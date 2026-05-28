@@ -10,19 +10,5 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]
     }
-  ],
-  "redirects": [
-    { "source": "/osaka", "destination": "/osaka.html", "permanent": false },
-    { "source": "/fukuoka", "destination": "/fukuoka.html", "permanent": false },
-    { "source": "/tokyo", "destination": "/tokyo.html", "permanent": false },
-    { "source": "/kyoto", "destination": "/kyoto.html", "permanent": false },
-    { "source": "/bangkok", "destination": "/bangkok.html", "permanent": false },
-    { "source": "/danang", "destination": "/danang.html", "permanent": false },
-    { "source": "/bali", "destination": "/bali.html", "permanent": false },
-    { "source": "/singapore", "destination": "/singapore.html", "permanent": false },
-    { "source": "/jeju", "destination": "/jeju.html", "permanent": false },
-    { "source": "/busan", "destination": "/busan.html", "permanent": false },
-    { "source": "/gangneung", "destination": "/gangneung.html", "permanent": false },
-    { "source": "/paris", "destination": "/paris.html", "permanent": false }
   ]
 }
