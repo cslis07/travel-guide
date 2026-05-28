@@ -212,15 +212,17 @@ const CTYPE_MAP = {
 };
 
 // API 키 저장/불러오기 (localStorage)
+const _TOUR_KEY = '9ae1336587e873e0ff6a0524e0b0cc0333868f67f9fb4180c0be654fb7794615';
+
 function saveTourApiKey(val) {
   const key = val.trim();
   if (key) localStorage.setItem('tripguide_tour_key', key);
 }
 
 function getTourApiKey() {
-  const key = localStorage.getItem('tripguide_tour_key') || '';
+  const key = localStorage.getItem('tripguide_tour_key') || _TOUR_KEY;
   const el  = document.getElementById('sw-apikey');
-  if (el && key) el.value = key; // 저장된 키 복원
+  if (el) el.value = key; // 저장된 키 복원
   return key;
 }
 
@@ -273,7 +275,7 @@ async function searchDomestic() {
       arrange:       'A',   // 제목순
     });
 
-    const res  = await fetch(`https://apis.data.go.kr/B551011/KorService1/areaBasedList1?${params}`);
+    const res  = await fetch(`https://apis.data.go.kr/B551011/KorService2/areaBasedList2?${params}`);
     const data = await res.json();
 
     // 에러 코드 체크
