@@ -42,29 +42,29 @@ img { max-width: 100%; display: block; }
 
 /* ── 환율 바 ── */
 .fx-bar {
-  background: var(--gray-100);
-  border-bottom: 1px solid var(--gray-200);
-  padding: 7px 0;
+  background: #EEF2FF;
+  border-bottom: 2px solid #C7D2FE;
+  padding: 12px 0;
 }
 .fx-inner {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
   overflow-x: auto;
   scrollbar-width: none;
 }
 .fx-inner::-webkit-scrollbar { display: none; }
 .fx-label {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 800;
   color: var(--primary);
   white-space: nowrap;
   flex-shrink: 0;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
 }
 .fx-rates {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: nowrap;
   overflow-x: auto;
   scrollbar-width: none;
@@ -73,28 +73,40 @@ img { max-width: 100%; display: block; }
 .fx-item {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 10px;
+  gap: 7px;
+  padding: 7px 16px;
   background: var(--white);
-  border: 1px solid var(--gray-200);
-  border-radius: 20px;
+  border: 1.5px solid #C7D2FE;
+  border-radius: 24px;
   white-space: nowrap;
-  font-size: 12px;
-  transition: border-color 0.15s;
+  font-size: 14px;
+  box-shadow: 0 1px 4px rgba(27,79,216,0.07);
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
-.fx-item:hover { border-color: var(--primary); }
-.fx-flag { font-size: 14px; line-height: 1; }
-.fx-pair { color: var(--gray-400); font-size: 11px; }
-.fx-rate { color: var(--dark); }
-.fx-rate strong { font-weight: 700; }
+.fx-item:hover {
+  border-color: var(--primary);
+  box-shadow: 0 2px 10px rgba(27,79,216,0.15);
+}
+.fx-flag { font-size: 18px; line-height: 1; }
+.fx-pair {
+  color: var(--gray-400);
+  font-size: 12px;
+  font-weight: 500;
+}
+.fx-rate { color: var(--dark); font-size: 14px; }
+.fx-rate strong {
+  font-weight: 800;
+  color: var(--primary-dark);
+  font-size: 15px;
+}
 .fx-updated {
   margin-left: auto;
   color: var(--gray-400);
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
   flex-shrink: 0;
 }
-.fx-skeleton { color: var(--gray-400); font-size: 12px; }
+.fx-skeleton { color: var(--gray-400); font-size: 13px; }
 
 /* ── HEADER ── */
 .header {
