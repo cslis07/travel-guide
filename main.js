@@ -316,6 +316,8 @@ async function searchDomestic() {
 
   grid.innerHTML = '';
   domHide('domesticMoreWrap');
+  const _mb1 = document.getElementById('domesticMoreBtn');
+  if (_mb1) _mb1.style.display = '';
   domShow('domesticLoading');
   domHide('domesticError');
   title.textContent = _buildTitle();
@@ -343,6 +345,8 @@ function onDomFilterChange() {
   const grid = document.getElementById('domesticGrid');
   if (grid) grid.innerHTML = '';
   domHide('domesticMoreWrap');
+  const _mb2 = document.getElementById('domesticMoreBtn');
+  if (_mb2) _mb2.style.display = '';
   domShow('domesticLoading');
   domHide('domesticError');
   const title = document.getElementById('domesticTitle');
@@ -528,16 +532,16 @@ function _updateDomMoreBtn() {
   const remain = _dom.totalCount - _dom.loaded;
   count.textContent = `${_dom.loaded.toLocaleString()} / 전체 ${_dom.totalCount.toLocaleString()}개`;
 
+  const moreBtn = document.getElementById('domesticMoreBtn');
   if (remain > 0) {
     label.textContent = `(${Math.min(remain, _dom.numOfRows)}개 더)`;
+    if (moreBtn) moreBtn.style.display = '';
     wrap.classList.remove('hidden');
   } else {
-    // 전체 로드 완료
+    // 전체 로드 완료 — 버튼 숨기고 카운트만 표시
     label.textContent = '';
-    if (_dom.totalCount > 0) {
-      wrap.classList.remove('hidden');
-      document.getElementById('domesticMoreBtn').style.display = 'none';
-    }
+    if (moreBtn) moreBtn.style.display = 'none';
+    if (_dom.totalCount > 0) wrap.classList.remove('hidden');
   }
 }
 
