@@ -43,19 +43,19 @@ img { max-width: 100%; display: block; }
 /* ── 환율 바 ── */
 .fx-bar {
   background: #EEF2FF;
-  border-bottom: 2px solid #C7D2FE;
-  padding: 12px 0;
+  border-bottom: 1.5px solid #C7D2FE;
+  padding: 7px 0;
 }
 .fx-inner {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   overflow-x: auto;
   scrollbar-width: none;
 }
 .fx-inner::-webkit-scrollbar { display: none; }
 .fx-label {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   color: var(--primary);
   white-space: nowrap;
@@ -64,7 +64,7 @@ img { max-width: 100%; display: block; }
 }
 .fx-rates {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: nowrap;
   overflow-x: auto;
   scrollbar-width: none;
@@ -73,40 +73,40 @@ img { max-width: 100%; display: block; }
 .fx-item {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 7px 16px;
+  gap: 5px;
+  padding: 4px 12px;
   background: var(--white);
-  border: 1.5px solid #C7D2FE;
-  border-radius: 24px;
+  border: 1px solid #C7D2FE;
+  border-radius: 20px;
   white-space: nowrap;
-  font-size: 14px;
-  box-shadow: 0 1px 4px rgba(27,79,216,0.07);
+  font-size: 13px;
+  box-shadow: 0 1px 3px rgba(27,79,216,0.06);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .fx-item:hover {
   border-color: var(--primary);
-  box-shadow: 0 2px 10px rgba(27,79,216,0.15);
+  box-shadow: 0 2px 8px rgba(27,79,216,0.12);
 }
-.fx-flag { font-size: 18px; line-height: 1; }
+.fx-flag { font-size: 15px; line-height: 1; }
 .fx-pair {
   color: var(--gray-400);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
 }
-.fx-rate { color: var(--dark); font-size: 14px; }
+.fx-rate { color: var(--dark); font-size: 13px; }
 .fx-rate strong {
   font-weight: 800;
   color: var(--primary-dark);
-  font-size: 15px;
+  font-size: 13px;
 }
 .fx-updated {
   margin-left: auto;
   color: var(--gray-400);
-  font-size: 12px;
+  font-size: 11px;
   white-space: nowrap;
   flex-shrink: 0;
 }
-.fx-skeleton { color: var(--gray-400); font-size: 13px; }
+.fx-skeleton { color: var(--gray-400); font-size: 12px; }
 
 /* ── HEADER ── */
 .header {
@@ -1429,6 +1429,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
 }
 
 @media (max-width: 640px) {
+  /* ── 헤더 ── */
   .nav { display: none; }
   .nav.open {
     display: flex;
@@ -1445,8 +1446,51 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
     box-shadow: var(--shadow);
   }
   .menu-btn { display: block; }
-  .qb-grid { grid-template-columns: repeat(2, 1fr); }
-  .qb-item:nth-child(2n) { border-right: none; }
+
+  /* ── 환율 바 (모바일) ── */
+  .fx-bar { padding: 6px 0; }
+  .fx-label { font-size: 11px; }
+  .fx-item { padding: 3px 9px; font-size: 12px; gap: 4px; }
+  .fx-flag { font-size: 13px; }
+  .fx-pair { display: none; }
+  .fx-rate { font-size: 12px; }
+  .fx-rate strong { font-size: 12px; }
+  .fx-updated { font-size: 10px; }
+
+  /* ── 퀵북 (모바일) — 가로 스크롤 줄 ── */
+  .qb-grid {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    grid-template-columns: unset;
+    border-top: 1px solid var(--gray-200);
+  }
+  .qb-grid::-webkit-scrollbar { display: none; }
+  .qb-item {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    padding: 14px 16px;
+    gap: 6px;
+    min-width: 92px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--gray-200);
+    border-bottom: none;
+  }
+  .qb-item:last-child { border-right: none; }
+  .qb-icon { font-size: 1.5rem; }
+  .qb-item strong {
+    font-size: 0.72rem;
+    margin-bottom: 4px;
+    white-space: nowrap;
+  }
+  .qb-item small { display: none; }
+  .qb-links { justify-content: center; gap: 3px; }
+  .qb-link { font-size: 0.65rem; padding: 3px 8px; }
+  .qb-item--group { min-width: 108px; }
+
+  /* ── 기타 ── */
   .partner-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-nav { flex-direction: column; }
   .budget-total { flex-direction: column; align-items: flex-start; }
