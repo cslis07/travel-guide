@@ -208,10 +208,15 @@ const AREA_MAP = {
 
 const CTYPE_MAP = {
   '12':'관광지', '14':'문화시설', '15':'축제·행사',
-  '28':'레포츠', '32':'숙박', '39':'음식점',
+  '28':'레포츠', '32':'숙박', '39':'음식점', 'cafe':'카페',
 };
 
-const CTYPE_ICON = { '12':'🏔', '14':'🏛', '15':'🎪', '28':'⛷', '32':'🏨', '39':'🍽' };
+const CTYPE_ICON = { '12':'🏔', '14':'🏛', '15':'🎪', '28':'⛷', '32':'🏨', '39':'🍽', 'cafe':'☕' };
+
+// 특수 카테고리 (contentTypeId + cat3 조합)
+const SPECIAL_CTYPE = {
+  'cafe': { contentTypeId: '39', cat3: 'A05020700' },
+};
 
 const SIGUNGU_MAP = {
   '1':{ '1':'종로구','2':'중구','3':'용산구','4':'성동구','5':'광진구','6':'동대문구','7':'중랑구','8':'성북구','9':'강북구','10':'도봉구','11':'노원구','12':'은평구','13':'서대문구','14':'마포구','15':'양천구','16':'강서구','17':'구로구','18':'금천구','19':'영등포구','20':'동작구','21':'관악구','22':'서초구','23':'강남구','24':'송파구','25':'강동구' },
@@ -471,18 +476,25 @@ async function _fetchDomesticPage(append) {
       numOfRows: _dom.numOfRows, pageNo: _dom.pageNo,
     };
 
+    // 특수 카테고리(카페 등) 처리
+    const special      = SPECIAL_CTYPE[_dom.contentTypeId];
+    const ctypeId      = special ? special.contentTypeId : _dom.contentTypeId;
+    const cat3Override = special ? special.cat3 : '';
+
     let endpoint, params;
     if (_dom.keyword) {
       endpoint = 'searchKeyword2';
       params   = { ...base, keyword: _dom.keyword };
-      if (_dom.areaCode)      params.areaCode      = _dom.areaCode;
-      if (_dom.contentTypeId) params.contentTypeId = _dom.contentTypeId;
+      if (_dom.areaCode) params.areaCode      = _dom.areaCode;
+      if (ctypeId)       params.contentTypeId = ctypeId;
+      if (cat3Override)  params.cat3          = cat3Override;
     } else {
       endpoint = 'areaBasedList2';
       params   = { ...base, arrange: 'A' };
-      if (_dom.areaCode)      params.areaCode      = _dom.areaCode;
-      if (_dom.sigunguCode)   params.sigunguCode   = _dom.sigunguCode;
-      if (_dom.contentTypeId) params.contentTypeId = _dom.contentTypeId;
+      if (_dom.areaCode)    params.areaCode      = _dom.areaCode;
+      if (_dom.sigunguCode) params.sigunguCode   = _dom.sigunguCode;
+      if (ctypeId)          params.contentTypeId = ctypeId;
+      if (cat3Override)     params.cat3          = cat3Override;
     }
 
     const res  = await fetch(`https://apis.data.go.kr/B551011/KorService2/${endpoint}?${new URLSearchParams(params)}`);
