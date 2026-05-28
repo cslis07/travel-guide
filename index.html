@@ -147,8 +147,8 @@
         <div class="sw-form" id="sw-domestic">
           <div class="sw-row">
             <div class="sw-field">
-              <label>지역</label>
-              <select id="sw-area">
+              <label>시/도</label>
+              <select id="sw-area" onchange="updateSigunguOptions('sw-sigungu', this.value)">
                 <option value="39">제주도</option>
                 <option value="6">부산</option>
                 <option value="32">강원도</option>
@@ -159,6 +159,7 @@
                 <option value="4">대구</option>
                 <option value="5">광주</option>
                 <option value="7">울산</option>
+                <option value="8">세종</option>
                 <option value="33">충청북도</option>
                 <option value="34">충청남도</option>
                 <option value="35">전라북도</option>
@@ -168,7 +169,13 @@
               </select>
             </div>
             <div class="sw-field">
-              <label>유형</label>
+              <label>구/군</label>
+              <select id="sw-sigungu">
+                <option value="">전체 구/군</option>
+              </select>
+            </div>
+            <div class="sw-field">
+              <label>업종</label>
               <select id="sw-ctype">
                 <option value="12">관광지</option>
                 <option value="14">문화시설</option>
@@ -178,7 +185,13 @@
                 <option value="39">음식점</option>
               </select>
             </div>
-            <button class="sw-btn" onclick="searchDomestic()">검색</button>
+          </div>
+          <div class="sw-row sw-row--kw">
+            <div class="sw-field sw-field--grow">
+              <label>키워드 (선택)</label>
+              <input type="text" id="sw-keyword" placeholder="예) 카페, 해수욕장, 박물관..." onkeydown="if(event.key==='Enter')searchDomestic()">
+            </div>
+            <button class="sw-btn" onclick="searchDomestic()">🔍 검색</button>
           </div>
           <div class="sw-apikey-row">
             <span>🔑 TourAPI 키</span>
@@ -258,6 +271,48 @@
         <span class="section-badge" id="domesticBadge">🇰🇷 국내여행</span>
         <h2 id="domesticTitle">검색 결과</h2>
       </div>
+      <!-- ── 결과 내 필터바 ── -->
+      <div class="dom-filterbar hidden" id="domFilterBar">
+        <div class="dom-fb-inner">
+          <select class="dom-fb-sel" id="dfArea" onchange="onDomAreaChange()">
+            <option value="">전체 지역</option>
+            <option value="1">서울</option>
+            <option value="2">인천</option>
+            <option value="3">대전</option>
+            <option value="4">대구</option>
+            <option value="5">광주</option>
+            <option value="6">부산</option>
+            <option value="7">울산</option>
+            <option value="8">세종</option>
+            <option value="31">경기도</option>
+            <option value="32">강원도</option>
+            <option value="33">충청북도</option>
+            <option value="34">충청남도</option>
+            <option value="35">전라북도</option>
+            <option value="36">전라남도</option>
+            <option value="37">경상북도</option>
+            <option value="38">경상남도</option>
+            <option value="39">제주도</option>
+          </select>
+          <select class="dom-fb-sel" id="dfSigungu" onchange="onDomFilterChange()">
+            <option value="">전체 구/군</option>
+          </select>
+          <select class="dom-fb-sel" id="dfCtype" onchange="onDomFilterChange()">
+            <option value="">전체 업종</option>
+            <option value="12">🏔 관광지</option>
+            <option value="14">🏛 문화시설</option>
+            <option value="15">🎪 축제·행사</option>
+            <option value="28">⛷ 레포츠</option>
+            <option value="32">🏨 숙박</option>
+            <option value="39">🍽 음식점</option>
+          </select>
+          <div class="dom-fb-kw">
+            <input type="text" id="dfKeyword" placeholder="🔍 키워드 검색..." oninput="onDomKeywordInput()">
+          </div>
+          <button class="dom-fb-parking-btn" id="dfParkingBtn" onclick="onDomParkingToggle()">🅿 주차 가능</button>
+        </div>
+      </div>
+
       <div class="dom-loading hidden" id="domesticLoading">
         <div class="dom-spinner"></div>
         <p>관광 정보를 불러오는 중...</p>

@@ -211,6 +211,28 @@ const CTYPE_MAP = {
   '28':'레포츠', '32':'숙박', '39':'음식점',
 };
 
+const CTYPE_ICON = { '12':'🏔', '14':'🏛', '15':'🎪', '28':'⛷', '32':'🏨', '39':'🍽' };
+
+const SIGUNGU_MAP = {
+  '1':{ '1':'종로구','2':'중구','3':'용산구','4':'성동구','5':'광진구','6':'동대문구','7':'중랑구','8':'성북구','9':'강북구','10':'도봉구','11':'노원구','12':'은평구','13':'서대문구','14':'마포구','15':'양천구','16':'강서구','17':'구로구','18':'금천구','19':'영등포구','20':'동작구','21':'관악구','22':'서초구','23':'강남구','24':'송파구','25':'강동구' },
+  '2':{ '1':'강화군','2':'옹진군','3':'중구','4':'동구','5':'미추홀구','6':'연수구','7':'남동구','8':'부평구','9':'계양구','10':'서구' },
+  '3':{ '1':'동구','2':'중구','3':'서구','4':'유성구','5':'대덕구' },
+  '4':{ '1':'중구','2':'동구','3':'서구','4':'남구','5':'북구','6':'수성구','7':'달서구','8':'달성군' },
+  '5':{ '1':'동구','2':'서구','3':'남구','4':'북구','5':'광산구' },
+  '6':{ '1':'중구','2':'서구','3':'동구','4':'영도구','5':'부산진구','6':'동래구','7':'남구','8':'북구','9':'해운대구','10':'사하구','11':'금정구','12':'강서구','13':'연제구','14':'수영구','15':'사상구','16':'기장군' },
+  '7':{ '1':'중구','2':'남구','3':'동구','4':'북구','5':'울주군' },
+  '8':{ '1':'세종특별자치시' },
+  '31':{ '1':'수원시','2':'성남시','3':'의정부시','4':'안양시','5':'부천시','6':'광명시','7':'평택시','8':'동두천시','9':'안산시','10':'고양시','11':'과천시','12':'구리시','13':'남양주시','14':'오산시','15':'시흥시','16':'군포시','17':'의왕시','18':'하남시','19':'용인시','20':'파주시','21':'이천시','22':'안성시','23':'김포시','24':'화성시','25':'광주시','26':'양주시','27':'포천시','28':'여주시','29':'연천군','30':'가평군','31':'양평군' },
+  '32':{ '1':'춘천시','2':'원주시','3':'강릉시','4':'동해시','5':'태백시','6':'속초시','7':'삼척시','8':'홍천군','9':'횡성군','10':'영월군','11':'평창군','12':'정선군','13':'철원군','14':'화천군','15':'양구군','16':'인제군','17':'고성군','18':'양양군' },
+  '33':{ '1':'청주시','2':'충주시','3':'제천시','4':'보은군','5':'옥천군','6':'영동군','7':'증평군','8':'진천군','9':'괴산군','10':'음성군','11':'단양군' },
+  '34':{ '1':'천안시','2':'공주시','3':'보령시','4':'아산시','5':'서산시','6':'논산시','7':'계룡시','8':'당진시','9':'금산군','10':'부여군','11':'서천군','12':'청양군','13':'홍성군','14':'예산군','15':'태안군' },
+  '35':{ '1':'전주시','2':'군산시','3':'익산시','4':'정읍시','5':'남원시','6':'김제시','7':'완주군','8':'진안군','9':'무주군','10':'장수군','11':'임실군','12':'순창군','13':'고창군','14':'부안군' },
+  '36':{ '1':'목포시','2':'여수시','3':'순천시','4':'나주시','5':'광양시','6':'담양군','7':'곡성군','8':'구례군','9':'고흥군','10':'보성군','11':'화순군','12':'장흥군','13':'강진군','14':'해남군','15':'영암군','16':'무안군','17':'함평군','18':'영광군','19':'장성군','20':'완도군','21':'진도군','22':'신안군' },
+  '37':{ '1':'포항시','2':'경주시','3':'김천시','4':'안동시','5':'구미시','6':'영주시','7':'영천시','8':'상주시','9':'문경시','10':'경산시','11':'군위군','12':'의성군','13':'청송군','14':'영양군','15':'영덕군','16':'청도군','17':'고령군','18':'성주군','19':'칠곡군','20':'예천군','21':'봉화군','22':'울진군','23':'울릉군' },
+  '38':{ '1':'창원시','2':'진주시','3':'통영시','4':'사천시','5':'김해시','6':'밀양시','7':'거제시','8':'양산시','9':'의령군','10':'함안군','11':'창녕군','12':'고성군','13':'남해군','14':'하동군','15':'산청군','16':'함양군','17':'거창군','18':'합천군' },
+  '39':{ '1':'제주시','2':'서귀포시' },
+};
+
 // API 키 저장/불러오기 (localStorage)
 const _TOUR_KEY = '9ae1336587e873e0ff6a0524e0b0cc0333868f67f9fb4180c0be654fb7794615';
 
@@ -230,37 +252,190 @@ function getTourApiKey() {
 function domShow(id)  { document.getElementById(id)?.classList.remove('hidden'); }
 function domHide(id)  { document.getElementById(id)?.classList.add('hidden'); }
 
-// 국내여행 페이지네이션 상태
+// 국내여행 페이지네이션 + 필터 상태
 const _dom = {
-  areaCode: '39', contentTypeId: '12',
+  areaCode: '', sigunguCode: '', contentTypeId: '', keyword: '',
   pageNo: 1, numOfRows: 20,
   totalCount: 0, loaded: 0,
   loading: false,
 };
 
+// 주차 필터 상태
+const _parkingCache = new Map();
+let _parkingActive = false;
+
+/* ─ 구/군 드롭다운 업데이트 ─ */
+function updateSigunguOptions(selectId, areaCode) {
+  const sel = document.getElementById(selectId);
+  if (!sel) return;
+  const sigs = SIGUNGU_MAP[areaCode] || {};
+  const opts = Object.entries(sigs).map(([k,v]) => `<option value="${k}">${v}</option>`).join('');
+  sel.innerHTML = '<option value="">전체 구/군</option>' + opts;
+}
+
+/* ─ 필터바 → 타이틀 텍스트 생성 ─ */
+function _buildTitle() {
+  const area  = AREA_MAP[_dom.areaCode] || '전국';
+  const sig   = _dom.sigunguCode ? (SIGUNGU_MAP[_dom.areaCode]?.[_dom.sigunguCode] || '') : '';
+  const ctype = CTYPE_MAP[_dom.contentTypeId] || '전체';
+  const kw    = _dom.keyword ? ` "${_dom.keyword}"` : '';
+  return `${area}${sig ? ' '+sig : ''} ${ctype}${kw}`;
+}
+
+/* ─ 위젯 값을 필터바에 동기화 ─ */
+function _syncFilterBar() {
+  const s = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+  s('dfArea', _dom.areaCode);
+  updateSigunguOptions('dfSigungu', _dom.areaCode);
+  s('dfSigungu', _dom.sigunguCode);
+  s('dfCtype', _dom.contentTypeId);
+  const kw = document.getElementById('dfKeyword');
+  if (kw) kw.value = _dom.keyword || '';
+}
+
+/* ─ 히어로 위젯에서 검색 버튼 클릭 ─ */
 async function searchDomestic() {
-  // 상태 초기화 (새 검색)
-  _dom.areaCode      = document.getElementById('sw-area')?.value  || '39';
-  _dom.contentTypeId = document.getElementById('sw-ctype')?.value || '12';
+  _dom.areaCode      = document.getElementById('sw-area')?.value     || '';
+  _dom.sigunguCode   = document.getElementById('sw-sigungu')?.value  || '';
+  _dom.contentTypeId = document.getElementById('sw-ctype')?.value    || '';
+  _dom.keyword       = document.getElementById('sw-keyword')?.value?.trim() || '';
   _dom.pageNo        = 1;
   _dom.totalCount    = 0;
   _dom.loaded        = 0;
+
+  _syncFilterBar();
+  _resetParkingFilter();
 
   const section = document.getElementById('domesticSection');
   const grid    = document.getElementById('domesticGrid');
   const title   = document.getElementById('domesticTitle');
 
   section?.classList.remove('hidden');
+  document.getElementById('domFilterBar')?.classList.remove('hidden');
   section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   grid.innerHTML = '';
   domHide('domesticMoreWrap');
   domShow('domesticLoading');
   domHide('domesticError');
-
-  title.textContent = `${AREA_MAP[_dom.areaCode] ?? '국내'} ${CTYPE_MAP[_dom.contentTypeId] ?? '여행'}`;
+  title.textContent = _buildTitle();
 
   await _fetchDomesticPage(false);
+}
+
+/* ─ 필터바에서 지역(시도) 변경 ─ */
+function onDomAreaChange() {
+  updateSigunguOptions('dfSigungu', document.getElementById('dfArea')?.value || '');
+  onDomFilterChange();
+}
+
+/* ─ 필터바 값 변경 → API 재검색 ─ */
+function onDomFilterChange() {
+  _dom.areaCode      = document.getElementById('dfArea')?.value    || '';
+  _dom.sigunguCode   = document.getElementById('dfSigungu')?.value || '';
+  _dom.contentTypeId = document.getElementById('dfCtype')?.value   || '';
+  _dom.keyword       = document.getElementById('dfKeyword')?.value?.trim() || '';
+  _dom.pageNo        = 1;
+  _dom.totalCount    = 0;
+  _dom.loaded        = 0;
+  _resetParkingFilter();
+
+  const grid = document.getElementById('domesticGrid');
+  if (grid) grid.innerHTML = '';
+  domHide('domesticMoreWrap');
+  domShow('domesticLoading');
+  domHide('domesticError');
+  const title = document.getElementById('domesticTitle');
+  if (title) title.textContent = _buildTitle();
+
+  _fetchDomesticPage(false);
+}
+
+/* ─ 키워드 입력 (디바운스 400ms) ─ */
+let _kwTimer = null;
+function onDomKeywordInput() {
+  clearTimeout(_kwTimer);
+  _kwTimer = setTimeout(onDomFilterChange, 400);
+}
+
+/* ─ 주차 필터 토글 ─ */
+async function onDomParkingToggle() {
+  _parkingActive = !_parkingActive;
+  document.getElementById('dfParkingBtn')?.classList.toggle('active', _parkingActive);
+  if (_parkingActive) {
+    await _batchFetchParking();
+  }
+  _applyParkingFilter();
+}
+
+function _resetParkingFilter() {
+  _parkingActive = false;
+  document.getElementById('dfParkingBtn')?.classList.remove('active');
+}
+
+/* ─ 주차 데이터 일괄 조회 ─ */
+async function _batchFetchParking() {
+  const apiKey = getTourApiKey();
+  const BASE   = 'https://apis.data.go.kr/B551011/KorService2';
+  const cmn    = { serviceKey: apiKey, MobileOS: 'ETC', MobileApp: 'TripGuide', _type: 'json' };
+  const btn    = document.getElementById('dfParkingBtn');
+
+  const toFetch = [...document.querySelectorAll('#domesticGrid .dom-card[data-cid]')]
+    .map(c => c.dataset.cid)
+    .filter(cid => !_parkingCache.has(cid));
+
+  if (!toFetch.length) return;
+
+  if (btn) { btn.textContent = '🅿 조회 중…'; btn.disabled = true; }
+  try {
+    await Promise.all(toFetch.map(async cid => {
+      const cached = _tourItemCache.get(cid);
+      const ctid   = cached?.contenttypeid || '12';
+      try {
+        const res   = await fetch(`${BASE}/detailIntro2?${new URLSearchParams({...cmn, contentId: cid, contentTypeId: ctid})}`);
+        const data  = await res.json();
+        const raw   = data?.response?.body?.items?.item;
+        const intro = Array.isArray(raw) ? raw[0] : raw;
+        _parkingCache.set(cid, _hasParkingFromIntro(intro));
+      } catch { _parkingCache.set(cid, null); }
+    }));
+  } finally {
+    if (btn) {
+      btn.textContent = '🅿 주차 가능';
+      btn.disabled    = false;
+      btn.classList.toggle('active', _parkingActive);
+    }
+  }
+}
+
+function _hasParkingFromIntro(intro) {
+  if (!intro) return null;
+  const fields = ['parking','parking14','parking28','parking30','parkingfood','parkingsports'];
+  for (const f of fields) {
+    const v = String(intro[f] || '').trim();
+    if (v && !v.includes('없') && !v.includes('불가') && !v.includes('안됨')) return true;
+  }
+  return false;
+}
+
+function _applyParkingFilter() {
+  document.querySelectorAll('#domesticGrid .dom-card[data-cid]').forEach(card => {
+    if (!_parkingActive) { card.style.display = ''; return; }
+    const v = _parkingCache.get(card.dataset.cid);
+    card.style.display = (v === false) ? 'none' : '';
+  });
+}
+
+/* ─ 이미지 로드 실패 처리 ─ */
+function domImgError(img) {
+  const thumb = img.closest('.dom-thumb');
+  if (!thumb) return;
+  const cid   = img.closest('.dom-card')?.dataset.cid;
+  const item  = cid ? _tourItemCache.get(cid) : null;
+  const icon  = CTYPE_ICON[item?.contenttypeid] || '🗺';
+  const name  = item?.title || '';
+  thumb.classList.add('dom-thumb--empty');
+  thumb.innerHTML = `<span class="dom-nimg-icon">${icon}</span><span class="dom-nimg-name">${name}</span>`;
 }
 
 async function loadMoreDomestic() {
@@ -287,19 +462,26 @@ async function _fetchDomesticPage(append) {
   if (append) domShow('domesticLoading');
 
   try {
-    const params = new URLSearchParams({
-      serviceKey:    apiKey,
-      MobileOS:      'ETC',
-      MobileApp:     'TripGuide',
-      _type:         'json',
-      areaCode:      _dom.areaCode,
-      contentTypeId: _dom.contentTypeId,
-      numOfRows:     _dom.numOfRows,
-      pageNo:        _dom.pageNo,
-      arrange:       'A',
-    });
+    const base = {
+      serviceKey: apiKey, MobileOS: 'ETC', MobileApp: 'TripGuide', _type: 'json',
+      numOfRows: _dom.numOfRows, pageNo: _dom.pageNo,
+    };
 
-    const res  = await fetch(`https://apis.data.go.kr/B551011/KorService2/areaBasedList2?${params}`);
+    let endpoint, params;
+    if (_dom.keyword) {
+      endpoint = 'searchKeyword2';
+      params   = { ...base, keyword: _dom.keyword };
+      if (_dom.areaCode)      params.areaCode      = _dom.areaCode;
+      if (_dom.contentTypeId) params.contentTypeId = _dom.contentTypeId;
+    } else {
+      endpoint = 'areaBasedList2';
+      params   = { ...base, arrange: 'A' };
+      if (_dom.areaCode)      params.areaCode      = _dom.areaCode;
+      if (_dom.sigunguCode)   params.sigunguCode   = _dom.sigunguCode;
+      if (_dom.contentTypeId) params.contentTypeId = _dom.contentTypeId;
+    }
+
+    const res  = await fetch(`https://apis.data.go.kr/B551011/KorService2/${endpoint}?${new URLSearchParams(params)}`);
     const data = await res.json();
 
     const resultCode = data?.response?.header?.resultCode;
@@ -365,19 +547,23 @@ function renderDomestic(items, append = false) {
   const grid = document.getElementById('domesticGrid');
   items.forEach(it => _tourItemCache.set(it.contentid, it));
 
-  const html = items.map(item => `
+  const html = items.map(item => {
+    const icon  = CTYPE_ICON[item.contenttypeid] || '🗺';
+    const thumb = item.firstimage
+      ? `<div class="dom-thumb"><img src="${item.firstimage}" alt="${item.title}" loading="lazy" onerror="domImgError(this)"></div>`
+      : `<div class="dom-thumb dom-thumb--empty"><span class="dom-nimg-icon">${icon}</span><span class="dom-nimg-name">${item.title}</span></div>`;
+    return `
     <div class="dom-card dom-card--link" data-cid="${item.contentid}">
-      ${item.firstimage
-        ? `<div class="dom-thumb"><img src="${item.firstimage}" alt="${item.title}" loading="lazy"></div>`
-        : `<div class="dom-thumb dom-thumb--empty">🗺</div>`}
+      ${thumb}
       <div class="dom-body">
+        <span class="dom-ctype-tag">${icon} ${CTYPE_MAP[item.contenttypeid]||''}</span>
         <h3>${item.title}</h3>
         ${item.addr1 ? `<p class="dom-addr">📍 ${item.addr1}</p>` : ''}
         ${item.tel   ? `<p class="dom-tel">📞 ${item.tel}</p>`    : ''}
         <p class="dom-more">상세보기 →</p>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 
   if (append) {
     grid.insertAdjacentHTML('beforeend', html);
@@ -393,6 +579,9 @@ function renderDomestic(items, append = false) {
       if (it) openTourDetail(it.contentid, it.contenttypeid, it.mapx, it.mapy);
     });
   });
+
+  // 주차 필터 활성화 상태면 새 카드에도 적용
+  if (_parkingActive) _applyParkingFilter();
 }
 
 /* ═══════════════════════════════════════════
