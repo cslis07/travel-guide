@@ -2169,6 +2169,40 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
   margin-top: 7px;
 }
 
+/* 더 보기 버튼 */
+.dom-more-wrap {
+  text-align: center;
+  padding: 32px 0 8px;
+}
+.dom-count {
+  font-size: 0.82rem;
+  color: var(--gray-400);
+  margin-bottom: 14px;
+}
+.dom-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 36px;
+  background: var(--white);
+  border: 2px solid var(--primary);
+  border-radius: 30px;
+  color: var(--primary);
+  font-size: 0.92rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.dom-more-btn:hover {
+  background: var(--primary);
+  color: var(--white);
+}
+.dom-more-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* 반응형 */
 @media (max-width: 600px) {
   .tmd-hero    { height: 200px; }

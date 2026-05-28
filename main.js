@@ -230,28 +230,47 @@ function getTourApiKey() {
 function domShow(id)  { document.getElementById(id)?.classList.remove('hidden'); }
 function domHide(id)  { document.getElementById(id)?.classList.add('hidden'); }
 
+// 국내여행 페이지네이션 상태
+const _dom = {
+  areaCode: '39', contentTypeId: '12',
+  pageNo: 1, numOfRows: 20,
+  totalCount: 0, loaded: 0,
+  loading: false,
+};
+
 async function searchDomestic() {
-  const areaCode      = document.getElementById('sw-area')?.value  || '39';
-  const contentTypeId = document.getElementById('sw-ctype')?.value || '12';
-  const apiKey        = getTourApiKey();
+  // 상태 초기화 (새 검색)
+  _dom.areaCode      = document.getElementById('sw-area')?.value  || '39';
+  _dom.contentTypeId = document.getElementById('sw-ctype')?.value || '12';
+  _dom.pageNo        = 1;
+  _dom.totalCount    = 0;
+  _dom.loaded        = 0;
 
   const section = document.getElementById('domesticSection');
   const grid    = document.getElementById('domesticGrid');
   const title   = document.getElementById('domesticTitle');
 
-  // 섹션 표시 후 스크롤
   section?.classList.remove('hidden');
   section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  // 상태 초기화
   grid.innerHTML = '';
+  domHide('domesticMoreWrap');
   domShow('domesticLoading');
   domHide('domesticError');
 
-  // 제목 업데이트
-  title.textContent = `${AREA_MAP[areaCode] ?? '국내'} ${CTYPE_MAP[contentTypeId] ?? '여행'}`;
+  title.textContent = `${AREA_MAP[_dom.areaCode] ?? '국내'} ${CTYPE_MAP[_dom.contentTypeId] ?? '여행'}`;
 
-  // API 키 없음
+  await _fetchDomesticPage(false);
+}
+
+async function loadMoreDomestic() {
+  if (_dom.loading) return;
+  _dom.pageNo++;
+  await _fetchDomesticPage(true);
+}
+
+async function _fetchDomesticPage(append) {
+  const apiKey = getTourApiKey();
   if (!apiKey) {
     domHide('domesticLoading');
     domShow('domesticError');
@@ -262,54 +281,91 @@ async function searchDomestic() {
     return;
   }
 
+  _dom.loading = true;
+  const btn = document.getElementById('domesticMoreBtn');
+  if (btn) btn.disabled = true;
+  if (append) domShow('domesticLoading');
+
   try {
     const params = new URLSearchParams({
       serviceKey:    apiKey,
       MobileOS:      'ETC',
       MobileApp:     'TripGuide',
       _type:         'json',
-      areaCode,
-      contentTypeId,
-      numOfRows:     12,
-      pageNo:        1,
-      arrange:       'A',   // 제목순
+      areaCode:      _dom.areaCode,
+      contentTypeId: _dom.contentTypeId,
+      numOfRows:     _dom.numOfRows,
+      pageNo:        _dom.pageNo,
+      arrange:       'A',
     });
 
     const res  = await fetch(`https://apis.data.go.kr/B551011/KorService2/areaBasedList2?${params}`);
     const data = await res.json();
 
-    // 에러 코드 체크
     const resultCode = data?.response?.header?.resultCode;
-    if (resultCode && resultCode !== '0000') {
+    if (resultCode && resultCode !== '0000')
       throw new Error(data?.response?.header?.resultMsg || '알 수 없는 오류');
-    }
 
-    const raw   = data?.response?.body?.items?.item;
+    const body  = data?.response?.body;
+    const raw   = body?.items?.item;
     const items = raw ? (Array.isArray(raw) ? raw : [raw]) : [];
+
+    _dom.totalCount = Number(body?.totalCount ?? 0);
+    _dom.loaded    += items.length;
 
     domHide('domesticLoading');
 
-    if (!items.length) {
+    if (!items.length && !append) {
       domShow('domesticError');
       document.getElementById('domesticErrorMsg').textContent = '검색 결과가 없습니다.';
       return;
     }
 
-    renderDomestic(items);
+    renderDomestic(items, append);
+    _updateDomMoreBtn();
+
   } catch (err) {
     domHide('domesticLoading');
-    domShow('domesticError');
-    document.getElementById('domesticErrorMsg').innerHTML =
-      `오류: ${err.message}<br><small>API 키를 확인하거나, 잠시 후 다시 시도해주세요.</small>`;
+    if (!append) {
+      domShow('domesticError');
+      document.getElementById('domesticErrorMsg').innerHTML =
+        `오류: ${err.message}<br><small>API 키를 확인하거나, 잠시 후 다시 시도해주세요.</small>`;
+    }
+  } finally {
+    _dom.loading = false;
+    if (btn) btn.disabled = false;
+  }
+}
+
+function _updateDomMoreBtn() {
+  const wrap  = document.getElementById('domesticMoreWrap');
+  const count = document.getElementById('domesticCount');
+  const label = document.getElementById('domesticMoreLabel');
+  if (!wrap) return;
+
+  const remain = _dom.totalCount - _dom.loaded;
+  count.textContent = `${_dom.loaded.toLocaleString()} / 전체 ${_dom.totalCount.toLocaleString()}개`;
+
+  if (remain > 0) {
+    label.textContent = `(${Math.min(remain, _dom.numOfRows)}개 더)`;
+    wrap.classList.remove('hidden');
+  } else {
+    // 전체 로드 완료
+    label.textContent = '';
+    if (_dom.totalCount > 0) {
+      wrap.classList.remove('hidden');
+      document.getElementById('domesticMoreBtn').style.display = 'none';
+    }
   }
 }
 
 const _tourItemCache = new Map();
 
-function renderDomestic(items) {
+function renderDomestic(items, append = false) {
   const grid = document.getElementById('domesticGrid');
   items.forEach(it => _tourItemCache.set(it.contentid, it));
-  grid.innerHTML = items.map(item => `
+
+  const html = items.map(item => `
     <div class="dom-card dom-card--link" data-cid="${item.contentid}">
       ${item.firstimage
         ? `<div class="dom-thumb"><img src="${item.firstimage}" alt="${item.title}" loading="lazy"></div>`
@@ -322,7 +378,16 @@ function renderDomestic(items) {
       </div>
     </div>
   `).join('');
-  grid.querySelectorAll('.dom-card--link').forEach(card => {
+
+  if (append) {
+    grid.insertAdjacentHTML('beforeend', html);
+  } else {
+    grid.innerHTML = html;
+  }
+
+  // 새로 추가된 카드에만 이벤트 등록
+  grid.querySelectorAll('.dom-card--link:not([data-bound])').forEach(card => {
+    card.dataset.bound = '1';
     card.addEventListener('click', () => {
       const it = _tourItemCache.get(card.dataset.cid);
       if (it) openTourDetail(it.contentid, it.contenttypeid, it.mapx, it.mapy);
