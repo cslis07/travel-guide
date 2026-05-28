@@ -194,21 +194,29 @@ img { max-width: 100%; display: block; }
 
 .qb-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  divide-x: 1px solid var(--gray-200);
+  grid-template-columns: repeat(5, 1fr);
 }
 
 .qb-item {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 20px 24px;
+  padding: 18px 20px;
   border-right: 1px solid var(--gray-200);
   transition: background 0.15s;
+  text-decoration: none;
+  color: inherit;
 }
 
 .qb-item:last-child { border-right: none; }
-.qb-item:hover { background: var(--gray-100); }
+.qb-item:not(.qb-item--group):hover { background: var(--gray-100); }
+
+/* 그룹 아이템 (서브링크 포함) */
+.qb-item--group {
+  align-items: flex-start;
+  cursor: default;
+}
+.qb-item--group .qb-icon { margin-top: 2px; }
 
 .qb-icon {
   font-size: 1.6rem;
@@ -217,14 +225,41 @@ img { max-width: 100%; display: block; }
 
 .qb-item strong {
   display: block;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: var(--dark);
+  margin-bottom: 6px;
 }
 
 .qb-item small {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--gray-400);
+}
+
+/* 서브링크 칩 */
+.qb-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.qb-link {
+  display: inline-block;
+  padding: 4px 11px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--gray-100);
+  color: var(--gray-800);
+  border: 1px solid var(--gray-200);
+  transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.12s;
+  white-space: nowrap;
+}
+.qb-link:hover {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+  transform: translateY(-1px);
 }
 
 /* ── SECTIONS ── */
@@ -1316,7 +1351,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
-  .qb-grid { grid-template-columns: repeat(2, 1fr); }
+  .qb-grid { grid-template-columns: repeat(3, 1fr); }
   .partner-grid { grid-template-columns: repeat(4, 1fr); }
   .footer-top { grid-template-columns: 1fr; }
   .footer-nav { gap: 24px; }
@@ -1343,6 +1378,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
   }
   .menu-btn { display: block; }
   .qb-grid { grid-template-columns: repeat(2, 1fr); }
+  .qb-item:nth-child(2n) { border-right: none; }
   .partner-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-nav { flex-direction: column; }
   .budget-total { flex-direction: column; align-items: flex-start; }
