@@ -6,3 +6,5 @@ desktop.ini
 .env.local
 node_modules/
 .vercel/
+
+.vercel
