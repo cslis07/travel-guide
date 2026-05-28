@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="초보 여행자를 위한 여행 가이드. 항공권·호텔·입장권·투어까지 한 번에 비교하고 예약하세요.">
+  <title>트립가이드 | 초보 여행자를 위한 여행 가이드 + 예약 서비스</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">✈ 트립가이드</a>
+      <nav class="nav" id="nav">
+        <a href="#destinations">여행지</a>
+        <a href="#how">이용 방법</a>
+        <a href="osaka.html">오사카 가이드</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <h1>어디로 여행 가세요?</h1>
+      <p>여행 코스부터 항공권·호텔·입장권까지<br>초보자도 쉽게 준비할 수 있도록 정리했습니다</p>
+      <div class="hero-search">
+        <input type="text" id="heroSearch" placeholder="여행지 검색 (예: 오사카, 제주도, 방콕…)" autocomplete="off">
+        <button onclick="doSearch()">검색</button>
+      </div>
+      <div class="hero-tags">
+        <span onclick="filterDest('일본')">🇯🇵 일본</span>
+        <span onclick="filterDest('동남아')">🌴 동남아</span>
+        <span onclick="filterDest('국내')">🇰🇷 국내</span>
+        <span onclick="filterDest('유럽')">🏰 유럽</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── QUICK BOOK ── -->
+  <section class="quick-book">
+    <div class="container">
+      <div class="qb-grid">
+        <a href="https://www.skyscanner.co.kr" target="_blank" rel="noopener" class="qb-item">
+          <span class="qb-icon">✈</span>
+          <div>
+            <strong>항공권 최저가</strong>
+            <small>스카이스캐너에서 비교</small>
+          </div>
+        </a>
+        <a href="https://www.agoda.com/ko-kr" target="_blank" rel="noopener" class="qb-item">
+          <span class="qb-icon">🏨</span>
+          <div>
+            <strong>호텔 예약</strong>
+            <small>아고다·부킹닷컴 연결</small>
+          </div>
+        </a>
+        <a href="https://www.klook.com/ko/" target="_blank" rel="noopener" class="qb-item">
+          <span class="qb-icon">🎟</span>
+          <div>
+            <strong>입장권·투어</strong>
+            <small>클룩·마이리얼트립 연결</small>
+          </div>
+        </a>
+        <a href="https://www.skyscanner.co.kr" target="_blank" rel="noopener" class="qb-item">
+          <span class="qb-icon">🚗</span>
+          <div>
+            <strong>렌터카</strong>
+            <small>현지 렌터카 비교</small>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DESTINATIONS ── -->
+  <section class="section" id="destinations">
+    <div class="container">
+      <div class="section-header">
+        <h2>인기 여행지 가이드</h2>
+        <p>여행지를 선택하면 일정·항공권·호텔·입장권까지 한 번에 볼 수 있어요</p>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-btn active" data-cat="전체" onclick="filterDest('전체')">전체</button>
+        <button class="filter-btn" data-cat="일본" onclick="filterDest('일본')">🇯🇵 일본</button>
+        <button class="filter-btn" data-cat="동남아" onclick="filterDest('동남아')">🌴 동남아</button>
+        <button class="filter-btn" data-cat="국내" onclick="filterDest('국내')">🇰🇷 국내</button>
+        <button class="filter-btn" data-cat="유럽" onclick="filterDest('유럽')">🏰 유럽</button>
+      </div>
+
+      <div class="dest-grid" id="destGrid">
+
+        <!-- 일본 -->
+        <article class="dest-card" data-cat="일본" data-name="오사카">
+          <div class="dest-thumb" style="background:linear-gradient(135deg,#BC002D 0%,#FF6B6B 100%)">
+            <span>🏯</span>
+          </div>
+          <div class="dest-body">
+            <div class="dest-meta"><span class="cat-tag japan">일본</span><span class="dest-duration">2박 3일 추천</span></div>
+            <h3>오사카</h3>
+            <p>도톤보리·USJ·오사카성. 처음 일본 여행이라면 오사카부터.</p>
+            <div class="dest-price-row">
+              <span class="dest-price">항공권 189,000원~</span>
+              <a href="osaka.html" class="dest-btn">가이드 보기</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="dest-card" data-cat="일본" data-name="후쿠오카">
+          <div class="dest-thumb" style="background:linear-gradient(135deg,#8B5CF6 0%,#EC4899 100%)">
+            <span>🍜</span>
+          </div>
+          <div class="dest-body">
+            <div class="dest-meta"><span class="cat-tag japan">일본</span><span class="dest-duration">2박 3일 추천</span></div>
+            <h3>후쿠오카</h3>
+            <p>하카타 라멘·야타이·텐진 쇼핑. 비행시간 1시간 10분의 가까운 일본.</p>
+            <div class="dest-price-row">
+              <span class="dest-price">항공권 159,000원~</span>
+              <a href="fukuoka.html" class="dest-btn">가이드 보기</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="dest-card" data-cat="일본" data-name="도쿄">
+          <div class="dest-thumb" style="background:linear-gradient(135deg,#1E3A5F 0%,#3B82F6 100%)">
+            <span>🗼</span>
+          </div>
+          <div class="dest-body">
+            <div class="dest-meta"><span class="cat-tag japan">일본</span><span class="dest-duration">3박 4일 추천</span></div>
+            <h3>도쿄</h3>
+            <p>시부야·아키하바라·디즈니랜드. 볼거리·먹거리·쇼핑 최강.</p>
+            <div class="dest-price-row">
+              <span class="dest-price">항공권 210,000원~</span>
+              <a href="tokyo.html" class="dest-btn">가이드 보기</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="dest-card" data-cat="일본" data-name="교토">
+          <div class="dest-thumb" style="background:linear-gradient(135deg,#065F46 0%,#34D399 100%)">
+            <span>⛩</span>
+          </div>
+          <div class="dest-body">
+            <div class="dest-meta"><span class="cat-tag japan">일본</span><span class="dest-duration">1박 2일 / 당일치기</span></div>
+            <h3>교토</h3>
+            <p>후시미이나리·아라시야마·기온. 전통 일본 감성의 정수.</p>
+            <div class="dest-price-row">
+              <span class="dest-price">오사카 당일치기 가능</span>
+              <a href="kyoto.html" class="dest-btn">가이드 보기</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 동남아 -->
+        <article class="dest-card" data-cat="동남아" data-name="방콕">
+          <div class="dest-thumb" style="background:linear-gradient(135deg,#D97706 0%,#F59E0B 100%)">
+            <span>🛕</span>
+          </div>
+          <div class="dest-body">
+            <div class="dest-meta"><span class="cat-tag sea">동남아</span><span class="dest-duration">3박 4일 추천</span></div>
+            <h3>방콕</h3>
+            <p>왓포·카오산로드·야시장. 저렴하고 다채로운 동남아 대표 도시.</p>
+            <div class="dest-price-row">
+              <span class="dest-price">항공권 220,000원~</span>
+              <a href="bangkok.html" class="dest-btn">가이드 보기</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="dest-card" data-cat="동남아" data-name="다낭">
+          <div class="dest-thumb" style="background:linear-gradient(135deg,#0369A1 0%,#38BDF8 100%)">
+            <span>🏖</span>
+          </div>
+          <div class="dest-body">
+            <div class="dest-meta"><span class="cat-tag sea">동남아</span><span class="dest-duration">3박 4일 추천</span></div>
+            <h3>다낭</h3>
+            <p>미케비치·바나힐·호이안. 가성비 최고의 베트남 휴양지.</p>
+            <div class="dest-price-row">
+              <span class="dest-price">항공권 180,000원~</span>
+              <a href="danang.html" class="dest-btn">가이드 보기</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="dest-card" data-cat="동남아" data-name="발리">
+          <div class="dest-thumb" style="background:linear-gradient(135deg,#166534 0%,#86EFAC 100%)">
+            <span>🌺</span>
+          </div>
+          <div class="dest-body">
+            <div class="dest-meta"><span class="cat-tag sea">동남아</span><span class="dest-duration">4박 5일 추천</span></div>
+            <h3>발리</h3>
+            <p>우붓·꾸따·사누르. 힐링과 자연이 공존하는 신들의 섬.</p>
+            <div class="dest-price-row">
+              <span class="dest-price">항공권 350,000원~</span>
+              <a href="bali.html" class="dest-btn">가이드 보기</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="dest-card" data-cat="동남아" data-name="싱가포르">
+          <div class="dest-thumb" style="background:linear-gradient(135deg,#7C3AED 0%,#C084FC 100%)">
+            <span>🌆</span>
+          </div>
+          <div class="dest-body">
+            <div class="dest-meta"><span class="cat-tag sea">동남아</span><span class="dest-duration">3박 4일 추천</span></div>
+            <h3>싱가포르</h3>
+            <p>마리나베이·가든스바이더베이·센토사. 동남아 최고 수준의 도시국가.</p>
+            <div class="dest-price-row">
+              <span class="dest-price">항공권 280,000원~</span>
+              <a href="singapore.html" class="dest-btn">가이드 보기</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 국내 -->
+        <article class="dest-card" data-cat="국내" data-name="제주도">
+          <div class="dest-thumb" style="background:linear-gradient(135deg,#047857 0%,#6EE7B7 100%)">
+            <span>🌊</span>
+          </div>
+          <div class="dest-body">
+            <div class="dest-meta"><span class="cat-tag domestic">국내</span><span class="dest-duration">2박 3일 추천</span></div>
+            <h3>제주도</h3>
+            <p>한라산·성산일출봉·협재해변. 사계절 여행 가능한 국내 최고 여행지.</p>
+            <div class="dest-price-row">
+              <span class="dest-price">항공권 50,000원~</span>
+              <a href="jeju.html" class="dest-btn">가이드 보기</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="dest-card" data-cat="국내" data-name="부산">
+          <div class="dest-thumb" style="background:linear-gradient(135deg,#1D4ED8 0%,#60A5FA 100%)">
+            <span>🐠</span>
+          </div>
+          <div class="dest-body">
+            <div class="dest-meta"><span class="cat-tag domestic">국내</span><span class="dest-duration">1박 2일 추천</span></div>
+            <h3>부산</h3>
+            <p>해운대·감천문화마을·광안리. KTX로 2시간 30분, 주말 여행 최적.</p>
+            <div class="dest-price-row">
+              <span class="dest-price">KTX 59,800원~</span>
+              <a href="busan.html" class="dest-btn">가이드 보기</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="dest-card" data-cat="국내" data-name="강릉">
+          <div class="dest-thumb" style="background:linear-gradient(135deg,#92400E 0%,#FCD34D 100%)">
+            <span>☕</span>
+          </div>
+          <div class="dest-body">
+            <div class="dest-meta"><span class="cat-tag domestic">국내</span><span class="dest-duration">1박 2일 추천</span></div>
+            <h3>강릉</h3>
+            <p>안목해변 카페거리·오죽헌·경포해변. 서울에서 2시간, 가족 여행 추천.</p>
+            <div class="dest-price-row">
+              <span class="dest-price">KTX 27,600원~</span>
+              <a href="gangneung.html" class="dest-btn">가이드 보기</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- 유럽 -->
+        <article class="dest-card" data-cat="유럽" data-name="파리">
+          <div class="dest-thumb" style="background:linear-gradient(135deg,#1E3A5F 0%,#7CA9D9 100%)">
+            <span>🗼</span>
+          </div>
+          <div class="dest-body">
+            <div class="dest-meta"><span class="cat-tag europe">유럽</span><span class="dest-duration">4박 5일 추천</span></div>
+            <h3>파리</h3>
+            <p>에펠탑·루브르·몽마르뜨. 로망 넘치는 유럽 여행의 시작.</p>
+            <div class="dest-price-row">
+              <span class="dest-price">항공권 780,000원~</span>
+              <a href="paris.html" class="dest-btn">가이드 보기</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <p class="no-result hidden" id="noResult">검색 결과가 없습니다. 다른 키워드로 검색해보세요.</p>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="section section-alt" id="how">
+    <div class="container">
+      <div class="section-header">
+        <h2>이렇게 이용하세요</h2>
+        <p>검색부터 예약까지 3단계면 충분합니다</p>
+      </div>
+      <div class="how-grid">
+        <div class="how-step">
+          <div class="how-num">01</div>
+          <div class="how-icon">🔍</div>
+          <h3>여행지 선택</h3>
+          <p>원하는 여행지를 검색하거나 목록에서 선택하면 맞춤 여행 가이드 페이지로 이동합니다.</p>
+        </div>
+        <div class="how-arrow">→</div>
+        <div class="how-step">
+          <div class="how-num">02</div>
+          <div class="how-icon">📋</div>
+          <h3>여행 정보 확인</h3>
+          <p>추천 일정표, 예상 경비, 현지 팁을 확인하고 자신에게 맞는 플랜을 선택합니다.</p>
+        </div>
+        <div class="how-arrow">→</div>
+        <div class="how-step">
+          <div class="how-num">03</div>
+          <div class="how-icon">🎫</div>
+          <h3>예약하기</h3>
+          <p>항공권·호텔·입장권 예약 버튼을 누르면 최저가 예약 페이지로 바로 이동합니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PARTNERS ── -->
+  <section class="section" id="partners">
+    <div class="container">
+      <div class="section-header">
+        <h2>연결된 예약 플랫폼</h2>
+        <p>검증된 예약 서비스와 연결되어 있습니다</p>
+      </div>
+      <div class="partner-grid">
+        <a href="https://www.skyscanner.co.kr" target="_blank" rel="noopener" class="partner-card">
+          <div class="partner-icon">✈</div>
+          <strong>Skyscanner</strong>
+          <small>항공권 최저가 비교</small>
+        </a>
+        <a href="https://kr.trip.com" target="_blank" rel="noopener" class="partner-card">
+          <div class="partner-icon">🌐</div>
+          <strong>Trip.com</strong>
+          <small>항공·호텔·투어</small>
+        </a>
+        <a href="https://www.agoda.com/ko-kr" target="_blank" rel="noopener" class="partner-card">
+          <div class="partner-icon">🏨</div>
+          <strong>Agoda</strong>
+          <small>아시아 최강 호텔</small>
+        </a>
+        <a href="https://www.booking.com" target="_blank" rel="noopener" class="partner-card">
+          <div class="partner-icon">📋</div>
+          <strong>Booking.com</strong>
+          <small>전세계 호텔 예약</small>
+        </a>
+        <a href="https://www.klook.com/ko/" target="_blank" rel="noopener" class="partner-card">
+          <div class="partner-icon">🎟</div>
+          <strong>Klook</strong>
+          <small>입장권·투어·교통</small>
+        </a>
+        <a href="https://www.myrealtrip.com" target="_blank" rel="noopener" class="partner-card">
+          <div class="partner-icon">🗺</div>
+          <strong>마이리얼트립</strong>
+          <small>현지 투어·가이드</small>
+        </a>
+        <a href="https://www.waug.com" target="_blank" rel="noopener" class="partner-card">
+          <div class="partner-icon">🎪</div>
+          <strong>Waug</strong>
+          <small>체험·액티비티</small>
+        </a>
+        <a href="https://www.expedia.co.kr" target="_blank" rel="noopener" class="partner-card">
+          <div class="partner-icon">💼</div>
+          <strong>Expedia</strong>
+          <small>항공+호텔 패키지</small>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">✈ 트립가이드</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 가이드</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="kyoto.html">교토</a>
+          </div>
+          <div>
+            <h4>동남아 가이드</h4>
+            <a href="bangkok.html">방콕</a>
+            <a href="danang.html">다낭</a>
+            <a href="bali.html">발리</a>
+            <a href="singapore.html">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 가이드</h4>
+            <a href="jeju.html">제주도</a>
+            <a href="busan.html">부산</a>
+            <a href="gangneung.html">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트립가이드 · TripGuide</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
