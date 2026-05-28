@@ -347,12 +347,17 @@ async function openTourDetail(contentId, contentTypeId, mapX, mapY) {
   const cmn  = { serviceKey: key, MobileOS: 'ETC', MobileApp: 'TripGuide', _type: 'json' };
   const safe = fn => fn.catch(() => null);
 
+  // 리스트 캐시에서 기본 정보 미리 확보 (detailCommon2 실패 시 폴백)
+  const cached = _tourItemCache.get(contentId);
+  const fallbackMapX = mapX || cached?.mapx || '';
+  const fallbackMapY = mapY || cached?.mapy || '';
+
   try {
     const [cRes, iRes, imgRes, nbRes] = await Promise.all([
       safe(fetch(`${BASE}/detailCommon2?${new URLSearchParams({ ...cmn, contentId, defaultYN:'Y', firstImageYN:'Y', addrinfoYN:'Y', overviewYN:'Y', mapinfoYN:'Y' })}`).then(r => r.json())),
       safe(fetch(`${BASE}/detailIntro2?${new URLSearchParams({ ...cmn, contentId, contentTypeId })}`).then(r => r.json())),
       safe(fetch(`${BASE}/detailImage2?${new URLSearchParams({ ...cmn, contentId, imageYN:'Y', subImageYN:'Y' })}`).then(r => r.json())),
-      (mapX && mapY) ? safe(fetch(`${BASE}/locationBasedList2?${new URLSearchParams({ ...cmn, mapX, mapY, radius:5000, numOfRows:6, pageNo:1, arrange:'E' })}`).then(r => r.json())) : Promise.resolve(null),
+      (fallbackMapX && fallbackMapY) ? safe(fetch(`${BASE}/locationBasedList2?${new URLSearchParams({ ...cmn, mapX: fallbackMapX, mapY: fallbackMapY, radius:5000, numOfRows:6, pageNo:1, arrange:'E' })}`).then(r => r.json())) : Promise.resolve(null),
     ]);
 
     const detail = _extractItem(cRes);
@@ -360,7 +365,10 @@ async function openTourDetail(contentId, contentTypeId, mapX, mapY) {
     const imgArr = _extractItems(imgRes);
     const nbArr  = _extractItems(nbRes).filter(n => n.contentid !== contentId).slice(0, 5);
 
-    _renderTourModal({ detail, intro, imgArr, nbArr });
+    // 주변 관광지도 캐시에 저장 (드릴다운 클릭 시 폴백 데이터로 사용)
+    nbArr.forEach(n => _tourItemCache.set(n.contentid, n));
+
+    _renderTourModal({ detail, intro, imgArr, nbArr, cached });
   } catch (err) {
     body.innerHTML = `<div class="tmd-err">⚠️ 오류: ${err.message}</div>`;
   }
@@ -376,27 +384,37 @@ function _extractIntroFields(intro) {
     const val = keys.map(k => intro[k]).find(v => v && String(v).trim());
     if (val) rows.push([label, String(val).trim()]);
   };
-  add('문의처',   'infocenter','infocenter12','infocenter14','infocenter28','infocenterlodging','infocenterfood');
-  add('이용시간', 'usetime','usetime14','usetime28','usetimefestival','opentimefood','checkintime');
-  add('쉬는 날',  'restdate','restdate12','restdate14','restdate28','restdatefood');
-  add('주차',     'parking','parking14','parking28','parking30','parkingfood');
-  add('입장료',   'usefee','usefee14','usefee28','admission');
-  add('체크아웃', 'checkouttime');
-  add('대표 메뉴','firstmenu','menu');
-  add('행사 장소','eventplace');
+  add('문의처',    'infocenter','infocenter12','infocenter14','infocenter28','infocenterlodging','infocenterfood','infocenterculture','infocentersports');
+  add('이용시간',  'usetime','usetime14','usetime28','usetimefestival','opentimefood','checkintime');
+  add('쉬는 날',   'restdate','restdate12','restdate14','restdate28','restdatefood','restdatesports');
+  add('주차',      'parking','parking14','parking28','parking30','parkingfood','parkingsports');
+  add('입장료',    'usefee','usefee14','usefee28','admission','usefeeculture');
+  add('유모차',    'chkbabycarriage','chkbabycarriageculture');
+  add('반려동물',  'chkpet','chkpetculture');
+  add('체크인',    'checkintime');
+  add('체크아웃',  'checkouttime');
+  add('객실 수',   'roomcount');
+  add('부대시설',  'subfacility');
+  add('대표 메뉴', 'firstmenu','menu');
+  add('행사 장소', 'eventplace');
+  if (intro.eventstartdate && intro.eventenddate)
+    rows.push(['행사 기간', `${intro.eventstartdate} ~ ${intro.eventenddate}`]);
+  else if (intro.eventstartdate)
+    rows.push(['행사 기간', intro.eventstartdate]);
   return rows;
 }
 
-function _renderTourModal({ detail, intro, imgArr, nbArr }) {
+function _renderTourModal({ detail, intro, imgArr, nbArr, cached }) {
   const body = document.getElementById('tourModalBody');
 
-  const title    = detail?.title    || '';
-  const addr     = [detail?.addr1, detail?.addr2].filter(Boolean).join(' ');
-  const tel      = detail?.tel      || '';
-  const overview = detail?.overview || '';
-  const heroImg  = detail?.firstimage || detail?.firstimage2 || '';
-  const mx = detail?.mapx || '';
-  const my = detail?.mapy || '';
+  // detailCommon2 실패 시 캐시 데이터로 폴백
+  const title    = detail?.title    || cached?.title    || '';
+  const addr     = [detail?.addr1   || cached?.addr1, detail?.addr2].filter(Boolean).join(' ');
+  const tel      = detail?.tel      || cached?.tel      || '';
+  const overview = detail?.overview ? detail.overview.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').trim() : '';
+  const heroImg  = detail?.firstimage || detail?.firstimage2 || cached?.firstimage || '';
+  const mx = detail?.mapx || cached?.mapx || '';
+  const my = detail?.mapy || cached?.mapy || '';
   const fields = _extractIntroFields(intro);
 
   const kakaoUrl = (mx && my) ? `https://map.kakao.com/link/map/${encodeURIComponent(title)},${my},${mx}` : '';
@@ -423,12 +441,12 @@ function _renderTourModal({ detail, intro, imgArr, nbArr }) {
   }
 
   // 개요
-  if (overview) {
-    html += `<div class="tmd-section">
-      <h3 class="tmd-sec-title">📝 개요</h3>
-      <p class="tmd-overview">${overview}</p>
-    </div>`;
-  }
+  html += `<div class="tmd-section">
+    <h3 class="tmd-sec-title">📝 개요</h3>
+    ${overview
+      ? `<p class="tmd-overview">${overview}</p>`
+      : `<p class="tmd-empty">등록된 설명이 없습니다.</p>`}
+  </div>`;
 
   // 이용 정보
   if (fields.length) {
@@ -441,14 +459,14 @@ function _renderTourModal({ detail, intro, imgArr, nbArr }) {
   }
 
   // 상세 이미지
-  if (imgArr.length) {
-    html += `<div class="tmd-section">
-      <h3 class="tmd-sec-title">🖼 상세 이미지</h3>
-      <div class="tmd-imgstrip">
-        ${imgArr.map(img => `<div class="tmd-imgitem"><img src="${img.originimgurl || img.smallimageurl}" alt="${img.imgname || title}" loading="lazy"></div>`).join('')}
-      </div>
-    </div>`;
-  }
+  html += `<div class="tmd-section">
+    <h3 class="tmd-sec-title">🖼 상세 이미지</h3>
+    ${imgArr.length
+      ? `<div class="tmd-imgstrip">
+          ${imgArr.map(img => `<div class="tmd-imgitem"><img src="${img.originimgurl || img.smallimageurl}" alt="${img.imgname || title}" loading="lazy"></div>`).join('')}
+        </div>`
+      : `<p class="tmd-empty">등록된 이미지가 없습니다.</p>`}
+  </div>`;
 
   // 주변 관광지
   if (nbArr.length) {
