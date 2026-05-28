@@ -1748,6 +1748,92 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
 }
 
 /* ═══════════════════════════════════════════
+   여행지 가이드 — 여행 유형 탭
+   ═══════════════════════════════════════════ */
+
+.type-select-bar {
+  background: var(--gray-100);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 20px 0;
+}
+
+.type-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gray-400);
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+.type-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.type-tab {
+  padding: 12px 28px;
+  border-radius: 30px;
+  border: 2px solid var(--gray-200);
+  background: var(--white);
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.type-tab:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(27,79,216,0.05);
+}
+
+.type-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--white);
+  box-shadow: 0 4px 14px rgba(27,79,216,0.3);
+}
+
+.type-content { display: none; }
+.type-content.active { display: block; }
+
+/* ── 현지 팁 카드 ── */
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.tip-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 22px 20px;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.tip-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+
+.tip-icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+
+.tip-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--dark);
+}
+
+.tip-card p {
+  font-size: 0.82rem;
+  color: var(--gray-600);
+  line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════════
    TourAPI 상세 모달
    ═══════════════════════════════════════════ */
 
