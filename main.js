@@ -139,55 +139,62 @@ function initDestNav() {
   sections.forEach(s => observer.observe(s));
 }
 
-// ── 날짜 기본값: 오늘 + 3일 / + 6일 ──
+// ── 날짜 기본값 ──
 function initDates() {
   const today = new Date();
   const fmt = d => d.toISOString().split('T')[0];
+  const addDays = (d, n) => { const r = new Date(d); r.setDate(r.getDate() + n); return r; };
+  const minDate = fmt(today);
 
-  const addDays = (d, n) => {
-    const r = new Date(d);
-    r.setDate(r.getDate() + n);
-    return r;
-  };
-
-  ['depDate', 'flightDep', 'dep'].forEach(id => {
+  ['depDate', 'flightDep', 'dep', 'sw-dep', 'sw-cin'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.value = fmt(addDays(today, 14));
+    if (el) { el.min = minDate; el.value = fmt(addDays(today, 14)); }
   });
 
-  ['retDate', 'flightRet', 'ret'].forEach(id => {
+  ['retDate', 'flightRet', 'ret', 'sw-ret', 'sw-cout'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.value = fmt(addDays(today, 17));
+    if (el) { el.min = minDate; el.value = fmt(addDays(today, 17)); }
   });
 }
 
-// ── 항공권 검색 시뮬레이션 ──
-const FLIGHTS = [
-  { airline: '🟠 제주항공', dep: '08:30', arr: '10:15', dur: '1h 45m', price: '189,000', url: 'https://www.skyscanner.co.kr/routes/icn/kix/' },
-  { airline: '🔵 티웨이항공', dep: '11:20', arr: '13:05', dur: '1h 45m', price: '205,000', url: 'https://www.skyscanner.co.kr/routes/icn/kix/' },
-  { airline: '🟡 진에어', dep: '13:00', arr: '14:45', dur: '1h 45m', price: '215,000', url: 'https://www.skyscanner.co.kr/routes/icn/kix/' },
-  { airline: '🔵 아시아나항공', dep: '09:00', arr: '10:45', dur: '1h 45m', price: '265,000', url: 'https://www.skyscanner.co.kr/routes/icn/kix/' },
-  { airline: '🔴 대한항공', dep: '15:00', arr: '16:45', dur: '1h 45m', price: '310,000', url: 'https://www.skyscanner.co.kr/routes/icn/kix/' },
-];
-
-function searchFlights() {
-  const tbody = document.getElementById('flightTbody');
-  if (!tbody) return;
-
-  tbody.querySelectorAll('tr').forEach(tr => tr.remove());
-
-  FLIGHTS.forEach((f, i) => {
-    const tr = document.createElement('tr');
-    tr.style.animation = `fadeIn 0.2s ease ${i * 0.06}s both`;
-    tr.innerHTML = `
-      <td><span class="airline-badge">${f.airline}</span></td>
-      <td>${f.dep} → ${f.arr}</td>
-      <td>${f.dur}</td>
-      <td><span class="price-cell">${f.price}원~</span></td>
-      <td><a href="${f.url}" target="_blank" rel="noopener" class="book-btn">예약 보기</a></td>
-    `;
-    tbody.appendChild(tr);
+// ── 검색 위젯 탭 전환 ──
+document.querySelectorAll('.sw-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.sw-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.sw-form').forEach(f => f.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('sw-' + tab.dataset.tab)?.classList.add('active');
   });
+});
+
+// ── 항공권 딥링크 검색 (Skyscanner) ──
+function searchFlightDeep() {
+  const to  = document.getElementById('sw-to')?.value;
+  const dep = document.getElementById('sw-dep')?.value;
+  const ret = document.getElementById('sw-ret')?.value;
+  const pax = document.getElementById('sw-pax')?.value || '2';
+
+  if (!dep || !ret) { alert('날짜를 선택해주세요.'); return; }
+  if (dep >= ret)   { alert('귀국일은 출발일보다 늦어야 합니다.'); return; }
+
+  // Skyscanner 날짜 포맷: YYMMDD
+  const sky = d => d.replace(/-/g, '').slice(2);
+  const url = `https://www.skyscanner.co.kr/transport/flights/ICN/${to}/${sky(dep)}/${sky(ret)}/?adults=${pax}&cabinclass=economy`;
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+// ── 호텔 딥링크 검색 (Agoda) ──
+function searchHotelDeep() {
+  const city   = document.getElementById('sw-hcity')?.value || 'Osaka';
+  const cin    = document.getElementById('sw-cin')?.value;
+  const cout   = document.getElementById('sw-cout')?.value;
+  const guests = document.getElementById('sw-guests')?.value || '2';
+
+  if (!cin || !cout) { alert('날짜를 선택해주세요.'); return; }
+  if (cin >= cout)   { alert('체크아웃은 체크인보다 늦어야 합니다.'); return; }
+
+  const url = `https://www.agoda.com/search?searchText=${encodeURIComponent(city)}&checkIn=${cin}&checkOut=${cout}&rooms=1&adults=${guests}&lang=ko`;
+  window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 // ── 초기화 ──

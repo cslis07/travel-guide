@@ -1350,3 +1350,157 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
   .aff-cta { flex-direction: column; }
   .dest-hero-stats { gap: 14px; }
 }
+
+/* ══════════════════════════════════════════
+   항공권·호텔 검색 위젯 (홈 히어로)
+   ══════════════════════════════════════════ */
+
+.search-widget {
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 16px;
+  overflow: hidden;
+  max-width: 900px;
+  margin: 32px auto 0;
+  text-align: left;
+}
+
+.sw-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.sw-tab {
+  flex: 1;
+  padding: 14px 20px;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .15s;
+  letter-spacing: 0.02em;
+}
+
+.sw-tab.active {
+  color: #fff;
+  background: rgba(255,255,255,0.12);
+}
+
+.sw-tab:hover:not(.active) { color: rgba(255,255,255,0.85); }
+
+.sw-form {
+  display: none;
+  padding: 18px 20px;
+}
+
+.sw-form.active { display: block; }
+
+.sw-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.sw-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.sw-field--sm { flex: 0 0 88px; min-width: 88px; }
+
+.sw-field label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.65);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+.sw-field input,
+.sw-field select {
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 8px;
+  color: #fff;
+  padding: 10px 11px;
+  font-size: 0.86rem;
+  font-family: inherit;
+  height: 42px;
+  outline: none;
+  transition: border-color .15s, background .15s;
+  width: 100%;
+}
+
+.sw-field select option { color: #1e293b; background: #fff; }
+.sw-field input[readonly] { cursor: default; opacity: .75; }
+
+.sw-field input:focus,
+.sw-field select:focus {
+  border-color: rgba(255,255,255,.55);
+  background: rgba(255,255,255,.2);
+}
+
+/* date input 아이콘 색상 (WebKit) */
+.sw-field input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: .6;
+  cursor: pointer;
+}
+
+.sw-btn {
+  height: 42px;
+  padding: 0 24px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background .15s;
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+
+.sw-btn:hover { background: var(--accent-dark); }
+
+.sw-direct {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sw-direct span {
+  font-size: 0.73rem;
+  color: rgba(255,255,255,.45);
+}
+
+.sw-direct a {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,.65);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color .15s;
+}
+
+.sw-direct a:hover { color: #fff; }
+
+@media (max-width: 600px) {
+  .sw-row { flex-direction: column; }
+  .sw-field,
+  .sw-field--sm { min-width: 100%; flex: none; }
+  .sw-btn { width: 100%; }
+}

@@ -18,7 +18,6 @@
       <nav class="nav" id="nav">
         <a href="#destinations">여행지</a>
         <a href="#how">이용 방법</a>
-        <a href="osaka.html">오사카 가이드</a>
       </nav>
       <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
     </div>
@@ -30,15 +29,107 @@
     <div class="container hero-content">
       <h1>어디로 여행 가세요?</h1>
       <p>여행 코스부터 항공권·호텔·입장권까지<br>초보자도 쉽게 준비할 수 있도록 정리했습니다</p>
-      <div class="hero-search">
-        <input type="text" id="heroSearch" placeholder="여행지 검색 (예: 오사카, 제주도, 방콕…)" autocomplete="off">
-        <button onclick="doSearch()">검색</button>
-      </div>
-      <div class="hero-tags">
-        <span onclick="filterDest('일본')">🇯🇵 일본</span>
-        <span onclick="filterDest('동남아')">🌴 동남아</span>
-        <span onclick="filterDest('국내')">🇰🇷 국내</span>
-        <span onclick="filterDest('유럽')">🏰 유럽</span>
+      <!-- ── SEARCH WIDGET ── -->
+      <div class="search-widget">
+        <div class="sw-tabs">
+          <button class="sw-tab active" data-tab="flight">✈ 항공권 검색</button>
+          <button class="sw-tab" data-tab="hotel">🏨 호텔 검색</button>
+        </div>
+
+        <!-- 항공권 -->
+        <div class="sw-form active" id="sw-flight">
+          <div class="sw-row">
+            <div class="sw-field">
+              <label>출발지</label>
+              <input type="text" value="인천 (ICN)" readonly>
+            </div>
+            <div class="sw-field">
+              <label>도착지</label>
+              <select id="sw-to">
+                <option value="KIX">오사카 간사이 (KIX)</option>
+                <option value="FUK">후쿠오카 (FUK)</option>
+                <option value="NRT">도쿄 나리타 (NRT)</option>
+                <option value="HND">도쿄 하네다 (HND)</option>
+                <option value="BKK">방콕 (BKK)</option>
+                <option value="DAD">다낭 (DAD)</option>
+                <option value="DPS">발리 (DPS)</option>
+                <option value="SIN">싱가포르 (SIN)</option>
+                <option value="CDG">파리 (CDG)</option>
+                <option value="CJU">제주 (CJU)</option>
+                <option value="PUS">부산 김해 (PUS)</option>
+              </select>
+            </div>
+            <div class="sw-field">
+              <label>출발일</label>
+              <input type="date" id="sw-dep">
+            </div>
+            <div class="sw-field">
+              <label>귀국일</label>
+              <input type="date" id="sw-ret">
+            </div>
+            <div class="sw-field sw-field--sm">
+              <label>인원</label>
+              <select id="sw-pax">
+                <option value="1">1명</option>
+                <option value="2" selected>2명</option>
+                <option value="3">3명</option>
+                <option value="4">4명</option>
+              </select>
+            </div>
+            <button class="sw-btn" onclick="searchFlightDeep()">검색</button>
+          </div>
+          <div class="sw-direct">
+            <span>바로가기 →</span>
+            <a href="https://www.skyscanner.co.kr" target="_blank" rel="noopener">스카이스캐너</a>
+            <a href="https://kr.trip.com/flights/" target="_blank" rel="noopener">Trip.com</a>
+            <a href="https://www.expedia.co.kr" target="_blank" rel="noopener">Expedia</a>
+          </div>
+        </div>
+
+        <!-- 호텔 -->
+        <div class="sw-form" id="sw-hotel">
+          <div class="sw-row">
+            <div class="sw-field">
+              <label>여행지</label>
+              <select id="sw-hcity">
+                <option value="Osaka">오사카</option>
+                <option value="Fukuoka">후쿠오카</option>
+                <option value="Tokyo">도쿄</option>
+                <option value="Bangkok">방콕</option>
+                <option value="Da Nang">다낭</option>
+                <option value="Bali">발리</option>
+                <option value="Singapore">싱가포르</option>
+                <option value="Paris">파리</option>
+                <option value="Jeju">제주도</option>
+                <option value="Busan">부산</option>
+              </select>
+            </div>
+            <div class="sw-field">
+              <label>체크인</label>
+              <input type="date" id="sw-cin">
+            </div>
+            <div class="sw-field">
+              <label>체크아웃</label>
+              <input type="date" id="sw-cout">
+            </div>
+            <div class="sw-field sw-field--sm">
+              <label>인원</label>
+              <select id="sw-guests">
+                <option value="1">1명</option>
+                <option value="2" selected>2명</option>
+                <option value="3">3명</option>
+                <option value="4">4명</option>
+              </select>
+            </div>
+            <button class="sw-btn" onclick="searchHotelDeep()">검색</button>
+          </div>
+          <div class="sw-direct">
+            <span>바로가기 →</span>
+            <a href="https://www.agoda.com/ko-kr" target="_blank" rel="noopener">아고다</a>
+            <a href="https://www.booking.com" target="_blank" rel="noopener">Booking.com</a>
+            <a href="https://kr.trip.com/hotels/" target="_blank" rel="noopener">Trip.com</a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -383,7 +474,6 @@
         <div class="footer-nav">
           <div>
             <h4>일본 가이드</h4>
-            <a href="osaka.html">오사카</a>
             <a href="fukuoka.html">후쿠오카</a>
             <a href="tokyo.html">도쿄</a>
             <a href="kyoto.html">교토</a>
