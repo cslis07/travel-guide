@@ -498,6 +498,48 @@ function closeTourModal() {
 }
 
 /* ═══════════════════════════════════════════
+   환율 정보
+   ═══════════════════════════════════════════ */
+async function loadExchangeRates() {
+  const el  = document.getElementById('fxRates');
+  const upd = document.getElementById('fxUpdated');
+  if (!el) return;
+
+  const CURRENCIES = [
+    { flag: '🇺🇸', code: 'USD', label: 'USD/KRW', unit: 1,     sym: '$1'      },
+    { flag: '🇯🇵', code: 'JPY', label: 'JPY/KRW', unit: 100,   sym: '¥100'    },
+    { flag: '🇪🇺', code: 'EUR', label: 'EUR/KRW', unit: 1,     sym: '€1'      },
+    { flag: '🇻🇳', code: 'VND', label: 'VND/KRW', unit: 10000, sym: '₫10,000' },
+    { flag: '🇹🇭', code: 'THB', label: 'THB/KRW', unit: 1,     sym: '฿1'      },
+  ];
+
+  try {
+    const res  = await fetch('https://open.er-api.com/v6/latest/USD');
+    const data = await res.json();
+    if (data.result !== 'success') throw new Error();
+
+    const r          = data.rates;
+    const krwPerUsd  = r.KRW;
+
+    el.innerHTML = CURRENCIES.map(c => {
+      const krw = Math.round((krwPerUsd / r[c.code]) * c.unit);
+      return `<span class="fx-item">
+        <span class="fx-flag">${c.flag}</span>
+        <span class="fx-pair">${c.label}</span>
+        <span class="fx-rate">${c.sym} = <strong>${krw.toLocaleString()}원</strong></span>
+      </span>`;
+    }).join('');
+
+    if (upd) {
+      const d = new Date(data.time_last_update_unix * 1000);
+      upd.textContent = `${d.getMonth()+1}/${d.getDate()} 기준`;
+    }
+  } catch {
+    el.innerHTML = '<span class="fx-skeleton">환율 정보를 불러올 수 없습니다</span>';
+  }
+}
+
+/* ═══════════════════════════════════════════
    초기화
    ═══════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -506,6 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDestNav();
   initDates();
   getTourApiKey(); // 저장된 키 복원
+  loadExchangeRates();
 
   // 모달 닫기 이벤트
   const _ov = document.getElementById('tourModalOverlay');

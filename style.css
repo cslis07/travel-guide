@@ -40,6 +40,62 @@ img { max-width: 100%; display: block; }
   padding: 0 20px;
 }
 
+/* ── 환율 바 ── */
+.fx-bar {
+  background: var(--gray-100);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 7px 0;
+}
+.fx-inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.fx-inner::-webkit-scrollbar { display: none; }
+.fx-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.03em;
+}
+.fx-rates {
+  display: flex;
+  gap: 6px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.fx-rates::-webkit-scrollbar { display: none; }
+.fx-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 20px;
+  white-space: nowrap;
+  font-size: 12px;
+  transition: border-color 0.15s;
+}
+.fx-item:hover { border-color: var(--primary); }
+.fx-flag { font-size: 14px; line-height: 1; }
+.fx-pair { color: var(--gray-400); font-size: 11px; }
+.fx-rate { color: var(--dark); }
+.fx-rate strong { font-weight: 700; }
+.fx-updated {
+  margin-left: auto;
+  color: var(--gray-400);
+  font-size: 11px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.fx-skeleton { color: var(--gray-400); font-size: 12px; }
+
 /* ── HEADER ── */
 .header {
   position: sticky;
