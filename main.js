@@ -304,10 +304,13 @@ async function searchDomestic() {
   }
 }
 
+const _tourItemCache = new Map();
+
 function renderDomestic(items) {
   const grid = document.getElementById('domesticGrid');
+  items.forEach(it => _tourItemCache.set(it.contentid, it));
   grid.innerHTML = items.map(item => `
-    <div class="dom-card">
+    <div class="dom-card dom-card--link" data-cid="${item.contentid}">
       ${item.firstimage
         ? `<div class="dom-thumb"><img src="${item.firstimage}" alt="${item.title}" loading="lazy"></div>`
         : `<div class="dom-thumb dom-thumb--empty">🗺</div>`}
@@ -315,9 +318,165 @@ function renderDomestic(items) {
         <h3>${item.title}</h3>
         ${item.addr1 ? `<p class="dom-addr">📍 ${item.addr1}</p>` : ''}
         ${item.tel   ? `<p class="dom-tel">📞 ${item.tel}</p>`    : ''}
+        <p class="dom-more">상세보기 →</p>
       </div>
     </div>
   `).join('');
+  grid.querySelectorAll('.dom-card--link').forEach(card => {
+    card.addEventListener('click', () => {
+      const it = _tourItemCache.get(card.dataset.cid);
+      if (it) openTourDetail(it.contentid, it.contenttypeid, it.mapx, it.mapy);
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════
+   TourAPI 상세 팝업
+   ═══════════════════════════════════════════ */
+
+async function openTourDetail(contentId, contentTypeId, mapX, mapY) {
+  const overlay = document.getElementById('tourModalOverlay');
+  const body    = document.getElementById('tourModalBody');
+  if (!overlay) return;
+  overlay.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  body.innerHTML = `<div class="tmd-loading"><div class="dom-spinner"></div><p>상세 정보를 불러오는 중...</p></div>`;
+
+  const key  = getTourApiKey();
+  const BASE = 'https://apis.data.go.kr/B551011/KorService2';
+  const cmn  = { serviceKey: key, MobileOS: 'ETC', MobileApp: 'TripGuide', _type: 'json' };
+  const safe = fn => fn.catch(() => null);
+
+  try {
+    const [cRes, iRes, imgRes, nbRes] = await Promise.all([
+      safe(fetch(`${BASE}/detailCommon2?${new URLSearchParams({ ...cmn, contentId, defaultYN:'Y', firstImageYN:'Y', addrinfoYN:'Y', overviewYN:'Y', mapinfoYN:'Y' })}`).then(r => r.json())),
+      safe(fetch(`${BASE}/detailIntro2?${new URLSearchParams({ ...cmn, contentId, contentTypeId })}`).then(r => r.json())),
+      safe(fetch(`${BASE}/detailImage2?${new URLSearchParams({ ...cmn, contentId, imageYN:'Y', subImageYN:'Y' })}`).then(r => r.json())),
+      (mapX && mapY) ? safe(fetch(`${BASE}/locationBasedList2?${new URLSearchParams({ ...cmn, mapX, mapY, radius:5000, numOfRows:6, pageNo:1, arrange:'E' })}`).then(r => r.json())) : Promise.resolve(null),
+    ]);
+
+    const detail = _extractItem(cRes);
+    const intro  = _extractItem(iRes);
+    const imgArr = _extractItems(imgRes);
+    const nbArr  = _extractItems(nbRes).filter(n => n.contentid !== contentId).slice(0, 5);
+
+    _renderTourModal({ detail, intro, imgArr, nbArr });
+  } catch (err) {
+    body.innerHTML = `<div class="tmd-err">⚠️ 오류: ${err.message}</div>`;
+  }
+}
+
+function _extractItem(res)  { const r = res?.response?.body?.items?.item; return Array.isArray(r) ? r[0] : (r || null); }
+function _extractItems(res) { const r = res?.response?.body?.items?.item; return r ? (Array.isArray(r) ? r : [r]) : []; }
+
+function _extractIntroFields(intro) {
+  if (!intro) return [];
+  const rows = [];
+  const add = (label, ...keys) => {
+    const val = keys.map(k => intro[k]).find(v => v && String(v).trim());
+    if (val) rows.push([label, String(val).trim()]);
+  };
+  add('문의처',   'infocenter','infocenter12','infocenter14','infocenter28','infocenterlodging','infocenterfood');
+  add('이용시간', 'usetime','usetime14','usetime28','usetimefestival','opentimefood','checkintime');
+  add('쉬는 날',  'restdate','restdate12','restdate14','restdate28','restdatefood');
+  add('주차',     'parking','parking14','parking28','parking30','parkingfood');
+  add('입장료',   'usefee','usefee14','usefee28','admission');
+  add('체크아웃', 'checkouttime');
+  add('대표 메뉴','firstmenu','menu');
+  add('행사 장소','eventplace');
+  return rows;
+}
+
+function _renderTourModal({ detail, intro, imgArr, nbArr }) {
+  const body = document.getElementById('tourModalBody');
+
+  const title    = detail?.title    || '';
+  const addr     = [detail?.addr1, detail?.addr2].filter(Boolean).join(' ');
+  const tel      = detail?.tel      || '';
+  const overview = detail?.overview || '';
+  const heroImg  = detail?.firstimage || detail?.firstimage2 || '';
+  const mx = detail?.mapx || '';
+  const my = detail?.mapy || '';
+  const fields = _extractIntroFields(intro);
+
+  const kakaoUrl = (mx && my) ? `https://map.kakao.com/link/map/${encodeURIComponent(title)},${my},${mx}` : '';
+  const naverUrl = (mx && my) ? `https://map.naver.com/v5/search/${encodeURIComponent(title)}` : '';
+
+  let html = `<div class="tmd-inner">`;
+
+  if (heroImg) html += `<div class="tmd-hero"><img src="${heroImg}" alt="${title}"></div>`;
+  html += `<div class="tmd-content">`;
+
+  // 제목·주소·연락처
+  html += `<div class="tmd-head">
+    <h2 class="tmd-name">${title}</h2>
+    ${addr ? `<p class="tmd-addr">📍 ${addr}</p>` : ''}
+    ${tel  ? `<p class="tmd-tel">📞 ${tel}</p>`   : ''}
+  </div>`;
+
+  // 지도 버튼
+  if (mx && my) {
+    html += `<div class="tmd-map-row">
+      <a href="${kakaoUrl}" target="_blank" rel="noopener" class="tmd-mapbtn tmd-mapbtn--kakao">🗺 카카오맵</a>
+      <a href="${naverUrl}" target="_blank" rel="noopener" class="tmd-mapbtn tmd-mapbtn--naver">🗺 네이버지도</a>
+    </div>`;
+  }
+
+  // 개요
+  if (overview) {
+    html += `<div class="tmd-section">
+      <h3 class="tmd-sec-title">📝 개요</h3>
+      <p class="tmd-overview">${overview}</p>
+    </div>`;
+  }
+
+  // 이용 정보
+  if (fields.length) {
+    html += `<div class="tmd-section">
+      <h3 class="tmd-sec-title">ℹ️ 이용 정보</h3>
+      <table class="tmd-table">
+        ${fields.map(([l,v]) => `<tr><th>${l}</th><td>${v}</td></tr>`).join('')}
+      </table>
+    </div>`;
+  }
+
+  // 상세 이미지
+  if (imgArr.length) {
+    html += `<div class="tmd-section">
+      <h3 class="tmd-sec-title">🖼 상세 이미지</h3>
+      <div class="tmd-imgstrip">
+        ${imgArr.map(img => `<div class="tmd-imgitem"><img src="${img.originimgurl || img.smallimageurl}" alt="${img.imgname || title}" loading="lazy"></div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // 주변 관광지
+  if (nbArr.length) {
+    html += `<div class="tmd-section">
+      <h3 class="tmd-sec-title">📍 주변 관광지</h3>
+      <div class="tmd-nearby">
+        ${nbArr.map(n => `
+          <div class="tmd-nb-card" data-cid="${n.contentid}" data-ctid="${n.contenttypeid}" data-mx="${n.mapx}" data-my="${n.mapy}">
+            ${n.firstimage ? `<img src="${n.firstimage}" alt="${n.title}" loading="lazy">` : `<div class="tmd-nb-empty">🗺</div>`}
+            <p>${n.title}</p>
+            ${n.dist ? `<small>${Math.round(n.dist)}m</small>` : ''}
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  html += `</div></div>`;
+  body.innerHTML = html;
+
+  // 주변 관광지 클릭 이벤트
+  body.querySelectorAll('.tmd-nb-card').forEach(card => {
+    card.addEventListener('click', () => openTourDetail(card.dataset.cid, card.dataset.ctid, card.dataset.mx, card.dataset.my));
+  });
+}
+
+function closeTourModal() {
+  document.getElementById('tourModalOverlay')?.classList.add('hidden');
+  document.body.style.overflow = '';
 }
 
 /* ═══════════════════════════════════════════
@@ -329,6 +488,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initDestNav();
   initDates();
   getTourApiKey(); // 저장된 키 복원
+
+  // 모달 닫기 이벤트
+  const _ov = document.getElementById('tourModalOverlay');
+  if (_ov) {
+    _ov.addEventListener('click', e => { if (e.target === _ov) closeTourModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTourModal(); });
+  }
 });
 
 // 페이드인 애니메이션
