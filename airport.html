@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>인천공항 실시간 | 트립가이드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>(function(){const t=localStorage.getItem('icn-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})()</script>
+<style>
+/* ── DESIGN TOKENS ── */
+:root{
+  --bg:#0c0f1e;--bg2:#101628;--card:#141b2d;--card2:#0f1422;
+  --border:#1f2d48;--text:#d0dbf5;--text2:#8aa4c6;--muted:#4e6180;
+  --accent:#00c8f0;--a-dim:rgba(0,200,240,.12);--a-hover:rgba(0,200,240,.07);
+  --g:#22c55e;--y:#f59e0b;--o:#f97316;--r:#ef4444;--b:#3b82f6;
+  --topbar-bg:#07091d;--strip-bg:#0b0e22;
+  --sh:0 4px 18px rgba(0,0,0,.45);--sh-sm:0 1px 6px rgba(0,0,0,.3);
+  --rc:10px;--rb:6px;--rx:4px;
+}
+[data-theme="light"]{
+  --bg:#eef2fa;--bg2:#e6ecf6;--card:#ffffff;--card2:#f4f7fd;
+  --border:#ccd5e8;--text:#0d1421;--text2:#334266;--muted:#677296;
+  --accent:#0077a8;--a-dim:rgba(0,119,168,.1);--a-hover:rgba(0,119,168,.06);
+  --topbar-bg:#ffffff;--strip-bg:#ffffff;
+  --sh:0 4px 18px rgba(0,0,0,.07);--sh-sm:0 1px 6px rgba(0,0,0,.05);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Noto Sans KR','Pretendard','Segoe UI',system-ui,sans-serif;
+  font-size:13px;display:flex;flex-direction:column;
+  transition:background .2s,color .2s;
+}
+
+/* ── TOP BAR (38px) ── */
+#topbar{
+  background:var(--topbar-bg);border-bottom:1px solid var(--border);height:38px;
+  flex-shrink:0;display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;z-index:20;box-shadow:var(--sh-sm);
+}
+#logo{
+  color:var(--accent);font-weight:800;font-size:.9rem;text-decoration:none;
+  letter-spacing:.04em;display:flex;align-items:center;gap:6px;
+}
+#logo::before{content:'✈';font-size:.78rem;opacity:.9}
+#topbar-right{display:flex;align-items:center;gap:10px;font-size:.7rem;color:var(--muted)}
+#topbar-right::before{
+  content:'';width:6px;height:6px;background:var(--g);border-radius:50%;
+  animation:blink 1.4s infinite;flex-shrink:0;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+#hdr-time{color:var(--text);font-weight:600;letter-spacing:.02em}
+/* theme toggle */
+#theme-toggle{
+  background:none;border:1px solid var(--border);color:var(--text2);
+  border-radius:var(--rx);padding:3px 10px;cursor:pointer;font-size:.68rem;
+  font-family:inherit;transition:.15s;display:flex;align-items:center;gap:4px;
+  white-space:nowrap;
+}
+#theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── INFO STRIP (92px) ── */
+#info-strip{
+  background:var(--strip-bg);border-bottom:1px solid var(--border);
+  flex-shrink:0;display:flex;height:92px;
+}
+
+/* weather */
+#wx-block{
+  padding:10px 16px;border-right:1px solid var(--border);display:flex;
+  flex-direction:column;justify-content:center;gap:5px;flex-shrink:0;min-width:200px;
+}
+#wx-main{display:flex;align-items:center;gap:10px}
+#wx-icon{font-size:2rem;line-height:1}
+#wx-right{display:flex;flex-direction:column;gap:2px}
+#w-temp{font-size:1.6rem;font-weight:200;color:var(--text);line-height:1}
+#w-desc{font-size:.65rem;color:var(--muted);margin-top:2px}
+#wx-detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 10px;font-size:.61rem}
+.wxd-item{color:var(--muted)}
+.wxd-item b{color:var(--text2);font-weight:500}
+
+/* pax center */
+#pax-center{
+  flex:1;padding:8px 18px;border-right:1px solid var(--border);display:flex;
+  flex-direction:column;justify-content:center;gap:7px;min-width:0;overflow:hidden;
+}
+#pax-nav-row{display:flex;align-items:center;gap:7px;font-size:.67rem;white-space:nowrap;flex-shrink:0}
+#pax-nav-row button{
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  font-size:1rem;padding:0 2px;line-height:1;transition:color .12s;
+}
+#pax-nav-row button:hover{color:var(--accent)}
+#pax-period-lbl{color:var(--muted);flex-shrink:0}
+#ct-switch{display:flex;gap:3px;flex-shrink:0}
+.ct-btn{
+  padding:2px 9px;border-radius:12px;border:1px solid var(--border);background:none;
+  color:var(--muted);cursor:pointer;font-size:.62rem;font-family:inherit;
+  transition:.12s;font-weight:500;
+}
+.ct-btn:hover{border-color:var(--accent);color:var(--text)}
+.ct-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+#pax-date-lbl{color:var(--text);font-size:.67rem;flex-shrink:0;font-weight:500}
+#pax-data-row{display:flex;align-items:center;gap:22px}
+.pax-col{display:flex;flex-direction:column;gap:2px}
+.pax-arrow{font-size:.6rem;color:var(--muted);display:flex;align-items:center;gap:3px}
+.pax-arrow::before{content:'↑';color:var(--accent);font-weight:700}
+.pax-total-val{font-size:1.55rem;font-weight:700;color:var(--accent);line-height:1.1}
+.pax-sub-row{display:flex;gap:14px;font-size:.61rem;margin-top:2px}
+.pax-sub-item{color:var(--muted)}
+.pax-sub-item b{color:var(--text2);font-weight:500}
+
+/* T1/T2 blocks */
+.t-block{
+  padding:8px 20px;border-right:1px solid var(--border);display:flex;
+  flex-direction:column;justify-content:center;gap:3px;flex-shrink:0;min-width:130px;
+}
+.t-block:last-child{border-right:none;padding-right:18px}
+.t-lbl{font-size:.59rem;color:var(--muted);letter-spacing:.07em;font-weight:600;text-transform:uppercase}
+.t-arrow{font-size:.59rem;display:flex;align-items:center;gap:3px;margin-top:1px}
+.t-arrow::before{content:'↑';font-size:.63rem;font-weight:700}
+.t-arrow-c{color:var(--text2)}.t-arrow-c::before{color:var(--accent)}
+.t-arrow-o{color:var(--text2)}.t-arrow-o::before{color:var(--o)}
+.t-val{font-size:1.45rem;font-weight:700;line-height:1.2}
+.t-val-c{color:var(--accent)}
+.t-val-o{color:var(--o)}
+.t-sub{font-size:.61rem;color:var(--muted);margin-top:2px}
+.t-sub b{font-weight:500;color:var(--text2)}
+
+/* ── CHART PANEL (136px) ── */
+#chart-panel{
+  height:136px;flex-shrink:0;background:var(--card2);
+  border-bottom:1px solid var(--border);display:flex;flex-direction:column;
+}
+#chart-row{
+  display:flex;align-items:center;justify-content:flex-end;
+  padding:5px 14px;font-size:.68rem;flex-shrink:0;gap:16px;
+}
+#chart-peak-info{display:flex;gap:16px;color:var(--muted)}
+#chart-wrap{flex:1;min-height:0;padding:0 10px 6px;position:relative}
+#paxChart{width:100%!important;height:100%!important}
+
+/* ── TABS ── */
+#tabs{
+  display:flex;background:var(--bg2);border-bottom:1px solid var(--border);
+  flex-shrink:0;overflow-x:auto;
+}
+#tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  padding:10px 20px;border:none;background:none;color:var(--muted);cursor:pointer;
+  font-size:.8rem;white-space:nowrap;border-bottom:2px solid transparent;
+  font-family:inherit;font-weight:500;transition:.15s;letter-spacing:.01em;
+}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--a-hover)}
+
+/* ── CONTENT ── */
+#content{flex:1;overflow-y:auto;background:var(--bg)}
+#content::-webkit-scrollbar{width:5px}
+#content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.tab-panel{display:none;padding:14px}
+.tab-panel.active{display:block}
+
+/* ── SUB-BTN ── */
+.sub-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.sub-btn{
+  padding:5px 15px;border-radius:20px;border:1px solid var(--border);background:none;
+  color:var(--muted);cursor:pointer;font-size:.72rem;font-family:inherit;
+  font-weight:500;transition:.12s;
+}
+.sub-btn:hover{border-color:var(--accent);color:var(--text)}
+.sub-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ── BADGE ── */
+.badge{
+  display:inline-block;padding:2px 7px;border-radius:8px;
+  font-size:.67rem;font-weight:600;white-space:nowrap;
+}
+.bg{background:rgba(34,197,94,.15);color:#22c55e}
+.by{background:rgba(245,158,11,.15);color:#f59e0b}
+.bo{background:rgba(249,115,22,.15);color:#f97316}
+.br{background:rgba(239,68,68,.15);color:#ef4444}
+.bb{background:rgba(59,130,246,.15);color:#3b82f6}
+.bm{background:rgba(168,85,247,.15);color:#a855f7}
+[data-theme="light"] .bg{color:#15803d}[data-theme="light"] .by{color:#b45309}
+[data-theme="light"] .bo{color:#c2410c}[data-theme="light"] .br{color:#b91c1c}
+[data-theme="light"] .bb{color:#1d4ed8}[data-theme="light"] .bm{color:#7e22ce}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.76rem}
+th{
+  background:var(--card2);color:var(--muted);padding:7px 10px;text-align:left;
+  font-weight:600;border-bottom:1px solid var(--border);white-space:nowrap;
+  font-size:.7rem;letter-spacing:.03em;
+}
+td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--a-hover)}
+.rate-bar{height:4px;background:var(--border);border-radius:2px;margin-top:3px;overflow:hidden;min-width:60px}
+.rate-fill{height:100%;border-radius:2px}
+
+/* ── SECTION HEADER ── */
+.sec-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0 7px;border-bottom:1px solid var(--border);margin-bottom:10px;
+}
+.sec-hdr h3{font-size:.88rem;font-weight:700;color:var(--text)}
+.sec-hdr span{font-size:.68rem;color:var(--muted)}
+
+/* ── PARKING ── */
+.park-term-section{margin-bottom:20px}
+.park-term-hdr{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;
+  padding:10px 14px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--rc);box-shadow:var(--sh-sm);
+}
+.park-term-hdr h3{font-size:.9rem;font-weight:700;color:var(--text)}
+.park-term-total{font-size:.7rem;color:var(--muted)}
+.park-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.park-sum-box{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:10px;text-align:center;box-shadow:var(--sh-sm);
+}
+.park-sum-lbl{font-size:.62rem;color:var(--muted);margin-bottom:3px;font-weight:500}
+.park-sum-val{font-size:1.15rem;font-weight:700}
+.park-sum-sub{font-size:.61rem;color:var(--muted)}
+.park-cat-hdr{
+  padding:5px 0 4px 8px;font-size:.72rem;font-weight:700;color:var(--text2);
+  border-left:3px solid var(--accent);margin:9px 0 5px;
+}
+.prg{color:var(--g)}.pry{color:var(--y)}.pro{color:var(--o)}.prr{color:var(--r)}
+
+/* ── FLIGHT BOARD ── */
+.flt-controls{display:flex;align-items:center;gap:7px;margin-bottom:10px;flex-wrap:wrap}
+.flt-search{
+  background:var(--card);border:1px solid var(--border);color:var(--text);
+  padding:6px 11px;border-radius:var(--rc);font-size:.74rem;width:200px;
+  outline:none;font-family:inherit;transition:.12s;
+}
+.flt-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--a-dim)}
+.flt-count{font-size:.67rem;color:var(--muted);margin-bottom:7px}
+/* terminal filter tabs */
+.flt-term-tabs{display:flex;gap:4px;flex-shrink:0}
+.flt-term-btn{
+  padding:4px 12px;border-radius:var(--rb);border:1px solid var(--border);background:none;
+  color:var(--muted);cursor:pointer;font-size:.72rem;font-family:inherit;
+  transition:.12s;font-weight:500;
+}
+.flt-term-btn:hover{border-color:var(--accent);color:var(--text)}
+.flt-term-btn.active{background:var(--a-dim);border-color:var(--accent);color:var(--accent)}
+/* terminal board v2 */
+.flt-board2{display:flex;gap:8px;align-items:flex-start}
+.flt-col2{
+  flex:1;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--rc);overflow:hidden;min-width:0;box-shadow:var(--sh-sm);
+}
+.flt-col2.single{flex:none;width:100%}
+.flt-col2-hdr{
+  padding:8px 12px;background:var(--card2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;
+}
+.flt-col2-label{font-size:.8rem;font-weight:700;color:var(--accent);white-space:nowrap}
+.flt-sec-tabs{display:flex;gap:3px;flex-wrap:wrap}
+.flt-sec-btn{
+  padding:2px 7px;border-radius:10px;border:1px solid var(--border);background:none;
+  color:var(--muted);cursor:pointer;font-size:.6rem;font-family:inherit;
+  transition:.12s;white-space:nowrap;
+}
+.flt-sec-btn.active{background:var(--a-dim);border-color:var(--accent);color:var(--accent)}
+.flt-col2-body{overflow-y:auto;max-height:calc(100vh - 460px)}
+.flt-col2-body::-webkit-scrollbar{width:3px}
+.flt-col2-body::-webkit-scrollbar-thumb{background:var(--border)}
+/* flight card grid */
+.flt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:8px}
+.flt-col2.single .flt-grid{grid-template-columns:repeat(5,1fr)}
+.flt-card2{
+  background:var(--card2);border:1px solid var(--border);border-radius:var(--rb);
+  padding:6px 7px;cursor:pointer;transition:.12s;
+}
+.flt-card2:hover{background:var(--a-hover);border-color:var(--accent)}
+.flt-c2-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:3px;gap:2px}
+.flt-c2-time{font-size:.76rem;font-weight:600;color:var(--text);line-height:1.2;flex-shrink:0}
+.flt-c2-time.delayed{color:var(--o)}
+.flt-c2-flt{font-size:.72rem;font-weight:700;color:var(--accent);margin-bottom:1px}
+.flt-c2-dest{font-size:.68rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}
+.flt-c2-air{font-size:.61rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.flt-c2-info{font-size:.58rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* For non-3-col modes (bag/close) */
+.flt-table-wrap{overflow-x:auto}
+/* legacy 3-col (bag/close fallback) */
+.flt-board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.flt-col{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  min-height:200px;display:flex;flex-direction:column;box-shadow:var(--sh-sm);
+}
+.flt-col-hdr{
+  padding:8px 11px;background:var(--card2);border-bottom:1px solid var(--border);
+  border-radius:var(--rc) var(--rc) 0 0;font-size:.76rem;font-weight:700;
+  color:var(--accent);display:flex;align-items:center;justify-content:space-between;
+}
+.flt-col-cnt{font-size:.66rem;font-weight:400;color:var(--muted)}
+.flt-col-body{flex:1;overflow-y:auto;max-height:calc(100vh - 380px)}
+.flt-col-body::-webkit-scrollbar{width:3px}
+.flt-col-body::-webkit-scrollbar-thumb{background:var(--border)}
+.flt-card{padding:8px 11px;border-bottom:1px solid var(--border);cursor:pointer;transition:.1s}
+.flt-card:last-child{border-bottom:none}
+.flt-card:hover{background:var(--a-hover)}
+.flt-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.flt-num{font-size:.82rem;font-weight:700;color:var(--accent)}
+.flt-time{font-size:.8rem;font-weight:600;color:var(--text)}
+.flt-dest{font-size:.75rem;color:var(--text);margin-bottom:1px}
+.flt-dest small{font-size:.62rem;color:var(--muted)}
+.flt-air{font-size:.65rem;color:var(--muted);margin-bottom:3px}
+.flt-btm{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:.64rem;color:var(--muted)}
+
+/* ── CONGESTION ── */
+.wait-good{color:var(--g)}.wait-ok{color:var(--y)}.wait-busy{color:var(--o)}.wait-jam{color:var(--r)}
+.cong-section{
+  margin-bottom:14px;border:1px solid var(--border);border-radius:var(--rc);
+  overflow:hidden;background:var(--card);box-shadow:var(--sh-sm);
+}
+.cong-sec-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border);
+}
+.cong-sec-hdr h3{font-size:.88rem;font-weight:700;color:var(--text)}
+.cong-sec-badge{font-size:.68rem;color:var(--muted)}
+.cong-stat-strip{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border)}
+.cong-stat-card{padding:10px 16px;border-right:1px solid var(--border)}
+.cong-stat-card:last-child{border-right:none}
+.cong-stat-lbl{font-size:.62rem;color:var(--muted);margin-bottom:4px;font-weight:500;letter-spacing:.03em}
+.cong-stat-val{font-size:1.08rem;font-weight:700}
+.cong-stat-sub{font-size:.61rem;color:var(--muted);margin-top:3px}
+/* arrival gate expand */
+.arr-gate-hdr td{background:var(--card2);cursor:pointer;padding:8px 12px;font-size:.77rem}
+.arr-gate-hdr:hover td{background:var(--a-hover)}
+.arr-expand-row td{
+  padding:5px 10px 5px 28px;background:var(--card);
+  font-size:.72rem;border-bottom:1px solid var(--border);
+}
+.arr-expand-row:last-child td{border-bottom:none}
+
+/* ── TRANSPORT ── */
+.tr-tabs{display:flex;gap:6px;margin-bottom:12px}
+.tr-btn{
+  padding:8px 20px;border-radius:var(--rb);border:1px solid var(--border);background:none;
+  color:var(--muted);cursor:pointer;font-size:.78rem;font-family:inherit;
+  transition:.12s;font-weight:500;
+}
+.tr-btn:hover{border-color:var(--accent);color:var(--text)}
+.tr-btn.active{background:var(--a-dim);border-color:var(--accent);color:var(--accent)}
+/* AREX */
+.arex-map{
+  display:flex;align-items:center;overflow-x:auto;padding:12px 10px;gap:0;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--rc);margin-bottom:10px;box-shadow:var(--sh-sm);
+}
+.arex-stn{display:flex;flex-direction:column;align-items:center;min-width:68px;cursor:pointer}
+.arex-dot{
+  width:12px;height:12px;border-radius:50%;background:var(--border);
+  border:2px solid var(--muted);margin:7px 0;z-index:1;transition:.15s;
+}
+.arex-stn:hover .arex-dot,.arex-stn.sel .arex-dot{background:var(--accent);border-color:var(--accent)}
+.arex-stn-name{font-size:.58rem;color:var(--muted);text-align:center;max-width:63px;word-break:keep-all;line-height:1.2;transition:.1s}
+.arex-stn.sel .arex-stn-name{color:var(--accent)}
+.arex-line{flex:1;height:2px;background:var(--border);min-width:8px}
+.arex-tbl-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding:0 2px}
+.arex-stn-sel{font-size:.88rem;font-weight:700;color:var(--text)}
+.arex-tbl-meta{font-size:.68rem;color:var(--muted)}
+.arex-hour-row{display:flex;gap:0;padding:4px 0;border-bottom:1px solid var(--border);align-items:baseline}
+.arex-hour-row:last-child{border-bottom:none}
+.arex-hr{font-size:.7rem;color:var(--muted);min-width:30px;flex-shrink:0}
+.arex-mins{display:flex;gap:5px;flex-wrap:wrap}
+.arex-min{font-size:.72rem;color:var(--text);cursor:pointer}
+.arex-min.dirc{color:var(--o);font-weight:600}
+.arex-min.now{background:var(--accent);color:#fff;border-radius:3px;padding:0 3px}
+/* SHUTTLE */
+.shuttle-route{
+  margin-bottom:9px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--rc);padding:11px;box-shadow:var(--sh-sm);
+}
+.shuttle-route-id{font-size:.76rem;font-weight:700;color:var(--accent);margin-bottom:6px}
+.shuttle-hours{display:flex;flex-direction:column;gap:2px}
+
+/* ── FACILITIES ── */
+.fac-search-row{display:flex;gap:8px;margin-bottom:10px}
+.fac-search{
+  flex:1;background:var(--card);border:1px solid var(--border);color:var(--text);
+  padding:8px 13px;border-radius:var(--rc);font-size:.78rem;outline:none;
+  font-family:inherit;transition:.12s;
+}
+.fac-search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--a-dim)}
+.fac-filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.fac-sep{width:1px;height:18px;background:var(--border)}
+.fac-count{font-size:.68rem;color:var(--muted);margin-bottom:7px}
+.fac-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.fac-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:11px;transition:.12s;box-shadow:var(--sh-sm);
+}
+.fac-card:hover{border-color:var(--accent);box-shadow:0 4px 14px var(--a-dim)}
+.fac-card-name{font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:5px}
+.fac-tags{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:5px}
+.fac-tag{display:inline-block;padding:2px 6px;border-radius:5px;font-size:.61rem;background:var(--a-dim);color:var(--accent)}
+.fac-tag-floor{background:rgba(34,197,94,.12);color:var(--g)}
+.fac-tag-duty{background:rgba(168,85,247,.12);color:#a855f7}
+.fac-tag-prod{background:var(--bg2);color:var(--text2)}
+.fac-loc{font-size:.68rem;color:var(--muted);line-height:1.5;margin-bottom:2px}
+.fac-loc::before{content:'📍 ';font-size:.6rem}
+.fac-time{font-size:.66rem;color:var(--muted)}
+.fac-time::before{content:'🕐 ';font-size:.6rem}
+.fac-tel{font-size:.66rem;color:var(--b)}
+.fac-tel::before{content:'📞 ';font-size:.6rem}
+.fac-prods{display:flex;gap:3px;flex-wrap:wrap;margin-top:5px}
+.fac-pager{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px;font-size:.75rem;color:var(--muted)}
+.fac-pager button{
+  background:var(--card);border:1px solid var(--border);color:var(--text);
+  padding:5px 14px;border-radius:var(--rb);cursor:pointer;font-family:inherit;transition:.12s;
+}
+.fac-pager button:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── SPOTS ── */
+.spot-summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:7px;margin-bottom:10px}
+.spot-box{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:8px;text-align:center;box-shadow:var(--sh-sm);
+}
+.spot-zone{font-size:.63rem;color:var(--muted);font-weight:500}
+.spot-rate{font-size:1.05rem;font-weight:700}
+.spot-cnt{font-size:.61rem;color:var(--muted)}
+
+/* ── TAXI ── */
+.taxi-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.taxi-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:11px;box-shadow:var(--sh-sm);
+}
+.taxi-name{font-size:.73rem;font-weight:600;color:var(--text);margin-bottom:4px}
+.taxi-cnt{font-size:1.35rem;font-weight:700;color:var(--accent)}
+.taxi-wait{font-size:.63rem;color:var(--muted);margin-top:3px}
+.taxi-loc{font-size:.63rem;color:var(--muted);margin-top:2px}
+
+/* ── UTILITY ── */
+.hi{color:var(--accent);font-weight:700}
+.hi-b{color:var(--b);font-weight:600}
+[data-theme="light"] .hi-b{color:#1d4ed8}
+.hi-w{color:var(--text);font-weight:700}
+
+/* ── MISC ── */
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:14px;margin-bottom:10px;box-shadow:var(--sh-sm);
+}
+.loading{text-align:center;padding:32px;color:var(--muted);font-size:.78rem}
+.err{
+  padding:12px;color:var(--r);background:rgba(239,68,68,.08);
+  border:1px solid rgba(239,68,68,.2);border-radius:var(--rb);font-size:.75rem;
+}
+.notice-bar{
+  background:var(--card2);border-bottom:1px solid var(--border);font-size:.66rem;
+  padding:3px 14px;overflow:hidden;white-space:nowrap;flex-shrink:0;color:var(--muted);
+}
+.notice-inner{display:inline-block;animation:scroll 60s linear infinite}
+@keyframes scroll{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <a href="index.html" id="logo">ICN Airport NOW</a>
+  <div id="topbar-right">
+    <span id="hdr-time">--:--</span>
+    <span id="hdr-date"></span>
+    <button id="theme-toggle" onclick="toggleTheme()">☀ 라이트</button>
+  </div>
+</div>
+
+<!-- INFO STRIP -->
+<div id="info-strip">
+  <!-- Weather -->
+  <div id="wx-block">
+    <div id="wx-main">
+      <span id="wx-icon">🌤</span>
+      <div id="wx-right">
+        <span id="w-temp">--°C</span>
+        <span id="w-desc">--</span>
+      </div>
+    </div>
+    <div id="wx-detail-grid">
+      <div class="wxd-item">최저/최고 <b id="w-hi">--</b></div>
+      <div class="wxd-item">습도 <b id="w-hum">--%</b></div>
+      <div class="wxd-item">PM2.5 <b id="w-pm25">--μg</b></div>
+      <div class="wxd-item">풍속 <b id="w-wind">--</b></div>
+      <div class="wxd-item">강수 <b id="w-prec">--</b></div>
+      <div class="wxd-item">PM10 <b id="w-pm10">--μg</b></div>
+    </div>
+  </div>
+
+  <!-- Pax center -->
+  <div id="pax-center">
+    <div id="pax-nav-row">
+      <button onclick="shiftDay(-1)">‹</button>
+      <span id="pax-period-lbl">10시 기준</span>
+      <div id="ct-switch">
+        <button class="ct-btn active" onclick="setChartT('all',this)">전체</button>
+        <button class="ct-btn" onclick="setChartT('T1',this)">T1</button>
+        <button class="ct-btn" onclick="setChartT('T2',this)">T2</button>
+      </div>
+      <span id="pax-date-lbl" id="chart-date-lbl">오늘</span>
+      <button onclick="shiftDay(1)">›</button>
+    </div>
+    <div id="pax-data-row">
+      <div class="pax-col">
+        <span class="pax-arrow">여객예측</span>
+        <span class="pax-total-val" id="ph-total">-</span>
+        <div class="pax-sub-row">
+          <span class="pax-sub-item">피크 <b id="ph-pk-lbl">-</b></span>
+          <span class="pax-sub-item">예약 <b id="ph-res-lbl">-</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- T1 block -->
+  <div class="t-block">
+    <div class="t-lbl">T1</div>
+    <div class="t-arrow t-arrow-c">여객예측</div>
+    <div class="t-val t-val-c" id="ph-t1">-</div>
+    <div class="t-sub" id="ph-t1-pk"></div>
+  </div>
+
+  <!-- T2 block -->
+  <div class="t-block">
+    <div class="t-lbl">T2</div>
+    <div class="t-arrow t-arrow-o">여객예측</div>
+    <div class="t-val t-val-o" id="ph-t2">-</div>
+    <div class="t-sub" id="ph-t2-pk"></div>
+  </div>
+</div>
+
+<!-- CHART PANEL (always visible) -->
+<div id="chart-panel">
+  <div id="chart-row">
+    <div id="chart-peak-info">
+      <span>T1 <b id="hs-t1-pk" style="color:var(--accent)"></b></span>
+      <span>T2 <b id="hs-t2-pk" style="color:var(--o)"></b></span>
+    </div>
+  </div>
+  <div id="chart-wrap"><canvas id="paxChart"></canvas></div>
+</div>
+
+<div class="notice-bar"><span class="notice-inner" id="notice-text">인천국제공항 실시간 정보 서비스</span></div>
+
+<nav id="tabs">
+  <button class="tab-btn active" onclick="showTab('entry',this)">진출입 현황</button>
+  <button class="tab-btn" onclick="showTab('parking',this)">주차장 현황</button>
+  <button class="tab-btn" onclick="showTab('transport',this)">셔틀·철도 시간표</button>
+  <button class="tab-btn" onclick="showTab('congestion',this)">출·입국장 현황</button>
+  <button class="tab-btn" onclick="showTab('flights',this)">항공편 현황</button>
+  <button class="tab-btn" onclick="showTab('facilities',this)">시설정보</button>
+</nav>
+
+<div id="content">
+
+<!-- ① 진출입 현황 -->
+<div id="tab-entry" class="tab-panel active">
+  <div class="sub-tabs">
+    <button class="sub-btn active" onclick="setEntryDir('arr',this)">도착편</button>
+    <button class="sub-btn" onclick="setEntryDir('dep',this)">출발편</button>
+  </div>
+  <div id="entry-area"><div class="loading">로딩 중...</div></div>
+</div>
+
+<!-- ② 주차장 현황 -->
+<div id="tab-parking" class="tab-panel">
+  <div id="park-area"><div class="loading">로딩 중...</div></div>
+  <div class="card" style="margin-top:6px">
+    <div class="hi-w" style="font-size:.82rem;margin-bottom:8px">T1 주차면 현황 <small style="font-size:.65rem;color:var(--muted);font-weight:400">(실시간·T1 전용)</small> <span id="spot-upd" style="font-size:.6rem;color:var(--muted);float:right"></span></div>
+    <div id="spot-area"><div class="loading">로딩 중...</div></div>
+  </div>
+</div>
+
+<!-- ③ 셔틀·철도 -->
+<div id="tab-transport" class="tab-panel">
+  <div class="tr-tabs">
+    <button class="tr-btn active" onclick="setTrans('shuttle',this)">셔틀버스</button>
+    <button class="tr-btn" onclick="setTrans('arex',this)">공항철도</button>
+    <button class="tr-btn" onclick="setTrans('taxi',this)">택시</button>
+  </div>
+  <div id="trans-shuttle">
+    <div class="sub-tabs">
+      <button class="sub-btn active" onclick="setShuttleMode('time',this)">시간표</button>
+      <button class="sub-btn" onclick="setShuttleMode('pred',this)">도착 예측</button>
+    </div>
+    <div id="shuttle-area"><div class="loading">로딩 중...</div></div>
+  </div>
+  <div id="trans-arex" style="display:none">
+    <div class="sub-tabs">
+      <button class="sub-btn active" onclick="setArexDir('to',this)">공항행</button>
+      <button class="sub-btn" onclick="setArexDir('from',this)">서울행</button>
+    </div>
+    <div class="arex-map" id="arex-map"></div>
+    <div id="arex-area"><div class="loading">로딩 중...</div></div>
+  </div>
+  <div id="trans-taxi" style="display:none">
+    <div id="taxi-area"><div class="loading">로딩 중...</div></div>
+  </div>
+</div>
+
+<!-- ④ 출·입국장 -->
+<div id="tab-congestion" class="tab-panel">
+  <div id="cong-dep1-area"><div class="loading">로딩 중...</div></div>
+  <div id="cong-arr1-area"><div class="loading">로딩 중...</div></div>
+  <div id="cong-dep2-area"><div class="loading">로딩 중...</div></div>
+  <div id="cong-arr2-area"><div class="loading">로딩 중...</div></div>
+</div>
+
+<!-- ⑤ 항공편 현황 -->
+<div id="tab-flights" class="tab-panel">
+  <div class="flt-controls">
+    <div class="sub-tabs" style="margin:0">
+      <button class="sub-btn active" onclick="setFltDir('dep',this)">출발편</button>
+      <button class="sub-btn" onclick="setFltDir('arr',this)">도착편</button>
+      <button class="sub-btn" onclick="setFltDir('bag',this)">수하물</button>
+      <button class="sub-btn" onclick="setFltDir('close',this)">운항마감</button>
+    </div>
+    <div class="flt-term-tabs" id="flt-term-tabs">
+      <button class="flt-term-btn active" onclick="setFltTerm('all',this)">전체</button>
+      <button class="flt-term-btn" onclick="setFltTerm('P01',this)">T1</button>
+      <button class="flt-term-btn" onclick="setFltTerm('P03',this)">탑승동</button>
+      <button class="flt-term-btn" onclick="setFltTerm('P02',this)">T2</button>
+    </div>
+    <input class="flt-search" id="flt-q" placeholder="편명·항공기·도시명 검색" oninput="renderFlights()">
+  </div>
+  <div class="flt-count" id="flt-count"></div>
+  <div id="flt-area"><div class="loading">로딩 중...</div></div>
+</div>
+
+<!-- ⑥ 시설정보 -->
+<div id="tab-facilities" class="tab-panel">
+  <div class="sub-tabs">
+    <button class="sub-btn active" onclick="setFacTab('comm',this)">상업시설</button>
+    <button class="sub-btn" onclick="setFacTab('airline',this)">취항 항공사</button>
+    <button class="sub-btn" onclick="setFacTab('noise',this)">소음 정보</button>
+  </div>
+
+  <div id="fac-comm">
+    <div class="fac-search-row">
+      <input class="fac-search" id="fac-q" placeholder="시설명 또는 취급품목 검색 (예: 스타벅스, 환전, 면세점...)" oninput="_facPage=1;renderFac()">
+    </div>
+    <div class="fac-filter-row" id="fac-term-btns">
+      <button class="sub-btn active" onclick="setFacFilter('term','all',this)">전체</button>
+      <button class="sub-btn" onclick="setFacFilter('term','T1',this)">T1</button>
+      <button class="sub-btn" onclick="setFacFilter('term','탑승동',this)">탑승동</button>
+      <button class="sub-btn" onclick="setFacFilter('term','T2',this)">T2</button>
+      <div class="fac-sep"></div>
+      <button class="sub-btn active" onclick="setFacFilter('duty','all',this)" id="fac-duty-btns-all">전체</button>
+      <button class="sub-btn" onclick="setFacFilter('duty','면세',this)">면세</button>
+      <button class="sub-btn" onclick="setFacFilter('duty','일반',this)">일반</button>
+      <div class="fac-sep"></div>
+      <button class="sub-btn active" onclick="setFacFilter('floor','all',this)" id="fac-floor-btns-all">전체</button>
+      <button class="sub-btn" onclick="setFacFilter('floor','B',this)">B1</button>
+      <button class="sub-btn" onclick="setFacFilter('floor','1F',this)">1F</button>
+      <button class="sub-btn" onclick="setFacFilter('floor','2F',this)">2F</button>
+      <button class="sub-btn" onclick="setFacFilter('floor','3F',this)">3F</button>
+      <button class="sub-btn" onclick="setFacFilter('floor','4F',this)">4F</button>
+      <button class="sub-btn" onclick="setFacFilter('floor','5F',this)">5F</button>
+    </div>
+    <div class="fac-count" id="fac-count"></div>
+    <div class="fac-grid" id="fac-grid"><div class="loading">로딩 중...</div></div>
+    <div class="fac-pager" id="fac-pager"></div>
+  </div>
+
+  <div id="fac-airline" style="display:none">
+    <div class="fac-search-row">
+      <input class="fac-search" id="airline-q" placeholder="항공사명 검색..." oninput="renderAirlines()">
+    </div>
+    <div class="fac-grid" id="airline-grid"><div class="loading">로딩 중...</div></div>
+  </div>
+
+  <div id="fac-noise" style="display:none">
+    <div class="loading" style="color:var(--muted);padding:40px">소음 정보는 현재 API에서 제공되지 않습니다.</div>
+  </div>
+</div>
+
+</div><!-- #content -->
+
+<script>
+// ════════════════════════════════
+//  CORE
+// ════════════════════════════════
+async function api(path, params={}) {
+  const p = new URLSearchParams({numOfRows:500, ...params});
+  try {
+    const r = await fetch(`/api/proxy?path=${encodeURIComponent(path)}&${p}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  } catch(e) { console.warn('[API]', path, e.message); return null; }
+}
+function items(data) {
+  const b = data?.response?.body;
+  if (!b) return [];
+  const i = b.items;
+  if (!i) return [];
+  if (Array.isArray(i)) return i;
+  if (i.item !== undefined) return Array.isArray(i.item) ? i.item : [i.item];
+  return [];
+}
+function el(id) { return document.getElementById(id); }
+function html(id, h) { const e=el(id); if(e) e.innerHTML=h; }
+function spin(id) { html(id,'<div class="loading">⏳ 로딩 중...</div>'); }
+function err(id, msg) { html(id,`<div class="err">⚠ ${msg||'데이터를 불러올 수 없습니다'}</div>`); }
+
+function fmtTime(s) {
+  if (!s) return '';
+  s = String(s).trim();
+  if (s.length >= 12) return s.slice(8,10)+':'+s.slice(10,12);
+  if (s.length === 4) return s.slice(0,2)+':'+s.slice(2,4);
+  return s;
+}
+
+function badge(s) {
+  s = (s||'').trim();
+  const m = {'출발':'bb','도착':'bg','지연':'by','결항':'br','탑승중':'bo','게이트오픈':'bg',
+    '수하물수취':'bb','입국장도착':'bg','운항취소':'br','예정':'bm'};
+  const cls = m[s] || 'bb';
+  return s ? `<span class="badge ${cls}">${s}</span>` : '';
+}
+
+function prClass(r) {
+  r=parseFloat(r)||0;
+  return r<60?'prg':r<80?'pry':r<95?'pro':'prr';
+}
+function prBar(r) {
+  const cls = prClass(r);
+  return `<div class="rate-bar"><div class="rate-fill ${cls}" style="width:${Math.min(r,100)}%"></div></div>`;
+}
+
+// State
+let _tab='entry', _entryDir='arr', _fltDir='dep', _fltCache=[];
+let _fltTermView='all', _fltSec={P01:'all',P02:'all',P03:'all'};
+let _transTab='shuttle', _shuttleMode='time', _arexData=[], _arexStnList=[], _arexSelIdx=0, _arexDir='to';
+let _congTab='dep';
+let _facTab='comm', _facCache=[], _airlineCache=[], _facFilters={term:'all',duty:'all',floor:'all'}, _facPage=1;
+let _chartDay=0, _chartMode='all', _paxChart=null;
+
+const WMO={0:'맑음',1:'대체로 맑음',2:'구름 많음',3:'흐림',45:'안개',51:'이슬비',61:'비',63:'비',65:'강한 비',71:'눈',73:'눈',80:'소나기',95:'뇌우'};
+const STN={'010':'서울역','020':'공덕역','030':'홍대입구역','040':'디지털미디어시티역','050':'김포공항역','060':'계양역','070':'검암역','077':'청라국제도시역','080':'영종역','090':'공항화물청사역','100':'인천공항T1역','110':'인천공항T2역'};
+const STOP={'10000140':'제1터미널','10000141':'제2터미널','10000142':'탑승동','10000143':'교통센터','10000144':'장기주차장'};
+const TERM={P01:'T1',P02:'T2',P03:'탑승동'};
+
+// ════════════════════════════════
+//  THEME
+// ════════════════════════════════
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('icn-theme', next);
+  const btn = el('theme-toggle');
+  if(btn) btn.textContent = next === 'light' ? '🌙 다크' : '☀ 라이트';
+  loadPaxChart();
+}
+
+// ════════════════════════════════
+//  CLOCK
+// ════════════════════════════════
+function tickClock() {
+  const n=new Date();
+  const days=['일','월','화','수','목','금','토'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const dayEn=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  html('hdr-time',n.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}));
+  html('hdr-date',`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')} (${dayEn[n.getDay()]})`);
+  // update pax-date-lbl with korean date
+  const paxLbl=el('pax-date-lbl');
+  if(paxLbl&&_chartDay===0) paxLbl.textContent=`${n.getMonth()+1}월 ${n.getDate()}일 (${days[n.getDay()]}) 오늘`;
+}
+setInterval(tickClock,1000); tickClock();
+
+// ════════════════════════════════
+//  WEATHER
+// ════════════════════════════════
+async function loadWeather() {
+  try {
+    const wxUrl='https://api.open-meteo.com/v1/forecast?latitude=37.46&longitude=126.44&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FSeoul';
+    const aqUrl='https://air-quality-api.open-meteo.com/v1/air-quality?latitude=37.46&longitude=126.44&current=pm10,pm2_5&timezone=Asia%2FSeoul';
+    const [w,aq]=await Promise.all([
+      fetch(`/api/proxy?_url=${encodeURIComponent(wxUrl)}`).then(r=>r.json()),
+      fetch(`/api/proxy?_url=${encodeURIComponent(aqUrl)}`).then(r=>r.json())
+    ]);
+    const c=w.current, d=w.daily;
+    html('w-temp',(c.temperature_2m??'--').toFixed(1)+'°C');
+    html('w-desc',WMO[c.weather_code]||'--');
+    html('w-hi',`${(d?.temperature_2m_min?.[0]??'--').toFixed(0)}° / ${(d?.temperature_2m_max?.[0]??'--').toFixed(0)}°`);
+    html('w-wind',(c.wind_speed_10m??'--').toFixed(1)+'m/s');
+    html('w-hum',(c.relative_humidity_2m??'--')+'%');
+    html('w-prec',c.precipitation>0?(c.precipitation.toFixed(1)+'mm'):'없음');
+    html('w-pm25',(aq?.current?.pm2_5??'--').toFixed(0)+' μg');
+    html('w-pm10',(aq?.current?.pm10??'--').toFixed(0)+' μg');
+  } catch(e){}
+}
+
+// ════════════════════════════════
+//  PASSENGER CHART
+// ════════════════════════════════
+function fmtD(d){return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`}
+
+async function loadPaxChart() {
+  try {
+    const data=await api('passgrAnncmt/getPassgrAnncmt',{numOfRows:1000});
+    const list=items(data);
+    if(!list.length) return;
+    const base=new Date();
+    const dayStr=_chartDay===0?fmtD(base):fmtD(new Date(base.getTime()+86400000));
+    const dayLbl=_chartDay===0?'오늘':'내일';
+    const t1h=new Array(24).fill(0), t2h=new Array(24).fill(0);
+    list.forEach(r=>{
+      if((r.adate||'')!==dayStr) return;
+      const hr=parseInt((r.atime||'').split('_')[0]);
+      if(isNaN(hr)||hr<0||hr>23) return;
+      t1h[hr]=parseFloat(r.t1egsum1||0)+parseFloat(r.t1dgsum1||0);
+      t2h[hr]=parseFloat(r.t2egsum1||0)+parseFloat(r.t2dgsum2||0);
+    });
+    const t1tot=t1h.reduce((a,b)=>a+b,0), t2tot=t2h.reduce((a,b)=>a+b,0);
+    const t1pk=Math.max(...t1h), t2pk=Math.max(...t2h);
+    const t1pkH=t1h.indexOf(t1pk), t2pkH=t2h.indexOf(t2pk);
+    const tot=t1tot+t2tot;
+    html('ph-total',tot>0?tot.toLocaleString():'-');
+    html('ph-t1',t1tot>0?t1tot.toLocaleString():'-');
+    html('ph-t2',t2tot>0?t2tot.toLocaleString():'-');
+    html('ph-t1-pk',t1pk>0?`피크 ${t1pkH}시 ${t1pk.toLocaleString()}명`:'');
+    html('ph-t2-pk',t2pk>0?`피크 ${t2pkH}시 ${t2pk.toLocaleString()}명`:'');
+    html('ph-pk-lbl',t1pk>0?`${t1pkH}시 ${t1pk.toLocaleString()}`:'');
+    html('hs-t1-pk',t1pk>0?`피크 ${t1pkH}시 · ${t1pk.toLocaleString()}명`:'');
+    html('hs-t2-pk',t2pk>0?`피크 ${t2pkH}시 · ${t2pk.toLocaleString()}명`:'');
+    // update date label
+    const n=new Date(); const days=['일','월','화','수','목','금','토'];
+    const paxLbl=el('pax-date-lbl');
+    if(paxLbl) paxLbl.textContent=_chartDay===0?`${n.getMonth()+1}월 ${n.getDate()}일 (${days[n.getDay()]}) 오늘`:'내일';
+    // render chart (always visible)
+    const nowH=new Date().getHours();
+    const labels=Array.from({length:24},(_,i)=>i+'시');
+    const datasets=[];
+    if(_chartMode!=='T2') datasets.push({label:'T1',data:t1h,borderColor:'#00c8ff',backgroundColor:'rgba(0,200,255,.08)',borderWidth:2,tension:.4,fill:true,pointRadius:t1h.map((_,i)=>i===t1pkH?4:i===nowH?3:0),pointBackgroundColor:'#00c8ff'});
+    if(_chartMode!=='T1') datasets.push({label:'T2',data:t2h,borderColor:'#f97316',backgroundColor:'rgba(249,115,22,.07)',borderWidth:2,tension:.4,fill:true,pointRadius:t2h.map((_,i)=>i===t2pkH?4:i===nowH?3:0),pointBackgroundColor:'#f97316'});
+    const ctx=el('paxChart').getContext('2d');
+    if(_paxChart) _paxChart.destroy();
+    const isLight=document.documentElement.getAttribute('data-theme')==='light';
+    const gc=isLight?'rgba(0,0,0,.07)':'rgba(255,255,255,.06)';
+    const tc=isLight?'#8090b0':'#4a6080';
+    _paxChart=new Chart(ctx,{type:'line',data:{labels,datasets},options:{
+      responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{
+        backgroundColor:isLight?'#fff':'#0d1628',
+        borderColor:isLight?'#ccd5e8':'#1f2d48',borderWidth:1,
+        titleColor:isLight?'#0d1421':'#d0dbf5',bodyColor:isLight?'#677296':'#8aa4c6',
+        padding:8,cornerRadius:8,
+        callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y.toLocaleString()}명`}
+      }},
+      scales:{
+        x:{grid:{color:gc},ticks:{color:tc,font:{size:9}},border:{color:'transparent'}},
+        y:{grid:{color:gc},ticks:{color:tc,font:{size:9},callback:v=>v>0?(v/1000).toFixed(0)+'K':'0'},border:{color:'transparent'}}
+      }
+    }});
+  } catch(e){}
+}
+function shiftDay(d){_chartDay=Math.max(0,Math.min(1,_chartDay+d));loadPaxChart();}
+function setChartT(m,btn){_chartMode=m;document.querySelectorAll('.ct-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadPaxChart();}
+
+// ════════════════════════════════
+//  NOTICE
+// ════════════════════════════════
+async function loadNotice() {
+  try {
+    const data=await api('passgrAnncmt/getPassgrAnncmt',{numOfRows:5});
+    const list=items(data);
+    const fmtN=d=>`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+    const today=fmtN(new Date());
+    const todayItems=list.filter(r=>r.adate===today);
+    const t1tot=todayItems.reduce((a,r)=>a+parseFloat(r.t1egsum1||0)+parseFloat(r.t1dgsum1||0),0);
+    const t2tot=todayItems.reduce((a,r)=>a+parseFloat(r.t2egsum1||0)+parseFloat(r.t2dgsum2||0),0);
+    if(t1tot+t2tot>0) html('notice-text',`오늘 예상 여객 — T1: ${Math.round(t1tot).toLocaleString()}명 · T2: ${Math.round(t2tot).toLocaleString()}명 · 인천국제공항 실시간 정보 서비스`);
+  } catch(e){}
+}
+
+// ════════════════════════════════
+//  TAB ROUTING
+// ════════════════════════════════
+function showTab(tab, btn) {
+  _tab=tab;
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  el('tab-'+tab)?.classList.add('active');
+  if(btn) btn.classList.add('active');
+  loadTab(tab);
+}
+function loadTab(tab) {
+  if(tab==='entry')      loadEntry();
+  if(tab==='parking')    { loadParking(); loadParkSpots(); }
+  if(tab==='transport')  loadTransTab();
+  if(tab==='congestion') loadCong();
+  if(tab==='flights')    loadFlights();
+  if(tab==='facilities') loadFacTab();
+}
+
+// ════════════════════════════════
+//  ① 진출입 현황
+// ════════════════════════════════
+function setEntryDir(d,btn){_entryDir=d;document.querySelectorAll('#tab-entry .sub-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadEntry();}
+
+async function loadEntry() {
+  spin('entry-area');
+  try {
+    const op=_entryDir==='arr'?'getPassengerArrivalsOdp':'getPassengerDeparturesOdp';
+    const data=await api(`StatusOfPassengerFlightsOdp/${op}`,{numOfRows:300});
+    const list=items(data);
+    if(!list.length){html('entry-area','<div class="loading">데이터 없음</div>');return;}
+    const cols=_entryDir==='arr'
+      ?'<tr><th>편명</th><th>출발지</th><th>항공사</th><th>예정</th><th>실제</th><th>상태</th><th>수하물</th><th>터미널</th></tr>'
+      :'<tr><th>편명</th><th>목적지</th><th>항공사</th><th>예정</th><th>실제</th><th>상태</th><th>게이트</th><th>터미널</th></tr>';
+    const rows=list.map(f=>{
+      const gate=_entryDir==='arr'?(f.carousel||f.exitnumber||'-'):(f.gatenumber||'-');
+      return `<tr>
+        <td><strong class="hi">${f.flightId||'-'}</strong></td>
+        <td>${f.airport||'-'} <span style="font-size:.62rem;color:var(--muted)">${f.airportCode||''}</span></td>
+        <td>${f.airline||'-'}</td>
+        <td>${fmtTime(f.scheduleDateTime)||'-'}</td>
+        <td style="color:${f.estimatedDateTime&&f.estimatedDateTime!==f.scheduleDateTime?'#f59e0b':'inherit'}">${fmtTime(f.estimatedDateTime)||'-'}</td>
+        <td>${badge(f.remark||'')}</td>
+        <td>${gate}</td>
+        <td><span style="font-size:.68rem;color:var(--muted)">${TERM[f.terminalId]||f.terminalId||'-'}</span></td>
+      </tr>`;
+    }).join('');
+    html('entry-area',`<div class="tbl-wrap"><table><thead>${cols}</thead><tbody>${rows}</tbody></table></div>`);
+  } catch(e){err('entry-area',e.message);}
+}
+
+// ════════════════════════════════
+//  ② 주차장 현황
+// ════════════════════════════════
+async function loadParking() {
+  spin('park-area');
+  try {
+    const data=await api('StatusOfParking/getTrackingParking',{numOfRows:200});
+    const list=items(data);
+    if(!list.length){html('park-area','<div class="loading">데이터 없음</div>');return;}
+
+    function enrich(p) {
+      const nm=p.floor||'', avail=parseInt(p.parking||0), total=parseInt(p.parkingarea||0);
+      const occ=total-avail, rate=total?Math.round(occ/total*100):0;
+      let cat='기타';
+      if(nm.includes('단기')) cat='단기';
+      else if(nm.includes('장기')) cat='장기';
+      else if(nm.includes('예약')) cat='예약';
+      else if(nm.includes('우선')) cat='우선';
+      return {...p, _nm:nm, _avail:avail, _total:total, _occ:occ, _rate:rate, _cat:cat};
+    }
+
+    function renderTerm(grp, label) {
+      if(!grp.length) return '';
+      const totOcc=grp.reduce((a,p)=>a+p._occ,0);
+      const totAll=grp.reduce((a,p)=>a+p._total,0);
+      const totRate=totAll?Math.round(totOcc/totAll*100):0;
+      // Category summaries
+      const cats=['단기','장기','예약','우선','기타'];
+      const catSumHtml=cats.map(cat=>{
+        const cp=grp.filter(p=>p._cat===cat);
+        if(!cp.length) return '';
+        const co=cp.reduce((a,p)=>a+p._occ,0), ct=cp.reduce((a,p)=>a+p._total,0);
+        const cr=ct?Math.round(co/ct*100):0;
+        return `<div class="park-sum-box"><div class="park-sum-lbl">${cat} 주차장</div>
+          <div class="park-sum-val ${prClass(cr)}">${cr}%</div>
+          <div class="park-sum-sub">기여 ${ct.toLocaleString()}면</div></div>`;
+      }).join('');
+      // Rows by category
+      const rowsHtml=cats.flatMap(cat=>{
+        const cp=grp.filter(p=>p._cat===cat);
+        if(!cp.length) return [];
+        const catHdr=`<tr><td colspan="4" class="park-cat-hdr">• ${cat}주차장</td></tr>`;
+        const rows=cp.map(p=>`<tr>
+          <td>${p._nm}</td>
+          <td>${badge(p._rate<60?'여유':p._rate<80?'보통':p._rate<95?'혼잡':'만차')}</td>
+          <td><span class="${prClass(p._rate)}">${p._rate}%</span>${prBar(p._rate)}</td>
+          <td style="color:var(--muted)">${p._occ.toLocaleString()} / ${p._total.toLocaleString()}</td>
+        </tr>`).join('');
+        return [catHdr, rows];
+      }).join('');
+      return `<div class="park-term-section">
+        <div class="park-term-hdr">
+          <h3>${label}</h3>
+          <div><span class="${prClass(totRate)}" style="font-size:.95rem;font-weight:700">${totRate}%</span>
+          <span class="park-term-total"> · 총 ${totAll.toLocaleString()}면</span></div>
+        </div>
+        <div class="park-summary">
+          <div class="park-sum-box"><div class="park-sum-lbl">전체 주차율</div>
+            <div class="park-sum-val ${prClass(totRate)}">${totRate}%</div>
+            <div class="park-sum-sub">${totOcc.toLocaleString()} / ${totAll.toLocaleString()}</div></div>
+          ${catSumHtml}
+        </div>
+        <div class="tbl-wrap"><table><thead><tr><th>주차장</th><th>상태</th><th>주차율</th><th>입차/주차면</th></tr></thead>
+        <tbody>${rowsHtml}</tbody></table></div>
+      </div>`;
+    }
+
+    const enriched=list.map(enrich);
+    const t1=enriched.filter(p=>p._nm.includes('T1'));
+    const t2=enriched.filter(p=>p._nm.includes('T2'));
+    const other=enriched.filter(p=>!p._nm.includes('T1')&&!p._nm.includes('T2'));
+    let out=renderTerm(t1,'제1여객터미널')+renderTerm(t2,'제2여객터미널');
+    if(other.length) out+=renderTerm(other,'기타');
+    html('park-area',out||renderTerm(enriched,'전체'));
+  } catch(e){err('park-area',e.message);}
+}
+
+async function loadParkSpots() {
+  spin('spot-area');
+  try {
+    const data=await api('ParkLocationData/getParkLocationData',{terminalid:'T1',numOfRows:1000});
+    const list=items(data);
+    if(!list.length){html('spot-area','<div class="loading">주차면 정보 없음 (T1 전용)</div>');return;}
+    const zones={};
+    list.forEach(s=>{
+      const k=`${s.parklotno||'?'}-${s.parkzoneno||'?'}`;
+      if(!zones[k]) zones[k]={lot:s.parklotno,zone:s.parkzoneno,total:0,occ:0};
+      zones[k].total++;
+      if(s.carstatus==='Y') zones[k].occ++;
+    });
+    const tot=list.length, occ=list.filter(s=>s.carstatus==='Y').length;
+    const sumHtml=`<div class="park-summary" style="grid-template-columns:repeat(4,1fr);margin-bottom:10px">
+      <div class="park-sum-box"><div class="park-sum-lbl">전체 주차면</div><div class="park-sum-val">${tot.toLocaleString()}</div></div>
+      <div class="park-sum-box"><div class="park-sum-lbl">사용 중</div><div class="park-sum-val ${prClass(occ/tot*100)}">${occ.toLocaleString()}</div></div>
+      <div class="park-sum-box"><div class="park-sum-lbl">빈 자리</div><div class="park-sum-val prg">${(tot-occ).toLocaleString()}</div></div>
+      <div class="park-sum-box"><div class="park-sum-lbl">점유율</div><div class="park-sum-val ${prClass(occ/tot*100)}">${Math.round(occ/tot*100)}%</div></div>
+    </div>`;
+    const zoneHtml=Object.values(zones).sort((a,b)=>a.lot-b.lot||a.zone-b.zone).map(z=>{
+      const r=Math.round(z.occ/z.total*100);
+      return `<div class="spot-box"><div class="spot-zone">구역 ${z.lot}-${z.zone}</div>
+        <div class="spot-rate ${prClass(r)}">${r}%</div>
+        <div class="spot-cnt">${z.occ}/${z.total}</div>
+        ${prBar(r)}</div>`;
+    }).join('');
+    html('spot-area',sumHtml+`<div class="spot-summary">${zoneHtml}</div>`);
+    html('spot-upd','갱신: '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}));
+  } catch(e){err('spot-area',e.message);}
+}
+
+// ════════════════════════════════
+//  ③ 교통
+// ════════════════════════════════
+function setTrans(tab,btn){
+  _transTab=tab;
+  ['shuttle','arex','taxi'].forEach(t=>{const e=el('trans-'+t);if(e)e.style.display=t===tab?'block':'none';});
+  document.querySelectorAll('.tr-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadTransTab();
+}
+function loadTransTab(){
+  if(_transTab==='shuttle') loadShuttle();
+  if(_transTab==='arex')    loadArex();
+  if(_transTab==='taxi')    loadTaxi();
+}
+function setShuttleMode(m,btn){_shuttleMode=m;document.querySelectorAll('#trans-shuttle .sub-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadShuttle();}
+function setArexDir(d,btn){_arexDir=d;document.querySelectorAll('#trans-arex .sub-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderArex();}
+
+async function loadShuttle() {
+  spin('shuttle-area');
+  try {
+    if(_shuttleMode==='time') {
+      const data=await api('ShtbusInfo/getShtbTimeInfo',{numOfRows:1000});
+      const list=items(data);
+      if(!list.length){html('shuttle-area','<div class="loading">시간표 없음</div>');return;}
+      // Group by routeId then by hour
+      const routes={};
+      list.forEach(s=>{
+        const r=s.routeId||'-';
+        if(!routes[r]) routes[r]=[];
+        routes[r].push(s);
+      });
+      const html_out=Object.entries(routes).map(([route,stops])=>{
+        // Group by hour
+        const hours={};
+        stops.forEach(s=>{
+          const t=s.startTime||'';
+          if(t.length>=4){const h=parseInt(t.slice(0,2));if(!hours[h])hours[h]=[];hours[h].push(t.slice(2,4));}
+        });
+        const tbl=Object.entries(hours).sort(([a],[b])=>+a-+b).map(([h,mins])=>
+          `<div class="arex-hour-row"><span class="arex-hr">${String(h).padStart(2,'0')}시</span>
+            <div class="arex-mins">${mins.map(m=>`<span class="arex-min">${m}</span>`).join(' ')}</div></div>`
+        ).join('');
+        return `<div class="shuttle-route"><div class="shuttle-route-id">노선 ${route}</div><div class="shuttle-hours">${tbl}</div></div>`;
+      }).join('');
+      html('shuttle-area',html_out);
+    } else {
+      const data=await api('ShtbusInfo/getShtbArrivalPredInfo',{numOfRows:200});
+      const list=items(data);
+      if(!list.length){html('shuttle-area','<div class="loading">예측 정보 없음</div>');return;}
+      const rows=list.map(s=>`<tr>
+        <td>${STOP[s.stopId]||s.stopId||'-'}</td>
+        <td>${s.routeId||'-'}</td>
+        <td><strong style="color:var(--accent)">${s.predTimes!=null?s.predTimes+'분 후':fmtTime(s.ofrTime)||'-'}</strong></td>
+        <td>${s.loc||s.ord||'-'}</td>
+      </tr>`).join('');
+      html('shuttle-area',`<div class="tbl-wrap"><table><thead><tr><th>정류장</th><th>노선</th><th>예상 도착</th><th>위치</th></tr></thead><tbody>${rows}</tbody></table></div>`);
+    }
+  } catch(e){err('shuttle-area',e.message);}
+}
+
+async function loadArex() {
+  spin('arex-area');
+  try {
+    const data=await api('AirportRailroadOperationInfo/getAirportRailroad',{numOfRows:1000});
+    const list=items(data);
+    if(!list.length){html('arex-area','<div class="loading">철도 운행 정보 없음</div>');return;}
+    _arexData=list;
+    // Build ordered station list from data
+    const stnSet=new Set(list.map(f=>f.stnCd).filter(Boolean));
+    const stnOrder=Object.keys(STN);
+    _arexStnList=stnOrder.filter(cd=>stnSet.has(cd));
+    if(!_arexStnList.length) _arexStnList=[...stnSet];
+    if(_arexSelIdx>=_arexStnList.length) _arexSelIdx=0;
+    renderArexMap();
+    renderArex();
+  } catch(e){err('arex-area',e.message);}
+}
+
+function renderArexMap() {
+  const stns=_arexStnList;
+  const mapHtml=stns.map((cd,i)=>`
+    <div class="arex-stn ${i===_arexSelIdx?'sel':''}" onclick="selectArexStn(${i})">
+      <div class="arex-stn-name">${STN[cd]||cd}</div>
+      <div class="arex-dot"></div>
+    </div>
+    ${i<stns.length-1?'<div class="arex-line"></div>':''}
+  `).join('');
+  html('arex-map',mapHtml);
+}
+
+function selectArexStn(idx){
+  _arexSelIdx=idx;
+  renderArexMap();
+  renderArex();
+}
+
+function renderArex() {
+  if(!_arexData.length) return;
+  const cd=_arexStnList[_arexSelIdx];
+  const stnName=STN[cd]||cd;
+  const nowDt=new Date();
+  const nowH=nowDt.getHours(), nowM=nowDt.getMinutes();
+
+  // Filter by station, sort by departure time
+  let stnTrains=_arexData.filter(f=>f.stnCd===cd && f.planDptrDttm).sort((a,b)=>a.planDptrDttm.localeCompare(b.planDptrDttm));
+
+  // Group by hour
+  const hours={};
+  stnTrains.forEach(f=>{
+    const dt=f.planDptrDttm||'';
+    if(dt.length<12) return;
+    const h=parseInt(dt.slice(8,10));
+    const m=dt.slice(10,12);
+    if(!hours[h]) hours[h]=[];
+    hours[h].push({m, dirc:f.trnClsfNm==='Dirc', trnNo:f.trnNo});
+  });
+
+  const nowAbs=nowH*60+nowM;
+  const tblHtml=Object.entries(hours).sort(([a],[b])=>+a-+b).map(([h,mins])=>`
+    <div class="arex-hour-row">
+      <span class="arex-hr">${String(h).padStart(2,'0')}시</span>
+      <div class="arex-mins">${mins.map(({m,dirc})=>{
+        const abs=+h*60+parseInt(m);
+        const isNow=abs>=nowAbs&&abs<=nowAbs+2;
+        return `<span class="arex-min${dirc?' dirc':''}${isNow?' now':''}" title="${dirc?'직행':'일반'}">${m}</span>`;
+      }).join(' ')}</div>
+    </div>
+  `).join('');
+
+  const total=stnTrains.length;
+  const dircCnt=stnTrains.filter(f=>f.trnClsfNm==='Dirc').length;
+  html('arex-area',`
+    <div class="arex-tbl-hdr">
+      <span class="arex-stn-sel">${stnName}</span>
+      <span class="arex-tbl-meta">총 ${total}편 · <span style="color:var(--o)">직행 ${dircCnt}편</span> · <span style="color:var(--muted)">일반 ${total-dircCnt}편</span></span>
+    </div>
+    <div class="card" style="padding:8px">${tblHtml||'<div class="loading">해당 역 시간표 없음</div>'}</div>
+    <div style="font-size:.62rem;color:var(--muted);margin-top:6px;padding-left:2px">
+      <span style="color:var(--o);font-weight:700">굵은 숫자</span> = 직행 · 현재 시각 근방 = <span style="background:var(--accent);color:#fff;padding:1px 3px;border-radius:2px">강조</span>
+    </div>
+  `);
+}
+
+async function loadTaxi() {
+  spin('taxi-area');
+  try {
+    const data=await api('StatusOfTaxi/getTaxiStatus',{terno:'P01',numOfRows:10});
+    const list=items(data);
+    if(!list.length){html('taxi-area','<div class="loading">택시 정보 없음</div>');return;}
+    const f=list[0];
+    const types=[
+      {n:'서울 택시',cnt:f.seoultaxicnt,wait:f.seoulstandtime,loc:f.seoultaxistand},
+      {n:'인천 택시',cnt:f.incheontaxicnt,wait:f.incheonstandtime,loc:f.incheontaxistand},
+      {n:'경기 택시',cnt:f.gyenggitaxicnt,wait:f.gyenggistandtime,loc:f.gyenggitaxistand},
+      {n:'인터시티',cnt:f.intercitytaxicnt,wait:f.intercitystandtime,loc:f.intercitytaxistand},
+      {n:'우등/밴',cnt:f.besttaxicnt,wait:f.beststandtime,loc:f.bestVantaxistand},
+    ].filter(t=>t.cnt!=null&&t.cnt!=='');
+    const cards=types.map(t=>{
+      const cnt=parseInt(t.cnt)||0;
+      const wt=parseInt(t.wait)||0;
+      return `<div class="taxi-card">
+        <div class="taxi-name">${t.n}</div>
+        <div class="taxi-cnt">${cnt}대</div>
+        <div class="taxi-wait">${wt?`대기 ${wt}분`:'즉시'}</div>
+        ${t.loc?`<div class="taxi-loc">📍 ${t.loc}</div>`:''}
+      </div>`;
+    }).join('');
+    html('taxi-area',`<div class="taxi-cards">${cards}</div>`);
+  } catch(e){err('taxi-area',e.message);}
+}
+
+// ════════════════════════════════
+//  ④ 출·입국장 현황 (통합)
+// ════════════════════════════════
+async function loadCong() {
+  ['cong-dep1-area','cong-arr1-area','cong-dep2-area','cong-arr2-area'].forEach(id=>spin(id));
+  try {
+    const [d1,d2,arrData]=await Promise.all([
+      api('statusOfDepartureCongestion/getDepartureCongestion',{terminalId:'P01',numOfRows:200}),
+      api('statusOfDepartureCongestion/getDepartureCongestion',{terminalId:'P02',numOfRows:200}),
+      api('StatusOfArrivals/getArrivalsCongestion',{numOfRows:200}),
+    ]);
+    renderDepCong(items(d1),'cong-dep1-area','제1여객터미널 출국장',false);
+    renderDepCong(items(d2),'cong-dep2-area','제2여객터미널 출국장',true);
+    const arrList=items(arrData);
+    renderArrCong(arrList.filter(i=>(i.terno||'T1')==='T1'),'cong-arr1-area','제1여객터미널 입국장');
+    renderArrCong(arrList.filter(i=>(i.terno||'T1')!=='T1'),'cong-arr2-area','제2여객터미널 입국장');
+  } catch(e){
+    ['cong-dep1-area','cong-arr1-area','cong-dep2-area','cong-arr2-area'].forEach(id=>err(id,e.message));
+  }
+}
+
+function renderDepCong(list,areaId,label,isT2) {
+  const waitCls=wt=>wt<5?'wait-good':wt<15?'wait-ok':wt<30?'wait-busy':'wait-jam';
+  const gateLabel=g=>{const m=(g.gateId||'').match(/DG(\d+)_([EW])/);return m?`${m[1]}번 ${m[2]==='E'?'동':'서'}편`:g.gateId||'-';};
+
+  // Parse gate map
+  const gmap={};
+  list.forEach(g=>{
+    const m=(g.gateId||'').match(/DG(\d+)_([EW])/);
+    if(!m) return;
+    const [,num,side]=m;
+    if(!gmap[num]) gmap[num]={num,E:null,W:null,opTime:g.operatingTime||''};
+    gmap[num][side]=g;
+  });
+  const gates=Object.values(gmap).sort((a,b)=>+a.num-+b.num);
+
+  // Summary
+  const totLen=list.reduce((a,g)=>a+parseInt(g.waitLength||0),0);
+  const maxG=list.length?list.reduce((a,g)=>parseInt(g.waitLength||0)>parseInt(a.waitLength||0)?g:a,list[0]):null;
+  const minG=list.length?list.reduce((a,g)=>parseInt(g.waitLength||0)<parseInt(a.waitLength||0)?g:a,list[0]):null;
+
+  const statHtml=`<div class="cong-stat-strip">
+    <div class="cong-stat-card">
+      <div class="cong-stat-lbl">전체 대기인원</div>
+      <div class="cong-stat-val" style="color:var(--y)">${totLen>0?totLen+'명':'-'}</div>
+    </div>
+    <div class="cong-stat-card">
+      <div class="cong-stat-lbl">가장 혼잡</div>
+      <div class="cong-stat-val" style="color:var(--r)">${maxG?gateLabel(maxG):'-'}</div>
+      ${maxG?`<div class="cong-stat-sub">${maxG.waitLength||0}명 약 ${maxG.waitTime||0}분</div>`:''}
+    </div>
+    <div class="cong-stat-card">
+      <div class="cong-stat-lbl">가장 여유</div>
+      <div class="cong-stat-val" style="color:var(--g)">${minG?gateLabel(minG):'-'}</div>
+      ${minG?`<div class="cong-stat-sub">${minG.waitLength||0}명 약 ${minG.waitTime||0}분</div>`:''}
+    </div>
+  </div>`;
+
+  const rowsHtml=gates.map(g=>{
+    const cell=(side,lbl)=>{
+      if(!side) return `<td style="color:var(--muted)">-</td>`;
+      const wt=parseInt(side.waitTime||0), wl=parseInt(side.waitLength||0);
+      return `<td><span class="${waitCls(wt)}">${lbl} ${wl}명 약${wt}분</span></td>`;
+    };
+    return `<tr>
+      <td class="hi-b">${g.num}번</td>
+      ${cell(g.E,'동')}${cell(g.W,'서')}
+      <td style="font-size:.65rem;color:var(--muted)">${g.opTime||'-'}</td>
+    </tr>`;
+  }).join('');
+
+  const noteHtml=isT2?'<div style="font-size:.6rem;color:var(--muted);padding:8px 12px">※ T2 출국장 혼잡도 정보는 공공데이터 미제공 · 운영시간만 표시</div>':'';
+
+  html(areaId,`<div class="cong-section">
+    <div class="cong-sec-hdr"><h3>${label}</h3><span class="cong-sec-badge">출국장 ${gates.length||'-'}개</span></div>
+    ${statHtml}
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>출국장</th><th>동편</th><th>서편</th><th>운영시간</th></tr></thead>
+      <tbody>${rowsHtml||`<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:12px">데이터 없음</td></tr>`}</tbody>
+    </table></div>
+    ${noteHtml}
+  </div>`);
+}
+
+function renderArrCong(list,areaId,label) {
+  // Group by entrygate; each item is one flight
+  const gmap={};
+  list.forEach(f=>{
+    const g=f.entrygate||'?';
+    if(!gmap[g]) gmap[g]={gate:g,flights:[]};
+    gmap[g].flights.push(f);
+  });
+  const gates=Object.values(gmap).sort((a,b)=>a.gate.localeCompare(b.gate));
+  const totalPax=Math.round(list.reduce((a,f)=>a+parseFloat(f.korean||0)+parseFloat(f.foreigner||0),0));
+
+  const rowsHtml=gates.map(g=>{
+    const totKr=Math.round(g.flights.reduce((a,f)=>a+parseFloat(f.korean||0),0));
+    const totFo=Math.round(g.flights.reduce((a,f)=>a+parseFloat(f.foreigner||0),0));
+    const totPax=totKr+totFo;
+    const clsId='ae-'+areaId+'-'+g.gate;
+
+    const gateHdr=`<tr class="arr-gate-hdr" onclick="toggleArrGate('${clsId}',this)">
+      <td class="hi-b" style="font-size:.82rem;width:50px">${g.gate}</td>
+      <td style="font-weight:600">${totPax.toLocaleString()}명</td>
+      <td>${g.flights.length}편</td>
+      <td>${totKr}</td>
+      <td>${totFo}</td>
+      <td style="color:var(--muted);text-align:right">►</td>
+    </tr>`;
+
+    const flightRows=g.flights
+      .sort((a,b)=>(a.scheduleDateTime||'').localeCompare(b.scheduleDateTime||''))
+      .map(f=>{
+        const sch=fmtTime(f.scheduleDateTime)||'-';
+        const act=fmtTime(f.estimatedDateTime)||'-';
+        const early=act!=='-'&&sch!=='-'&&act<sch;
+        const kr=Math.round(parseFloat(f.korean||0));
+        const fo=Math.round(parseFloat(f.foreigner||0));
+        return `<tr class="arr-expand-row ${clsId}" style="display:none">
+          <td class="hi">${f.flightId||f.flightNum||'-'}</td>
+          <td>${f.airportCode||f.airport||'-'}</td>
+          <td>${f.gatenumber||f.carousel||'-'}</td>
+          <td>${sch}</td>
+          <td style="color:${early?'var(--o)':act!==sch&&act!=='-'?'var(--y)':'inherit'}">${act}</td>
+          <td>${kr}</td>
+          <td>${fo}</td>
+        </tr>`;
+      }).join('');
+
+    return gateHdr+flightRows;
+  }).join('');
+
+  html(areaId,`<div class="cong-section">
+    <div class="cong-sec-hdr"><h3>${label}</h3><span class="cong-sec-badge">총 ${totalPax.toLocaleString()}명</span></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>입국장</th><th>입국여객</th><th>항공편</th><th>내국인</th><th>외국인</th><th></th></tr></thead>
+      <tbody>${rowsHtml||`<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:12px">데이터 없음</td></tr>`}</tbody>
+    </table></div>
+    <div style="font-size:.6rem;color:var(--muted);padding:8px 12px">현재시간 기준 · 행 클릭으로 편별 확인</div>
+  </div>`);
+}
+
+function toggleArrGate(clsId,rowEl) {
+  const rows=document.querySelectorAll('.'+clsId);
+  const visible=rows.length&&rows[0].style.display!=='none';
+  rows.forEach(r=>r.style.display=visible?'none':'table-row');
+  const arrow=rowEl.querySelector('td:last-child');
+  if(arrow) arrow.textContent=visible?'►':'▼';
+}
+
+// ════════════════════════════════
+//  ⑤ 항공편 현황
+// ════════════════════════════════
+function setFltDir(d,btn){
+  _fltDir=d;
+  _fltTermView='all';
+  _fltSec={P01:'all',P02:'all',P03:'all'};
+  document.querySelectorAll('#tab-flights .sub-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.flt-term-btn').forEach(b=>b.classList.remove('active'));
+  const allBtn=document.querySelector('.flt-term-btn');
+  if(allBtn) allBtn.classList.add('active');
+  const termTabs=el('flt-term-tabs');
+  if(termTabs) termTabs.style.display=(d==='dep'||d==='arr')?'flex':'none';
+  loadFlights();
+}
+function setFltTerm(term,btn){
+  _fltTermView=term;
+  document.querySelectorAll('.flt-term-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFlights();
+}
+function setFltSec(term,sec,btn){
+  _fltSec[term]=sec;
+  document.querySelectorAll(`.flt-sec-btn[data-term="${term}"]`).forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFlights();
+}
+
+async function loadFlights() {
+  html('flt-area','<div class="loading">⏳ 로딩 중...</div>');
+  html('flt-count','');
+  try {
+    _fltCache=[];
+    if(_fltDir==='dep'){
+      const d=await api('StatusOfPassengerFlightsOdp/getPassengerDeparturesOdp',{numOfRows:500});
+      _fltCache=items(d);
+    } else if(_fltDir==='arr'){
+      const d=await api('StatusOfPassengerFlightsOdp/getPassengerArrivalsOdp',{numOfRows:500});
+      _fltCache=items(d);
+    } else if(_fltDir==='bag'){
+      const d=await api('StatusOfBaggageLateral/getDeparturesBaggage',{numOfRows:300});
+      _fltCache=items(d);
+    } else if(_fltDir==='close'){
+      const d=await api('FlightClosingInfoSpot/getFlightClosingInfoSpot',{numOfRows:300});
+      _fltCache=items(d);
+    }
+    renderFlights();
+  } catch(e){err('flt-area',e.message);}
+}
+
+function renderFlights() {
+  const q=(el('flt-q')?.value||'').trim().toLowerCase();
+  let list=_fltCache;
+  if(q) list=list.filter(f=>(f.flightId||f.flightNum||'').toLowerCase().includes(q)||(f.airport||'').toLowerCase().includes(q)||(f.airline||'').toLowerCase().includes(q)||(f.airportCode||'').toLowerCase().includes(q));
+
+  // Show/hide terminal tabs
+  const termTabs=el('flt-term-tabs');
+  if(termTabs) termTabs.style.display=(_fltDir==='dep'||_fltDir==='arr')?'flex':'none';
+
+  if(_fltDir==='bag') {
+    html('flt-count',`${list.length}편`);
+    const rows=list.map(f=>`<tr>
+      <td><strong class="hi">${f.flightId||'-'}</strong></td>
+      <td>${f.airline||'-'}</td>
+      <td>${f.airport||'-'}</td>
+      <td><strong style="color:var(--accent)">${f.lateral1||f.lateral2||'-'}</strong></td>
+      <td>${badge(f.remark||'')}</td>
+      <td><span style="font-size:.68rem;color:var(--muted)">${TERM[f.terminalId]||f.terminalId||'-'}</span></td>
+    </tr>`).join('');
+    html('flt-area',`<div class="tbl-wrap"><table><thead><tr><th>편명</th><th>항공사</th><th>출발지</th><th>수하물벨트</th><th>상태</th><th>터미널</th></tr></thead><tbody>${rows}</tbody></table></div>`);
+    return;
+  }
+  if(_fltDir==='close') {
+    html('flt-count',`${list.length}편`);
+    const rows=list.map(f=>`<tr>
+      <td><strong class="hi">${f.flightNum||'-'}</strong></td>
+      <td>${f.msIo==='D'?'출발':'도착'} ${f.msLine==='I'?'국제':'국내'}</td>
+      <td>${f.msSspot||'-'}</td>
+      <td>${f.msAspot||'-'}</td>
+      <td>${fmtTime(f.msStime)||'-'}</td>
+    </tr>`).join('');
+    html('flt-area',`<div class="tbl-wrap"><table><thead><tr><th>편명</th><th>구분</th><th>계획스팟</th><th>실제스팟</th><th>시간</th></tr></thead><tbody>${rows}</tbody></table></div>`);
+    return;
+  }
+
+  // ── dep/arr: terminal board with SEC sub-tabs ──
+  const isDep=_fltDir==='dep';
+  const byTerm={P01:[],P02:[],P03:[]};
+  list.forEach(f=>{const t=f.terminalId||'P01';(byTerm[t]||byTerm.P01).push(f);});
+  html('flt-count',`${list.length.toLocaleString()}편 · T1 ${byTerm.P01.length} · 탑승동 ${byTerm.P03.length} · T2 ${byTerm.P02.length}`);
+
+  const isSingle=_fltTermView!=='all';
+
+  // Get section letter from a flight (check-in zone first char)
+  const secOf=f=>{
+    const src=isDep?(f.chkinrange||'').replace(/\s/g,''):(f.gatenumber||f.exitnumber||f.carousel||'');
+    const c=(src||'').charAt(0).toUpperCase();
+    return /[A-Z]/.test(c)?c:null;
+  };
+
+  const termDefs=[{id:'P01',label:'T1'},{id:'P03',label:'탑승동'},{id:'P02',label:'T2'}];
+
+  const colsHtml=termDefs.map(({id,label})=>{
+    if(_fltTermView!=='all'&&_fltTermView!==id) return '';
+
+    const flights=byTerm[id];
+    const sections=[...new Set(flights.map(secOf).filter(Boolean))].sort();
+    const secFilter=_fltSec[id];
+    const filtered=secFilter==='all'?flights:flights.filter(f=>secOf(f)===secFilter);
+
+    // Build SEC tabs: 전체 + dynamic sections
+    const secBtns=['all',...sections].map((s,i)=>{
+      const lbl=s==='all'?'전체':`SEC${i}`;
+      const active=secFilter===s;
+      return `<button class="flt-sec-btn${active?' active':''}" data-term="${id}" onclick="setFltSec('${id}','${s}',this)">${lbl}</button>`;
+    }).join('');
+
+    const cardsHtml=filtered.map(f=>{
+      const sch=fmtTime(f.scheduleDateTime)||'-';
+      const est=fmtTime(f.estimatedDateTime)||'';
+      const delayed=est&&est!==sch;
+      const gate=isDep?(f.gatenumber||''):(f.carousel||f.exitnumber||'');
+      const ck=f.chkinrange||'';
+      const dest=(f.airport||f.airportCode||'-');
+      const air=(f.airline||'-').length>8?(f.airline||'-').slice(0,7)+'…':(f.airline||'-');
+      return `<div class="flt-card2">
+        <div class="flt-c2-top">
+          <span class="flt-c2-time${delayed?' delayed':''}">${sch}${delayed?`<br><small style="font-size:.56rem">${est}</small>`:''}</span>
+          ${badge(f.remark||'')}
+        </div>
+        <div class="flt-c2-flt">${f.flightId||'-'}</div>
+        <div class="flt-c2-dest">${isDep?'↑':'↓'} ${dest}</div>
+        <div class="flt-c2-air">${air}</div>
+        <div class="flt-c2-info">${ck?`체크인 ${ck.split('-')[0]}~`:''}${gate?` ✈${gate}`:''}</div>
+      </div>`;
+    }).join('');
+
+    return `<div class="flt-col2${isSingle?' single':''}">
+      <div class="flt-col2-hdr">
+        <span class="flt-col2-label">${label} <span style="font-size:.62rem;font-weight:400;color:var(--muted)">${filtered.length}편</span></span>
+        <div class="flt-sec-tabs">${secBtns}</div>
+      </div>
+      <div class="flt-col2-body">
+        <div class="flt-grid">
+          ${cardsHtml||'<div style="padding:12px;color:var(--muted);font-size:.72rem;grid-column:1/-1">해당 편 없음</div>'}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  html('flt-area',`<div class="flt-board2">${colsHtml}</div>`);
+}
+
+// ════════════════════════════════
+//  ⑥ 시설정보
+// ════════════════════════════════
+function setFacTab(t,btn){
+  _facTab=t;
+  ['comm','airline','noise'].forEach(id=>{const e=el('fac-'+id);if(e)e.style.display=id===t?'block':'none';});
+  document.querySelectorAll('#tab-facilities>.sub-tabs .sub-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadFacTab();
+}
+function loadFacTab(){
+  if(_facTab==='comm')    loadFacComm();
+  if(_facTab==='airline') loadAirlines();
+}
+
+// Facility helpers
+function facParse(f) {
+  const loc=f.lckoreannm||'', nm=f.entrpskoreannm||'-';
+  let term='';
+  if(loc.includes('탑승동')||nm.includes('탑승동')) term='탑승동';
+  else if(loc.includes('제1여객터미널')||loc.includes('T1')) term='T1';
+  else if(loc.includes('제2여객터미널')||loc.includes('T2')) term='T2';
+  let floor='';
+  if(loc.includes('지하')) floor='B'+(loc.match(/지하\s*(\d+)/)?.[1]||'1');
+  else if(loc.match(/(\d)층/)) floor=loc.match(/(\d)층/)[1]+'F';
+  const duty=loc.includes('면세')?'면세':'일반';
+  const prods=(f.trtmntprdlstkoreannm||'').split(/[,·]/).map(s=>s.trim()).filter(Boolean);
+  return {nm,loc,term,floor,duty,prods,tel:f.tel||'',time:f.servicetime||''};
+}
+
+function setFacFilter(type,val,btn) {
+  _facFilters[type]=val;
+  const groupId=type==='term'?'fac-term-btns':type==='duty'?undefined:'fac-floor-btns-all';
+  // Toggle active in the right group
+  const parent=btn.closest('.fac-filter-row');
+  if(parent) {
+    // Deactivate siblings in the same logical group
+    const allBtns=[...parent.querySelectorAll('.sub-btn')];
+    const groups=[];
+    let cur=[];
+    allBtns.forEach(b=>{
+      if(b.classList.contains('fac-sep')||b.nextSibling?.classList?.contains?.('fac-sep')){
+        // separator logic handled by DOM - just find same "logical group"
+      }
+      cur.push(b);
+    });
+    // Simple: just find all buttons with same onclick pattern
+    const typeStr=`setFacFilter('${type}',`;
+    allBtns.filter(b=>(b.getAttribute('onclick')||'').includes(typeStr)).forEach(b=>b.classList.remove('active'));
+  }
+  btn.classList.add('active');
+  _facPage=1;
+  renderFac();
+}
+
+const FAC_PER_PAGE=18;
+
+async function loadFacComm() {
+  if(_facCache.length){renderFac();return;}
+  html('fac-grid','<div class="loading">로딩 중...</div>');
+  try {
+    const data=await api('StatusOfFacility/getFacilityKR',{numOfRows:2000});
+    _facCache=items(data).map(f=>({...f,_p:facParse(f)}));
+    renderFac();
+  } catch(e){err('fac-grid',e.message);}
+}
+
+function renderFac() {
+  const q=(el('fac-q')?.value||'').trim().toLowerCase();
+  let list=_facCache;
+  if(_facFilters.term!=='all') list=list.filter(f=>f._p.term===_facFilters.term);
+  if(_facFilters.duty!=='all') list=list.filter(f=>f._p.duty===_facFilters.duty);
+  if(_facFilters.floor!=='all') {
+    const fv=_facFilters.floor;
+    list=list.filter(f=>f._p.floor.includes(fv)||f._p.loc.includes(fv==='B'?'지하':fv.replace('F','층')));
+  }
+  if(q) list=list.filter(f=>f._p.nm.toLowerCase().includes(q)||f._p.loc.toLowerCase().includes(q)||(f._p.prods.join(' ')).toLowerCase().includes(q));
+  const total=list.length;
+  const pages=Math.ceil(total/FAC_PER_PAGE)||1;
+  if(_facPage>pages) _facPage=1;
+  const slice=list.slice((_facPage-1)*FAC_PER_PAGE,_facPage*FAC_PER_PAGE);
+  html('fac-count',`${total.toLocaleString()}개 결과`);
+  const cards=slice.map(f=>{
+    const p=f._p;
+    return `<div class="fac-card">
+      <div class="fac-card-name">${p.nm}</div>
+      <div class="fac-tags">
+        ${p.term?`<span class="fac-tag">${p.term}</span>`:''}
+        ${p.floor?`<span class="fac-tag fac-tag-floor">${p.floor}</span>`:''}
+        <span class="fac-tag fac-tag-duty">${p.duty}</span>
+      </div>
+      ${p.loc?`<div class="fac-loc">${p.loc}</div>`:''}
+      ${p.time?`<div class="fac-time">${p.time}</div>`:''}
+      ${p.tel?`<div class="fac-tel">${p.tel}</div>`:''}
+      ${p.prods.length?`<div class="fac-prods">${p.prods.map(pr=>`<span class="fac-tag fac-tag-prod">${pr}</span>`).join('')}</div>`:''}
+    </div>`;
+  }).join('');
+  html('fac-grid',cards||'<div class="loading">검색 결과 없음</div>');
+  html('fac-pager',total>FAC_PER_PAGE?`
+    <button onclick="facGoPage(_facPage-1)" ${_facPage<=1?'disabled':''}>◀ 이전</button>
+    <span>${_facPage} / ${pages}</span>
+    <button onclick="facGoPage(_facPage+1)" ${_facPage>=pages?'disabled':''}>다음 ▶</button>
+  `:'');
+}
+function facGoPage(p){const pages=Math.ceil(_facCache.length/FAC_PER_PAGE);_facPage=Math.max(1,Math.min(pages,p));renderFac();}
+
+async function loadAirlines() {
+  if(_airlineCache.length){renderAirlines();return;}
+  html('airline-grid','<div class="loading">로딩 중...</div>');
+  try {
+    const data=await api('StatusOfSrvAirlines/getServiceAirlineInfo',{numOfRows:300});
+    _airlineCache=items(data);
+    renderAirlines();
+  } catch(e){err('airline-grid',e.message);}
+}
+function renderAirlines() {
+  const q=(el('airline-q')?.value||'').trim().toLowerCase();
+  const list=q?_airlineCache.filter(a=>(a.airlineName||'').toLowerCase().includes(q)||(a.airlineIata||'').toLowerCase().includes(q)):_airlineCache;
+  const cards=list.map(a=>{
+    const logo=a.airlineImage?`<img src="${a.airlineImage}" alt="${a.airlineName}" style="height:26px;object-fit:contain;margin-bottom:3px" onerror="this.style.display='none'">`:'';
+    return `<div class="fac-card" style="text-align:center">
+      ${logo}
+      <div class="fac-card-name">${a.airlineName||'-'}</div>
+      <div style="font-size:.68rem;color:var(--muted)">${a.airlineIata||'-'} / ${a.airlineIcao||'-'}</div>
+      ${a.airlineTel?`<div class="fac-tel" style="text-align:left;margin-top:4px">${a.airlineTel}</div>`:''}
+    </div>`;
+  }).join('');
+  html('airline-grid',cards||'<div class="loading">결과 없음</div>');
+}
+
+// ════════════════════════════════
+//  INIT & AUTO REFRESH
+// ════════════════════════════════
+function refreshAll() {
+  loadWeather();
+  loadPaxChart();
+  loadNotice();
+  if(_tab==='entry')      loadEntry();
+  if(_tab==='parking')    { loadParking(); loadParkSpots(); }
+  if(_tab==='transport')  loadTransTab();
+  if(_tab==='congestion') loadCong();
+  if(_tab==='flights')    loadFlights();
+}
+
+// Init — set correct theme button label
+(function(){
+  const t = document.documentElement.getAttribute('data-theme') || 'dark';
+  const btn = el('theme-toggle');
+  if(btn) btn.textContent = t === 'light' ? '🌙 다크' : '☀ 라이트';
+})();
+
+loadWeather();
+loadNotice();
+loadEntry();
+// 차트는 패널이 열릴 때 로드 (초기에는 데이터만 조회해 헤더 수치 채움)
+loadPaxChart();
+setInterval(refreshAll, 60000);
+</script>
+</body>
+</html>
