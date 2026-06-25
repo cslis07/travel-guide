@@ -1,8 +1,6 @@
 // 인천공항 페이지용 Service Worker - 오프라인 캐싱
-const CACHE = 'icn-v1';
+const CACHE = 'icn-v2';
 const SHELL = [
-  '/airport.html',
-  '/index.html',
   '/style.css',
   '/main.js',
   '/manifest.webmanifest',
@@ -24,8 +22,11 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
-  // API 호출은 항상 네트워크 우선 (실시간 데이터)
-  if (url.pathname.startsWith('/api/')) {
+  const accept = e.request.headers.get('accept') || '';
+  const isHtml = accept.includes('text/html') || url.pathname.endsWith('.html');
+
+  // API와 HTML은 항상 네트워크 우선 (실시간 데이터·항상 최신 페이지)
+  if (url.pathname.startsWith('/api/') || isHtml) {
     e.respondWith(
       fetch(e.request).catch(() => caches.match(e.request))
     );

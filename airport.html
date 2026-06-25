@@ -591,6 +591,20 @@ tr:hover td{background:var(--a-hover)}
   cursor:pointer;font-family:inherit;transition:.15s;
 }
 .fav-notify-btn:hover{border-color:var(--accent);color:var(--accent)}
+.fav-card-actions{display:flex;gap:4px;align-items:center}
+.fav-ics-btn{
+  background:none;border:1px solid var(--border);color:var(--muted);
+  border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:.78rem;
+  display:flex;align-items:center;justify-content:center;transition:.15s;
+}
+.fav-ics-btn:hover{border-color:var(--accent);color:var(--accent)}
+/* lang toggle */
+#lang-toggle{
+  background:none;border:1px solid var(--border);color:var(--text2);
+  border-radius:var(--rx);padding:3px 9px;cursor:pointer;font-size:.66rem;
+  font-family:inherit;transition:.15s;
+}
+#lang-toggle:hover{border-color:var(--accent);color:var(--accent)}
 .fav-card{
   background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
   padding:14px;margin-bottom:8px;display:grid;
@@ -885,6 +899,7 @@ tr:hover td{background:var(--a-hover)}
     <span id="hdr-time">--:--</span>
     <span id="hdr-date"></span>
     <button id="quick-search-btn" onclick="openQuickSearch()" title="빠른 검색 (Ctrl+K)"><span>🔍</span><kbd>Ctrl+K</kbd></button>
+    <button id="lang-toggle" onclick="toggleLang()" title="언어 전환">EN</button>
     <button id="share-btn" onclick="sharePage()" title="공유">🔗</button>
     <button id="theme-toggle" onclick="toggleTheme()">☀ 라이트</button>
   </div>
@@ -1108,7 +1123,8 @@ tr:hover td{background:var(--a-hover)}
       <span>편명을 저장하면 출발 카운트다운·게이트 변경 알림을 받을 수 있어요. 60초마다 자동 갱신. localStorage 영구 저장.</span>
     </div>
     <div class="fav-add-row">
-      <input class="fav-add-input" id="fav-add-q" placeholder="편명 입력 (예: KE901, OZ102)" onkeydown="if(event.key==='Enter')addFavFlight()">
+      <input class="fav-add-input" id="fav-add-q" list="fav-suggestions" placeholder="편명 입력 (예: KE901, OZ102)" oninput="updateFavSuggestions()" onkeydown="if(event.key==='Enter')addFavFlight()">
+      <datalist id="fav-suggestions"></datalist>
       <select id="fav-add-dir" class="fav-add-sel">
         <option value="dep">출발편</option>
         <option value="arr">도착편</option>
@@ -2755,6 +2771,180 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// ════════════════════════════════
+//  편명 자동완성
+// ════════════════════════════════
+function updateFavSuggestions(){
+  const inp = el('fav-add-q');
+  const dir = el('fav-add-dir')?.value || 'dep';
+  const list = el('fav-suggestions');
+  if(!inp || !list) return;
+  const q = (inp.value || '').trim().toUpperCase();
+  if(!q || q.length < 2){ list.innerHTML = ''; return; }
+  // 현재 _fltCache 또는 즐겨찾기 캐시에서 추천
+  const pool = Array.isArray(_fltCache) ? _fltCache : [];
+  const seen = new Set();
+  const matches = [];
+  pool.forEach(f => {
+    const id = ((f.flightId || f.flightNum || '') + '').toUpperCase();
+    if(id && id.includes(q) && !seen.has(id)){
+      seen.add(id);
+      matches.push({ id, lbl: `${id} — ${f.airline||''} · ${f.airport||f.airportCode||''}` });
+    }
+  });
+  list.innerHTML = matches.slice(0, 12).map(m => `<option value="${m.id}">${m.lbl}</option>`).join('');
+}
+
+// ════════════════════════════════
+//  ICS 캘린더 다운로드
+// ════════════════════════════════
+function _icsDate(d){
+  // YYYYMMDDTHHmmssZ (UTC)
+  const pad = n => n.toString().padStart(2,'0');
+  return d.getUTCFullYear() + pad(d.getUTCMonth()+1) + pad(d.getUTCDate()) +
+         'T' + pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + '00Z';
+}
+async function downloadFavIcs(flightId, dir){
+  // 캐시에서 항공편 찾기
+  const op = dir === 'dep' ? 'StatusOfPassengerFlightsOdp/getPassengerDeparturesOdp' : 'StatusOfPassengerFlightsOdp/getPassengerArrivalsOdp';
+  const data = await api(op, { numOfRows: 500 });
+  const list = items(data);
+  const live = list.find(x => ((x.flightId || x.flightNum || '') + '').toUpperCase().replace(/\s+/g,'') === flightId);
+  if(!live){ _toast(`${flightId} 운항 정보를 찾을 수 없습니다`); return; }
+  const raw = live.estimatedDateTime || live.scheduleDateTime || '';
+  const hhmm = raw.slice(-4);
+  const start = _parseFlightTime(raw, hhmm);
+  if(!start){ _toast('출발/도착 시간을 파싱할 수 없습니다'); return; }
+  // 출발편: 출발 3시간 전부터 출발까지 / 도착편: 도착시간부터 1시간
+  const isDep = dir === 'dep';
+  const calStart = isDep ? new Date(start.getTime() - 3*3600*1000) : start;
+  const calEnd = isDep ? start : new Date(start.getTime() + 60*60*1000);
+  const dest = live.airport || live.airportCode || '';
+  const air = live.airline || '';
+  const gate = isDep ? (live.gatenumber||'') : (live.carousel||live.exitnumber||'');
+  const term = TERM[live.terminalId] || live.terminalId || '';
+  const title = `${isDep ? '✈ 출국' : '🛬 입국'} ${flightId} ${dest}`;
+  const desc = [
+    `항공사: ${air}`,
+    `${isDep?'출발':'도착'}: ${fmtTime(live.scheduleDateTime)||'-'}`,
+    live.estimatedDateTime ? `변경: ${fmtTime(live.estimatedDateTime)}` : '',
+    gate ? `${isDep?'게이트':'수하물벨트'}: ${gate}` : '',
+    term ? `터미널: ${term}` : '',
+    `https://travel-guide-cslis07.vercel.app/airport`,
+  ].filter(Boolean).join('\\n');
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//트립가이드//인천공항//KR',
+    'BEGIN:VEVENT',
+    `UID:icn-${flightId}-${dir}@travel-guide`,
+    `DTSTAMP:${_icsDate(new Date())}`,
+    `DTSTART:${_icsDate(calStart)}`,
+    `DTEND:${_icsDate(calEnd)}`,
+    `SUMMARY:${title}`,
+    `DESCRIPTION:${desc}`,
+    `LOCATION:인천국제공항 ${term}`,
+    'BEGIN:VALARM',
+    'ACTION:DISPLAY',
+    `DESCRIPTION:${title} ${isDep?'3시간':'1시간'} 전 알림`,
+    'TRIGGER:-PT30M',
+    'END:VALARM',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${flightId}_${isDep?'departure':'arrival'}.ics`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  _toast(`📅 ${flightId} 일정 다운로드 — 캘린더 앱에서 가져오기`);
+}
+
+// ════════════════════════════════
+//  URL 딥링크 (#tab=fav&sub=lounge)
+// ════════════════════════════════
+function _parseHash(){
+  const h = window.location.hash.slice(1);
+  if(!h) return {};
+  const out = {};
+  h.split('&').forEach(p => {
+    const [k,v] = p.split('=');
+    if(k) out[k] = decodeURIComponent(v || '');
+  });
+  return out;
+}
+function applyDeeplink(){
+  const p = _parseHash();
+  if(p.tab){
+    const btn = [...document.querySelectorAll('#tabs .tab-btn')].find(b => b.getAttribute('onclick')?.includes(`'${p.tab}'`));
+    if(btn) btn.click();
+  }
+  if(p.sub){
+    setTimeout(() => {
+      const subBtn = [...document.querySelectorAll('#tab-prep .sub-btn')].find(b => b.getAttribute('onclick')?.includes(`'${p.sub}'`));
+      if(subBtn) subBtn.click();
+    }, 80);
+  }
+}
+window.addEventListener('hashchange', applyDeeplink);
+// 페이지 로드 후 1초 뒤 적용 (탭 DOM 준비 보장)
+setTimeout(applyDeeplink, 200);
+
+// ════════════════════════════════
+//  다국어 토글 (한/영)
+// ════════════════════════════════
+const I18N = {
+  ko: {
+    '진출입 현황':'진출입 현황','주차장 현황':'주차장 현황','셔틀·철도 시간표':'셔틀·철도 시간표',
+    '출·입국장 현황':'출·입국장 현황','항공편 현황':'항공편 현황','시설정보':'시설정보',
+    '⭐ 내 편명':'⭐ 내 편명','🛫 출국 준비':'🛫 출국 준비',
+    '✅ 체크리스트':'✅ 체크리스트','🚗 공항 가는 길':'🚗 공항 가는 길','🗺 평면도':'🗺 평면도',
+    '🛋 라운지':'🛋 라운지','🏢 공항 편의':'🏢 공항 편의','🧳 수하물 규정':'🧳 수하물 규정',
+    '💰 면세 한도':'💰 면세 한도','🚫 반입 금지':'🚫 반입 금지',
+    'EN':'EN','☀ 라이트':'☀ 라이트','🌙 다크':'🌙 다크',
+  },
+  en: {
+    '진출입 현황':'Pax In/Out','주차장 현황':'Parking','셔틀·철도 시간표':'Shuttle/Rail',
+    '출·입국장 현황':'Checkpoint','항공편 현황':'Flights','시설정보':'Facilities',
+    '⭐ 내 편명':'⭐ My Flights','🛫 출국 준비':'🛫 Travel Prep',
+    '✅ 체크리스트':'✅ Checklist','🚗 공항 가는 길':'🚗 Getting Here','🗺 평면도':'🗺 Floor Map',
+    '🛋 라운지':'🛋 Lounges','🏢 공항 편의':'🏢 Amenities','🧳 수하물 규정':'🧳 Baggage',
+    '💰 면세 한도':'💰 Duty-Free','🚫 반입 금지':'🚫 Prohibited',
+    'EN':'한국어','☀ 라이트':'☀ Light','🌙 다크':'🌙 Dark',
+  }
+};
+function _getLang(){ return localStorage.getItem('icn-lang') || 'ko'; }
+function toggleLang(){
+  const cur = _getLang();
+  const next = cur === 'ko' ? 'en' : 'ko';
+  localStorage.setItem('icn-lang', next);
+  applyLang();
+}
+function applyLang(){
+  const lang = _getLang();
+  const dict = I18N[lang];
+  if(!dict) return;
+  // 탭 버튼
+  document.querySelectorAll('#tabs .tab-btn, #tab-prep .sub-tabs .sub-btn').forEach(b => {
+    const orig = b.dataset.ko || b.textContent.trim();
+    if(!b.dataset.ko) b.dataset.ko = orig;
+    if(dict[orig]) b.textContent = dict[orig];
+  });
+  // 토글 버튼 자체 라벨
+  const lt = el('lang-toggle');
+  if(lt) lt.textContent = dict['EN'];
+  // 테마 토글 라벨
+  const tt = el('theme-toggle');
+  if(tt){
+    const t = document.documentElement.getAttribute('data-theme') || 'dark';
+    const key = t === 'light' ? '🌙 다크' : '☀ 라이트';
+    tt.textContent = dict[key] || key;
+  }
+}
+setTimeout(applyLang, 250);
+
 // ── Service Worker 등록 (PWA) ──
 if('serviceWorker' in navigator){
   window.addEventListener('load', () => {
@@ -2961,7 +3151,10 @@ async function loadFavFlights(){
         ${gate || ck ? `<div class="fav-gate">${gate ? `${gateLbl} <b>${gate}</b>` : ''}${gate && ck ? ' · ' : ''}${ck ? `체크인 <b>${ck}</b>` : ''}</div>` : ''}
         ${cd}
       </div>
-      <button class="fav-remove-btn" onclick="removeFavFlight('${f.flightId}','${f.dir}')" title="삭제">✕</button>
+      <div class="fav-card-actions">
+        <button class="fav-ics-btn" onclick="downloadFavIcs('${f.flightId}','${f.dir}')" title="캘린더 추가">📅</button>
+        <button class="fav-remove-btn" onclick="removeFavFlight('${f.flightId}','${f.dir}')" title="삭제">✕</button>
+      </div>
     </div>`;
   }).join('');
   area.innerHTML = cards;
