@@ -79,6 +79,74 @@ body{
   font-family:inherit;transition:.15s;
 }
 #share-btn:hover{border-color:var(--accent);color:var(--accent)}
+/* quick search button */
+#quick-search-btn{
+  background:none;border:1px solid var(--border);color:var(--text2);
+  border-radius:var(--rx);padding:3px 9px;cursor:pointer;font-size:.72rem;
+  font-family:inherit;display:flex;align-items:center;gap:6px;transition:.15s;
+}
+#quick-search-btn:hover{border-color:var(--accent);color:var(--accent)}
+#quick-search-btn kbd{
+  background:var(--card2);border:1px solid var(--border);padding:1px 5px;
+  border-radius:3px;font-size:.6rem;color:var(--muted);font-family:inherit;
+}
+@media(max-width:560px){#quick-search-btn kbd{display:none}}
+/* quick search modal */
+#qs-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;
+  display:flex;align-items:flex-start;justify-content:center;padding:80px 20px 20px;
+  backdrop-filter:blur(3px);transition:opacity .15s;
+}
+#qs-overlay.qs-hidden{opacity:0;pointer-events:none}
+#qs-modal{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  width:100%;max-width:620px;box-shadow:0 20px 50px rgba(0,0,0,.55);
+  display:flex;flex-direction:column;max-height:75vh;
+}
+.qs-head{
+  display:flex;align-items:center;gap:10px;padding:14px 16px;
+  border-bottom:1px solid var(--border);
+}
+.qs-icon{font-size:1rem;opacity:.7}
+#qs-input{
+  flex:1;background:none;border:none;outline:none;color:var(--text);
+  font-size:.95rem;font-family:inherit;
+}
+.qs-close{
+  background:var(--card2);border:1px solid var(--border);color:var(--muted);
+  border-radius:var(--rx);padding:3px 9px;cursor:pointer;font-size:.65rem;
+  font-family:inherit;letter-spacing:.05em;
+}
+#qs-results{
+  flex:1;overflow-y:auto;padding:6px 0;
+}
+.qs-group{
+  font-size:.65rem;color:var(--muted);font-weight:700;
+  padding:8px 16px 4px;letter-spacing:.06em;text-transform:uppercase;
+}
+.qs-item{
+  display:flex;align-items:center;gap:12px;padding:9px 16px;
+  cursor:pointer;border-left:3px solid transparent;transition:.1s;
+}
+.qs-item:hover,.qs-item.active{
+  background:var(--a-hover);border-left-color:var(--accent);
+}
+.qs-item-icon{font-size:1rem;flex-shrink:0;width:22px;text-align:center}
+.qs-item-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.qs-item-title{font-size:.82rem;color:var(--text);font-weight:600}
+.qs-item-sub{font-size:.68rem;color:var(--muted)}
+.qs-item-key{font-size:.62rem;color:var(--muted);background:var(--card2);
+  padding:2px 7px;border-radius:8px;border:1px solid var(--border);white-space:nowrap;
+}
+.qs-empty{padding:30px;text-align:center;color:var(--muted);font-size:.78rem}
+.qs-foot{
+  padding:8px 16px;border-top:1px solid var(--border);
+  display:flex;gap:16px;font-size:.62rem;color:var(--muted);
+}
+.qs-foot kbd{
+  background:var(--card2);border:1px solid var(--border);padding:1px 5px;
+  border-radius:3px;font-size:.58rem;color:var(--text2);font-family:inherit;
+}
 /* toast */
 #icn-toast{
   position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
@@ -548,6 +616,20 @@ tr:hover td{background:var(--a-hover)}
   text-align:center;padding:30px;color:var(--muted);font-size:.78rem;
   background:var(--card);border:1px dashed var(--border);border-radius:var(--rc);
 }
+.fav-countdown{
+  background:var(--card2);border:1px solid var(--border);border-radius:var(--rb);
+  padding:8px 12px;margin-top:6px;display:flex;align-items:center;gap:10px;
+  font-size:.72rem;color:var(--text2);
+}
+.fav-countdown.urgent{border-color:var(--r);background:rgba(239,68,68,.06)}
+.fav-countdown.warning{border-color:var(--y);background:rgba(245,158,11,.06)}
+.fav-countdown.go{border-color:var(--g);background:rgba(34,197,94,.06)}
+.fav-cd-time{font-weight:800;font-size:1rem;color:var(--accent);letter-spacing:.02em}
+.fav-countdown.urgent .fav-cd-time{color:var(--r)}
+.fav-countdown.warning .fav-cd-time{color:var(--y)}
+.fav-countdown.go .fav-cd-time{color:var(--g)}
+.fav-cd-msg{flex:1;color:var(--text2);font-weight:500;line-height:1.4}
+.fav-cd-msg b{color:var(--text);font-weight:700}
 
 /* ── PREP (출국 준비) ── */
 .check-head{
@@ -692,6 +774,39 @@ tr:hover td{background:var(--a-hover)}
   grid-column:1/-1;
 }
 
+/* ── MAP (평면도) ── */
+.map-intro{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:12px 14px;margin-bottom:10px;display:flex;flex-direction:column;gap:4px;
+}
+.map-intro strong{color:var(--accent);font-size:.85rem}
+.map-intro span{color:var(--text2);font-size:.72rem;line-height:1.55}
+.map-term-tabs{display:flex;gap:5px;margin-bottom:8px}
+.map-svg-wrap{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:10px;overflow:hidden;
+}
+#map-svg{width:100%;height:auto;display:block;max-height:480px}
+.map-legend{
+  display:flex;flex-wrap:wrap;gap:8px 14px;padding:10px 14px;margin-top:8px;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+}
+.map-leg{
+  font-size:.7rem;color:var(--text2);display:inline-flex;align-items:center;gap:6px;
+}
+.map-leg i{
+  display:inline-block;width:11px;height:11px;border-radius:3px;
+}
+.map-zone{fill:var(--card2);stroke:var(--border);stroke-width:1}
+.map-corridor{fill:rgba(255,255,255,.02);stroke:var(--border);stroke-width:1;stroke-dasharray:3,3}
+.map-label{fill:var(--text2);font-size:11px;font-family:'Noto Sans KR',sans-serif;font-weight:600}
+.map-label-sm{fill:var(--muted);font-size:9px;font-family:'Noto Sans KR',sans-serif}
+.map-pin{stroke:var(--card);stroke-width:1.5;cursor:pointer;transition:.15s}
+.map-pin:hover{transform:scale(1.3);filter:brightness(1.2)}
+.map-pin-label{fill:var(--text);font-size:8.5px;font-weight:700;pointer-events:none;text-anchor:middle}
+[data-theme="light"] .map-corridor{fill:rgba(0,0,0,.02)}
+[data-theme="light"] .map-pin{stroke:#fff}
+
 @media(max-width:560px){
   .fav-card{grid-template-columns:auto 1fr;gap:8px}
   .fav-remove-btn{grid-column:2;justify-self:end}
@@ -703,12 +818,30 @@ tr:hover td{background:var(--a-hover)}
 
 <div id="icn-toast"></div>
 
+<!-- QUICK SEARCH MODAL -->
+<div id="qs-overlay" class="qs-hidden" onclick="if(event.target===this)closeQuickSearch()">
+  <div id="qs-modal">
+    <div class="qs-head">
+      <span class="qs-icon">🔍</span>
+      <input id="qs-input" placeholder="편명·게이트·시설·라운지·공항코드 검색..." autocomplete="off" oninput="renderQuickSearch()" onkeydown="onQsKey(event)">
+      <button class="qs-close" onclick="closeQuickSearch()" title="닫기">ESC</button>
+    </div>
+    <div id="qs-results"></div>
+    <div class="qs-foot">
+      <span><kbd>↑↓</kbd> 이동</span>
+      <span><kbd>Enter</kbd> 선택</span>
+      <span><kbd>ESC</kbd> 닫기</span>
+    </div>
+  </div>
+</div>
+
 <!-- TOP BAR -->
 <div id="topbar">
   <a href="index.html" id="logo">ICN Airport NOW</a>
   <div id="topbar-right">
     <span id="hdr-time">--:--</span>
     <span id="hdr-date"></span>
+    <button id="quick-search-btn" onclick="openQuickSearch()" title="빠른 검색 (Ctrl+K)"><span>🔍</span><kbd>Ctrl+K</kbd></button>
     <button id="share-btn" onclick="sharePage()" title="공유">🔗</button>
     <button id="theme-toggle" onclick="toggleTheme()">☀ 라이트</button>
   </div>
@@ -948,6 +1081,7 @@ tr:hover td{background:var(--a-hover)}
   <div class="sub-tabs">
     <button class="sub-btn active" onclick="setPrepTab('check',this)">✅ 체크리스트</button>
     <button class="sub-btn" onclick="setPrepTab('route',this)">🚗 공항 가는 길</button>
+    <button class="sub-btn" onclick="setPrepTab('map',this)">🗺 평면도</button>
     <button class="sub-btn" onclick="setPrepTab('lounge',this)">🛋 라운지</button>
     <button class="sub-btn" onclick="setPrepTab('amenity',this)">🏢 공항 편의</button>
     <button class="sub-btn" onclick="setPrepTab('bag',this)">🧳 수하물 규정</button>
@@ -1082,6 +1216,29 @@ tr:hover td{background:var(--a-hover)}
           <p>미신고 적발 시 40% 가산세 부과</p>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div id="prep-map" style="display:none">
+    <div class="map-intro">
+      <strong>🗺 인천공항 평면도 (간략화)</strong>
+      <span>주요 시설·라운지·게이트 영역 위치. 정확한 동선은 공항 안내데스크 또는 출입국 시 화면 안내를 참고하세요.</span>
+    </div>
+    <div class="map-term-tabs">
+      <button class="sub-btn active" onclick="setMapTerm('T1',this)">제1터미널 (T1)</button>
+      <button class="sub-btn" onclick="setMapTerm('T2',this)">제2터미널 (T2)</button>
+    </div>
+    <div class="map-svg-wrap">
+      <svg id="map-svg" viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+    <div class="map-legend">
+      <span class="map-leg"><i style="background:#00c8f0"></i> 게이트</span>
+      <span class="map-leg"><i style="background:#22c55e"></i> 라운지</span>
+      <span class="map-leg"><i style="background:#f59e0b"></i> 환전·은행</span>
+      <span class="map-leg"><i style="background:#a78bfa"></i> 면세점</span>
+      <span class="map-leg"><i style="background:#ef4444"></i> 흡연실</span>
+      <span class="map-leg"><i style="background:#3b82f6"></i> 수유실·키즈존</span>
+      <span class="map-leg"><i style="background:#94a3b8"></i> 화장실·기타</span>
     </div>
   </div>
 
@@ -2333,6 +2490,171 @@ async function sharePage(){
   }
 }
 
+// ════════════════════════════════
+//  통합 검색 (Ctrl+K)
+// ════════════════════════════════
+const QS_STATIC = [
+  // 탭
+  { type:'탭', icon:'📊', title:'진출입 현황', sub:'도착편/출발편 실시간', go:()=>showTab('entry',_qsTabBtn('entry')) },
+  { type:'탭', icon:'🅿', title:'주차장 현황', sub:'T1·T2 주차면 실시간', go:()=>showTab('parking',_qsTabBtn('parking')) },
+  { type:'탭', icon:'🚌', title:'셔틀·철도 시간표', sub:'공항버스/AREX/택시', go:()=>showTab('transport',_qsTabBtn('transport')) },
+  { type:'탭', icon:'👥', title:'출·입국장 현황', sub:'터미널별 혼잡도', go:()=>showTab('congestion',_qsTabBtn('congestion')) },
+  { type:'탭', icon:'✈', title:'항공편 현황', sub:'출발/도착/수하물/운항마감', go:()=>showTab('flights',_qsTabBtn('flights')) },
+  { type:'탭', icon:'🏢', title:'시설정보', sub:'상업시설/항공사', go:()=>showTab('facilities',_qsTabBtn('facilities')) },
+  { type:'탭', icon:'⭐', title:'내 편명', sub:'즐겨찾기 항공편 추적', go:()=>showTab('fav',_qsTabBtn('fav')) },
+  { type:'탭', icon:'🛫', title:'출국 준비', sub:'체크리스트·수하물·면세·라운지', go:()=>showTab('prep',_qsTabBtn('prep')) },
+  // 빠른 액션
+  { type:'액션', icon:'✅', title:'출국 체크리스트', sub:'34개 준비물 체크', go:()=>{showTab('prep',_qsTabBtn('prep'));setPrepTab('check',_qsSubBtn('check'));} },
+  { type:'액션', icon:'🚗', title:'공항 가는 길', sub:'리무진/철도/택시 비교', go:()=>{showTab('prep',_qsTabBtn('prep'));setPrepTab('route',_qsSubBtn('route'));} },
+  { type:'액션', icon:'🛋', title:'라운지 가이드', sub:'T1·T2 PP카드 무료 라운지', go:()=>{showTab('prep',_qsTabBtn('prep'));setPrepTab('lounge',_qsSubBtn('lounge'));} },
+  { type:'액션', icon:'🏢', title:'공항 편의시설', sub:'와이파이/충전/환전/흡연실', go:()=>{showTab('prep',_qsTabBtn('prep'));setPrepTab('amenity',_qsSubBtn('amenity'));} },
+  { type:'액션', icon:'🧳', title:'수하물 규정', sub:'기내/위탁 무게·크기', go:()=>{showTab('prep',_qsTabBtn('prep'));setPrepTab('bag',_qsSubBtn('bag'));} },
+  { type:'액션', icon:'💰', title:'면세 한도', sub:'USD 800 + 술/담배/향수', go:()=>{showTab('prep',_qsTabBtn('prep'));setPrepTab('duty',_qsSubBtn('duty'));} },
+  { type:'액션', icon:'🚫', title:'반입 금지 품목', sub:'기내/위탁 금지물품', go:()=>{showTab('prep',_qsTabBtn('prep'));setPrepTab('ban',_qsSubBtn('ban'));} },
+];
+function _qsTabBtn(id){
+  return [...document.querySelectorAll('#tabs .tab-btn')].find(b => b.getAttribute('onclick')?.includes(`'${id}'`));
+}
+function _qsSubBtn(id){
+  return [...document.querySelectorAll('#tab-prep .sub-btn')].find(b => b.getAttribute('onclick')?.includes(`'${id}'`));
+}
+let _qsResults = [];
+let _qsActive = 0;
+function openQuickSearch(){
+  const ov = el('qs-overlay');
+  if(!ov) return;
+  ov.classList.remove('qs-hidden');
+  const inp = el('qs-input');
+  if(inp){ inp.value = ''; setTimeout(()=>inp.focus(), 50); }
+  renderQuickSearch();
+}
+function closeQuickSearch(){
+  el('qs-overlay')?.classList.add('qs-hidden');
+}
+function renderQuickSearch(){
+  const q = (el('qs-input')?.value || '').trim().toLowerCase();
+  const out = el('qs-results');
+  if(!out) return;
+  _qsActive = 0;
+  // 정적 항목 점수 매기기
+  let staticHits = QS_STATIC;
+  if(q){
+    staticHits = QS_STATIC.filter(it =>
+      (it.title+' '+it.sub+' '+it.type).toLowerCase().includes(q)
+    );
+  }
+  // 항공편 검색 (캐시 활용)
+  const flightHits = [];
+  if(q && Array.isArray(_fltCache)){
+    _fltCache.forEach(f => {
+      const id = (f.flightId || f.flightNum || '').toLowerCase();
+      const ap = (f.airport || '').toLowerCase();
+      const apc = (f.airportCode || '').toLowerCase();
+      const air = (f.airline || '').toLowerCase();
+      if(id.includes(q) || ap.includes(q) || apc.includes(q) || air.includes(q)){
+        flightHits.push(f);
+      }
+    });
+  }
+  // 시설 검색 (캐시 활용)
+  const facHits = [];
+  if(q && Array.isArray(_facCache) && _facCache.length){
+    _facCache.forEach(it => {
+      const nm = (it.entrFacltNm || '').toLowerCase();
+      const sv = (it.svcEtc || '').toLowerCase();
+      if(nm.includes(q) || sv.includes(q)) facHits.push(it);
+    });
+  }
+  _qsResults = [];
+  let html = '';
+  if(staticHits.length){
+    html += '<div class="qs-group">탭 / 액션</div>';
+    staticHits.slice(0, 12).forEach(it => {
+      _qsResults.push(it);
+      const idx = _qsResults.length - 1;
+      html += `<div class="qs-item" data-idx="${idx}" onclick="selectQs(${idx})">
+        <span class="qs-item-icon">${it.icon}</span>
+        <div class="qs-item-body">
+          <div class="qs-item-title">${it.title}</div>
+          <div class="qs-item-sub">${it.sub}</div>
+        </div>
+        <span class="qs-item-key">${it.type}</span>
+      </div>`;
+    });
+  }
+  if(flightHits.length){
+    html += '<div class="qs-group">항공편 (현재 운항)</div>';
+    flightHits.slice(0, 10).forEach(f => {
+      const item = {
+        type:'편명', icon:'✈',
+        title: f.flightId || f.flightNum || '',
+        sub: `${f.airline||''} · ${f.airport||f.airportCode||''} · ${fmtTime(f.scheduleDateTime)||''}`,
+        go: () => { closeQuickSearch(); showTab('flights',_qsTabBtn('flights')); setTimeout(()=>{ const q2=el('flt-q'); if(q2){q2.value=f.flightId||f.flightNum||'';renderFlights();}},100); }
+      };
+      _qsResults.push(item);
+      const idx = _qsResults.length - 1;
+      html += `<div class="qs-item" data-idx="${idx}" onclick="selectQs(${idx})">
+        <span class="qs-item-icon">${item.icon}</span>
+        <div class="qs-item-body">
+          <div class="qs-item-title">${item.title}</div>
+          <div class="qs-item-sub">${item.sub}</div>
+        </div>
+        <span class="qs-item-key">편명</span>
+      </div>`;
+    });
+  }
+  if(facHits.length){
+    html += '<div class="qs-group">공항 시설</div>';
+    facHits.slice(0, 10).forEach(it => {
+      const item = {
+        type:'시설', icon:'🏢',
+        title: it.entrFacltNm,
+        sub: `${TERM[it.terminalId]||it.terminalId||''} · ${it.lFloor||''} · ${it.svcEtc||''}`,
+        go: () => { closeQuickSearch(); showTab('facilities',_qsTabBtn('facilities')); setTimeout(()=>{ const q2=el('fac-q'); if(q2){q2.value=it.entrFacltNm;_facPage=1;renderFac();}},150); }
+      };
+      _qsResults.push(item);
+      const idx = _qsResults.length - 1;
+      html += `<div class="qs-item" data-idx="${idx}" onclick="selectQs(${idx})">
+        <span class="qs-item-icon">${item.icon}</span>
+        <div class="qs-item-body">
+          <div class="qs-item-title">${item.title}</div>
+          <div class="qs-item-sub">${item.sub}</div>
+        </div>
+        <span class="qs-item-key">시설</span>
+      </div>`;
+    });
+  }
+  if(!html){
+    html = q ? `<div class="qs-empty">"${q}" 결과가 없습니다.<br><span style="font-size:.66rem">항공편/시설 검색은 해당 탭을 한번 열어 데이터 로드 후 가능합니다.</span></div>`
+            : '<div class="qs-empty">검색어를 입력하세요</div>';
+  }
+  out.innerHTML = html;
+  _qsHighlight();
+}
+function _qsHighlight(){
+  document.querySelectorAll('.qs-item').forEach((el,i) => el.classList.toggle('active', i === _qsActive));
+  const cur = document.querySelector(`.qs-item[data-idx="${_qsActive}"]`);
+  if(cur) cur.scrollIntoView({ block:'nearest' });
+}
+function onQsKey(e){
+  if(e.key === 'Escape'){ e.preventDefault(); closeQuickSearch(); return; }
+  if(e.key === 'ArrowDown'){ e.preventDefault(); _qsActive = Math.min(_qsActive+1, _qsResults.length-1); _qsHighlight(); }
+  else if(e.key === 'ArrowUp'){ e.preventDefault(); _qsActive = Math.max(_qsActive-1, 0); _qsHighlight(); }
+  else if(e.key === 'Enter'){ e.preventDefault(); selectQs(_qsActive); }
+}
+function selectQs(idx){
+  const it = _qsResults[idx];
+  if(!it) return;
+  closeQuickSearch();
+  try { it.go(); } catch(e){ console.warn(e); }
+}
+document.addEventListener('keydown', e => {
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
+    e.preventDefault();
+    openQuickSearch();
+  }
+});
+
 // ── Service Worker 등록 (PWA) ──
 if('serviceWorker' in navigator){
   window.addEventListener('load', () => {
@@ -2373,6 +2695,86 @@ function removeFavFlight(flightId, dir){
   setFavs(favs);
   loadFavFlights();
 }
+// 출발/도착 카운트다운 + 이동 권장 시간 계산
+// 출발편: 게이트 도착 권장 = 출발 60분 전 (보안검색 25 + 출국심사 20 + 도보 15)
+// 도착편: 짐 찾기까지 = 도착 후 평균 30분
+function _parseFlightTime(dtStr, hhmmStr){
+  // scheduleDateTime이 'YYYYMMDDHHMM' 같은 12자리
+  if(dtStr && dtStr.length >= 12){
+    const y=+dtStr.slice(0,4), mo=+dtStr.slice(4,6)-1, d=+dtStr.slice(6,8),
+          h=+dtStr.slice(8,10), mi=+dtStr.slice(10,12);
+    return new Date(y, mo, d, h, mi);
+  }
+  // scheduleDateTime이 'HHMM' 4자리만 있는 경우 → 오늘 + HHMM
+  if(hhmmStr && /^\d{4}$/.test(hhmmStr)){
+    const now = new Date();
+    const t = new Date(now.getFullYear(), now.getMonth(), now.getDate(),
+                       +hhmmStr.slice(0,2), +hhmmStr.slice(2,4));
+    // 출발편 기준: 시간이 이미 지나갔으면 익일로 (도착편은 그대로)
+    if(t.getTime() < now.getTime() - 3*3600*1000) t.setDate(t.getDate()+1);
+    return t;
+  }
+  return null;
+}
+function buildCountdown(live, dir){
+  const raw = live.estimatedDateTime || live.scheduleDateTime || '';
+  const hhmm = (live.estimatedDateTime || live.scheduleDateTime || '').slice(-4);
+  const target = _parseFlightTime(raw, hhmm);
+  if(!target) return '';
+  const ts = target.getTime();
+  const isDep = dir === 'dep';
+  // 출발편: 게이트 도착 권장 시간 = 출발 60분 전
+  const goTs = isDep ? ts - 60*60*1000 : ts;
+  return `<div class="fav-countdown" data-target="${ts}" data-go="${goTs}" data-dir="${dir}">
+    <span class="fav-cd-time" data-cd-time>--:--:--</span>
+    <span class="fav-cd-msg" data-cd-msg>계산 중...</span>
+  </div>`;
+}
+function _updateCountdowns(){
+  const now = Date.now();
+  document.querySelectorAll('.fav-countdown').forEach(box => {
+    const ts = +box.dataset.target;
+    const goTs = +box.dataset.go;
+    const isDep = box.dataset.dir === 'dep';
+    const diff = ts - now;
+    const goDiff = goTs - now;
+    const timeEl = box.querySelector('[data-cd-time]');
+    const msgEl = box.querySelector('[data-cd-msg]');
+    box.classList.remove('urgent','warning','go');
+    if(diff <= 0){
+      if(timeEl) timeEl.textContent = isDep ? '출발 완료' : '도착 완료';
+      if(msgEl) msgEl.innerHTML = isDep
+        ? '항공기가 이미 출발했습니다'
+        : '도착 후 짐 찾기·입국심사 진행 중일 수 있어요';
+      box.classList.add('go');
+      return;
+    }
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    const fmt = (h>0 ? `${h}시간 ` : '') + `${m}분 ${s.toString().padStart(2,'0')}초`;
+    if(timeEl) timeEl.textContent = fmt;
+    if(!isDep){
+      if(msgEl) msgEl.innerHTML = `🛬 도착까지 — 짐 찾기 + 입국심사 통상 <b>30~50분</b> 추가 소요`;
+      return;
+    }
+    // 출발편: 이동 권장 메시지
+    if(goDiff <= 0){
+      if(msgEl) msgEl.innerHTML = `🏃 <b>지금 게이트로 이동하세요</b> · 출발까지 ${fmt}`;
+      box.classList.add('urgent');
+    } else if(goDiff <= 30*60*1000){
+      const gm = Math.ceil(goDiff/60000);
+      if(msgEl) msgEl.innerHTML = `⚠️ <b>${gm}분 후 게이트로 이동 권장</b> · 보안검색·심사 약 45분 소요`;
+      box.classList.add('warning');
+    } else {
+      const goH = Math.floor(goDiff/3600000);
+      const goM = Math.floor((goDiff%3600000)/60000);
+      if(msgEl) msgEl.innerHTML = `✈ 게이트 도착 권장: <b>${goH>0?goH+'시간 ':''}${goM}분 후</b> · 출발 60분 전`;
+    }
+  });
+}
+setInterval(_updateCountdowns, 1000);
+
 async function loadFavFlights(){
   const area = el('fav-area');
   if(!area) return;
@@ -2421,6 +2823,7 @@ async function loadFavFlights(){
     const ck = live.chkinrange || '';
     const term = TERM[live.terminalId] || live.terminalId || '';
     const cls = cancelled ? 'cancelled' : (delayed ? 'delayed' : '');
+    const cd = !cancelled ? buildCountdown(live, f.dir) : '';
     return `<div class="fav-card ${cls}">
       <div class="fav-flight-id">${f.flightId}</div>
       <div class="fav-meta">
@@ -2431,24 +2834,137 @@ async function loadFavFlights(){
           ${live.remark ? `<span>${badge(live.remark)}</span>` : ''}
         </div>
         ${gate || ck ? `<div class="fav-gate">${gate ? `${gateLbl} <b>${gate}</b>` : ''}${gate && ck ? ' · ' : ''}${ck ? `체크인 <b>${ck}</b>` : ''}</div>` : ''}
+        ${cd}
       </div>
       <button class="fav-remove-btn" onclick="removeFavFlight('${f.flightId}','${f.dir}')" title="삭제">✕</button>
     </div>`;
   }).join('');
   area.innerHTML = cards;
+  _updateCountdowns();
 }
 
 // ════════════════════════════════
 //  ⑧ 출국 준비
 // ════════════════════════════════
 function setPrepTab(t, btn){
-  ['check','route','lounge','amenity','bag','duty','ban'].forEach(k => {
+  ['check','route','map','lounge','amenity','bag','duty','ban'].forEach(k => {
     const p = el('prep-'+k);
     if(p) p.style.display = (k === t) ? '' : 'none';
   });
   document.querySelectorAll('#tab-prep .sub-btn').forEach(b => b.classList.remove('active'));
   if(btn) btn.classList.add('active');
   if(t === 'lounge') renderLounges();
+  if(t === 'map') drawMap();
+}
+
+// ── 평면도 (SVG 인포그래픽) ──
+let _mapTerm = 'T1';
+const MAP_DATA = {
+  T1: {
+    title: '제1터미널 (T1) — 출국장 3F / 면세구역 4F',
+    zones: [
+      // 출국장 (좌측)
+      { x:40,  y:60,  w:220, h:90, label:'체크인 카운터 (3F)', sub:'A·B·C·D·E·F·G·H·J·K·L·M' },
+      // 면세구역 게이트 (우측)
+      { x:330, y:50,  w:230, h:110, label:'면세구역·게이트 (4F)', sub:'게이트 11~50' },
+      // 입국장 (하단)
+      { x:40,  y:230, w:220, h:80, label:'입국장 (1F)', sub:'수하물·세관' },
+      { x:330, y:230, w:230, h:80, label:'교통센터·주차장', sub:'B1 AREX / 리무진' },
+    ],
+    corridors: [
+      { x1:260, y1:105, x2:330, y2:105 }, // 출국장→게이트
+      { x1:445, y1:160, x2:445, y2:230 }, // 게이트→교통센터
+      { x1:150, y1:150, x2:150, y2:230 }, // 출국장→입국장
+    ],
+    pins: [
+      { x:90,  y:75,  c:'#f59e0b', t:'환', d:'환전·은행 (3F)' },
+      { x:200, y:75,  c:'#f59e0b', t:'환', d:'환전소' },
+      { x:130, y:115, c:'#ef4444', t:'🚬', d:'흡연실 (3F)' },
+      { x:230, y:115, c:'#3b82f6', t:'👶', d:'수유실' },
+      { x:355, y:75,  c:'#00c8f0', t:'11', d:'게이트 11~14' },
+      { x:400, y:75,  c:'#00c8f0', t:'25', d:'게이트 22~25' },
+      { x:455, y:75,  c:'#00c8f0', t:'30', d:'게이트 26~30' },
+      { x:520, y:75,  c:'#00c8f0', t:'50', d:'게이트 41~50' },
+      { x:370, y:130, c:'#22c55e', t:'L', d:'아시아나 라운지 (동편)' },
+      { x:440, y:130, c:'#22c55e', t:'M', d:'마티나/SKY HUB 라운지' },
+      { x:520, y:130, c:'#22c55e', t:'L', d:'아시아나 라운지 (서편)' },
+      { x:400, y:105, c:'#a78bfa', t:'면', d:'면세점' },
+      { x:480, y:105, c:'#a78bfa', t:'면', d:'면세점' },
+      { x:425, y:155, c:'#ef4444', t:'🚬', d:'흡연실 (4F)' },
+      { x:520, y:155, c:'#3b82f6', t:'👶', d:'키즈존·수유실' },
+      { x:80,  y:265, c:'#94a3b8', t:'수', d:'수하물 컨베이어' },
+      { x:200, y:265, c:'#94a3b8', t:'세', d:'세관' },
+      { x:380, y:265, c:'#94a3b8', t:'리', d:'공항리무진 정류장' },
+      { x:480, y:265, c:'#94a3b8', t:'A', d:'AREX 공항철도' },
+    ]
+  },
+  T2: {
+    title: '제2터미널 (T2) — 출국장 3F / 면세구역 4F',
+    zones: [
+      { x:40,  y:60,  w:220, h:90, label:'체크인 카운터 (3F)', sub:'A~H 카운터 · 자동수하물' },
+      { x:330, y:50,  w:230, h:110, label:'면세구역·게이트 (4F)', sub:'게이트 230~270' },
+      { x:40,  y:230, w:220, h:80, label:'입국장 (1F)', sub:'수하물·세관' },
+      { x:330, y:230, w:230, h:80, label:'교통센터·주차장', sub:'B1 AREX / 리무진' },
+    ],
+    corridors: [
+      { x1:260, y1:105, x2:330, y2:105 },
+      { x1:445, y1:160, x2:445, y2:230 },
+      { x1:150, y1:150, x2:150, y2:230 },
+    ],
+    pins: [
+      { x:90,  y:75,  c:'#f59e0b', t:'환', d:'환전·은행 (3F)' },
+      { x:200, y:75,  c:'#f59e0b', t:'환', d:'환전소' },
+      { x:150, y:115, c:'#ef4444', t:'🚬', d:'흡연실 (3F)' },
+      { x:230, y:115, c:'#3b82f6', t:'👶', d:'수유실 (3F)' },
+      { x:360, y:75,  c:'#00c8f0', t:'230', d:'게이트 230~234' },
+      { x:420, y:75,  c:'#00c8f0', t:'250', d:'게이트 250~254' },
+      { x:480, y:75,  c:'#00c8f0', t:'260', d:'게이트 255~260' },
+      { x:540, y:75,  c:'#00c8f0', t:'270', d:'게이트 261~270' },
+      { x:380, y:130, c:'#22c55e', t:'L', d:'KAL 라운지 (East)' },
+      { x:460, y:130, c:'#22c55e', t:'L', d:'Lounge L' },
+      { x:530, y:130, c:'#22c55e', t:'L', d:'KAL 라운지 (West)' },
+      { x:410, y:105, c:'#a78bfa', t:'면', d:'대한항공 면세점' },
+      { x:490, y:105, c:'#a78bfa', t:'면', d:'면세점' },
+      { x:445, y:155, c:'#ef4444', t:'🚬', d:'흡연실 (4F)' },
+      { x:510, y:155, c:'#3b82f6', t:'👶', d:'키즈존·수유실' },
+      { x:80,  y:265, c:'#94a3b8', t:'수', d:'수하물 컨베이어' },
+      { x:200, y:265, c:'#94a3b8', t:'세', d:'세관 (자동심사 우선)' },
+      { x:380, y:265, c:'#94a3b8', t:'리', d:'공항리무진 정류장' },
+      { x:480, y:265, c:'#94a3b8', t:'A', d:'AREX 공항철도' },
+    ]
+  }
+};
+function setMapTerm(t, btn){
+  _mapTerm = t;
+  document.querySelectorAll('.map-term-tabs .sub-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  drawMap();
+}
+function drawMap(){
+  const svg = el('map-svg');
+  if(!svg) return;
+  const data = MAP_DATA[_mapTerm];
+  if(!data) return;
+  let out = `<text x="300" y="28" text-anchor="middle" class="map-label" font-size="13">${data.title}</text>`;
+  // zones
+  data.zones.forEach(z => {
+    out += `<rect x="${z.x}" y="${z.y}" width="${z.w}" height="${z.h}" rx="6" class="map-zone"/>`;
+    out += `<text x="${z.x + z.w/2}" y="${z.y + z.h/2 - 2}" text-anchor="middle" class="map-label">${z.label}</text>`;
+    out += `<text x="${z.x + z.w/2}" y="${z.y + z.h/2 + 12}" text-anchor="middle" class="map-label-sm">${z.sub}</text>`;
+  });
+  // corridors
+  data.corridors.forEach(c => {
+    out += `<line x1="${c.x1}" y1="${c.y1}" x2="${c.x2}" y2="${c.y2}" class="map-corridor"/>`;
+  });
+  // pins
+  data.pins.forEach(p => {
+    const tt = (p.t || '').length;
+    out += `<g><title>${p.d}</title>`;
+    out += `<circle class="map-pin" cx="${p.x}" cy="${p.y}" r="11" fill="${p.c}"/>`;
+    out += `<text class="map-pin-label" x="${p.x}" y="${p.y + (tt > 2 ? 2 : 3)}" font-size="${tt > 2 ? 7 : 9}">${p.t}</text>`;
+    out += `</g>`;
+  });
+  svg.innerHTML = out;
 }
 function loadPrepTab(){
   renderChecklist();
