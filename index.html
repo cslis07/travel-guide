@@ -18,6 +18,7 @@
       <nav class="nav" id="nav">
         <a href="#destinations">여행지</a>
         <a href="#how">이용 방법</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;">✈ 인천공항</a>
       </nav>
       <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
     </div>
@@ -31,6 +32,24 @@
         <span class="fx-skeleton">로딩 중…</span>
       </div>
       <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── 환율 계산기 ── -->
+  <div class="fx-calc-bar" id="fxCalcBar">
+    <div class="container fx-calc-inner">
+      <span class="fx-calc-label">💰 계산</span>
+      <input type="number" id="fxCalcAmount" class="fx-calc-input" placeholder="금액 입력" oninput="calcFx()" min="0">
+      <select id="fxCalcFrom" class="fx-calc-sel" onchange="calcFx()">
+        <option value="KRW">원(KRW)</option>
+        <option value="USD">달러($)</option>
+        <option value="JPY">엔(¥)</option>
+        <option value="EUR">유로(€)</option>
+        <option value="VND">동(₫)</option>
+        <option value="THB">밧(฿)</option>
+      </select>
+      <span class="fx-calc-arrow">→</span>
+      <div class="fx-calc-results" id="fxCalcResults"><span class="fx-calc-hint">금액을 입력하세요</span></div>
     </div>
   </div>
 
@@ -145,6 +164,7 @@
 
         <!-- 국내여행 (TourAPI) -->
         <div class="sw-form" id="sw-domestic">
+          <div class="search-hist-bar hidden" id="searchHistBar"></div>
           <div class="sw-row">
             <div class="sw-field">
               <label>시/도</label>
@@ -193,6 +213,9 @@
               <input type="text" id="sw-keyword" placeholder="예) 카페, 해수욕장, 박물관..." onkeydown="if(event.key==='Enter')searchDomestic()">
             </div>
             <button class="sw-btn" onclick="searchDomestic()">🔍 검색</button>
+          </div>
+          <div class="sw-row sw-row--nearby">
+            <button class="sw-nearby-btn" id="nearbyBtn" onclick="searchNearby()">📍 내 주변 관광지</button>
           </div>
           <div class="sw-apikey-row">
             <span>🔑 TourAPI 키</span>
@@ -270,7 +293,11 @@
     <div class="container">
       <div class="section-header">
         <span class="section-badge" id="domesticBadge">🇰🇷 국내여행</span>
-        <h2 id="domesticTitle">검색 결과</h2>
+        <div class="dom-title-row">
+          <h2 id="domesticTitle">검색 결과</h2>
+          <div id="domesticWeather" class="hidden"></div>
+          <button class="dom-share-btn" onclick="shareSearch()" title="검색 결과 링크 공유">🔗 공유</button>
+        </div>
       </div>
       <!-- ── 결과 내 필터바 ── -->
       <div class="dom-filterbar hidden" id="domFilterBar">
@@ -329,6 +356,18 @@
           더 보기 <span id="domesticMoreLabel"></span>
         </button>
       </div>
+    </div>
+  </section>
+
+  <!-- ── FAVORITES ── -->
+  <section class="dom-section hidden" id="favSection">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">♥ 즐겨찾기</span>
+        <h2>저장한 장소</h2>
+        <p>카드의 하트를 눌러 저장하면 여기에 모입니다</p>
+      </div>
+      <div class="dom-grid" id="favGrid"></div>
     </div>
   </section>
 

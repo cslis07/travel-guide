@@ -269,6 +269,21 @@ const _dom = {
 const _parkingCache = new Map();
 let _parkingActive = false;
 
+// 위치 기반 검색 좌표
+let _nearbyCoords = null;
+
+// 환율 데이터 (계산기용)
+let _fxRates = null;
+let _fxKrwPerUsd = 0;
+
+// 즐겨찾기 (contentId → item)
+const _favsData = new Map(
+  JSON.parse(localStorage.getItem('tripguide_favs') || '[]').map(it => [it.contentid, it])
+);
+
+// 검색 히스토리
+let _searchHistory = JSON.parse(localStorage.getItem('tripguide_history') || '[]');
+
 /* ─ 구/군 드롭다운 업데이트 ─ */
 function updateSigunguOptions(selectId, areaCode) {
   const sel = document.getElementById(selectId);
@@ -308,6 +323,7 @@ async function searchDomestic() {
   _dom.totalCount    = 0;
   _dom.loaded        = 0;
 
+  _nearbyCoords = null;
   _syncFilterBar();
   _resetParkingFilter();
 
@@ -327,6 +343,8 @@ async function searchDomestic() {
   domHide('domesticError');
   title.textContent = _buildTitle();
 
+  _saveSearchHistory();
+  if (_dom.areaCode) loadWeather(_dom.areaCode);
   await _fetchDomesticPage(false);
 }
 
@@ -345,6 +363,7 @@ function onDomFilterChange() {
   _dom.pageNo        = 1;
   _dom.totalCount    = 0;
   _dom.loaded        = 0;
+  _nearbyCoords      = null;
   _resetParkingFilter();
 
   const grid = document.getElementById('domesticGrid');
@@ -357,6 +376,8 @@ function onDomFilterChange() {
   const title = document.getElementById('domesticTitle');
   if (title) title.textContent = _buildTitle();
 
+  _saveSearchHistory();
+  if (_dom.areaCode) loadWeather(_dom.areaCode);
   _fetchDomesticPage(false);
 }
 
@@ -450,7 +471,11 @@ function domImgError(img) {
 async function loadMoreDomestic() {
   if (_dom.loading) return;
   _dom.pageNo++;
-  await _fetchDomesticPage(true);
+  if (_nearbyCoords) {
+    await _fetchNearbyPage(true);
+  } else {
+    await _fetchDomesticPage(true);
+  }
 }
 
 async function _fetchDomesticPage(append) {
@@ -568,9 +593,11 @@ function renderDomestic(items, append = false) {
     const thumb = item.firstimage
       ? `<div class="dom-thumb"><img src="${item.firstimage}" alt="${item.title}" loading="lazy" onerror="domImgError(this)"></div>`
       : `<div class="dom-thumb dom-thumb--empty"><span class="dom-nimg-icon">${icon}</span><span class="dom-nimg-name">${item.title}</span></div>`;
+    const fav = _favsData.has(item.contentid);
     return `
     <div class="dom-card dom-card--link" data-cid="${item.contentid}">
       ${thumb}
+      <button class="dom-fav-btn${fav?' active':''}" data-cid="${item.contentid}" onclick="toggleFav('${item.contentid}',event)" title="${fav?'즐겨찾기 해제':'즐겨찾기'}">${fav?'♥':'♡'}</button>
       <div class="dom-body">
         <span class="dom-ctype-tag">${icon} ${CTYPE_MAP[item.contenttypeid]||''}</span>
         <h3>${item.title}</h3>
@@ -590,7 +617,8 @@ function renderDomestic(items, append = false) {
   // 새로 추가된 카드에만 이벤트 등록
   grid.querySelectorAll('.dom-card--link:not([data-bound])').forEach(card => {
     card.dataset.bound = '1';
-    card.addEventListener('click', () => {
+    card.addEventListener('click', e => {
+      if (e.target.classList.contains('dom-fav-btn')) return;
       const it = _tourItemCache.get(card.dataset.cid);
       if (it) openTourDetail(it.contentid, it.contenttypeid, it.mapx, it.mapy);
     });
@@ -696,10 +724,13 @@ function _renderTourModal({ detail, intro, imgArr, nbArr, cached }) {
   html += `<div class="tmd-content">`;
 
   // 제목·주소·연락처
+  const _cid   = detail?.contentid || cached?.contentid || '';
+  const _favOn = _favsData.has(_cid);
   html += `<div class="tmd-head">
     <h2 class="tmd-name">${title}</h2>
     ${addr ? `<p class="tmd-addr">📍 ${addr}</p>` : ''}
     ${tel  ? `<p class="tmd-tel">📞 ${tel}</p>`   : ''}
+    ${_cid ? `<button class="tmd-fav-btn dom-fav-btn${_favOn?' active':''}" data-cid="${_cid}" onclick="toggleFav('${_cid}',event)">${_favOn?'♥ 저장됨':'♡ 저장하기'}</button>` : ''}
   </div>`;
 
   // 지도 버튼
@@ -790,6 +821,8 @@ async function loadExchangeRates() {
 
     const r          = data.rates;
     const krwPerUsd  = r.KRW;
+    _fxRates = r;
+    _fxKrwPerUsd = r.KRW;
 
     el.innerHTML = CURRENCIES.map(c => {
       const krw = Math.round((krwPerUsd / r[c.code]) * c.unit);
@@ -810,6 +843,290 @@ async function loadExchangeRates() {
 }
 
 /* ═══════════════════════════════════════════
+   환율 계산기
+   ═══════════════════════════════════════════ */
+function calcFx() {
+  const amt  = parseFloat(document.getElementById('fxCalcAmount')?.value);
+  const from = document.getElementById('fxCalcFrom')?.value || 'KRW';
+  const out  = document.getElementById('fxCalcResults');
+  if (!out) return;
+  if (!_fxRates || isNaN(amt) || amt <= 0) {
+    out.innerHTML = '<span class="fx-calc-hint">금액을 입력하세요</span>';
+    return;
+  }
+  const SHOW = [
+    { code:'KRW', sym:'원' }, { code:'USD', sym:'$' },
+    { code:'JPY', sym:'¥' }, { code:'EUR', sym:'€' },
+    { code:'VND', sym:'₫' }, { code:'THB', sym:'฿' },
+  ].filter(t => t.code !== from);
+  const conv = (a, f, t) => {
+    const fr = f === 'USD' ? 1 : _fxRates[f];
+    const tr = t === 'USD' ? 1 : _fxRates[t];
+    return (a / fr) * tr;
+  };
+  out.innerHTML = SHOW.map(t => {
+    const v = conv(amt, from, t.code);
+    const s = t.code === 'KRW'
+      ? Math.round(v).toLocaleString() + '원'
+      : v.toLocaleString('ko', { maximumFractionDigits: (t.code === 'JPY' || t.code === 'VND') ? 0 : 2 }) + t.sym;
+    return `<span class="fx-calc-item"><strong>${s}</strong></span>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════
+   즐겨찾기
+   ═══════════════════════════════════════════ */
+function toggleFav(contentId, e) {
+  if (e) e.stopPropagation();
+  if (_favsData.has(contentId)) {
+    _favsData.delete(contentId);
+  } else {
+    const it = _tourItemCache.get(contentId);
+    if (it) _favsData.set(contentId, it);
+  }
+  localStorage.setItem('tripguide_favs', JSON.stringify([..._favsData.values()]));
+  const on = _favsData.has(contentId);
+  document.querySelectorAll(`.dom-fav-btn[data-cid="${contentId}"]`).forEach(btn => {
+    btn.classList.toggle('active', on);
+    btn.textContent = on ? (btn.classList.contains('tmd-fav-btn') ? '♥ 저장됨' : '♥') : (btn.classList.contains('tmd-fav-btn') ? '♡ 저장하기' : '♡');
+    btn.title = on ? '즐겨찾기 해제' : '즐겨찾기';
+  });
+  _renderFavSection();
+}
+
+function _renderFavSection() {
+  const section = document.getElementById('favSection');
+  const grid    = document.getElementById('favGrid');
+  if (!section || !grid) return;
+  const items = [..._favsData.values()];
+  if (!items.length) { section.classList.add('hidden'); return; }
+  section.classList.remove('hidden');
+  grid.innerHTML = items.map(item => {
+    const icon  = CTYPE_ICON[item.contenttypeid] || '🗺';
+    const thumb = item.firstimage
+      ? `<div class="dom-thumb"><img src="${item.firstimage}" alt="${item.title}" loading="lazy"></div>`
+      : `<div class="dom-thumb dom-thumb--empty"><span class="dom-nimg-icon">${icon}</span><span class="dom-nimg-name">${item.title}</span></div>`;
+    return `
+    <div class="dom-card dom-card--link fav-card" data-cid="${item.contentid}">
+      ${thumb}
+      <button class="dom-fav-btn active" data-cid="${item.contentid}" onclick="toggleFav('${item.contentid}',event)" title="즐겨찾기 해제">♥</button>
+      <div class="dom-body">
+        <span class="dom-ctype-tag">${icon} ${CTYPE_MAP[item.contenttypeid]||''}</span>
+        <h3>${item.title}</h3>
+        ${item.addr1 ? `<p class="dom-addr">📍 ${item.addr1}</p>` : ''}
+        <p class="dom-more">상세보기 →</p>
+      </div>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('.fav-card:not([data-bound])').forEach(card => {
+    card.dataset.bound = '1';
+    card.addEventListener('click', e => {
+      if (e.target.classList.contains('dom-fav-btn')) return;
+      const it = _favsData.get(card.dataset.cid) || _tourItemCache.get(card.dataset.cid);
+      if (it) openTourDetail(it.contentid, it.contenttypeid, it.mapx, it.mapy);
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════
+   검색 히스토리
+   ═══════════════════════════════════════════ */
+function _saveSearchHistory() {
+  const area  = AREA_MAP[_dom.areaCode] || '전국';
+  const ctype = CTYPE_MAP[_dom.contentTypeId] || '';
+  const kw    = _dom.keyword;
+  const label = [area, ctype, kw ? `"${kw}"` : ''].filter(Boolean).join(' ');
+  const entry = { areaCode: _dom.areaCode, sigunguCode: _dom.sigunguCode, contentTypeId: _dom.contentTypeId, keyword: kw, label };
+  _searchHistory = [entry, ..._searchHistory.filter(h => h.label !== label)].slice(0, 5);
+  localStorage.setItem('tripguide_history', JSON.stringify(_searchHistory));
+  _renderSearchHistory();
+}
+
+function _renderSearchHistory() {
+  const bar = document.getElementById('searchHistBar');
+  if (!bar) return;
+  if (!_searchHistory.length) { bar.classList.add('hidden'); return; }
+  bar.classList.remove('hidden');
+  bar.innerHTML = '<span class="sh-label">최근</span>' +
+    _searchHistory.map((h, i) => `<button class="sh-chip" onclick="_applySearchHistory(${i})">${h.label}</button>`).join('') +
+    '<button class="sh-clear" onclick="_clearSearchHistory()" title="히스토리 삭제">✕</button>';
+}
+
+function _applySearchHistory(idx) {
+  const h = _searchHistory[idx];
+  if (!h) return;
+  _dom.areaCode = h.areaCode; _dom.sigunguCode = h.sigunguCode;
+  _dom.contentTypeId = h.contentTypeId; _dom.keyword = h.keyword || '';
+  const s = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+  s('sw-area', h.areaCode);
+  updateSigunguOptions('sw-sigungu', h.areaCode);
+  s('sw-sigungu', h.sigunguCode);
+  s('sw-ctype', h.contentTypeId);
+  s('sw-keyword', h.keyword || '');
+  searchDomestic();
+}
+
+function _clearSearchHistory() {
+  _searchHistory = [];
+  localStorage.removeItem('tripguide_history');
+  _renderSearchHistory();
+}
+
+/* ═══════════════════════════════════════════
+   공유 기능 (URL 파라미터)
+   ═══════════════════════════════════════════ */
+function shareSearch() {
+  const params = new URLSearchParams();
+  if (_dom.areaCode)      params.set('area',  _dom.areaCode);
+  if (_dom.sigunguCode)   params.set('sig',   _dom.sigunguCode);
+  if (_dom.contentTypeId) params.set('ctype', _dom.contentTypeId);
+  if (_dom.keyword)       params.set('kw',    _dom.keyword);
+  const url = location.origin + location.pathname + '?' + params.toString();
+  navigator.clipboard?.writeText(url)
+    .then(() => _showToast('🔗 링크 복사됨!'))
+    .catch(() => prompt('아래 링크를 복사하세요:', url));
+}
+
+function _parseUrlAndSearch() {
+  const p = new URLSearchParams(location.search);
+  if (!p.has('area') && !p.has('ctype') && !p.has('kw')) return;
+  _dom.areaCode = p.get('area') || ''; _dom.sigunguCode = p.get('sig') || '';
+  _dom.contentTypeId = p.get('ctype') || ''; _dom.keyword = p.get('kw') || '';
+  const s = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+  s('sw-area', _dom.areaCode);
+  updateSigunguOptions('sw-sigungu', _dom.areaCode);
+  s('sw-sigungu', _dom.sigunguCode);
+  s('sw-ctype', _dom.contentTypeId);
+  s('sw-keyword', _dom.keyword);
+  searchDomestic();
+}
+
+function _showToast(msg) {
+  let t = document.getElementById('tripToast');
+  if (!t) { t = document.createElement('div'); t.id = 'tripToast'; t.className = 'trip-toast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ═══════════════════════════════════════════
+   현재 위치 기반 검색
+   ═══════════════════════════════════════════ */
+function searchNearby() {
+  const btn = document.getElementById('nearbyBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '위치 확인 중…'; }
+  if (!navigator.geolocation) {
+    alert('이 브라우저는 위치 기반 검색을 지원하지 않습니다.');
+    if (btn) { btn.disabled = false; btn.textContent = '📍 내 주변'; }
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(pos => {
+    if (btn) { btn.disabled = false; btn.textContent = '📍 내 주변 관광지'; }
+    _nearbyCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+    _dom.areaCode = ''; _dom.sigunguCode = ''; _dom.contentTypeId = ''; _dom.keyword = '';
+    _dom.pageNo = 1; _dom.totalCount = 0; _dom.loaded = 0;
+    _syncFilterBar(); _resetParkingFilter();
+    const section = document.getElementById('domesticSection');
+    const grid    = document.getElementById('domesticGrid');
+    const title   = document.getElementById('domesticTitle');
+    section?.classList.remove('hidden');
+    document.getElementById('domFilterBar')?.classList.remove('hidden');
+    section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (grid) grid.innerHTML = '';
+    domHide('domesticMoreWrap');
+    const _mb = document.getElementById('domesticMoreBtn');
+    if (_mb) _mb.style.display = '';
+    domShow('domesticLoading');
+    domHide('domesticError');
+    const wxEl = document.getElementById('domesticWeather');
+    if (wxEl) wxEl.classList.add('hidden');
+    if (title) title.textContent = '📍 내 주변 관광지';
+    _fetchNearbyPage(false);
+  }, () => {
+    if (btn) { btn.disabled = false; btn.textContent = '📍 내 주변 관광지'; }
+    alert('위치 권한을 허용해 주세요.');
+  }, { timeout: 8000 });
+}
+
+async function _fetchNearbyPage(append) {
+  if (!_nearbyCoords) return;
+  const { lat, lng } = _nearbyCoords;
+  const apiKey = getTourApiKey();
+  if (!apiKey) return;
+  _dom.loading = true;
+  const btn = document.getElementById('domesticMoreBtn');
+  if (btn) btn.disabled = true;
+  if (append) domShow('domesticLoading');
+  try {
+    const params = {
+      serviceKey: apiKey, MobileOS: 'ETC', MobileApp: 'TripGuide', _type: 'json',
+      mapX: lng.toFixed(6), mapY: lat.toFixed(6),
+      radius: 5000, numOfRows: _dom.numOfRows, pageNo: _dom.pageNo, arrange: 'E',
+    };
+    const res  = await fetch(`https://apis.data.go.kr/B551011/KorService2/locationBasedList2?${new URLSearchParams(params)}`);
+    const data = await res.json();
+    const body  = data?.response?.body;
+    const raw   = body?.items?.item;
+    const items = raw ? (Array.isArray(raw) ? raw : [raw]) : [];
+    _dom.totalCount = Number(body?.totalCount ?? 0);
+    _dom.loaded    += items.length;
+    domHide('domesticLoading');
+    if (!items.length && !append) {
+      domShow('domesticError');
+      document.getElementById('domesticErrorMsg').textContent = '주변 관광지 정보가 없습니다.';
+      return;
+    }
+    renderDomestic(items, append);
+    _updateDomMoreBtn();
+  } catch (err) {
+    domHide('domesticLoading');
+    if (!append) {
+      domShow('domesticError');
+      document.getElementById('domesticErrorMsg').textContent = `오류: ${err.message}`;
+    }
+  } finally {
+    _dom.loading = false;
+    if (btn) btn.disabled = false;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   날씨 정보 (Open-Meteo)
+   ═══════════════════════════════════════════ */
+const AREA_COORDS = {
+  '1':  {lat:37.5665,lng:126.9780}, '2':  {lat:37.4563,lng:126.7052},
+  '3':  {lat:36.3504,lng:127.3845}, '4':  {lat:35.8714,lng:128.6014},
+  '5':  {lat:35.1595,lng:126.8526}, '6':  {lat:35.1796,lng:129.0756},
+  '7':  {lat:35.5384,lng:129.3114}, '8':  {lat:36.4800,lng:127.2890},
+  '31': {lat:37.4138,lng:127.5183}, '32': {lat:37.8228,lng:128.1555},
+  '33': {lat:36.6354,lng:127.4916}, '34': {lat:36.6588,lng:126.6728},
+  '35': {lat:35.8200,lng:127.1088}, '36': {lat:34.9160,lng:126.8864},
+  '37': {lat:36.5760,lng:128.5056}, '38': {lat:35.4606,lng:128.2132},
+  '39': {lat:33.4996,lng:126.5312},
+};
+
+function _wxEmoji(c) {
+  return c === 0 ? '☀️' : c <= 3 ? '🌤' : c <= 48 ? '🌫' : c <= 55 ? '🌦' : c <= 67 ? '🌧' : c <= 77 ? '🌨' : c <= 82 ? '🌧' : '⛈';
+}
+
+async function loadWeather(areaCode) {
+  const el = document.getElementById('domesticWeather');
+  if (!el) return;
+  const coords = AREA_COORDS[areaCode];
+  if (!coords) { el.classList.add('hidden'); return; }
+  el.classList.remove('hidden');
+  el.innerHTML = '<span class="wx-loading">날씨 로딩…</span>';
+  try {
+    const res  = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lng}&current=temperature_2m,weathercode&timezone=Asia%2FSeoul&forecast_days=1`);
+    const data = await res.json();
+    const temp = Math.round(data.current.temperature_2m);
+    el.innerHTML = `<span class="wx-badge">${_wxEmoji(data.current.weathercode)} ${temp}°C</span>`;
+  } catch {
+    el.classList.add('hidden');
+  }
+}
+
+/* ═══════════════════════════════════════════
    초기화
    ═══════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -817,8 +1134,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initHotelFilter();
   initDestNav();
   initDates();
-  getTourApiKey(); // 저장된 키 복원
+  getTourApiKey();
   loadExchangeRates();
+  _renderFavSection();
+  _renderSearchHistory();
+  setTimeout(_parseUrlAndSearch, 50); // DOM 준비 후 URL 파라미터 처리
 
   // 모달 닫기 이벤트
   const _ov = document.getElementById('tourModalOverlay');

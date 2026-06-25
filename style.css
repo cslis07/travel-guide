@@ -2322,3 +2322,248 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
   .tmd-imgitem { flex: 0 0 180px; height: 125px; }
   .tmd-nb-card { flex: 0 0 110px; }
 }
+
+/* ═══════════════════════════════════════════
+   환율 계산기 바
+   ═══════════════════════════════════════════ */
+.fx-calc-bar {
+  background: #F5F3FF;
+  border-bottom: 1.5px solid #DDD6FE;
+  padding: 6px 0;
+}
+.fx-calc-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.fx-calc-inner::-webkit-scrollbar { display: none; }
+.fx-calc-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #7C3AED;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.fx-calc-input {
+  width: 110px;
+  height: 28px;
+  border: 1px solid #DDD6FE;
+  border-radius: 8px;
+  padding: 0 10px;
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--white);
+  flex-shrink: 0;
+}
+.fx-calc-input:focus { outline: none; border-color: #7C3AED; }
+.fx-calc-sel {
+  height: 28px;
+  border: 1px solid #DDD6FE;
+  border-radius: 8px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-family: inherit;
+  background: var(--white);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.fx-calc-arrow { color: #7C3AED; font-weight: 700; flex-shrink: 0; font-size: 14px; }
+.fx-calc-results {
+  display: flex;
+  gap: 6px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1;
+}
+.fx-calc-results::-webkit-scrollbar { display: none; }
+.fx-calc-hint { font-size: 12px; color: var(--gray-400); white-space: nowrap; }
+.fx-calc-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 11px;
+  background: var(--white);
+  border: 1px solid #DDD6FE;
+  border-radius: 16px;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.fx-calc-item strong { color: #7C3AED; font-size: 13px; font-weight: 800; }
+
+/* ═══════════════════════════════════════════
+   즐겨찾기 버튼
+   ═══════════════════════════════════════════ */
+.dom-card { position: relative; }
+
+.dom-fav-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--gray-200);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  color: var(--gray-400);
+  line-height: 1;
+  padding: 0;
+}
+.dom-fav-btn:hover { background: var(--white); color: #EF4444; border-color: #EF4444; }
+.dom-fav-btn.active { color: #EF4444; border-color: #EF4444; background: var(--white); }
+
+/* 모달 내 즐겨찾기 버튼 (position 재정의) */
+.tmd-fav-btn {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  border-radius: 20px !important;
+  padding: 7px 18px !important;
+  font-size: 0.85rem !important;
+  font-weight: 700;
+  font-family: inherit;
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--white);
+  border: 1.5px solid var(--gray-200) !important;
+  color: var(--gray-600) !important;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.tmd-fav-btn:hover { border-color: #EF4444 !important; color: #EF4444 !important; }
+.tmd-fav-btn.active { border-color: #EF4444 !important; color: #EF4444 !important; background: #FFF5F5 !important; }
+
+/* ═══════════════════════════════════════════
+   검색 히스토리
+   ═══════════════════════════════════════════ */
+.search-hist-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 0 0 8px;
+}
+.sh-label { font-size: 11px; color: var(--gray-400); white-space: nowrap; flex-shrink: 0; }
+.sh-chip {
+  padding: 3px 12px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 16px;
+  font-size: 12px;
+  color: var(--gray-600);
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.sh-chip:hover { border-color: var(--primary); color: var(--primary); }
+.sh-clear {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--gray-400);
+  font-size: 13px;
+  padding: 2px 4px;
+  margin-left: 2px;
+}
+
+/* ═══════════════════════════════════════════
+   내 주변 버튼
+   ═══════════════════════════════════════════ */
+.sw-nearby-btn {
+  padding: 9px 20px;
+  background: var(--white);
+  border: 1.5px solid var(--primary);
+  border-radius: 8px;
+  color: var(--primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.sw-nearby-btn:hover { background: var(--primary); color: var(--white); }
+.sw-nearby-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.sw-row--nearby { margin-top: 8px; }
+
+/* ═══════════════════════════════════════════
+   공유 버튼 / 날씨 배지
+   ═══════════════════════════════════════════ */
+.dom-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.dom-title-row h2 { flex: 1; min-width: 0; }
+
+.dom-share-btn {
+  padding: 5px 13px;
+  background: var(--white);
+  border: 1.5px solid var(--gray-200);
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gray-600);
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.dom-share-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+.wx-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1D4ED8;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.wx-loading { font-size: 12px; color: var(--gray-400); }
+
+/* ═══════════════════════════════════════════
+   토스트 알림
+   ═══════════════════════════════════════════ */
+.trip-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--dark);
+  color: var(--white);
+  padding: 10px 24px;
+  border-radius: 24px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s, transform 0.22s;
+  white-space: nowrap;
+}
+.trip-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* 모바일 환율 계산기 */
+@media (max-width: 640px) {
+  .fx-calc-bar { padding: 5px 0; }
+  .fx-calc-input { width: 90px; }
+  .fx-calc-label { display: none; }
+}
