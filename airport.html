@@ -593,10 +593,83 @@ tr:hover td{background:var(--a-hover)}
   background:var(--a-dim);padding:4px 8px;border-radius:var(--rx);
 }
 
+/* ── ROUTE (공항 가는 길) ── */
+.route-intro,.lounge-intro{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:12px 14px;margin-bottom:10px;display:flex;flex-direction:column;gap:4px;
+}
+.route-intro strong,.lounge-intro strong{color:var(--accent);font-size:.85rem}
+.route-intro span,.lounge-intro span{color:var(--text2);font-size:.72rem;line-height:1.55}
+.route-input-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.route-input{
+  flex:1;min-width:170px;background:var(--card2);border:1px solid var(--border);
+  border-radius:var(--rb);padding:8px 11px;color:var(--text);font-size:.78rem;
+  font-family:inherit;outline:none;
+}
+.route-input:focus{border-color:var(--accent)}
+.route-sel{
+  background:var(--card2);border:1px solid var(--border);border-radius:var(--rb);
+  padding:8px 11px;color:var(--text);font-size:.74rem;font-family:inherit;cursor:pointer;
+}
+.route-btn{
+  background:var(--accent);color:#001a24;border:none;border-radius:var(--rb);
+  padding:8px 16px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;
+}
+.route-btn:hover{opacity:.85}
+.route-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.route-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:14px;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;
+}
+.route-icon{font-size:1.8rem;line-height:1;padding-top:2px}
+.route-card-body{display:flex;flex-direction:column;gap:6px;min-width:0}
+.route-card-title{font-size:.92rem;font-weight:700;color:var(--text)}
+.route-card-desc{font-size:.72rem;color:var(--text2);line-height:1.5}
+.route-card-meta{
+  list-style:none;display:flex;flex-direction:column;gap:3px;
+  padding:6px 0;border-top:1px dashed var(--border);margin-top:4px;
+}
+.route-card-meta li{font-size:.7rem;color:var(--text2);line-height:1.5}
+.route-card-meta strong{color:var(--muted);font-weight:500;display:inline-block;min-width:74px}
+.route-link{
+  font-size:.7rem;color:var(--accent);text-decoration:none;font-weight:600;
+  margin-top:4px;align-self:flex-start;
+}
+.route-link:hover{text-decoration:underline}
+
+/* ── LOUNGE ── */
+.lounge-filter-row{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap}
+.lounge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px}
+.lounge-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:14px;display:flex;flex-direction:column;gap:6px;
+}
+.lounge-card-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.lounge-card-title{font-size:.9rem;font-weight:700;color:var(--text);flex:1;min-width:0}
+.lounge-tag{
+  font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:10px;
+  letter-spacing:.04em;white-space:nowrap;
+}
+.lounge-tag.t1{background:rgba(0,200,240,.15);color:var(--accent);border:1px solid rgba(0,200,240,.3)}
+.lounge-tag.t2{background:rgba(245,158,11,.15);color:var(--y);border:1px solid rgba(245,158,11,.3)}
+.lounge-tag.pp{background:rgba(34,197,94,.15);color:var(--g);border:1px solid rgba(34,197,94,.3)}
+.lounge-loc{font-size:.7rem;color:var(--muted)}
+.lounge-loc b{color:var(--text2);font-weight:500}
+.lounge-cards-line{font-size:.7rem;color:var(--text2);line-height:1.5}
+.lounge-cards-line b{color:var(--text);font-weight:600}
+.lounge-hours{
+  font-size:.68rem;color:var(--muted);padding:5px 0 0;
+  border-top:1px dashed var(--border);margin-top:4px;
+}
+.lounge-empty{
+  text-align:center;padding:30px;color:var(--muted);font-size:.78rem;
+  grid-column:1/-1;
+}
+
 @media(max-width:560px){
   .fav-card{grid-template-columns:auto 1fr;gap:8px}
   .fav-remove-btn{grid-column:2;justify-self:end}
-  .rule-grid{grid-template-columns:1fr}
+  .rule-grid,.route-grid,.lounge-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -845,6 +918,8 @@ tr:hover td{background:var(--a-hover)}
 <div id="tab-prep" class="tab-panel">
   <div class="sub-tabs">
     <button class="sub-btn active" onclick="setPrepTab('check',this)">✅ 체크리스트</button>
+    <button class="sub-btn" onclick="setPrepTab('route',this)">🚗 공항 가는 길</button>
+    <button class="sub-btn" onclick="setPrepTab('lounge',this)">🛋 라운지</button>
     <button class="sub-btn" onclick="setPrepTab('bag',this)">🧳 수하물 규정</button>
     <button class="sub-btn" onclick="setPrepTab('duty',this)">💰 면세 한도</button>
     <button class="sub-btn" onclick="setPrepTab('ban',this)">🚫 반입 금지</button>
@@ -978,6 +1053,93 @@ tr:hover td{background:var(--a-hover)}
         </div>
       </div>
     </div>
+  </div>
+
+  <div id="prep-route" style="display:none">
+    <div class="route-intro">
+      <strong>🚗 공항 가는 길 비교</strong>
+      <span>출발지를 입력하면 인천공항(T1/T2)까지의 주요 교통수단 정보를 한눈에 비교할 수 있습니다.</span>
+    </div>
+    <div class="route-input-row">
+      <input class="route-input" id="route-from" placeholder="출발지 입력 (예: 강남역, 서울역, 분당)" onkeydown="if(event.key==='Enter')compareRoute()">
+      <select id="route-term" class="route-sel">
+        <option value="T1">제1터미널 (T1)</option>
+        <option value="T2">제2터미널 (T2)</option>
+      </select>
+      <button class="route-btn" onclick="compareRoute()">🔍 비교</button>
+    </div>
+    <div class="route-grid" id="route-grid">
+      <div class="route-card">
+        <div class="route-icon">🚌</div>
+        <div class="route-card-body">
+          <div class="route-card-title">공항리무진</div>
+          <div class="route-card-desc">서울·경기 주요 지역에서 직행. 짐 많을 때 가장 편함.</div>
+          <ul class="route-card-meta">
+            <li><strong>요금</strong> 10,000~17,000원</li>
+            <li><strong>소요시간</strong> 60~90분 (교통 상황 따라)</li>
+            <li><strong>배차</strong> 15~30분 간격</li>
+            <li><strong>운행시간</strong> 04:30~22:30</li>
+          </ul>
+          <a class="route-link" href="https://www.airportlimousine.co.kr/" target="_blank" rel="noopener">시간표 확인 ↗</a>
+        </div>
+      </div>
+      <div class="route-card">
+        <div class="route-icon">🚆</div>
+        <div class="route-card-body">
+          <div class="route-card-title">공항철도 (AREX)</div>
+          <div class="route-card-desc">직통 43분, 일반 66분. 도심에서 가장 빠르고 정시성 우수.</div>
+          <ul class="route-card-meta">
+            <li><strong>직통</strong> 서울역 → T1 43분 / T2 51분, 11,000원</li>
+            <li><strong>일반</strong> 서울역 → T1 59분 / T2 66분, 4,750원</li>
+            <li><strong>배차</strong> 직통 40분 / 일반 10분</li>
+            <li><strong>운행시간</strong> 05:20~23:40 (서울역 기준)</li>
+          </ul>
+          <a class="route-link" id="route-arex-link" href="https://www.arex.or.kr/" target="_blank" rel="noopener">시간표 확인 ↗</a>
+        </div>
+      </div>
+      <div class="route-card">
+        <div class="route-icon">🚕</div>
+        <div class="route-card-body">
+          <div class="route-card-title">택시 / 카카오T</div>
+          <div class="route-card-desc">짐이 많거나 새벽·심야 시간대 추천. 가족·일행과 분담하면 가성비.</div>
+          <ul class="route-card-meta">
+            <li><strong>일반택시</strong> 서울 도심 → 약 55,000~75,000원</li>
+            <li><strong>모범/대형</strong> 약 90,000~110,000원</li>
+            <li><strong>소요시간</strong> 50~80분</li>
+            <li><strong>심야할증</strong> 24~04시 +20%</li>
+          </ul>
+          <a class="route-link" id="route-kakao-link" href="https://map.kakao.com/?sName=서울역&eName=인천공항" target="_blank" rel="noopener">카카오맵 길찾기 ↗</a>
+        </div>
+      </div>
+      <div class="route-card">
+        <div class="route-icon">🚙</div>
+        <div class="route-card-body">
+          <div class="route-card-title">자가용 + 주차</div>
+          <div class="route-card-desc">단기 여행에는 비추, 장기 출장·해외이주 시 유리.</div>
+          <ul class="route-card-meta">
+            <li><strong>주차요금</strong> 단기 30분 1,200원 / 1일 28,800원</li>
+            <li><strong>장기주차</strong> 1일 9,000원 (T1·T2 별도)</li>
+            <li><strong>대리주차</strong> 1일 13,000원~ (사설)</li>
+            <li><strong>고속도로</strong> 영종대교/인천대교 통행료 별도</li>
+          </ul>
+          <a class="route-link" href="https://www.airport.kr/ap/ko/svc/parkingFee.do" target="_blank" rel="noopener">주차요금 안내 ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="prep-lounge" style="display:none">
+    <div class="lounge-intro">
+      <strong>🛋 인천공항 라운지 가이드</strong>
+      <span>PP카드(Priority Pass) 또는 신용카드 무료 제공 라운지 정보. 음식·샤워실·와이파이·휴식 공간 제공. 일반 입장료 약 35,000~50,000원.</span>
+    </div>
+    <div class="lounge-filter-row">
+      <button class="sub-btn active" onclick="filterLounge('all',this)">전체</button>
+      <button class="sub-btn" onclick="filterLounge('T1',this)">T1</button>
+      <button class="sub-btn" onclick="filterLounge('T2',this)">T2</button>
+      <button class="sub-btn" onclick="filterLounge('pp',this)">PP카드 무료</button>
+    </div>
+    <div class="lounge-grid" id="lounge-grid"></div>
   </div>
 
   <div id="prep-ban" style="display:none">
@@ -2127,15 +2289,97 @@ async function loadFavFlights(){
 //  ⑧ 출국 준비
 // ════════════════════════════════
 function setPrepTab(t, btn){
-  ['check','bag','duty','ban'].forEach(k => {
+  ['check','route','lounge','bag','duty','ban'].forEach(k => {
     const p = el('prep-'+k);
     if(p) p.style.display = (k === t) ? '' : 'none';
   });
   document.querySelectorAll('#tab-prep .sub-btn').forEach(b => b.classList.remove('active'));
   if(btn) btn.classList.add('active');
+  if(t === 'lounge') renderLounges();
 }
 function loadPrepTab(){
   renderChecklist();
+}
+
+// ── 공항 가는 길 ──
+function compareRoute(){
+  const from = (el('route-from')?.value || '').trim();
+  const term = el('route-term')?.value || 'T1';
+  if(!from) return;
+  const dest = term === 'T1' ? '인천공항 제1여객터미널' : '인천공항 제2여객터미널';
+  const kakao = el('route-kakao-link');
+  if(kakao){
+    kakao.href = `https://map.kakao.com/?sName=${encodeURIComponent(from)}&eName=${encodeURIComponent(dest)}`;
+    kakao.textContent = `카카오맵: ${from} → ${term} ↗`;
+  }
+  const arex = el('route-arex-link');
+  if(arex){
+    arex.href = `https://www.arex.or.kr/content.do?menuCd=DOM010102`;
+  }
+}
+
+// ── 라운지 데이터 (인천공항 주요 라운지) ──
+const LOUNGES = [
+  // T1
+  { name: 'Asiana Lounge (동편)', term: 'T1', location: '면세구역 4F, 게이트 14~25 사이',
+    cards: ['PP카드', '신한 The Best/THE PRIVATE', '현대 The Black/Red', '삼성 The First'],
+    hours: '05:00~22:00', pp: true },
+  { name: 'Asiana Business Lounge (서편)', term: 'T1', location: '면세구역 4F, 게이트 41~50 사이',
+    cards: ['PP카드', '아시아나 비즈니스', '주요 프리미엄 신용카드'],
+    hours: '06:00~22:00', pp: true },
+  { name: 'KAL Lounge (동편)', term: 'T1', location: '면세구역 4F, 게이트 11 부근',
+    cards: ['대한항공 프레스티지/퍼스트', 'PP카드 일부 허용 안 됨'],
+    hours: '05:30~22:00', pp: false },
+  { name: 'Matina Lounge (East)', term: 'T1', location: '면세구역 4F, 게이트 26 부근',
+    cards: ['PP카드', '주요 신용카드 다수', '하나카드 Club H 시리즈'],
+    hours: '07:00~21:30', pp: true },
+  { name: 'SKY HUB Lounge', term: 'T1', location: '면세구역 4F, 게이트 11 부근',
+    cards: ['PP카드', 'KB국민카드 프리미엄', '롯데카드 프리미엄'],
+    hours: '06:30~21:30', pp: true },
+  // T2
+  { name: 'KAL Lounge T2 (West)', term: 'T2', location: '면세구역 4F, 게이트 250 부근',
+    cards: ['대한항공 프레스티지/퍼스트', '스카이팀 엘리트 플러스'],
+    hours: '06:00~22:00', pp: false },
+  { name: 'KAL Lounge T2 (East)', term: 'T2', location: '면세구역 4F, 게이트 230 부근',
+    cards: ['대한항공 프레스티지/퍼스트', '스카이팀 엘리트 플러스'],
+    hours: '06:00~22:00', pp: false },
+  { name: 'SKY HUB Lounge T2', term: 'T2', location: '면세구역 4F, 게이트 268 부근',
+    cards: ['PP카드', 'KB국민·롯데·신한·현대 프리미엄'],
+    hours: '06:30~21:30', pp: true },
+  { name: 'Lounge L', term: 'T2', location: '면세구역 4F, 게이트 231 부근',
+    cards: ['PP카드', '하나카드 Club H', '주요 프리미엄 신용카드'],
+    hours: '07:00~21:30', pp: true },
+];
+let _loungeFilter = 'all';
+function filterLounge(f, btn){
+  _loungeFilter = f;
+  document.querySelectorAll('#prep-lounge .sub-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderLounges();
+}
+function renderLounges(){
+  const grid = el('lounge-grid');
+  if(!grid) return;
+  let list = LOUNGES;
+  if(_loungeFilter === 'T1') list = list.filter(l => l.term === 'T1');
+  else if(_loungeFilter === 'T2') list = list.filter(l => l.term === 'T2');
+  else if(_loungeFilter === 'pp') list = list.filter(l => l.pp);
+  if(!list.length){
+    grid.innerHTML = '<div class="lounge-empty">해당 조건의 라운지가 없습니다.</div>';
+    return;
+  }
+  grid.innerHTML = list.map(l => `
+    <div class="lounge-card">
+      <div class="lounge-card-head">
+        <div class="lounge-card-title">${l.name}</div>
+        <span class="lounge-tag ${l.term.toLowerCase()}">${l.term}</span>
+        ${l.pp ? '<span class="lounge-tag pp">PP카드</span>' : ''}
+      </div>
+      <div class="lounge-loc">📍 <b>${l.location}</b></div>
+      <div class="lounge-cards-line"><b>입장 가능:</b> ${l.cards.join(' · ')}</div>
+      <div class="lounge-hours">🕐 ${l.hours}</div>
+    </div>
+  `).join('');
 }
 
 const CHECK_KEY = 'icn_checklist';
