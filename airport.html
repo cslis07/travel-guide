@@ -585,6 +585,12 @@ tr:hover td{background:var(--a-hover)}
   transition:opacity .15s;
 }
 .fav-add-btn:hover{opacity:.85}
+.fav-notify-btn{
+  background:var(--card2);color:var(--text2);border:1px solid var(--border);
+  border-radius:var(--rb);padding:7px 12px;font-size:.72rem;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:.15s;
+}
+.fav-notify-btn:hover{border-color:var(--accent);color:var(--accent)}
 .fav-card{
   background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
   padding:14px;margin-bottom:8px;display:grid;
@@ -653,6 +659,43 @@ tr:hover td{background:var(--a-hover)}
   font-family:inherit;transition:.15s;
 }
 .check-reset-btn:hover{border-color:var(--r);color:var(--r)}
+
+/* ── 출국 진행 트래커 ── */
+.depart-tracker{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:14px;margin-bottom:10px;
+}
+.dt-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px}
+.dt-head strong{font-size:.85rem;color:var(--accent)}
+.dt-eta{font-size:.7rem;color:var(--muted);font-weight:500}
+.dt-steps{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:5px;position:relative;
+}
+.dt-step{
+  background:var(--card2);border:1px solid var(--border);border-radius:var(--rb);
+  padding:9px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;
+  gap:5px;text-align:center;transition:.15s;position:relative;min-width:0;
+}
+.dt-step:hover{border-color:var(--accent)}
+.dt-step.done{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.4)}
+.dt-step.current{background:rgba(0,200,240,.1);border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,200,240,.18)}
+.dt-step-num{
+  width:24px;height:24px;border-radius:50%;background:var(--card);
+  border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:800;color:var(--muted);transition:.15s;
+}
+.dt-step.done .dt-step-num{background:var(--g);border-color:var(--g);color:#fff}
+.dt-step.done .dt-step-num::after{content:'✓';font-size:.78rem}
+.dt-step.done .dt-step-num{font-size:0}
+.dt-step.current .dt-step-num{background:var(--accent);border-color:var(--accent);color:#001a24}
+.dt-step-body{display:flex;flex-direction:column;gap:1px;min-width:0;width:100%}
+.dt-step-title{font-size:.7rem;font-weight:600;color:var(--text);line-height:1.2}
+.dt-step-time{font-size:.6rem;color:var(--muted)}
+.dt-reset-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px;flex-wrap:wrap}
+.dt-tip{font-size:.68rem;color:var(--text2)}
+@media(max-width:560px){
+  .dt-steps{grid-template-columns:repeat(3,1fr)}
+}
 .check-group{
   background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
   padding:12px 14px;margin-bottom:8px;
@@ -1062,7 +1105,7 @@ tr:hover td{background:var(--a-hover)}
   <div class="fav-intro">
     <div class="fav-intro-text">
       <strong>⭐ 내 편명 추적</strong>
-      <span>편명(예: KE901)을 입력해 저장하면, 게이트·시간 변경을 한눈에 확인할 수 있어요. localStorage에 저장되어 브라우저에 영구 보관됩니다.</span>
+      <span>편명을 저장하면 출발 카운트다운·게이트 변경 알림을 받을 수 있어요. 60초마다 자동 갱신. localStorage 영구 저장.</span>
     </div>
     <div class="fav-add-row">
       <input class="fav-add-input" id="fav-add-q" placeholder="편명 입력 (예: KE901, OZ102)" onkeydown="if(event.key==='Enter')addFavFlight()">
@@ -1071,6 +1114,7 @@ tr:hover td{background:var(--a-hover)}
         <option value="arr">도착편</option>
       </select>
       <button class="fav-add-btn" onclick="addFavFlight()">⭐ 추가</button>
+      <button class="fav-notify-btn" onclick="requestFavNotifyPermission()" title="게이트/시간 변경 시 OS 알림">🔔 알림 켜기</button>
     </div>
   </div>
   <div id="fav-area"><div class="loading" style="color:var(--muted);padding:30px">저장된 편명이 없습니다.<br>위에 편명을 입력해 추가하세요.</div></div>
@@ -1090,6 +1134,62 @@ tr:hover td{background:var(--a-hover)}
   </div>
 
   <div id="prep-check">
+    <!-- 출국 진행 트래커 -->
+    <div class="depart-tracker" id="depart-tracker">
+      <div class="dt-head">
+        <strong>📋 출국 진행 단계</strong>
+        <span class="dt-eta" id="dt-eta">예상 총 소요 50~80분</span>
+      </div>
+      <div class="dt-steps">
+        <div class="dt-step" data-step="0" onclick="setDepartStep(0)">
+          <div class="dt-step-num">1</div>
+          <div class="dt-step-body">
+            <div class="dt-step-title">체크인·수하물</div>
+            <div class="dt-step-time">5~20분</div>
+          </div>
+        </div>
+        <div class="dt-step" data-step="1" onclick="setDepartStep(1)">
+          <div class="dt-step-num">2</div>
+          <div class="dt-step-body">
+            <div class="dt-step-title">보안검색</div>
+            <div class="dt-step-time">10~25분</div>
+          </div>
+        </div>
+        <div class="dt-step" data-step="2" onclick="setDepartStep(2)">
+          <div class="dt-step-num">3</div>
+          <div class="dt-step-body">
+            <div class="dt-step-title">출국심사</div>
+            <div class="dt-step-time">5~20분</div>
+          </div>
+        </div>
+        <div class="dt-step" data-step="3" onclick="setDepartStep(3)">
+          <div class="dt-step-num">4</div>
+          <div class="dt-step-body">
+            <div class="dt-step-title">면세점·라운지</div>
+            <div class="dt-step-time">자유</div>
+          </div>
+        </div>
+        <div class="dt-step" data-step="4" onclick="setDepartStep(4)">
+          <div class="dt-step-num">5</div>
+          <div class="dt-step-body">
+            <div class="dt-step-title">게이트 이동</div>
+            <div class="dt-step-time">5~15분</div>
+          </div>
+        </div>
+        <div class="dt-step" data-step="5" onclick="setDepartStep(5)">
+          <div class="dt-step-num">6</div>
+          <div class="dt-step-body">
+            <div class="dt-step-title">탑승 완료</div>
+            <div class="dt-step-time">출발 30분 전</div>
+          </div>
+        </div>
+      </div>
+      <div class="dt-reset-row">
+        <span class="dt-tip" id="dt-tip">현재 단계를 눌러 시작하세요</span>
+        <button class="check-reset-btn" onclick="resetDepart()">↺ 단계 초기화</button>
+      </div>
+    </div>
+
     <div class="check-head">
       <div class="check-progress-wrap">
         <div class="check-progress-bar"><div class="check-progress-fill" id="check-fill"></div></div>
@@ -2775,6 +2875,31 @@ function _updateCountdowns(){
 }
 setInterval(_updateCountdowns, 1000);
 
+// 게이트/시간 변경 알림용 이전 상태
+const FAV_SNAP_KEY = 'icn_fav_snapshot';
+function _getFavSnap(){
+  try { return JSON.parse(localStorage.getItem(FAV_SNAP_KEY) || '{}'); }
+  catch(e){ return {}; }
+}
+function _setFavSnap(s){ localStorage.setItem(FAV_SNAP_KEY, JSON.stringify(s)); }
+function _notify(title, body){
+  // 토스트는 항상
+  _toast(`🔔 ${title}: ${body}`);
+  // 권한 있으면 OS 알림도
+  if('Notification' in window && Notification.permission === 'granted'){
+    try {
+      new Notification(title, { body, icon: '/manifest.webmanifest', tag: 'icn-gate' });
+    } catch(e){ /* ignore */ }
+  }
+}
+function requestFavNotifyPermission(){
+  if(!('Notification' in window)){ _toast('이 브라우저는 알림 미지원'); return; }
+  if(Notification.permission === 'granted'){ _toast('알림 이미 허용됨 ✓'); return; }
+  Notification.requestPermission().then(p => {
+    _toast(p === 'granted' ? '알림 허용됨 ✓' : '알림 거부됨');
+  });
+}
+
 async function loadFavFlights(){
   const area = el('fav-area');
   if(!area) return;
@@ -2841,7 +2966,48 @@ async function loadFavFlights(){
   }).join('');
   area.innerHTML = cards;
   _updateCountdowns();
+
+  // ── 변경 감지 (게이트/시간/상태) ──
+  const snap = _getFavSnap();
+  const next = {};
+  favs.forEach(f => {
+    const src = f.dir === 'dep' ? depList : arrList;
+    const live = src.find(x =>
+      ((x.flightId || x.flightNum || '') + '').toUpperCase().replace(/\s+/g,'') === f.flightId
+    );
+    if(!live) return;
+    const key = f.flightId + '|' + f.dir;
+    const cur = {
+      gate: f.dir === 'dep' ? (live.gatenumber || '') : (live.carousel || live.exitnumber || ''),
+      est: live.estimatedDateTime || '',
+      sch: live.scheduleDateTime || '',
+      remark: live.remark || ''
+    };
+    next[key] = cur;
+    const prev = snap[key];
+    if(prev){
+      if(prev.gate && cur.gate && prev.gate !== cur.gate){
+        const lbl = f.dir === 'dep' ? '게이트' : '수하물벨트';
+        _notify(`${f.flightId} ${lbl} 변경`, `${prev.gate} → ${cur.gate}`);
+      }
+      if(prev.est && cur.est && prev.est !== cur.est){
+        const before = fmtTime(prev.est), after = fmtTime(cur.est);
+        if(before && after && before !== after){
+          _notify(`${f.flightId} 시간 변경`, `${before} → ${after}`);
+        }
+      }
+      if((prev.remark || '') !== (cur.remark || '') && cur.remark){
+        _notify(`${f.flightId} 상태 변경`, cur.remark);
+      }
+    }
+  });
+  _setFavSnap(next);
 }
+
+// 즐겨찾기 자동 갱신 (60초마다 백그라운드 체크)
+setInterval(() => {
+  if(getFavs().length) loadFavFlights();
+}, 60000);
 
 // ════════════════════════════════
 //  ⑧ 출국 준비
@@ -2968,6 +3134,47 @@ function drawMap(){
 }
 function loadPrepTab(){
   renderChecklist();
+  renderDepartTracker();
+}
+
+// ── 출국 진행 트래커 ──
+const DEPART_KEY = 'icn_depart_step';
+const DEPART_TIPS = [
+  '체크인 카운터에서 항공권 발권·짐 위탁. 모바일 체크인 시 셀프수하물도 가능.',
+  '액체류 100ml·노트북·보조배터리는 별도 트레이에 분리. 신발·벨트 검사 가능.',
+  '여권+탑승권 준비. 자동출국심사(만 7세 이상, 등록자 무료) 권장.',
+  '면세점/라운지 이용. 게이트까지 평균 도보 10분, 탑승동 이동 시 +5분.',
+  '게이트 이동 후 탑승 대기. 탑승동(P03)은 셔틀트레인 5분 추가.',
+  '탑승 완료! 좋은 여행 되세요 ✈',
+];
+function getDepartStep(){
+  const v = +localStorage.getItem(DEPART_KEY);
+  return Number.isFinite(v) ? v : -1;
+}
+function setDepartStep(s){
+  const cur = getDepartStep();
+  // 같은 단계 다시 누르면 그 단계로 진입 (현재로) / 이미 현재면 한 단계 뒤로
+  if(s === cur) localStorage.setItem(DEPART_KEY, String(s - 1));
+  else localStorage.setItem(DEPART_KEY, String(s));
+  renderDepartTracker();
+}
+function resetDepart(){
+  localStorage.removeItem(DEPART_KEY);
+  renderDepartTracker();
+}
+function renderDepartTracker(){
+  const cur = getDepartStep();
+  document.querySelectorAll('.dt-step').forEach(s => {
+    const i = +s.dataset.step;
+    s.classList.toggle('done', i < cur);
+    s.classList.toggle('current', i === cur);
+  });
+  const tip = el('dt-tip');
+  if(tip){
+    if(cur < 0) tip.textContent = '현재 단계를 눌러 시작하세요';
+    else if(cur >= DEPART_TIPS.length - 1) tip.innerHTML = '<b>탑승 완료!</b> 좋은 여행 되세요 ✈';
+    else tip.innerHTML = `<b>현재:</b> ${DEPART_TIPS[cur]}`;
+  }
 }
 
 // ── 공항 가는 길 ──
