@@ -1,0 +1,26 @@
+{
+  "name": "트립가이드 - 인천공항 실시간",
+  "short_name": "ICN Now",
+  "description": "인천공항 출국장 혼잡도·날씨·대기질·항공편·주차 실시간 정보",
+  "start_url": "/airport.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c0f1e",
+  "theme_color": "#00c8f0",
+  "lang": "ko-KR",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%230c0f1e'/><text x='96' y='130' font-size='110' text-anchor='middle' fill='%2300c8f0'>%E2%9C%88</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='84' fill='%230c0f1e'/><text x='256' y='340' font-size='280' text-anchor='middle' fill='%2300c8f0'>%E2%9C%88</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

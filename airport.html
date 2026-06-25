@@ -6,8 +6,19 @@
 <title>인천공항 실시간 | 트립가이드</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#00c8f0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script>(function(){const t=localStorage.getItem('icn-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})()</script>
+<script>(function(){
+  // 저장된 테마 우선, 없으면 시스템 prefers-color-scheme 감지
+  let t = localStorage.getItem('icn-theme');
+  if(!t){
+    t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+  }
+  document.documentElement.setAttribute('data-theme', t);
+})()</script>
 <style>
 /* ── DESIGN TOKENS ── */
 :root{
@@ -61,6 +72,21 @@ body{
   white-space:nowrap;
 }
 #theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+/* share button */
+#share-btn{
+  background:none;border:1px solid var(--border);color:var(--text2);
+  border-radius:var(--rx);padding:3px 9px;cursor:pointer;font-size:.78rem;
+  font-family:inherit;transition:.15s;
+}
+#share-btn:hover{border-color:var(--accent);color:var(--accent)}
+/* toast */
+#icn-toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--card);color:var(--text);border:1px solid var(--accent);
+  padding:10px 18px;border-radius:var(--rc);font-size:.76rem;font-weight:600;
+  box-shadow:var(--sh);opacity:0;pointer-events:none;transition:.25s;z-index:100;
+}
+#icn-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ── INFO STRIP (92px) ── */
 #info-strip{
@@ -675,12 +701,15 @@ tr:hover td{background:var(--a-hover)}
 </head>
 <body>
 
+<div id="icn-toast"></div>
+
 <!-- TOP BAR -->
 <div id="topbar">
   <a href="index.html" id="logo">ICN Airport NOW</a>
   <div id="topbar-right">
     <span id="hdr-time">--:--</span>
     <span id="hdr-date"></span>
+    <button id="share-btn" onclick="sharePage()" title="공유">🔗</button>
     <button id="theme-toggle" onclick="toggleTheme()">☀ 라이트</button>
   </div>
 </div>
@@ -920,6 +949,7 @@ tr:hover td{background:var(--a-hover)}
     <button class="sub-btn active" onclick="setPrepTab('check',this)">✅ 체크리스트</button>
     <button class="sub-btn" onclick="setPrepTab('route',this)">🚗 공항 가는 길</button>
     <button class="sub-btn" onclick="setPrepTab('lounge',this)">🛋 라운지</button>
+    <button class="sub-btn" onclick="setPrepTab('amenity',this)">🏢 공항 편의</button>
     <button class="sub-btn" onclick="setPrepTab('bag',this)">🧳 수하물 규정</button>
     <button class="sub-btn" onclick="setPrepTab('duty',this)">💰 면세 한도</button>
     <button class="sub-btn" onclick="setPrepTab('ban',this)">🚫 반입 금지</button>
@@ -1140,6 +1170,98 @@ tr:hover td{background:var(--a-hover)}
       <button class="sub-btn" onclick="filterLounge('pp',this)">PP카드 무료</button>
     </div>
     <div class="lounge-grid" id="lounge-grid"></div>
+  </div>
+
+  <div id="prep-amenity" style="display:none">
+    <div class="rule-grid">
+      <div class="rule-card">
+        <div class="rule-icon">📶</div>
+        <div class="rule-title">무료 Wi-Fi</div>
+        <div class="rule-detail">
+          <p>SSID: <strong>Airport_Wi-Fi</strong> (비번 없음)</p>
+          <p>T1·T2·교통센터 전 구역 제공</p>
+          <p>외국인 입국객용 별도 SSID: <strong>ICN_FreeWiFi</strong></p>
+          <p class="rule-tip">💡 SK·KT·LGU+ 5G도 빠르지만 와이파이는 무제한</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">🔌</div>
+        <div class="rule-title">충전 콘센트</div>
+        <div class="rule-detail">
+          <p>모든 게이트 대기석에 <strong>220V 콘센트 + USB</strong> 비치</p>
+          <p>면세구역 중앙 휴게공간에 충전 테이블</p>
+          <p>탑승동 공용 충전소 (검색 키워드: 충전, Charging)</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">💱</div>
+        <div class="rule-title">환전소·ATM</div>
+        <div class="rule-detail">
+          <p>3F 출국장: <strong>KEB하나·우리·신한·KB</strong> 환전소 다수</p>
+          <p>1F 입국장: 입국 후 즉시 환전 가능</p>
+          <p>면세구역: KEB하나은행 환전소 (T1·T2 모두)</p>
+          <p class="rule-tip">💡 모바일 환전 후 공항 수령이 가장 저렴 (수수료 90% 할인)</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">🚬</div>
+        <div class="rule-title">흡연실</div>
+        <div class="rule-detail">
+          <p><strong>T1:</strong> 출국장 3F (게이트 14·25·29·39 부근), 면세구역 4F (게이트 11·26·43 부근)</p>
+          <p><strong>T2:</strong> 출국장 3F (게이트 230·268 부근), 면세구역 4F</p>
+          <p>탑승동: 게이트 113·119·121·130 부근</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">👶</div>
+        <div class="rule-title">유아·가족 시설</div>
+        <div class="rule-detail">
+          <p><strong>수유실:</strong> T1 12곳, T2 9곳 (체크인 카운터·면세구역 분산)</p>
+          <p><strong>유모차 무료대여:</strong> 출국장 3F 안내데스크, 입국장 1F</p>
+          <p><strong>키즈존:</strong> T1 면세구역 4F 게이트 24·44 부근, T2 게이트 253 부근</p>
+          <p><strong>가족 화장실:</strong> 전 층에 다수 (장애인 공용)</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">🐶</div>
+        <div class="rule-title">반려동물 동반</div>
+        <div class="rule-detail">
+          <p><strong>기내 동반:</strong> 케이지 포함 7kg 이하, 사전 예약 필수</p>
+          <p><strong>위탁 운송:</strong> 7~32kg, 항공사별 규정 다름</p>
+          <p><strong>국제선 필수:</strong> 광견병 예방접종 증명서, 검역증명서</p>
+          <p><strong>반려동물 호텔:</strong> T1 교통센터 B1, 24시간 운영</p>
+          <p class="rule-tip">→ 농림축산검역본부 (032-740-2660)</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">💼</div>
+        <div class="rule-title">짐 보관소·택배</div>
+        <div class="rule-detail">
+          <p><strong>짐 보관:</strong> T1 3F·B1, T2 3F (1일 5,000~15,000원/개)</p>
+          <p><strong>택배 발송:</strong> CJ대한통운·우체국 (당일 도착 가능)</p>
+          <p><strong>코인라커:</strong> 1F·3F 다수 (24시간 무인)</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">🚿</div>
+        <div class="rule-title">샤워실·찜질방</div>
+        <div class="rule-detail">
+          <p><strong>스파온에어 (T1):</strong> 교통센터 지하 1층, 24시간</p>
+          <p>샤워 13,000원 / 찜질방 21,000원</p>
+          <p>장시간 환승 시 추천. 라운지 샤워실 무료 이용 가능</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">💊</div>
+        <div class="rule-title">의무실·약국</div>
+        <div class="rule-detail">
+          <p><strong>인하대병원 공항의원:</strong> T1 지하1층·T2 3F</p>
+          <p>운영시간 07:00~22:00, 응급은 24시간</p>
+          <p><strong>약국:</strong> T1 3F·B1, T2 3F</p>
+          <p class="rule-tip">→ 응급 신고 032-741-3119</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="prep-ban" style="display:none">
@@ -2187,6 +2309,37 @@ loadEntry();
 loadPaxChart();
 setInterval(refreshAll, 60000);
 
+// ── 공유 + 토스트 ──
+function _toast(msg){
+  const t = el('icn-toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(_toast._tm);
+  _toast._tm = setTimeout(() => t.classList.remove('show'), 2200);
+}
+async function sharePage(){
+  const url = window.location.href;
+  const title = '인천공항 실시간 정보 - 트립가이드';
+  if(navigator.share){
+    try { await navigator.share({ title, url }); return; }
+    catch(e) { /* user cancelled, fall through to clipboard */ }
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    _toast('🔗 링크가 복사되었습니다');
+  } catch(e){
+    _toast('복사 실패: ' + url);
+  }
+}
+
+// ── Service Worker 등록 (PWA) ──
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
 // ════════════════════════════════
 //  ⑦ 내 편명 (즐겨찾기)
 // ════════════════════════════════
@@ -2289,7 +2442,7 @@ async function loadFavFlights(){
 //  ⑧ 출국 준비
 // ════════════════════════════════
 function setPrepTab(t, btn){
-  ['check','route','lounge','bag','duty','ban'].forEach(k => {
+  ['check','route','lounge','amenity','bag','duty','ban'].forEach(k => {
     const p = el('prep-'+k);
     if(p) p.style.display = (k === t) ? '' : 'none';
   });
