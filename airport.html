@@ -465,6 +465,139 @@ tr:hover td{background:var(--a-hover)}
 }
 .notice-inner{display:inline-block;animation:scroll 60s linear infinite}
 @keyframes scroll{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}
+
+/* ── FAV (내 편명) ── */
+.fav-intro{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:14px;margin-bottom:10px;
+}
+.fav-intro-text{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.fav-intro-text strong{color:var(--accent);font-size:.85rem}
+.fav-intro-text span{color:var(--text2);font-size:.72rem;line-height:1.5}
+.fav-add-row{display:flex;gap:6px;flex-wrap:wrap}
+.fav-add-input{
+  flex:1;min-width:160px;background:var(--card2);border:1px solid var(--border);
+  border-radius:var(--rb);padding:7px 10px;color:var(--text);font-size:.78rem;
+  font-family:inherit;outline:none;
+}
+.fav-add-input:focus{border-color:var(--accent)}
+.fav-add-sel{
+  background:var(--card2);border:1px solid var(--border);border-radius:var(--rb);
+  padding:7px 10px;color:var(--text);font-size:.74rem;font-family:inherit;cursor:pointer;
+}
+.fav-add-btn{
+  background:var(--accent);color:#001a24;border:none;border-radius:var(--rb);
+  padding:7px 16px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:opacity .15s;
+}
+.fav-add-btn:hover{opacity:.85}
+.fav-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:14px;margin-bottom:8px;display:grid;
+  grid-template-columns:auto 1fr auto;gap:14px;align-items:center;
+  transition:border-color .15s;
+}
+.fav-card.delayed{border-color:var(--y);background:rgba(245,158,11,.04)}
+.fav-card.cancelled{border-color:var(--r);background:rgba(239,68,68,.04)}
+.fav-flight-id{
+  font-size:1.1rem;font-weight:800;color:var(--accent);letter-spacing:.02em;
+  min-width:80px;
+}
+.fav-meta{display:grid;gap:3px;min-width:0}
+.fav-route{font-size:.82rem;color:var(--text);font-weight:600}
+.fav-times{font-size:.7rem;color:var(--text2);display:flex;gap:10px;flex-wrap:wrap}
+.fav-times b{color:var(--text)}
+.fav-times .delay-tag{color:var(--y);font-weight:700}
+.fav-gate{
+  font-size:.7rem;color:var(--muted);
+}
+.fav-gate b{color:var(--accent);font-weight:700;font-size:.85rem}
+.fav-remove-btn{
+  background:none;border:1px solid var(--border);color:var(--muted);
+  border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:.9rem;
+  display:flex;align-items:center;justify-content:center;transition:.15s;
+}
+.fav-remove-btn:hover{border-color:var(--r);color:var(--r)}
+.fav-empty{
+  text-align:center;padding:30px;color:var(--muted);font-size:.78rem;
+  background:var(--card);border:1px dashed var(--border);border-radius:var(--rc);
+}
+
+/* ── PREP (출국 준비) ── */
+.check-head{
+  display:flex;align-items:center;gap:14px;padding:12px 14px;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  margin-bottom:10px;
+}
+.check-progress-wrap{flex:1;display:flex;align-items:center;gap:10px}
+.check-progress-bar{
+  flex:1;height:8px;background:var(--card2);border-radius:4px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.check-progress-fill{
+  height:100%;background:linear-gradient(90deg,var(--accent),var(--g));
+  width:0%;transition:width .25s;
+}
+#check-progress-lbl{font-size:.72rem;color:var(--text2);font-weight:600;white-space:nowrap}
+.check-reset-btn{
+  background:none;border:1px solid var(--border);color:var(--muted);
+  border-radius:var(--rb);padding:6px 12px;cursor:pointer;font-size:.7rem;
+  font-family:inherit;transition:.15s;
+}
+.check-reset-btn:hover{border-color:var(--r);color:var(--r)}
+.check-group{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:12px 14px;margin-bottom:8px;
+}
+.check-group-title{
+  font-size:.78rem;font-weight:700;color:var(--accent);margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.check-items{display:flex;flex-direction:column;gap:4px}
+.check-item{
+  display:flex;align-items:center;gap:9px;padding:6px 4px;
+  cursor:pointer;border-radius:var(--rx);transition:background .12s;
+  user-select:none;
+}
+.check-item:hover{background:var(--a-hover)}
+.check-box{
+  width:18px;height:18px;border:1.5px solid var(--border);border-radius:4px;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:.65rem;transition:.15s;
+}
+.check-item.done .check-box{background:var(--g);border-color:var(--g)}
+.check-label{font-size:.78rem;color:var(--text);flex:1}
+.check-item.done .check-label{color:var(--muted);text-decoration:line-through}
+
+.rule-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:10px;
+}
+.rule-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
+  padding:14px;display:grid;grid-template-columns:auto 1fr;gap:10px;
+  align-items:start;
+}
+.rule-card.duty-card{border-left:3px solid var(--g)}
+.rule-card.ban-card{border-left:3px solid var(--r)}
+.rule-icon{font-size:1.6rem;line-height:1;padding-top:2px}
+.rule-title{
+  grid-column:2;font-size:.85rem;font-weight:700;color:var(--text);
+  margin-bottom:6px;
+}
+.rule-detail{grid-column:2;display:flex;flex-direction:column;gap:4px}
+.rule-detail p{font-size:.72rem;color:var(--text2);line-height:1.55}
+.rule-detail strong{color:var(--text);font-weight:700}
+.rule-tip{
+  margin-top:4px;font-size:.68rem !important;color:var(--accent) !important;
+  background:var(--a-dim);padding:4px 8px;border-radius:var(--rx);
+}
+
+@media(max-width:560px){
+  .fav-card{grid-template-columns:auto 1fr;gap:8px}
+  .fav-remove-btn{grid-column:2;justify-self:end}
+  .rule-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -562,6 +695,8 @@ tr:hover td{background:var(--a-hover)}
   <button class="tab-btn" onclick="showTab('congestion',this)">출·입국장 현황</button>
   <button class="tab-btn" onclick="showTab('flights',this)">항공편 현황</button>
   <button class="tab-btn" onclick="showTab('facilities',this)">시설정보</button>
+  <button class="tab-btn" onclick="showTab('fav',this)">⭐ 내 편명</button>
+  <button class="tab-btn" onclick="showTab('prep',this)">🛫 출국 준비</button>
 </nav>
 
 <div id="content">
@@ -684,6 +819,211 @@ tr:hover td{background:var(--a-hover)}
 
   <div id="fac-noise" style="display:none">
     <div class="loading" style="color:var(--muted);padding:40px">소음 정보는 현재 API에서 제공되지 않습니다.</div>
+  </div>
+</div>
+
+<!-- ⑦ 내 편명 (즐겨찾기) -->
+<div id="tab-fav" class="tab-panel">
+  <div class="fav-intro">
+    <div class="fav-intro-text">
+      <strong>⭐ 내 편명 추적</strong>
+      <span>편명(예: KE901)을 입력해 저장하면, 게이트·시간 변경을 한눈에 확인할 수 있어요. localStorage에 저장되어 브라우저에 영구 보관됩니다.</span>
+    </div>
+    <div class="fav-add-row">
+      <input class="fav-add-input" id="fav-add-q" placeholder="편명 입력 (예: KE901, OZ102)" onkeydown="if(event.key==='Enter')addFavFlight()">
+      <select id="fav-add-dir" class="fav-add-sel">
+        <option value="dep">출발편</option>
+        <option value="arr">도착편</option>
+      </select>
+      <button class="fav-add-btn" onclick="addFavFlight()">⭐ 추가</button>
+    </div>
+  </div>
+  <div id="fav-area"><div class="loading" style="color:var(--muted);padding:30px">저장된 편명이 없습니다.<br>위에 편명을 입력해 추가하세요.</div></div>
+</div>
+
+<!-- ⑧ 출국 준비 (체크리스트 + 수하물·면세) -->
+<div id="tab-prep" class="tab-panel">
+  <div class="sub-tabs">
+    <button class="sub-btn active" onclick="setPrepTab('check',this)">✅ 체크리스트</button>
+    <button class="sub-btn" onclick="setPrepTab('bag',this)">🧳 수하물 규정</button>
+    <button class="sub-btn" onclick="setPrepTab('duty',this)">💰 면세 한도</button>
+    <button class="sub-btn" onclick="setPrepTab('ban',this)">🚫 반입 금지</button>
+  </div>
+
+  <div id="prep-check">
+    <div class="check-head">
+      <div class="check-progress-wrap">
+        <div class="check-progress-bar"><div class="check-progress-fill" id="check-fill"></div></div>
+        <span id="check-progress-lbl">0 / 0 완료</span>
+      </div>
+      <button class="check-reset-btn" onclick="resetChecklist()">↺ 초기화</button>
+    </div>
+    <div id="check-area"></div>
+  </div>
+
+  <div id="prep-bag" style="display:none">
+    <div class="rule-grid">
+      <div class="rule-card">
+        <div class="rule-icon">💧</div>
+        <div class="rule-title">기내 액체류</div>
+        <div class="rule-detail">
+          <p><strong>개당 100ml 이하</strong> 용기만 반입 가능</p>
+          <p>총 <strong>1L 이하</strong>, 투명 지퍼백(20×20cm) 1개에 담아야 함</p>
+          <p class="rule-tip">💡 면세점에서 산 액체는 STEB 봉투로 밀봉되어 별도 허용</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">🔋</div>
+        <div class="rule-title">보조배터리</div>
+        <div class="rule-detail">
+          <p><strong>위탁 불가</strong>, 반드시 기내 휴대</p>
+          <p>100Wh(약 27,000mAh) 이하: 자유 휴대</p>
+          <p>100~160Wh: 항공사 사전 승인, 2개까지</p>
+          <p>160Wh 초과: 운송 불가</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">📏</div>
+        <div class="rule-title">기내 수하물 크기</div>
+        <div class="rule-detail">
+          <p>일반적으로 <strong>55×40×20cm</strong>, 10~12kg 이하</p>
+          <p>대한항공·아시아나: 1개 + 노트북가방·핸드백 1개</p>
+          <p>저비용항공사: 1개 + 작은 가방 1개 (총 7~10kg)</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">📦</div>
+        <div class="rule-title">위탁 수하물 무게</div>
+        <div class="rule-detail">
+          <p><strong>대한항공/아시아나(일반석):</strong> 23kg × 1개</p>
+          <p><strong>제주항공·티웨이·에어부산:</strong> 노선별 15~20kg 별도구매</p>
+          <p><strong>저비용항공사 무료허용:</strong> 통상 없음 (사전 구매 권장)</p>
+          <p class="rule-tip">💡 158cm(가로+세로+높이) 초과 시 추가 요금</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">💊</div>
+        <div class="rule-title">의약품</div>
+        <div class="rule-detail">
+          <p>처방약: 처방전·소견서 지참 권장 (영문)</p>
+          <p>액체 의약품: 100ml 초과 시 처방전 제시</p>
+          <p>주사기·인슐린: 의사 소견서 필수</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-icon">🎯</div>
+        <div class="rule-title">스포츠 용품</div>
+        <div class="rule-detail">
+          <p>골프채·서핑보드·자전거: 위탁 가능, <strong>특수 수하물 요금</strong></p>
+          <p>스키·스노보드: 사전 통보 필수</p>
+          <p>드론: 위탁 불가 (배터리 분리 후 기내)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="prep-duty" style="display:none">
+    <div class="rule-grid">
+      <div class="rule-card duty-card">
+        <div class="rule-icon">💵</div>
+        <div class="rule-title">면세 총 한도</div>
+        <div class="rule-detail">
+          <p><strong>1인당 USD 800</strong> (약 110만원)</p>
+          <p>술·담배·향수 별도 (아래 참조)</p>
+          <p class="rule-tip">💡 자가사용·선물용 한도. 판매 목적은 면세 적용 X</p>
+        </div>
+      </div>
+      <div class="rule-card duty-card">
+        <div class="rule-icon">🍷</div>
+        <div class="rule-title">주류</div>
+        <div class="rule-detail">
+          <p><strong>2병 이내, 2L 이하, USD 400 이하</strong></p>
+          <p>2가지 조건 모두 충족해야 면세</p>
+          <p>만 19세 이상만 반입 가능</p>
+        </div>
+      </div>
+      <div class="rule-card duty-card">
+        <div class="rule-icon">🚬</div>
+        <div class="rule-title">담배</div>
+        <div class="rule-detail">
+          <p><strong>궐련 200개비</strong> (1보루)</p>
+          <p>엽궐련 50개비, 전자담배 니코틴 20ml</p>
+          <p>기타담배 250g</p>
+          <p>만 19세 이상만 반입 가능</p>
+        </div>
+      </div>
+      <div class="rule-card duty-card">
+        <div class="rule-icon">💐</div>
+        <div class="rule-title">향수</div>
+        <div class="rule-detail">
+          <p><strong>60mL 이하</strong></p>
+          <p>총액 한도(USD 800)와 별도 적용</p>
+        </div>
+      </div>
+      <div class="rule-card duty-card">
+        <div class="rule-icon">💱</div>
+        <div class="rule-title">외화 신고 한도</div>
+        <div class="rule-detail">
+          <p><strong>USD 10,000 초과 시 세관 신고</strong></p>
+          <p>외화·원화 합산 기준</p>
+          <p>미신고 시 압수·과태료</p>
+        </div>
+      </div>
+      <div class="rule-card duty-card">
+        <div class="rule-icon">🎁</div>
+        <div class="rule-title">자진신고 감면</div>
+        <div class="rule-detail">
+          <p>한도 초과 시 자진신고 → <strong>관세 30% 감면</strong> (최대 15만원)</p>
+          <p>미신고 적발 시 40% 가산세 부과</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="prep-ban" style="display:none">
+    <div class="rule-grid">
+      <div class="rule-card ban-card">
+        <div class="rule-icon">🔪</div>
+        <div class="rule-title">기내 반입 금지</div>
+        <div class="rule-detail">
+          <p>칼·가위(날 6cm 이상)·면도날</p>
+          <p>야구방망이·골프채·등산스틱</p>
+          <p>스프레이·가스라이터(1개는 휴대 가능)</p>
+          <p>총기·모형총기·전자충격기</p>
+          <p class="rule-tip">→ 위탁 수하물로는 가능</p>
+        </div>
+      </div>
+      <div class="rule-card ban-card">
+        <div class="rule-icon">⛔</div>
+        <div class="rule-title">위탁·기내 모두 금지</div>
+        <div class="rule-detail">
+          <p>인화성 액체(휘발유·시너)</p>
+          <p>폭발물·실탄·화약</p>
+          <p>독극물·방사성 물질</p>
+          <p>마약류</p>
+        </div>
+      </div>
+      <div class="rule-card ban-card">
+        <div class="rule-icon">🍖</div>
+        <div class="rule-title">검역 대상 (입국 시)</div>
+        <div class="rule-detail">
+          <p>육류·가공육(소시지·햄·육포)</p>
+          <p>축산물(우유·치즈·계란)</p>
+          <p>과일·채소·종자·묘목</p>
+          <p>흙·물·동물(살아있는)</p>
+          <p class="rule-tip">→ 적발 시 최대 1,000만원 과태료</p>
+        </div>
+      </div>
+      <div class="rule-card ban-card">
+        <div class="rule-icon">🎒</div>
+        <div class="rule-title">관세 100% 부과</div>
+        <div class="rule-detail">
+          <p>모조품·짝퉁(샤넬·루이비통 등 위조 상표)</p>
+          <p>음란물·정치 선전물</p>
+          <p>위변조 화폐·유가증권</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -906,6 +1246,8 @@ function loadTab(tab) {
   if(tab==='congestion') loadCong();
   if(tab==='flights')    loadFlights();
   if(tab==='facilities') loadFacTab();
+  if(tab==='fav')        loadFavFlights();
+  if(tab==='prep')       loadPrepTab();
 }
 
 // ════════════════════════════════
@@ -1682,6 +2024,196 @@ loadEntry();
 // 차트는 패널이 열릴 때 로드 (초기에는 데이터만 조회해 헤더 수치 채움)
 loadPaxChart();
 setInterval(refreshAll, 60000);
+
+// ════════════════════════════════
+//  ⑦ 내 편명 (즐겨찾기)
+// ════════════════════════════════
+const FAV_KEY = 'icn_fav_flights';
+function getFavs(){
+  try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function setFavs(arr){
+  localStorage.setItem(FAV_KEY, JSON.stringify(arr));
+}
+function addFavFlight(){
+  const inp = el('fav-add-q');
+  const dir = el('fav-add-dir')?.value || 'dep';
+  if(!inp) return;
+  const id = (inp.value || '').trim().toUpperCase().replace(/\s+/g,'');
+  if(!id){ inp.focus(); return; }
+  const favs = getFavs();
+  if(favs.some(f => f.flightId === id && f.dir === dir)){
+    inp.value = '';
+    loadFavFlights();
+    return;
+  }
+  favs.push({ flightId: id, dir, added: Date.now() });
+  setFavs(favs);
+  inp.value = '';
+  loadFavFlights();
+}
+function removeFavFlight(flightId, dir){
+  const favs = getFavs().filter(f => !(f.flightId === flightId && f.dir === dir));
+  setFavs(favs);
+  loadFavFlights();
+}
+async function loadFavFlights(){
+  const area = el('fav-area');
+  if(!area) return;
+  const favs = getFavs();
+  if(!favs.length){
+    area.innerHTML = '<div class="fav-empty">⭐ 저장된 편명이 없습니다.<br><span style="font-size:.7rem;color:var(--muted)">위에 편명을 입력해 추가하세요.</span></div>';
+    return;
+  }
+  area.innerHTML = '<div class="loading">⏳ 항공편 데이터 조회 중...</div>';
+
+  // Fetch live flight data for matching
+  const needDep = favs.some(f => f.dir === 'dep');
+  const needArr = favs.some(f => f.dir === 'arr');
+  const [depData, arrData] = await Promise.all([
+    needDep ? api('StatusOfPassengerFlightsOdp/getPassengerDeparturesOdp', {numOfRows:500}) : null,
+    needArr ? api('StatusOfPassengerFlightsOdp/getPassengerArrivalsOdp', {numOfRows:500}) : null,
+  ]);
+  const depList = depData ? items(depData) : [];
+  const arrList = arrData ? items(arrData) : [];
+
+  const cards = favs.map(f => {
+    const src = f.dir === 'dep' ? depList : arrList;
+    const live = src.find(x =>
+      ((x.flightId || x.flightNum || '') + '').toUpperCase().replace(/\s+/g,'') === f.flightId
+    );
+    const dirLbl = f.dir === 'dep' ? '✈ 출발' : '🛬 도착';
+    if(!live){
+      return `<div class="fav-card">
+        <div class="fav-flight-id">${f.flightId}</div>
+        <div class="fav-meta">
+          <div class="fav-route">${dirLbl} · <span style="color:var(--muted)">현재 운항 정보 없음</span></div>
+          <div class="fav-times" style="color:var(--muted)">오늘 ±1일 범위 운항 데이터에서 찾을 수 없음</div>
+        </div>
+        <button class="fav-remove-btn" onclick="removeFavFlight('${f.flightId}','${f.dir}')" title="삭제">✕</button>
+      </div>`;
+    }
+    const sch = fmtTime(live.scheduleDateTime) || '-';
+    const est = fmtTime(live.estimatedDateTime) || '';
+    const delayed = est && est !== sch;
+    const remark = (live.remark || '').toLowerCase();
+    const cancelled = remark.includes('취소') || remark.includes('cancel');
+    const dest = live.airport || live.airportCode || '-';
+    const air = live.airline || '-';
+    const gate = f.dir === 'dep' ? (live.gatenumber || '') : (live.carousel || live.exitnumber || '');
+    const gateLbl = f.dir === 'dep' ? '게이트' : '수하물벨트';
+    const ck = live.chkinrange || '';
+    const term = TERM[live.terminalId] || live.terminalId || '';
+    const cls = cancelled ? 'cancelled' : (delayed ? 'delayed' : '');
+    return `<div class="fav-card ${cls}">
+      <div class="fav-flight-id">${f.flightId}</div>
+      <div class="fav-meta">
+        <div class="fav-route">${dirLbl} · ${air} · <span style="color:var(--accent)">${dest}</span> <span style="color:var(--muted);font-size:.7rem">${term}</span></div>
+        <div class="fav-times">
+          <span>예정 <b>${sch}</b></span>
+          ${est ? `<span class="${delayed?'delay-tag':''}">${delayed?'변경':'실제'} <b>${est}</b></span>` : ''}
+          ${live.remark ? `<span>${badge(live.remark)}</span>` : ''}
+        </div>
+        ${gate || ck ? `<div class="fav-gate">${gate ? `${gateLbl} <b>${gate}</b>` : ''}${gate && ck ? ' · ' : ''}${ck ? `체크인 <b>${ck}</b>` : ''}</div>` : ''}
+      </div>
+      <button class="fav-remove-btn" onclick="removeFavFlight('${f.flightId}','${f.dir}')" title="삭제">✕</button>
+    </div>`;
+  }).join('');
+  area.innerHTML = cards;
+}
+
+// ════════════════════════════════
+//  ⑧ 출국 준비
+// ════════════════════════════════
+function setPrepTab(t, btn){
+  ['check','bag','duty','ban'].forEach(k => {
+    const p = el('prep-'+k);
+    if(p) p.style.display = (k === t) ? '' : 'none';
+  });
+  document.querySelectorAll('#tab-prep .sub-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+function loadPrepTab(){
+  renderChecklist();
+}
+
+const CHECK_KEY = 'icn_checklist';
+const CHECK_GROUPS = [
+  { title: '📄 필수 서류', items: [
+    '여권 (유효기간 6개월 이상)', '항공권 / 모바일 탑승권',
+    '호텔·숙소 예약 확인서', '여행자 보험', '국제운전면허증 (필요시)',
+    '비자 (필요한 국가)', '여권 사본 (분실 대비)',
+  ]},
+  { title: '💳 결제·통화', items: [
+    '신용카드 (해외 결제 가능)', '현지 통화 환전', '비상금 USD',
+    '해외 결제 차단 해제 확인',
+  ]},
+  { title: '📱 전자기기', items: [
+    '휴대폰 + 충전기', '보조배터리 (100Wh 이하)',
+    '멀티어댑터 / 변환플러그', '이어폰',
+    '카메라 + 메모리카드', '노트북 (필요시)',
+    '유심 / eSIM / 포켓와이파이',
+  ]},
+  { title: '👕 의류·세면', items: [
+    '속옷 / 양말 (일수만큼)', '잠옷 / 편한옷',
+    '운동화 / 슬리퍼', '겉옷 / 우산',
+    '칫솔·치약·세면도구 (100ml 이하)', '수건',
+  ]},
+  { title: '💊 위생·약품', items: [
+    '상비약 (감기약·진통제·소화제·지사제)', '처방약 + 처방전 영문',
+    '마스크', '손소독제 (100ml 이하)', '밴드·연고',
+  ]},
+  { title: '🎒 기타', items: [
+    '여행용 캐리어 (위탁용)', '기내용 가방', '지퍼백 (액체류 정리)',
+    '간식 / 컵라면', '여행 일정표 / 가이드북',
+  ]},
+];
+function getCheckState(){
+  try { return JSON.parse(localStorage.getItem(CHECK_KEY) || '{}'); }
+  catch(e){ return {}; }
+}
+function setCheckState(s){
+  localStorage.setItem(CHECK_KEY, JSON.stringify(s));
+}
+function toggleCheck(key){
+  const s = getCheckState();
+  s[key] = !s[key];
+  setCheckState(s);
+  renderChecklist();
+}
+function resetChecklist(){
+  if(!confirm('체크 상태를 모두 초기화할까요?')) return;
+  setCheckState({});
+  renderChecklist();
+}
+function renderChecklist(){
+  const area = el('check-area');
+  if(!area) return;
+  const state = getCheckState();
+  let total = 0, done = 0;
+  const groupsHtml = CHECK_GROUPS.map(g => {
+    const itemsHtml = g.items.map(it => {
+      const key = g.title + '|' + it;
+      const checked = !!state[key];
+      total++;
+      if(checked) done++;
+      return `<div class="check-item${checked?' done':''}" onclick="toggleCheck('${key.replace(/'/g,"\\'")}')">
+        <div class="check-box">${checked ? '✓' : ''}</div>
+        <div class="check-label">${it}</div>
+      </div>`;
+    }).join('');
+    return `<div class="check-group">
+      <div class="check-group-title">${g.title}</div>
+      <div class="check-items">${itemsHtml}</div>
+    </div>`;
+  }).join('');
+  area.innerHTML = groupsHtml;
+  const lbl = el('check-progress-lbl');
+  const fill = el('check-fill');
+  if(lbl) lbl.textContent = `${done} / ${total} 완료`;
+  if(fill) fill.style.width = total ? (done * 100 / total) + '%' : '0%';
+}
 </script>
 </body>
 </html>
