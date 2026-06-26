@@ -881,17 +881,58 @@ button,select,input,a{touch-action:manipulation}
   #quick-search-btn span{font-size:.85rem}
   #lang-toggle,#share-btn,#theme-toggle{padding:6px 9px;font-size:.66rem;min-width:36px}
 
-  /* INFO STRIP — 세로 스택 + 가로 스크롤 */
-  #info-strip{height:auto;flex-wrap:wrap;overflow-x:auto;scroll-snap-type:x proximity}
+  /* INFO STRIP — 모바일은 한 줄 압축 (날씨 + 여객예측만) */
+  #info-strip{
+    height:auto;min-height:0;display:flex;flex-wrap:nowrap;align-items:center;
+    padding:7px 10px;gap:10px;border-bottom:1px solid var(--border);
+  }
   #info-strip::-webkit-scrollbar{display:none}
-  #wx-block{min-width:170px;padding:8px 12px;border-right:1px solid var(--border);scroll-snap-align:start}
-  #wx-icon{font-size:1.6rem}
-  #w-temp{font-size:1.3rem}
-  #pax-center,#term-cmp{min-width:200px;padding:8px 12px;scroll-snap-align:start}
-  #wx-detail-grid{font-size:.58rem;gap:2px 8px}
+  /* 날씨: 아이콘 + 온도 + 습도만 */
+  #wx-block{
+    min-width:0;padding:0;border-right:1px solid var(--border);
+    padding-right:10px;gap:0;flex-direction:row;align-items:center;flex-shrink:0;
+  }
+  #wx-main{gap:6px}
+  #wx-icon{font-size:1.5rem}
+  #wx-right{flex-direction:row;align-items:baseline;gap:6px}
+  #w-temp{font-size:1.05rem;font-weight:600}
+  #w-desc{display:none}
+  #wx-detail-grid{
+    display:flex !important;gap:0;font-size:.66rem;margin-left:4px;
+  }
+  /* 디테일 항목 다 숨기고 습도 하나만 보여주기 */
+  .wxd-item{display:none}
+  .wxd-item:nth-child(2){display:inline-block !important}
+  .wxd-item:nth-child(2)::before{content:'';display:none}
 
-  /* CHART panel — 키 축소 */
-  #chart-panel{height:110px}
+  /* 여객예측: 한 줄 압축 */
+  #pax-center{
+    flex:1;min-width:0;padding:0 0 0 4px;gap:4px;
+    flex-direction:row;align-items:center;overflow:hidden;border:none;
+  }
+  #pax-nav-row{display:none}
+  #pax-data-row{
+    display:flex;align-items:baseline;gap:6px;width:100%;
+    font-size:.66rem;color:var(--muted);white-space:nowrap;overflow:hidden;
+  }
+  #pax-data-row .pax-col{display:flex;align-items:baseline;gap:5px;flex-shrink:0}
+  .pax-arrow{font-size:.66rem;color:var(--muted);font-weight:500}
+  .pax-total-val{font-size:.95rem !important;font-weight:700;color:var(--accent);line-height:1 !important}
+  .pax-sub-row{display:none}
+
+  /* T1/T2 박스: 한 줄 인라인으로 변경 */
+  .t-block{
+    padding:0;border:none;min-width:0;
+    display:inline-flex;align-items:baseline;gap:4px;
+  }
+  .t-lbl{font-size:.62rem;color:var(--muted);font-weight:600;margin:0;padding:0}
+  .t-arrow{display:none}
+  .t-val{font-size:.78rem !important;font-weight:700;line-height:1 !important;margin:0;padding:0}
+  .t-sub{display:none}
+
+  /* CHART panel + 흐름 공지 — 모바일에선 완전히 숨김 */
+  #chart-panel{display:none !important}
+  .notice-bar{display:none !important}
 
   /* TABS — 큰 타깃 + 스냅 */
   #tabs{padding:0 4px;background:linear-gradient(to right,var(--bg2) 90%,transparent)}
