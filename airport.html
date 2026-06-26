@@ -707,9 +707,6 @@ tr:hover td{background:var(--a-hover)}
 .dt-step-time{font-size:.6rem;color:var(--muted)}
 .dt-reset-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px;flex-wrap:wrap}
 .dt-tip{font-size:.68rem;color:var(--text2)}
-@media(max-width:560px){
-  .dt-steps{grid-template-columns:repeat(3,1fr)}
-}
 .check-group{
   background:var(--card);border:1px solid var(--border);border-radius:var(--rc);
   padding:12px 14px;margin-bottom:8px;
@@ -864,10 +861,182 @@ tr:hover td{background:var(--a-hover)}
 [data-theme="light"] .map-corridor{fill:rgba(0,0,0,.02)}
 [data-theme="light"] .map-pin{stroke:#fff}
 
-@media(max-width:560px){
-  .fav-card{grid-template-columns:auto 1fr;gap:8px}
-  .fav-remove-btn{grid-column:2;justify-self:end}
-  .rule-grid,.route-grid,.lounge-grid{grid-template-columns:1fr}
+
+/* base mobile utilities (top of style ok) */
+html,body{overscroll-behavior-y:contain;-webkit-tap-highlight-color:transparent}
+button,select,input,a{touch-action:manipulation}
+#tabs{scroll-snap-type:x proximity;scroll-padding-left:8px}
+.tab-btn{scroll-snap-align:start}
+
+@media(max-width:768px){
+  /* TOP BAR — 압축 + 큰 타깃 */
+  #topbar{padding:0 10px;height:42px;gap:6px}
+  #logo{font-size:.78rem}
+  #logo::before{font-size:.7rem}
+  #topbar-right{gap:5px;font-size:.65rem}
+  #topbar-right::before{width:5px;height:5px}
+  #hdr-date{display:none}
+  #hdr-time{font-size:.72rem}
+  #quick-search-btn{padding:6px 10px;font-size:.7rem}
+  #quick-search-btn span{font-size:.85rem}
+  #lang-toggle,#share-btn,#theme-toggle{padding:6px 9px;font-size:.66rem;min-width:36px}
+
+  /* INFO STRIP — 세로 스택 + 가로 스크롤 */
+  #info-strip{height:auto;flex-wrap:wrap;overflow-x:auto;scroll-snap-type:x proximity}
+  #info-strip::-webkit-scrollbar{display:none}
+  #wx-block{min-width:170px;padding:8px 12px;border-right:1px solid var(--border);scroll-snap-align:start}
+  #wx-icon{font-size:1.6rem}
+  #w-temp{font-size:1.3rem}
+  #pax-center,#term-cmp{min-width:200px;padding:8px 12px;scroll-snap-align:start}
+  #wx-detail-grid{font-size:.58rem;gap:2px 8px}
+
+  /* CHART panel — 키 축소 */
+  #chart-panel{height:110px}
+
+  /* TABS — 큰 타깃 + 스냅 */
+  #tabs{padding:0 4px;background:linear-gradient(to right,var(--bg2) 90%,transparent)}
+  .tab-btn{
+    padding:13px 16px;font-size:.78rem;min-width:max-content;
+    border-bottom-width:3px;font-weight:600;
+  }
+  .tab-btn.active{background:var(--a-dim)}
+
+  /* SUB-TABS — 가로 스크롤 (안랩핑) */
+  .sub-tabs{
+    flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;
+    margin:0 -14px 12px;padding:0 14px 4px;gap:6px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .sub-tabs::-webkit-scrollbar{display:none}
+  .sub-btn{
+    padding:8px 14px;font-size:.74rem;flex-shrink:0;scroll-snap-align:start;
+    min-height:34px;display:inline-flex;align-items:center;
+  }
+  .sub-btn.active{background:var(--a-dim);color:var(--accent);border-color:var(--accent)}
+
+  /* CONTENT — 여유 패딩 + 바닥 안전영역 */
+  .tab-panel{padding:12px 12px calc(20px + env(safe-area-inset-bottom))}
+  .card{padding:12px;margin-bottom:8px}
+
+  /* TABLES → 모바일에서 카드형 */
+  .tbl-wrap{margin:0 -12px;border-radius:0}
+  .tbl-wrap table{font-size:.7rem}
+  .tbl-wrap th,.tbl-wrap td{padding:8px 9px}
+
+  /* FAV — 카운트다운 강조 + 카드 큰 글씨 */
+  .fav-card{padding:12px;gap:10px}
+  .fav-flight-id{font-size:1.05rem;min-width:auto}
+  .fav-route{font-size:.82rem;line-height:1.35}
+  .fav-times{font-size:.72rem;gap:8px}
+  .fav-gate{font-size:.72rem}
+  .fav-gate b{font-size:.9rem}
+  .fav-countdown{padding:9px 12px}
+  .fav-cd-time{font-size:1.08rem}
+  .fav-cd-msg{font-size:.72rem}
+  .fav-add-row{gap:5px}
+  .fav-add-input{font-size:16px;padding:9px 11px;min-height:40px}
+  .fav-add-sel{font-size:.78rem;padding:9px 10px;min-height:40px}
+  .fav-add-btn,.fav-notify-btn{padding:9px 14px;min-height:40px;font-size:.76rem;flex:1;min-width:120px}
+  .fav-ics-btn,.fav-remove-btn{width:36px;height:36px;font-size:1rem}
+
+  /* CHECKLIST + 트래커 */
+  .check-head{padding:10px 12px}
+  .check-progress-bar{height:10px}
+  #check-progress-lbl{font-size:.7rem}
+  .check-reset-btn{padding:8px 12px;min-height:36px;font-size:.7rem}
+  .check-group{padding:11px 12px}
+  .check-items{gap:2px}
+  .check-item{padding:10px 6px;gap:11px}
+  .check-box{width:22px;height:22px;font-size:.78rem}
+  .check-label{font-size:.84rem;line-height:1.35}
+
+  /* 트래커 6단계 → 2열 그리드, 큰 카드 */
+  .dt-steps{grid-template-columns:repeat(2,1fr);gap:6px}
+  .dt-step{padding:11px 8px;flex-direction:row;align-items:center;justify-content:flex-start;gap:9px;text-align:left;min-height:54px}
+  .dt-step-num{width:28px;height:28px;font-size:.78rem;flex-shrink:0}
+  .dt-step.done .dt-step-num::after{font-size:.86rem}
+  .dt-step-body{align-items:flex-start;text-align:left}
+  .dt-step-title{font-size:.78rem}
+  .dt-step-time{font-size:.65rem}
+  .dt-head strong{font-size:.85rem}
+  .dt-eta{font-size:.7rem}
+
+  /* RULE CARDS — 한 컬럼 + 큰 폰트 */
+  .rule-grid{grid-template-columns:1fr;gap:8px}
+  .rule-card{padding:13px;gap:11px}
+  .rule-icon{font-size:1.5rem}
+  .rule-title{font-size:.92rem}
+  .rule-detail p{font-size:.78rem;line-height:1.6}
+  .rule-tip{font-size:.72rem !important}
+
+  /* ROUTE — 1열 카드 */
+  .route-grid{grid-template-columns:1fr}
+  .route-input-row{gap:5px}
+  .route-input{font-size:16px;padding:10px 12px;min-height:42px}
+  .route-sel{font-size:.78rem;padding:10px;min-height:42px}
+  .route-btn{padding:10px 16px;min-height:42px;font-size:.78rem;flex:1}
+
+  /* LOUNGE — 1열 */
+  .lounge-grid{grid-template-columns:1fr}
+  .lounge-card-title{font-size:.92rem;line-height:1.35}
+  .lounge-loc,.lounge-cards-line,.lounge-hours{font-size:.78rem;line-height:1.55}
+
+  /* MAP — 모바일 큰 표시 */
+  .map-svg-wrap{padding:8px}
+  #map-svg{min-height:280px}
+  .map-legend{padding:9px 11px;gap:7px 12px}
+  .map-leg{font-size:.74rem}
+  .map-pin-label{font-size:10px !important}
+
+  /* QUICK SEARCH — 풀스크린 모달 */
+  #qs-overlay{padding:0;align-items:stretch}
+  #qs-modal{max-width:100%;max-height:100vh;border-radius:0;border:none;height:100vh}
+  .qs-head{padding:15px 14px;gap:11px;padding-top:calc(15px + env(safe-area-inset-top))}
+  #qs-input{font-size:16px}
+  .qs-close{padding:6px 11px;min-width:46px;font-size:.7rem}
+  .qs-item{padding:13px 14px;gap:13px}
+  .qs-item-title{font-size:.88rem}
+  .qs-item-sub{font-size:.72rem;line-height:1.4}
+  .qs-foot{padding:10px 14px;padding-bottom:calc(10px + env(safe-area-inset-bottom));font-size:.66rem}
+
+  /* PARKING / SHUTTLE / FLIGHT 그리드 모바일 */
+  .park-grid{grid-template-columns:1fr 1fr !important}
+  .flt-grid,.flt-cols{grid-template-columns:1fr !important;gap:8px !important}
+
+  /* FAC 필터 줄 깔끔하게 */
+  .fac-filter-row{gap:5px}
+  .fac-filter-row .sub-btn{font-size:.7rem;padding:7px 11px;min-height:32px}
+
+  /* NOTICE 바 */
+  .notice-bar{font-size:.62rem;padding:4px 12px}
+
+  /* TOAST 큰 글씨 */
+  #icn-toast{
+    bottom:calc(20px + env(safe-area-inset-bottom));
+    padding:11px 18px;font-size:.82rem;max-width:88vw;text-align:center;
+  }
+
+  /* AMENITY 카드 (편의시설) */
+  #prep-amenity .rule-card{grid-template-columns:auto 1fr}
+}
+
+/* ── 더 작은 폰 (~440px) ── */
+@media(max-width:440px){
+  #topbar{padding:0 8px}
+  #logo{font-size:.74rem}
+  #lang-toggle{display:none}
+  #share-btn{padding:6px 8px}
+  .tab-btn{padding:12px 13px;font-size:.74rem}
+  .fav-add-row{flex-direction:column}
+  .fav-add-input,.fav-add-sel,.fav-add-btn,.fav-notify-btn{width:100%;flex:none}
+  .dt-steps{grid-template-columns:1fr}
+  .fav-card{grid-template-columns:auto 1fr auto}
+  .fav-card-actions{flex-direction:column;gap:5px}
+}
+
+/* iPhone safe area – 가로모드 등 */
+@supports(padding:max(0px)){
+  body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
 }
 </style>
 </head>
