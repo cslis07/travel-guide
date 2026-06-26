@@ -238,20 +238,35 @@ const SIGUNGU_MAP = {
   '39':{ '1':'제주시','2':'서귀포시' },
 };
 
-// API 키 저장/불러오기 (localStorage)
-const _TOUR_KEY = '9ae1336587e873e0ff6a0524e0b0cc0333868f67f9fb4180c0be654fb7794615';
+// ─────────────────────────────────────────
+// TourAPI 호출은 Vercel Edge Function 프록시 경유
+// (서비스 키는 서버 환경변수, 브라우저에 노출 X)
+// ─────────────────────────────────────────
+const _TOUR_PROXY = '/api/tour';
 
-function saveTourApiKey(val) {
-  const key = val.trim();
-  if (key) localStorage.setItem('tripguide_tour_key', key);
+/** TourAPI 호출 래퍼.
+ *  @param {string} path  엔드포인트 (예: 'areaBasedList2')
+ *  @param {object} params  쿼리 파라미터
+ *  @returns {Promise<object|null>}  실패 시 null
+ */
+async function _callTourApi(path, params = {}) {
+  const qs = new URLSearchParams({ path, ...params });
+  try {
+    const res = await fetch(`${_TOUR_PROXY}?${qs}`);
+    if (!res.ok) {
+      console.warn('[TourAPI]', path, 'HTTP', res.status);
+      return null;
+    }
+    return await res.json();
+  } catch (e) {
+    console.warn('[TourAPI]', path, e.message);
+    return null;
+  }
 }
 
-function getTourApiKey() {
-  const key = localStorage.getItem('tripguide_tour_key') || _TOUR_KEY;
-  const el  = document.getElementById('sw-apikey');
-  if (el) el.value = key; // 저장된 키 복원
-  return key;
-}
+// (Legacy) 더 이상 호출되지 않지만, 외부 코드 호환을 위해 빈 함수만 남김
+function saveTourApiKey() { /* deprecated */ }
+function getTourApiKey()  { return ''; /* deprecated */ }
 
 // 결과 섹션 헬퍼
 function domShow(id)  { document.getElementById(id)?.classList.remove('hidden'); }
@@ -384,9 +399,6 @@ function _resetParkingFilter() {
 
 /* ─ 주차 데이터 일괄 조회 ─ */
 async function _batchFetchParking() {
-  const apiKey = getTourApiKey();
-  const BASE   = 'https://apis.data.go.kr/B551011/KorService2';
-  const cmn    = { serviceKey: apiKey, MobileOS: 'ETC', MobileApp: 'TripGuide', _type: 'json' };
   const btn    = document.getElementById('dfParkingBtn');
 
   const toFetch = [...document.querySelectorAll('#domesticGrid .dom-card[data-cid]')]
@@ -400,13 +412,10 @@ async function _batchFetchParking() {
     await Promise.all(toFetch.map(async cid => {
       const cached = _tourItemCache.get(cid);
       const ctid   = cached?.contenttypeid || '12';
-      try {
-        const res   = await fetch(`${BASE}/detailIntro2?${new URLSearchParams({...cmn, contentId: cid, contentTypeId: ctid})}`);
-        const data  = await res.json();
-        const raw   = data?.response?.body?.items?.item;
-        const intro = Array.isArray(raw) ? raw[0] : raw;
-        _parkingCache.set(cid, _hasParkingFromIntro(intro));
-      } catch { _parkingCache.set(cid, null); }
+      const data   = await _callTourApi('detailIntro2', { contentId: cid, contentTypeId: ctid });
+      const raw    = data?.response?.body?.items?.item;
+      const intro  = Array.isArray(raw) ? raw[0] : raw;
+      _parkingCache.set(cid, _hasParkingFromIntro(intro));
     }));
   } finally {
     if (btn) {
@@ -454,27 +463,13 @@ async function loadMoreDomestic() {
 }
 
 async function _fetchDomesticPage(append) {
-  const apiKey = getTourApiKey();
-  if (!apiKey) {
-    domHide('domesticLoading');
-    domShow('domesticError');
-    document.getElementById('domesticErrorMsg').innerHTML =
-      '한국관광공사 TourAPI 서비스 키가 필요합니다.<br>' +
-      '➡ <a href="https://www.data.go.kr/data/15101578/openapi.do" target="_blank" rel="noopener">' +
-      'data.go.kr에서 무료 발급</a> 후, 검색 위젯의 🔑 키 입력란에 붙여넣으세요.';
-    return;
-  }
-
   _dom.loading = true;
   const btn = document.getElementById('domesticMoreBtn');
   if (btn) btn.disabled = true;
   if (append) domShow('domesticLoading');
 
   try {
-    const base = {
-      serviceKey: apiKey, MobileOS: 'ETC', MobileApp: 'TripGuide', _type: 'json',
-      numOfRows: _dom.numOfRows, pageNo: _dom.pageNo,
-    };
+    const base = { numOfRows: _dom.numOfRows, pageNo: _dom.pageNo };
 
     // 특수 카테고리(카페 등) 처리
     const special      = SPECIAL_CTYPE[_dom.contentTypeId];
@@ -497,8 +492,8 @@ async function _fetchDomesticPage(append) {
       if (cat3Override)     params.cat3          = cat3Override;
     }
 
-    const res  = await fetch(`https://apis.data.go.kr/B551011/KorService2/${endpoint}?${new URLSearchParams(params)}`);
-    const data = await res.json();
+    const data = await _callTourApi(endpoint, params);
+    if (!data) throw new Error('관광 데이터 서비스에 일시적으로 연결할 수 없습니다.');
 
     const resultCode = data?.response?.header?.resultCode;
     if (resultCode && resultCode !== '0000')
@@ -527,7 +522,8 @@ async function _fetchDomesticPage(append) {
     if (!append) {
       domShow('domesticError');
       document.getElementById('domesticErrorMsg').innerHTML =
-        `오류: ${err.message}<br><small>API 키를 확인하거나, 잠시 후 다시 시도해주세요.</small>`;
+        `<strong>일시적인 문제가 발생했어요.</strong><br>` +
+        `<small>${err.message}<br>잠시 후 다시 시도해주세요. 한국관광공사 API 응답이 늦거나 점검 중일 수 있습니다.</small>`;
     }
   } finally {
     _dom.loading = false;
@@ -612,11 +608,6 @@ async function openTourDetail(contentId, contentTypeId, mapX, mapY) {
   document.body.style.overflow = 'hidden';
   body.innerHTML = `<div class="tmd-loading"><div class="dom-spinner"></div><p>상세 정보를 불러오는 중...</p></div>`;
 
-  const key  = getTourApiKey();
-  const BASE = 'https://apis.data.go.kr/B551011/KorService2';
-  const cmn  = { serviceKey: key, MobileOS: 'ETC', MobileApp: 'TripGuide', _type: 'json' };
-  const safe = fn => fn.catch(() => null);
-
   // 리스트 캐시에서 기본 정보 미리 확보 (detailCommon2 실패 시 폴백)
   const cached = _tourItemCache.get(contentId);
   const fallbackMapX = mapX || cached?.mapx || '';
@@ -624,10 +615,12 @@ async function openTourDetail(contentId, contentTypeId, mapX, mapY) {
 
   try {
     const [cRes, iRes, imgRes, nbRes] = await Promise.all([
-      safe(fetch(`${BASE}/detailCommon2?${new URLSearchParams({ ...cmn, contentId, defaultYN:'Y', firstImageYN:'Y', addrinfoYN:'Y', overviewYN:'Y', mapinfoYN:'Y' })}`).then(r => r.json())),
-      safe(fetch(`${BASE}/detailIntro2?${new URLSearchParams({ ...cmn, contentId, contentTypeId })}`).then(r => r.json())),
-      safe(fetch(`${BASE}/detailImage2?${new URLSearchParams({ ...cmn, contentId, imageYN:'Y', subImageYN:'Y' })}`).then(r => r.json())),
-      (fallbackMapX && fallbackMapY) ? safe(fetch(`${BASE}/locationBasedList2?${new URLSearchParams({ ...cmn, mapX: fallbackMapX, mapY: fallbackMapY, radius:5000, numOfRows:6, pageNo:1, arrange:'E' })}`).then(r => r.json())) : Promise.resolve(null),
+      _callTourApi('detailCommon2', { contentId, defaultYN:'Y', firstImageYN:'Y', addrinfoYN:'Y', overviewYN:'Y', mapinfoYN:'Y' }),
+      _callTourApi('detailIntro2',  { contentId, contentTypeId }),
+      _callTourApi('detailImage2',  { contentId, imageYN:'Y', subImageYN:'Y' }),
+      (fallbackMapX && fallbackMapY)
+        ? _callTourApi('locationBasedList2', { mapX: fallbackMapX, mapY: fallbackMapY, radius:5000, numOfRows:6, pageNo:1, arrange:'E' })
+        : Promise.resolve(null),
     ]);
 
     const detail = _extractItem(cRes);
@@ -817,7 +810,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initHotelFilter();
   initDestNav();
   initDates();
-  getTourApiKey(); // 저장된 키 복원
   loadExchangeRates();
 
   // 모달 닫기 이벤트
