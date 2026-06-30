@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이용가이드 — 트립가이드</title>
+<meta name="description" content="트립가이드 이용가이드 — 국내·해외 여행 검색, 인천공항 실시간 정보, 출국 준비, 환율 계산 사용법">
+<meta property="og:type" content="website">
+<meta property="og:title" content="트립가이드 — 이용가이드">
+<meta property="og:description" content="국내·해외 여행 + 인천공항 실시간 통합 가이드">
+<meta property="og:url" content="https://travel-guide-cslis07.vercel.app/guide.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#3b82f6;
+  --primary-dark:#1d4ed8;
+  --primary-lt:#eff6ff;
+  --c1:#3b82f6;--c1-lt:#eff6ff;       /* 검색 - 블루 */
+  --c2:#0ea5e9;--c2-lt:#f0f9ff;       /* 인천공항 - 시안 */
+  --c3:#10b981;--c3-lt:#ecfdf5;       /* 국내여행 - 그린 */
+  --c4:#f59e0b;--c4-lt:#fffbeb;       /* 내 편명 - 앰버 */
+  --c5:#8b5cf6;--c5-lt:#f5f3ff;       /* 출국 준비 - 퍼플 */
+  --c6:#ec4899;--c6-lt:#fdf2f8;       /* 도구 - 핑크 */
+  --text:#1e293b;--text2:#475569;--text3:#94a3b8;
+  --border:#e2e8f0;--surface:#fff;--bg:#f8fafc;
+  --radius:10px;--shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
+  --shadow-md:0 4px 16px rgba(0,0,0,.10);
+  --sidebar:260px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;color:var(--text);background:var(--bg);font-size:15px;line-height:1.7}
+
+/* ── 상단 헤더 ── */
+.top-bar{
+  position:sticky;top:0;z-index:200;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  padding:0 24px;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.top-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.top-logo-text{font-size:17px;font-weight:800;color:#0f172a;}
+.top-back{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 18px;border-radius:8px;
+  background:var(--primary);color:#fff;
+  font-size:13px;font-weight:600;text-decoration:none;
+  transition:background .15s;
+}
+.top-back:hover{background:var(--primary-dark)}
+
+/* ── 히어로 ── */
+.hero{
+  background:linear-gradient(135deg,#0c4a6e 0%,#0ea5e9 50%,#3b82f6 100%);
+  color:#fff;padding:72px 24px 64px;text-align:center;
+}
+.hero-badge{
+  display:inline-block;background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.35);
+  border-radius:999px;padding:5px 16px;
+  font-size:12px;font-weight:600;letter-spacing:.8px;
+  margin-bottom:20px;text-transform:uppercase;
+}
+.hero h1{font-size:36px;font-weight:800;line-height:1.25;margin-bottom:16px}
+.hero h1 span{display:block;font-size:20px;font-weight:500;opacity:.85;margin-top:6px}
+.hero-desc{font-size:15px;opacity:.85;max-width:600px;margin:0 auto 32px;line-height:1.7}
+.hero-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.hero-chip{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  border-radius:999px;padding:6px 14px;font-size:13px;font-weight:500;
+}
+
+/* ── 레이아웃 ── */
+.layout{display:flex;align-items:flex-start;max-width:1200px;margin:0 auto;padding:0 20px;}
+
+/* ── 사이드바 ── */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  position:sticky;top:80px;
+  padding:28px 0 28px 0;
+  max-height:calc(100vh - 80px);overflow-y:auto;
+}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.sidebar-title{
+  font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text3);padding:0 20px 10px;
+}
+.sidebar-section{margin-bottom:4px}
+.sidebar-link{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 20px;border-radius:8px;
+  font-size:13px;font-weight:500;color:var(--text2);
+  text-decoration:none;cursor:pointer;
+  transition:all .15s;
+}
+.sidebar-link:hover{background:var(--bg);color:var(--text)}
+.sidebar-link.active{background:var(--primary-lt);color:var(--primary);font-weight:700}
+.sidebar-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+}
+.sidebar-divider{height:1px;background:var(--border);margin:12px 20px;}
+.sidebar-sub{padding-left:36px}
+.sidebar-sub a{
+  display:block;padding:5px 0;font-size:12px;color:var(--text3);
+  text-decoration:none;transition:color .12s;
+}
+.sidebar-sub a:hover{color:var(--primary)}
+
+/* ── 메인 콘텐츠 ── */
+.main{flex:1;min-width:0;padding:40px 0 40px 40px;}
+
+/* ── 섹션 ── */
+.guide-section{padding-top:16px;margin-bottom:64px;scroll-margin-top:80px}
+.section-header{
+  display:flex;align-items:center;gap:14px;
+  padding:20px 24px;border-radius:14px;
+  margin-bottom:32px;
+}
+.section-icon{font-size:28px;line-height:1}
+.section-title{font-size:22px;font-weight:800;color:#fff}
+.section-subtitle{font-size:13px;font-weight:400;opacity:.85;margin-top:2px;color:#fff}
+
+/* 섹션별 색상 */
+.sh-1{background:linear-gradient(135deg,#1d4ed8,#3b82f6)}     /* 검색 */
+.sh-2{background:linear-gradient(135deg,#0c4a6e,#0ea5e9)}     /* 인천공항 */
+.sh-3{background:linear-gradient(135deg,#065f46,#10b981)}     /* 국내여행 */
+.sh-4{background:linear-gradient(135deg,#92400e,#f59e0b)}     /* 내 편명 */
+.sh-5{background:linear-gradient(135deg,#5b21b6,#8b5cf6)}     /* 출국 준비 */
+.sh-6{background:linear-gradient(135deg,#9d174d,#ec4899)}     /* 도구 */
+.sh-update{background:linear-gradient(135deg,#b91c1c,#ef4444)}
+
+/* ── 기능 블록 ── */
+.feature{margin-bottom:40px;scroll-margin-top:80px}
+.feature-title{
+  font-size:16px;font-weight:700;color:var(--text);
+  margin-bottom:8px;display:flex;align-items:center;gap:8px;
+}
+.feature-badge{
+  font-size:10px;font-weight:700;letter-spacing:.6px;
+  padding:2px 8px;border-radius:4px;text-transform:uppercase;
+  background:var(--c4-lt);color:#92400e;
+}
+.feature-badge.new{background:#fef2f2;color:#991b1b}
+.feature-desc{font-size:14px;color:var(--text2);margin-bottom:16px;line-height:1.75}
+
+/* ── 스텝 카드 ── */
+.steps{display:flex;flex-direction:column;gap:0}
+.step{display:flex;gap:0;position:relative}
+.step:not(:last-child)::after{
+  content:'';position:absolute;left:19px;top:40px;
+  width:2px;height:calc(100% - 8px);
+  background:var(--border);
+}
+.step-num{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#fff;flex-shrink:0;
+  position:relative;z-index:1;background:var(--primary);
+}
+.step-body{padding:0 0 24px 14px;flex:1}
+.step-label{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.step-text{font-size:13px;color:var(--text2);line-height:1.65}
+.step-text code{background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px;border:1px solid var(--border)}
+
+/* ── 팁 박스 ── */
+.tip{
+  background:var(--primary-lt);border-left:4px solid var(--primary);
+  border-radius:0 8px 8px 0;padding:12px 16px;
+  font-size:13px;color:#1e40af;margin:14px 0;line-height:1.65;
+}
+.tip strong{font-weight:700}
+.tip-warn{background:#fff5f5;border-color:#ef4444;color:#991b1b}
+.tip-green{background:#ecfdf5;border-color:#10b981;color:#065f46}
+.tip-amber{background:#fffbeb;border-color:#f59e0b;color:#78350f}
+
+/* ── 기능 그리드 ── */
+.feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
+.feat-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:16px;
+}
+.feat-card-icon{font-size:22px;margin-bottom:8px}
+.feat-card-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.feat-card-desc{font-size:12px;color:var(--text2);line-height:1.6}
+
+/* ── 구분선 ── */
+.divider{height:1px;background:var(--border);margin:40px 0}
+
+/* ── 탭 기능 리스트 ── */
+.func-list{
+  list-style:none;display:flex;flex-direction:column;gap:10px;margin:14px 0;
+}
+.func-list li{
+  display:flex;align-items:flex-start;gap:10px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:12px 16px;font-size:13px;
+}
+.func-list li .fi{font-size:18px;flex-shrink:0;margin-top:1px}
+.func-list li .ft{font-weight:600;color:var(--text);display:block;margin-bottom:2px}
+.func-list li .fd{color:var(--text2);font-size:12px;line-height:1.55;display:block}
+
+/* ── 테이블 ── */
+.info-table{width:100%;border-collapse:collapse;font-size:13px;margin:14px 0;background:var(--surface);border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.info-table th{
+  background:var(--bg);padding:10px 14px;text-align:left;
+  font-weight:700;font-size:12px;color:var(--text2);
+  border-bottom:2px solid var(--border);white-space:nowrap;
+}
+.info-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+.info-table tr:last-child td{border-bottom:none}
+.info-table strong{color:var(--text)}
+
+/* ── 업데이트 카드 ── */
+.update-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:12px;
+  border-left:4px solid var(--primary);
+}
+.update-card.new{border-left-color:#ef4444}
+.update-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.update-date{font-size:12px;color:var(--text3);font-weight:600}
+.update-badge{
+  font-size:10px;font-weight:700;letter-spacing:.6px;
+  padding:2px 7px;border-radius:4px;text-transform:uppercase;
+  background:#fef2f2;color:#991b1b;
+}
+.update-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.update-body{font-size:13px;color:var(--text2);line-height:1.7}
+.update-body ul{margin:6px 0 0 20px}
+.update-body li{margin-bottom:3px}
+
+/* ── 단축키 표시 ── */
+kbd{
+  background:var(--bg);border:1px solid var(--border);
+  border-bottom-width:2px;border-radius:5px;
+  padding:2px 7px;font-size:11px;font-weight:600;
+  font-family:inherit;color:var(--text);
+}
+
+/* ── 푸터 ── */
+.guide-footer{
+  background:#0f172a;color:#94a3b8;
+  text-align:center;padding:40px 24px;
+  font-size:13px;line-height:1.8;
+}
+.guide-footer a{color:#60a5fa;text-decoration:none}
+.guide-footer strong{color:#e2e8f0}
+
+/* ── 모바일 목차 점프 버튼 ── */
+.toc-fab{
+  display:none;
+  position:fixed;bottom:24px;right:24px;z-index:300;
+  width:52px;height:52px;border-radius:50%;
+  background:var(--primary);color:#fff;
+  border:none;cursor:pointer;font-size:20px;
+  box-shadow:0 4px 16px rgba(59,130,246,.4);
+  align-items:center;justify-content:center;
+}
+.toc-fab:hover{background:var(--primary-dark)}
+
+/* ── 모바일 목차 드로어 ── */
+.toc-drawer{
+  position:fixed;inset:0;z-index:400;
+  background:rgba(0,0,0,.5);display:none;
+}
+.toc-drawer.open{display:block}
+.toc-drawer-panel{
+  position:absolute;right:0;top:0;bottom:0;width:280px;max-width:85vw;
+  background:#fff;padding:20px 0;overflow-y:auto;
+}
+.toc-drawer-close{
+  position:absolute;top:10px;right:10px;
+  width:36px;height:36px;border:none;background:none;
+  cursor:pointer;font-size:22px;color:var(--text2);
+}
+
+/* ── 반응형 ── */
+@media(max-width:900px){
+  .layout{flex-direction:column;padding:0 14px}
+  .sidebar{display:none}
+  .main{padding:24px 0 24px 0}
+  .hero h1{font-size:26px}
+  .hero h1 span{font-size:16px}
+  .feat-grid{grid-template-columns:1fr}
+  .toc-fab{display:flex}
+}
+@media(max-width:640px){
+  .hero{padding:48px 16px 40px}
+  .hero h1{font-size:22px}
+  .section-header{padding:16px}
+  .section-title{font-size:18px}
+  .info-table{font-size:12px}
+  .info-table th,.info-table td{padding:8px 10px}
+}
+</style>
+</head>
+<body>
+
+<!-- 상단 바 -->
+<header class="top-bar">
+  <a class="top-logo" href="/">
+    <span class="top-logo-text">✈ 트립가이드</span>
+  </a>
+  <a class="top-back" href="/">← 메인으로 돌아가기</a>
+</header>
+
+<!-- 히어로 -->
+<section class="hero">
+  <div class="hero-badge">User Guide</div>
+  <h1>트립가이드 이용가이드
+    <span>국내·해외 여행 + 인천공항 실시간 통합 가이드</span>
+  </h1>
+  <p class="hero-desc">
+    환율·여행지 검색부터 인천공항 실시간 출국 정보까지<br>
+    트립가이드의 모든 기능을 한 페이지에서 확인하세요.
+  </p>
+  <div class="hero-chips">
+    <span class="hero-chip">💱 환율·계산기</span>
+    <span class="hero-chip">🇰🇷 국내여행</span>
+    <span class="hero-chip">✈ 인천공항</span>
+    <span class="hero-chip">⭐ 내 편명</span>
+    <span class="hero-chip">🛫 출국 준비</span>
+    <span class="hero-chip">🔍 통합 검색</span>
+  </div>
+</section>
+
+<!-- 본문 레이아웃 -->
+<div class="layout">
+
+  <!-- 사이드바 TOC -->
+  <aside class="sidebar">
+    <div class="sidebar-title">목차</div>
+
+    <div class="sidebar-section">
+      <a class="sidebar-link" href="#sec-updates">
+        <span class="sidebar-dot" style="background:#ef4444"></span>
+        수정된 사항
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <a class="sidebar-link" href="#sec-overview">
+        <span class="sidebar-dot" style="background:var(--text3)"></span>
+        화면 구성 & 메뉴
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <a class="sidebar-link" href="#sec-search">
+        <span class="sidebar-dot" style="background:var(--c1)"></span>
+        항공권·숙소 검색
+      </a>
+      <div class="sidebar-sub">
+        <a href="#search-flight">항공권 위젯</a>
+        <a href="#search-hotel">호텔 위젯</a>
+        <a href="#search-fx">환율 + 계산기</a>
+        <a href="#search-banner">인천공항 배너</a>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <a class="sidebar-link" href="#sec-domestic">
+        <span class="sidebar-dot" style="background:var(--c3)"></span>
+        국내여행 (TourAPI)
+      </a>
+      <div class="sidebar-sub">
+        <a href="#dom-search">지역·업종 검색</a>
+        <a href="#dom-filter">결과 필터</a>
+        <a href="#dom-detail">상세보기 모달</a>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <a class="sidebar-link" href="#sec-airport">
+        <span class="sidebar-dot" style="background:var(--c2)"></span>
+        인천공항 실시간
+      </a>
+      <div class="sidebar-sub">
+        <a href="#air-entry">진출입 현황</a>
+        <a href="#air-parking">주차장 현황</a>
+        <a href="#air-transport">셔틀·철도</a>
+        <a href="#air-cong">출·입국장 혼잡도</a>
+        <a href="#air-flights">항공편 현황</a>
+        <a href="#air-fac">시설정보</a>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <a class="sidebar-link" href="#sec-fav">
+        <span class="sidebar-dot" style="background:var(--c4)"></span>
+        ⭐ 내 편명
+      </a>
+      <div class="sidebar-sub">
+        <a href="#fav-add">편명 추가</a>
+        <a href="#fav-countdown">출발 카운트다운</a>
+        <a href="#fav-alert">게이트 변경 알림</a>
+        <a href="#fav-ics">캘린더 저장</a>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <a class="sidebar-link" href="#sec-prep">
+        <span class="sidebar-dot" style="background:var(--c5)"></span>
+        🛫 출국 준비
+      </a>
+      <div class="sidebar-sub">
+        <a href="#prep-check">체크리스트·트래커</a>
+        <a href="#prep-route">공항 가는 길</a>
+        <a href="#prep-map">평면도</a>
+        <a href="#prep-lounge">라운지</a>
+        <a href="#prep-amenity">공항 편의</a>
+        <a href="#prep-rules">수하물·면세·금지</a>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <a class="sidebar-link" href="#sec-tools">
+        <span class="sidebar-dot" style="background:var(--c6)"></span>
+        부가 기능
+      </a>
+      <div class="sidebar-sub">
+        <a href="#tool-search">통합 검색 (Ctrl+K)</a>
+        <a href="#tool-share">공유 + URL 딥링크</a>
+        <a href="#tool-theme">테마 + 한/영</a>
+        <a href="#tool-pwa">홈 화면 추가 (PWA)</a>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+    <a class="sidebar-link" href="/" style="font-size:12px">
+      ← 메인 바로가기
+    </a>
+    <a class="sidebar-link" href="/airport" style="font-size:12px">
+      ✈ 인천공항 페이지
+    </a>
+  </aside>
+
+  <!-- 메인 콘텐츠 -->
+  <main class="main">
+
+    <!-- ══════════════════════════════════
+         섹션 0: 수정된 사항
+         ══════════════════════════════════ -->
+    <section class="guide-section" id="sec-updates">
+      <div class="section-header sh-update">
+        <span class="section-icon">📢</span>
+        <div>
+          <div class="section-title">수정된 사항</div>
+          <div class="section-subtitle">포털 개선·수정 내역을 최신순으로 안내합니다</div>
+        </div>
+      </div>
+
+      <div class="update-card new">
+        <div class="update-head">
+          <span class="update-date">2026.06.30</span>
+          <span class="update-badge">NEW</span>
+        </div>
+        <div class="update-title">🛡️ API 키 보안 강화 + Edge Cache 도입</div>
+        <div class="update-body">
+          한국관광공사(TourAPI) 호출을 Vercel Edge Function 프록시 뒤로 옮겼습니다.
+          <ul>
+            <li>서비스 키가 더 이상 브라우저에 노출되지 않음</li>
+            <li>같은 검색을 100명이 해도 실제 API 호출은 1회로 압축 (s-maxage 캐싱)</li>
+            <li>API 장애 시 친절한 안내 메시지로 변경</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="update-card new">
+        <div class="update-head">
+          <span class="update-date">2026.06.26</span>
+          <span class="update-badge">NEW</span>
+        </div>
+        <div class="update-title">📱 모바일 UI 대폭 개선</div>
+        <div class="update-body">
+          모바일 화면에서 더 편하게 쓸 수 있도록 다듬었습니다.
+          <ul>
+            <li>모든 버튼 44px 이상 터치 타깃 확보</li>
+            <li>탭 가로 스크롤(스냅) + iOS 자동 줌 방지(16px 입력)</li>
+            <li>인천공항 헤더 압축: 차트·공지 숨김, 날씨는 아이콘+온도+습도만</li>
+            <li>iPhone safe-area 대응, 풀스크린 검색 모달</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="update-card">
+        <div class="update-head">
+          <span class="update-date">2026.06.25</span>
+        </div>
+        <div class="update-title">⏰ 출발 카운트다운 + Ctrl+K 통합 검색 + T1/T2 평면도</div>
+        <div class="update-body">
+          <ul>
+            <li>내 편명에 추가한 항공편의 출발까지 실시간 카운트다운, 게이트 이동 권장 시간 표시</li>
+            <li><kbd>Ctrl</kbd> + <kbd>K</kbd> 단축키로 탭·항공편·시설 통합 검색</li>
+            <li>인천공항 T1/T2 평면도 SVG로 라운지·게이트·편의시설 위치 표시</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="update-card">
+        <div class="update-head">
+          <span class="update-date">2026.06.24</span>
+        </div>
+        <div class="update-title">🛫 8가지 신규 기능</div>
+        <div class="update-body">
+          환율 계산기, 즐겨찾기/저장, 검색 히스토리, URL 공유, 현재 위치 검색, 날씨 정보, 즐겨찾기 섹션, 토스트 알림. 목적지 페이지 5개 추가 (후쿠오카·도쿄·제주·부산·강릉).
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         섹션 1: 화면 구성
+         ══════════════════════════════════ -->
+    <section class="guide-section" id="sec-overview">
+      <div class="section-header" style="background:linear-gradient(135deg,#475569,#94a3b8)">
+        <span class="section-icon">🧭</span>
+        <div>
+          <div class="section-title">화면 구성 & 메뉴</div>
+          <div class="section-subtitle">메인 페이지와 인천공항 페이지의 기본 레이아웃</div>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-title">🏠 메인 페이지 (/)</div>
+        <p class="feature-desc">
+          상단 헤더에 환율 바, 환율 계산기, 히어로 검색 위젯(항공·숙소·국내), 인천공항 실시간 배너, 퀵북, 인기 여행지 카드 순으로 구성됩니다.
+        </p>
+        <ul class="func-list">
+          <li><span class="fi">💱</span><div><span class="ft">환율 바</span><span class="fd">USD/JPY/EUR/VND/THB → KRW 실시간 환율 (24시간 단위 갱신)</span></div></li>
+          <li><span class="fi">🧮</span><div><span class="ft">환율 계산기</span><span class="fd">금액 입력 → 6개 통화 즉시 변환. 키 입력에 따라 실시간 갱신</span></div></li>
+          <li><span class="fi">🔍</span><div><span class="ft">검색 위젯</span><span class="fd">항공권 / 호텔 / 국내여행 3개 탭. 외부 OTA로 검색 위임</span></div></li>
+          <li><span class="fi">✈</span><div><span class="ft">인천공항 배너</span><span class="fd">실시간 정보 페이지(/airport)로 바로 이동</span></div></li>
+          <li><span class="fi">🗺</span><div><span class="ft">목적지 카드</span><span class="fd">9개 여행지(오사카·후쿠오카·도쿄·교토·방콕·다낭·발리·제주·부산·강릉)</span></div></li>
+        </ul>
+      </div>
+
+      <div class="feature">
+        <div class="feature-title">✈ 인천공항 페이지 (/airport)</div>
+        <p class="feature-desc">
+          8개 메인 탭 + 자동 데이터 갱신. 출국·입국·중간 환승까지 한 화면에서 확인.
+        </p>
+        <div class="feat-grid">
+          <div class="feat-card">
+            <div class="feat-card-icon">📊</div>
+            <div class="feat-card-title">진출입 현황</div>
+            <div class="feat-card-desc">출발편·도착편 실시간 운항 현황</div>
+          </div>
+          <div class="feat-card">
+            <div class="feat-card-icon">🅿</div>
+            <div class="feat-card-title">주차장 현황</div>
+            <div class="feat-card-desc">T1·T2 주차면 실시간 + T1 구역별 상세</div>
+          </div>
+          <div class="feat-card">
+            <div class="feat-card-icon">🚌</div>
+            <div class="feat-card-title">셔틀·철도</div>
+            <div class="feat-card-desc">공항버스/AREX/택시 시간표</div>
+          </div>
+          <div class="feat-card">
+            <div class="feat-card-icon">👥</div>
+            <div class="feat-card-title">출·입국장</div>
+            <div class="feat-card-desc">T1/T2 출국·입국 혼잡도</div>
+          </div>
+          <div class="feat-card">
+            <div class="feat-card-icon">✈</div>
+            <div class="feat-card-title">항공편</div>
+            <div class="feat-card-desc">출발/도착/수하물/운항마감 + 편명 검색</div>
+          </div>
+          <div class="feat-card">
+            <div class="feat-card-icon">🏢</div>
+            <div class="feat-card-title">시설정보</div>
+            <div class="feat-card-desc">상업시설·항공사 정보</div>
+          </div>
+          <div class="feat-card" style="border-color:var(--c4);background:var(--c4-lt)">
+            <div class="feat-card-icon">⭐</div>
+            <div class="feat-card-title">내 편명</div>
+            <div class="feat-card-desc">즐겨찾기 항공편 추적 + 카운트다운</div>
+          </div>
+          <div class="feat-card" style="border-color:var(--c5);background:var(--c5-lt)">
+            <div class="feat-card-icon">🛫</div>
+            <div class="feat-card-title">출국 준비</div>
+            <div class="feat-card-desc">체크리스트·라운지·평면도·수하물·면세</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        💡 <strong>다크 모드</strong>·<strong>한/영 토글</strong>·<strong>공유</strong>·<strong>검색</strong>은 상단 우측 버튼으로 언제든 전환할 수 있어요.
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         섹션 2: 항공권·숙소 검색
+         ══════════════════════════════════ -->
+    <section class="guide-section" id="sec-search">
+      <div class="section-header sh-1">
+        <span class="section-icon">🔍</span>
+        <div>
+          <div class="section-title">항공권·숙소 검색</div>
+          <div class="section-subtitle">메인 페이지 검색 위젯 + 환율 도구</div>
+        </div>
+      </div>
+
+      <div class="feature" id="search-flight">
+        <div class="feature-title">✈ 항공권 검색</div>
+        <p class="feature-desc">출발지(인천 고정), 도착지, 일정, 인원 입력 후 외부 OTA(스카이스캐너·Trip.com·Expedia)로 이동합니다.</p>
+        <div class="steps">
+          <div class="step"><div class="step-num" style="background:var(--c1)">1</div><div class="step-body"><div class="step-label">플랫폼 선택</div><div class="step-text">스카이스캐너·Trip.com·Expedia 중 원하는 OTA 칩 클릭</div></div></div>
+          <div class="step"><div class="step-num" style="background:var(--c1)">2</div><div class="step-body"><div class="step-label">도착지 선택</div><div class="step-text">오사카·후쿠오카·도쿄·방콕 등 주요 도시 코드 선택</div></div></div>
+          <div class="step"><div class="step-num" style="background:var(--c1)">3</div><div class="step-body"><div class="step-label">일정·인원</div><div class="step-text">출발일·귀국일·인원 지정 후 <code>🔍 검색</code> 클릭 → 새 탭에서 결과</div></div></div>
+        </div>
+      </div>
+
+      <div class="feature" id="search-hotel">
+        <div class="feature-title">🏨 호텔 검색</div>
+        <p class="feature-desc">아고다·부킹닷컴·Trip.com에서 도시별 호텔 가격 비교.</p>
+      </div>
+
+      <div class="feature" id="search-fx">
+        <div class="feature-title">💱 환율 + 계산기</div>
+        <p class="feature-desc">
+          상단 환율 바는 USD·JPY·EUR·VND·THB → KRW 환산을 항상 표시합니다. 그 아래 계산기 바는 임의 금액을 6개 통화로 즉시 변환합니다.
+        </p>
+        <table class="info-table">
+          <thead><tr><th>입력</th><th>예시</th><th>결과</th></tr></thead>
+          <tbody>
+            <tr><td><strong>10000 KRW</strong></td><td>원화 1만원</td><td>$7.5 / ¥1,047 / €6.8 / ₫170,000 / ฿217</td></tr>
+            <tr><td><strong>100 USD</strong></td><td>달러 100불</td><td>₩154,300 / ¥13,995 / €88 / ₫2,278,000 / ฿2,896</td></tr>
+          </tbody>
+        </table>
+        <div class="tip">💡 환율 데이터는 <strong>open.er-api.com</strong>에서 24시간마다 자동 갱신됩니다.</div>
+      </div>
+
+      <div class="feature" id="search-banner">
+        <div class="feature-title">✈ 인천공항 실시간 배너</div>
+        <p class="feature-desc">메인 페이지 히어로 바로 아래의 큰 배너로 인천공항 페이지(<code>/airport</code>)에 한 번에 이동합니다.</p>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         섹션 3: 국내여행
+         ══════════════════════════════════ -->
+    <section class="guide-section" id="sec-domestic">
+      <div class="section-header sh-3">
+        <span class="section-icon">🇰🇷</span>
+        <div>
+          <div class="section-title">국내여행 (TourAPI)</div>
+          <div class="section-subtitle">한국관광공사 공공데이터 — 관광지·문화·축제·레포츠·숙박·음식점·카페</div>
+        </div>
+      </div>
+
+      <div class="feature" id="dom-search">
+        <div class="feature-title">🔍 지역·업종 검색</div>
+        <p class="feature-desc">시/도 → 구/군 → 업종 → 키워드 순으로 조합 검색.</p>
+        <div class="steps">
+          <div class="step"><div class="step-num" style="background:var(--c3)">1</div><div class="step-body"><div class="step-label">시/도 선택</div><div class="step-text">17개 광역시도 (서울·부산·강원·제주 등)</div></div></div>
+          <div class="step"><div class="step-num" style="background:var(--c3)">2</div><div class="step-body"><div class="step-label">구/군 선택 (선택)</div><div class="step-text">시/도에 따라 자동으로 옵션 변경. 비워두면 전체</div></div></div>
+          <div class="step"><div class="step-num" style="background:var(--c3)">3</div><div class="step-body"><div class="step-label">업종 선택</div><div class="step-text">관광지 / 문화시설 / 축제·행사 / 레포츠 / 숙박 / 음식점 / <strong>☕ 카페</strong> (특수 카테고리)</div></div></div>
+          <div class="step"><div class="step-num" style="background:var(--c3)">4</div><div class="step-body"><div class="step-label">키워드 입력 (선택)</div><div class="step-text">예: "해수욕장", "박물관", "야경" — Enter 또는 🔍 검색</div></div></div>
+        </div>
+      </div>
+
+      <div class="feature" id="dom-filter">
+        <div class="feature-title">🎯 결과 필터</div>
+        <p class="feature-desc">검색 결과 화면 상단 sticky 필터바에서 시/도·구/군·업종·키워드를 즉시 재조합. <strong>주차 가능</strong> 토글로 주차 필터링.</p>
+        <ul class="func-list">
+          <li><span class="fi">📍</span><div><span class="ft">내 주변 관광지</span><span class="fd">현재 위치 기반 검색 (브라우저 위치 권한 필요)</span></div></li>
+          <li><span class="fi">🅿</span><div><span class="ft">주차 가능 필터</span><span class="fd">현재 페이지 카드의 주차 정보를 일괄 조회 후 필터</span></div></li>
+          <li><span class="fi">📄</span><div><span class="ft">더 보기 페이지네이션</span><span class="fd">20개씩 추가 로드, 전체 개수 표시</span></div></li>
+        </ul>
+      </div>
+
+      <div class="feature" id="dom-detail">
+        <div class="feature-title">📋 상세보기 모달</div>
+        <p class="feature-desc">카드 클릭 → 모달에서 상세 정보·이미지·주변 관광지·지도 링크.</p>
+        <div class="feat-grid">
+          <div class="feat-card"><div class="feat-card-icon">📷</div><div class="feat-card-title">이미지 갤러리</div><div class="feat-card-desc">대표 + 추가 이미지</div></div>
+          <div class="feat-card"><div class="feat-card-icon">📍</div><div class="feat-card-title">주변 5km</div><div class="feat-card-desc">관광지·맛집·숙소 6곳</div></div>
+          <div class="feat-card"><div class="feat-card-icon">🗺</div><div class="feat-card-title">지도 바로가기</div><div class="feat-card-desc">카카오맵·네이버지도 링크</div></div>
+          <div class="feat-card"><div class="feat-card-icon">⭐</div><div class="feat-card-title">즐겨찾기</div><div class="feat-card-desc">하트 버튼으로 저장</div></div>
+        </div>
+      </div>
+
+      <div class="tip tip-amber">
+        ⚠️ 한국관광공사 API 응답 속도에 따라 1~3초 지연이 발생할 수 있습니다. 점검 시간엔 친절한 안내 메시지가 표시됩니다.
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         섹션 4: 인천공항 실시간
+         ══════════════════════════════════ -->
+    <section class="guide-section" id="sec-airport">
+      <div class="section-header sh-2">
+        <span class="section-icon">✈</span>
+        <div>
+          <div class="section-title">인천공항 실시간</div>
+          <div class="section-subtitle">8개 메인 탭 + 자동 갱신 + 통합 검색</div>
+        </div>
+      </div>
+
+      <div class="feature" id="air-entry">
+        <div class="feature-title">📊 진출입 현황</div>
+        <p class="feature-desc">최근 도착편·출발편 운항 상황을 표로 표시. 도착편/출발편 서브탭으로 전환.</p>
+      </div>
+
+      <div class="feature" id="air-parking">
+        <div class="feature-title">🅿 주차장 현황</div>
+        <p class="feature-desc">T1·T2 단기/장기 주차장 만차율 + T1 한정 구역별 실시간 주차면 수.</p>
+      </div>
+
+      <div class="feature" id="air-transport">
+        <div class="feature-title">🚌 셔틀·철도·택시</div>
+        <ul class="func-list">
+          <li><span class="fi">🚌</span><div><span class="ft">셔틀버스</span><span class="fd">서울·경기 주요 노선 시간표 + 도착 예측</span></div></li>
+          <li><span class="fi">🚆</span><div><span class="ft">공항철도 AREX</span><span class="fd">공항행·서울행 시간표 + 노선도 미니맵</span></div></li>
+          <li><span class="fi">🚕</span><div><span class="ft">택시</span><span class="fd">현재 대기 차량 수</span></div></li>
+        </ul>
+      </div>
+
+      <div class="feature" id="air-cong">
+        <div class="feature-title">👥 출·입국장 혼잡도</div>
+        <p class="feature-desc">T1·T2 출국장/입국장 각 구역의 실시간 혼잡도(여유/보통/혼잡/매우혼잡) 표시.</p>
+      </div>
+
+      <div class="feature" id="air-flights">
+        <div class="feature-title">✈ 항공편 현황</div>
+        <p class="feature-desc">최대 500편 조회. 편명·도시·항공사 검색, T1/탑승동/T2 + SEC 구역 필터.</p>
+        <ul class="func-list">
+          <li><span class="fi">🛫</span><div><span class="ft">출발편</span><span class="fd">체크인 카운터·게이트·시간 + 상태(정시/지연/탑승중/마감)</span></div></li>
+          <li><span class="fi">🛬</span><div><span class="ft">도착편</span><span class="fd">출발지·예정/실제·수하물 벨트</span></div></li>
+          <li><span class="fi">🧳</span><div><span class="ft">수하물</span><span class="fd">편명별 수하물 벨트 번호</span></div></li>
+          <li><span class="fi">🚪</span><div><span class="ft">운항마감</span><span class="fd">탑승 마감된 항공편</span></div></li>
+        </ul>
+      </div>
+
+      <div class="feature" id="air-fac">
+        <div class="feature-title">🏢 시설정보</div>
+        <p class="feature-desc">공항 내 상업시설(식당·카페·편의점·면세점·은행) 검색 + 취항 항공사 목록.</p>
+        <table class="info-table">
+          <thead><tr><th>필터</th><th>옵션</th></tr></thead>
+          <tbody>
+            <tr><td><strong>터미널</strong></td><td>T1 / 탑승동 / T2</td></tr>
+            <tr><td><strong>면세 여부</strong></td><td>면세 / 일반</td></tr>
+            <tr><td><strong>층</strong></td><td>B1 / 1F~5F</td></tr>
+            <tr><td><strong>검색</strong></td><td>시설명 또는 취급품목 (예: "스타벅스", "환전")</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tip">
+        💡 <strong>모바일 최적화</strong>: 모바일에서는 상단 차트와 공지바가 자동 숨김 처리되어 더 많은 정보가 한눈에 보입니다.
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         섹션 5: 내 편명
+         ══════════════════════════════════ -->
+    <section class="guide-section" id="sec-fav">
+      <div class="section-header sh-4">
+        <span class="section-icon">⭐</span>
+        <div>
+          <div class="section-title">내 편명</div>
+          <div class="section-subtitle">즐겨찾기 + 카운트다운 + 게이트 변경 알림</div>
+        </div>
+      </div>
+
+      <div class="feature" id="fav-add">
+        <div class="feature-title">✏ 편명 추가</div>
+        <div class="steps">
+          <div class="step"><div class="step-num" style="background:var(--c4)">1</div><div class="step-body"><div class="step-label">편명 입력</div><div class="step-text">예: <code>KE901</code>, <code>OZ102</code>. 자동완성으로 현재 운항 중인 편명 추천</div></div></div>
+          <div class="step"><div class="step-num" style="background:var(--c4)">2</div><div class="step-body"><div class="step-label">출발/도착 선택</div><div class="step-text">드롭다운에서 출발편 또는 도착편 선택</div></div></div>
+          <div class="step"><div class="step-num" style="background:var(--c4)">3</div><div class="step-body"><div class="step-label">⭐ 추가</div><div class="step-text">localStorage에 영구 저장. 다음 방문 시에도 유지</div></div></div>
+        </div>
+      </div>
+
+      <div class="feature" id="fav-countdown">
+        <div class="feature-title">⏰ 출발 카운트다운</div>
+        <p class="feature-desc">각 카드에 출발까지 남은 시간 실시간 표시. 게이트 도착 권장 시간도 자동 계산.</p>
+        <table class="info-table">
+          <thead><tr><th>잔여 시간</th><th>표시 색상</th><th>안내 메시지</th></tr></thead>
+          <tbody>
+            <tr><td>출발 60분+ 이전</td><td>기본</td><td>"X시간 X분 후 게이트 도착 권장"</td></tr>
+            <tr><td>출발 60분~30분</td><td><span style="color:#f59e0b;font-weight:700">⚠ 주황</span></td><td>"X분 후 게이트로 이동 권장"</td></tr>
+            <tr><td>출발 30분 이내</td><td><span style="color:#ef4444;font-weight:700">🚨 빨강</span></td><td>"지금 게이트로 이동하세요"</td></tr>
+            <tr><td>출발 후</td><td><span style="color:#10b981;font-weight:700">✓ 초록</span></td><td>"항공기가 이미 출발했습니다"</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="feature" id="fav-alert">
+        <div class="feature-title">🔔 게이트 변경 알림</div>
+        <p class="feature-desc">60초마다 백그라운드 자동 갱신. 게이트·시간·운항 상태가 바뀌면 토스트 + OS 푸시 알림 표시.</p>
+        <div class="tip">💡 <kbd>🔔 알림 켜기</kbd> 버튼으로 OS 알림 권한 활성화. 사이트가 백그라운드여도 알림 수신.</div>
+      </div>
+
+      <div class="feature" id="fav-ics">
+        <div class="feature-title">📅 캘린더 저장 (ICS)</div>
+        <p class="feature-desc">즐겨찾기 카드의 <kbd>📅</kbd> 버튼 → .ics 파일 다운로드 → Google Calendar / Apple Calendar에 가져오기. 출발 30분 전 알림 자동 설정.</p>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         섹션 6: 출국 준비
+         ══════════════════════════════════ -->
+    <section class="guide-section" id="sec-prep">
+      <div class="section-header sh-5">
+        <span class="section-icon">🛫</span>
+        <div>
+          <div class="section-title">출국 준비</div>
+          <div class="section-subtitle">체크리스트·평면도·라운지·수하물·면세 정보 통합</div>
+        </div>
+      </div>
+
+      <div class="feature" id="prep-check">
+        <div class="feature-title">✅ 체크리스트 + 진행 트래커</div>
+        <p class="feature-desc">출국 6단계 진행 트래커 + 34개 준비물 체크리스트.</p>
+        <table class="info-table">
+          <thead><tr><th>단계</th><th>평균 소요</th><th>주요 활동</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1. 체크인·수하물</strong></td><td>5~20분</td><td>카운터 발권 + 짐 위탁</td></tr>
+            <tr><td><strong>2. 보안검색</strong></td><td>10~25분</td><td>액체·노트북·신발 분리</td></tr>
+            <tr><td><strong>3. 출국심사</strong></td><td>5~20분</td><td>자동심사 등록 시 빠름</td></tr>
+            <tr><td><strong>4. 면세점·라운지</strong></td><td>자유</td><td>탑승 30분 전까지 여유</td></tr>
+            <tr><td><strong>5. 게이트 이동</strong></td><td>5~15분</td><td>탑승동(P03)은 +5분</td></tr>
+            <tr><td><strong>6. 탑승 완료</strong></td><td>30분 전</td><td>최종 탑승 완료</td></tr>
+          </tbody>
+        </table>
+        <p class="feature-desc" style="margin-top:14px">체크리스트는 6개 그룹(필수서류·결제·전자기기·의류세면·위생약품·기타)으로 정리되어 있고, 항목 클릭 시 체크됩니다. 진행률은 상단 게이지로 표시.</p>
+      </div>
+
+      <div class="feature" id="prep-route">
+        <div class="feature-title">🚗 공항 가는 길</div>
+        <p class="feature-desc">출발지 입력 → 공항리무진·AREX·택시·자가용 4가지 교통수단을 한눈에 비교.</p>
+        <table class="info-table">
+          <thead><tr><th>교통편</th><th>요금</th><th>소요시간</th></tr></thead>
+          <tbody>
+            <tr><td><strong>🚌 공항리무진</strong></td><td>10,000~17,000원</td><td>60~90분</td></tr>
+            <tr><td><strong>🚆 공항철도 AREX 직통</strong></td><td>11,000원</td><td>43~51분</td></tr>
+            <tr><td><strong>🚆 AREX 일반</strong></td><td>4,750원</td><td>59~66분</td></tr>
+            <tr><td><strong>🚕 택시 (서울 도심)</strong></td><td>55,000~75,000원</td><td>50~80분</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="feature" id="prep-map">
+        <div class="feature-title">🗺 평면도</div>
+        <p class="feature-desc">T1/T2 간략 평면도. 게이트·라운지·환전·면세점·흡연실·수유실 위치를 색깔 핀으로 표시. 핀에 마우스 올리면 상세 안내.</p>
+      </div>
+
+      <div class="feature" id="prep-lounge">
+        <div class="feature-title">🛋 라운지</div>
+        <p class="feature-desc">T1·T2 주요 라운지 9곳. PP카드(Priority Pass) 무료 입장 가능 라운지 필터.</p>
+        <ul class="func-list">
+          <li><span class="fi">🛋</span><div><span class="ft">Asiana Lounge (동/서편)</span><span class="fd">T1 면세구역 4F · PP카드·아시아나·프리미엄 신용카드</span></div></li>
+          <li><span class="fi">🛋</span><div><span class="ft">KAL Lounge T2 (East/West)</span><span class="fd">T2 면세구역 4F · 대한항공·스카이팀 엘리트 플러스</span></div></li>
+          <li><span class="fi">🛋</span><div><span class="ft">SKY HUB / Matina / Lounge L</span><span class="fd">T1·T2 · PP카드 + 다수 프리미엄 신용카드</span></div></li>
+        </ul>
+      </div>
+
+      <div class="feature" id="prep-amenity">
+        <div class="feature-title">🏢 공항 편의시설</div>
+        <p class="feature-desc">와이파이·충전·환전·흡연실·수유실·키즈존·반려동물·짐 보관·샤워실·의무실 9가지 정보 카드.</p>
+      </div>
+
+      <div class="feature" id="prep-rules">
+        <div class="feature-title">🧳 수하물 · 💰 면세 · 🚫 반입 금지</div>
+        <div class="feat-grid">
+          <div class="feat-card" style="border-left:3px solid var(--c5)">
+            <div class="feat-card-icon">💧</div>
+            <div class="feat-card-title">기내 액체류</div>
+            <div class="feat-card-desc">개당 100ml 이하, 총 1L 이하, 투명 지퍼백</div>
+          </div>
+          <div class="feat-card" style="border-left:3px solid var(--c5)">
+            <div class="feat-card-icon">🔋</div>
+            <div class="feat-card-title">보조배터리</div>
+            <div class="feat-card-desc">위탁 불가, 기내만 가능 (100Wh 이하)</div>
+          </div>
+          <div class="feat-card" style="border-left:3px solid var(--c3)">
+            <div class="feat-card-icon">💵</div>
+            <div class="feat-card-title">면세 한도</div>
+            <div class="feat-card-desc">1인당 USD 800 (술·담배·향수 별도)</div>
+          </div>
+          <div class="feat-card" style="border-left:3px solid var(--c3)">
+            <div class="feat-card-icon">🍷</div>
+            <div class="feat-card-title">주류</div>
+            <div class="feat-card-desc">2병 이내, 2L 이하, USD 400 이하</div>
+          </div>
+          <div class="feat-card" style="border-left:3px solid var(--c2)">
+            <div class="feat-card-icon">🔪</div>
+            <div class="feat-card-title">기내 반입 금지</div>
+            <div class="feat-card-desc">칼·가위·스프레이·라이터 (위탁 가능)</div>
+          </div>
+          <div class="feat-card" style="border-left:3px solid var(--c2)">
+            <div class="feat-card-icon">🍖</div>
+            <div class="feat-card-title">검역 대상 (입국)</div>
+            <div class="feat-card-desc">육류·가공육·과일·종자 (최대 1,000만원 과태료)</div>
+          </div>
+        </div>
+        <div class="tip tip-amber">
+          💡 자세한 정보는 <a href="/airport" style="color:#92400e;font-weight:700">/airport</a> → 출국 준비 탭에서 확인할 수 있어요.
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════
+         섹션 7: 부가 기능
+         ══════════════════════════════════ -->
+    <section class="guide-section" id="sec-tools">
+      <div class="section-header sh-6">
+        <span class="section-icon">🛠</span>
+        <div>
+          <div class="section-title">부가 기능</div>
+          <div class="section-subtitle">통합 검색 · 공유 · 테마 · PWA</div>
+        </div>
+      </div>
+
+      <div class="feature" id="tool-search">
+        <div class="feature-title">🔍 통합 검색 <span class="feature-badge">단축키</span></div>
+        <p class="feature-desc">
+          인천공항 페이지에서 <kbd>Ctrl</kbd> + <kbd>K</kbd> (또는 우상단 🔍 버튼) → 8개 탭, 7개 액션, 항공편, 시설을 한 화면에서 즉시 검색.
+        </p>
+        <ul class="func-list">
+          <li><span class="fi">⬆️⬇️</span><div><span class="ft">방향키로 선택 이동</span><span class="fd">결과 목록에서 위/아래로 이동</span></div></li>
+          <li><span class="fi">↩️</span><div><span class="ft">Enter로 즉시 이동</span><span class="fd">선택한 항목으로 점프</span></div></li>
+          <li><span class="fi">⎋</span><div><span class="ft">ESC로 닫기</span><span class="fd">검색 모달 닫고 이전 화면으로</span></div></li>
+        </ul>
+      </div>
+
+      <div class="feature" id="tool-share">
+        <div class="feature-title">🔗 공유 + URL 딥링크</div>
+        <p class="feature-desc">
+          우상단 🔗 버튼 → 현재 페이지 URL 복사 (모바일은 시스템 공유 시트). 인천공항 페이지의 특정 탭으로 직접 진입하려면 URL 해시 사용.
+        </p>
+        <table class="info-table">
+          <thead><tr><th>URL</th><th>결과</th></tr></thead>
+          <tbody>
+            <tr><td><code>/airport#tab=fav</code></td><td>내 편명 탭으로 바로</td></tr>
+            <tr><td><code>/airport#tab=prep&sub=lounge</code></td><td>출국 준비 → 라운지로</td></tr>
+            <tr><td><code>/airport#tab=prep&sub=check</code></td><td>출국 준비 → 체크리스트로</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="feature" id="tool-theme">
+        <div class="feature-title">🌙 테마 + 🌐 한/영</div>
+        <p class="feature-desc">우상단 토글로 다크/라이트 모드 전환. 시스템 prefers-color-scheme 자동 감지. <kbd>EN</kbd> 버튼으로 영어 번역 (탭·서브탭).</p>
+      </div>
+
+      <div class="feature" id="tool-pwa">
+        <div class="feature-title">📱 홈 화면에 추가 (PWA)</div>
+        <p class="feature-desc">
+          모바일 브라우저에서 "홈 화면에 추가" → 앱처럼 작동. Service Worker가 정적 자산을 캐싱해 오프라인에서도 마지막 화면이 표시됩니다. 실시간 API는 항상 네트워크 우선.
+        </p>
+        <div class="tip tip-green">
+          ✅ Chrome (Android): 주소창 옆 ⋮ → "홈 화면에 추가"<br>
+          ✅ Safari (iOS): 공유 → "홈 화면에 추가"<br>
+          ✅ PC Chrome: 주소창 우측 설치 아이콘
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- 푸터 -->
+<footer class="guide-footer">
+  <p><strong>✈ 트립가이드</strong> — 국내·해외 여행 + 인천공항 실시간 통합 가이드</p>
+  <p style="margin-top:8px">데이터 출처: 한국관광공사 TourAPI · 인천공항공사 공공데이터 · Open-Meteo · open.er-api.com</p>
+  <p style="margin-top:8px"><a href="/">메인</a> · <a href="/airport">인천공항</a> · <a href="https://github.com/cslis07/travel-guide" target="_blank" rel="noopener">GitHub</a></p>
+  <p style="margin-top:16px;font-size:11px;color:#64748b">© 2026 트립가이드. 공공데이터를 활용한 비상업 정보 제공 서비스입니다.</p>
+</footer>
+
+<!-- 모바일 목차 점프 버튼 -->
+<button class="toc-fab" onclick="document.getElementById('toc-drawer').classList.add('open')" title="목차">📑</button>
+
+<!-- 모바일 목차 드로어 -->
+<div class="toc-drawer" id="toc-drawer" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="toc-drawer-panel">
+    <button class="toc-drawer-close" onclick="document.getElementById('toc-drawer').classList.remove('open')">✕</button>
+    <div class="sidebar-title" style="padding-top:10px">목차</div>
+    <a class="sidebar-link" href="#sec-updates" onclick="document.getElementById('toc-drawer').classList.remove('open')"><span class="sidebar-dot" style="background:#ef4444"></span>수정된 사항</a>
+    <a class="sidebar-link" href="#sec-overview" onclick="document.getElementById('toc-drawer').classList.remove('open')"><span class="sidebar-dot" style="background:var(--text3)"></span>화면 구성 & 메뉴</a>
+    <a class="sidebar-link" href="#sec-search" onclick="document.getElementById('toc-drawer').classList.remove('open')"><span class="sidebar-dot" style="background:var(--c1)"></span>항공권·숙소 검색</a>
+    <a class="sidebar-link" href="#sec-domestic" onclick="document.getElementById('toc-drawer').classList.remove('open')"><span class="sidebar-dot" style="background:var(--c3)"></span>국내여행</a>
+    <a class="sidebar-link" href="#sec-airport" onclick="document.getElementById('toc-drawer').classList.remove('open')"><span class="sidebar-dot" style="background:var(--c2)"></span>인천공항 실시간</a>
+    <a class="sidebar-link" href="#sec-fav" onclick="document.getElementById('toc-drawer').classList.remove('open')"><span class="sidebar-dot" style="background:var(--c4)"></span>⭐ 내 편명</a>
+    <a class="sidebar-link" href="#sec-prep" onclick="document.getElementById('toc-drawer').classList.remove('open')"><span class="sidebar-dot" style="background:var(--c5)"></span>🛫 출국 준비</a>
+    <a class="sidebar-link" href="#sec-tools" onclick="document.getElementById('toc-drawer').classList.remove('open')"><span class="sidebar-dot" style="background:var(--c6)"></span>부가 기능</a>
+    <div class="sidebar-divider"></div>
+    <a class="sidebar-link" href="/" style="font-size:12px">← 메인 바로가기</a>
+  </div>
+</div>
+
+<script>
+// 스크롤 시 사이드바 active 상태 갱신
+(() => {
+  const links = document.querySelectorAll('.sidebar-link[href^="#sec-"]');
+  const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  function update(){
+    const y = window.scrollY + 100;
+    let cur = sections[0];
+    for(const s of sections){
+      if(s.offsetTop <= y) cur = s;
+    }
+    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + cur.id));
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+
+</body>
+</html>
