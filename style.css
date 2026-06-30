@@ -108,6 +108,91 @@ img { max-width: 100%; display: block; }
 }
 .fx-skeleton { color: var(--gray-400); font-size: 12px; }
 
+/* ── 환율 계산기 ── */
+.fx-calc-bar {
+  background: #FEF3C7;
+  border-bottom: 1.5px solid #FCD34D;
+  padding: 7px 0;
+}
+.fx-calc-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.fx-calc-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #92400E;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+.fx-calc-input {
+  flex: 0 0 110px;
+  background: var(--white);
+  border: 1px solid #FCD34D;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--dark);
+  outline: none;
+  -moz-appearance: textfield;
+}
+.fx-calc-input::-webkit-outer-spin-button,
+.fx-calc-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.fx-calc-input:focus { border-color: #D97706; box-shadow: 0 0 0 3px rgba(217,119,6,.15); }
+.fx-calc-sel {
+  background: var(--white);
+  border: 1px solid #FCD34D;
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--dark);
+  cursor: pointer;
+  outline: none;
+}
+.fx-calc-arrow {
+  color: #92400E;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.fx-calc-results {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+.fx-calc-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 10px;
+  background: var(--white);
+  border: 1px solid #FCD34D;
+  border-radius: 14px;
+  font-size: 12px;
+  color: var(--gray-500);
+  white-space: nowrap;
+}
+.fx-calc-item strong { color: #92400E; font-weight: 700; font-size: 12.5px; }
+.fx-calc-hint { color: #B45309; font-size: 12px; font-style: italic; }
+
+@media (max-width: 640px) {
+  .fx-calc-bar { padding: 6px 0; }
+  .fx-calc-inner { gap: 6px; }
+  .fx-calc-label { font-size: 11px; }
+  .fx-calc-input { flex: 1 1 90px; font-size: 16px; padding: 7px 9px; min-height: 36px; } /* iOS 자동 줌 방지 */
+  .fx-calc-sel { font-size: 12px; padding: 7px 6px; min-height: 36px; }
+  .fx-calc-arrow { display: none; }
+  .fx-calc-results { flex-basis: 100%; }
+  .fx-calc-item { font-size: 11px; padding: 3px 8px; }
+}
+
 /* ── HEADER ── */
 .header {
   position: sticky;

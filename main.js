@@ -761,8 +761,43 @@ function closeTourModal() {
 }
 
 /* ═══════════════════════════════════════════
-   환율 정보
+   환율 정보 + 계산기
    ═══════════════════════════════════════════ */
+let _fxRates     = null;
+let _fxKrwPerUsd = 0;
+
+/** 환율 계산기 — 입력한 금액·통화를 다른 5개 통화로 환산 */
+function calcFx() {
+  const amtEl  = document.getElementById('fxCalcAmount');
+  const fromEl = document.getElementById('fxCalcFrom');
+  const out    = document.getElementById('fxCalcResults');
+  if (!amtEl || !out) return;
+  const amt  = parseFloat(amtEl.value);
+  const from = fromEl?.value || 'KRW';
+  if (!_fxRates || !isFinite(amt) || amt <= 0) {
+    out.innerHTML = '<span class="fx-calc-hint">금액을 입력하세요</span>';
+    return;
+  }
+  // 모든 환율은 USD 기준 → 일단 amt를 USD로 환산 후 각 통화로
+  const amtUsd = from === 'USD' ? amt
+                 : from === 'KRW' ? amt / _fxKrwPerUsd
+                 : amt / _fxRates[from];
+  const TARGETS = [
+    { code: 'KRW', sym: '₩', dec: 0 },
+    { code: 'USD', sym: '$', dec: 2 },
+    { code: 'JPY', sym: '¥', dec: 0 },
+    { code: 'EUR', sym: '€', dec: 2 },
+    { code: 'VND', sym: '₫', dec: 0 },
+    { code: 'THB', sym: '฿', dec: 2 },
+  ];
+  out.innerHTML = TARGETS.filter(t => t.code !== from).map(t => {
+    const rate = t.code === 'USD' ? 1 : _fxRates[t.code];
+    const v    = amtUsd * rate;
+    const fmt  = v.toLocaleString('ko-KR', { maximumFractionDigits: t.dec });
+    return `<span class="fx-calc-item">${t.sym}<strong>${fmt}</strong></span>`;
+  }).join('');
+}
+
 async function loadExchangeRates() {
   const el  = document.getElementById('fxRates');
   const upd = document.getElementById('fxUpdated');
@@ -783,6 +818,9 @@ async function loadExchangeRates() {
 
     const r          = data.rates;
     const krwPerUsd  = r.KRW;
+    _fxRates         = r;          // 계산기용 보관
+    _fxKrwPerUsd     = krwPerUsd;
+    calcFx();                       // 첫 계산 시도
 
     el.innerHTML = CURRENCIES.map(c => {
       const krw = Math.round((krwPerUsd / r[c.code]) * c.unit);

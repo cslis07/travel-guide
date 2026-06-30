@@ -35,6 +35,24 @@
     </div>
   </div>
 
+  <!-- ── 환율 계산기 ── -->
+  <div class="fx-calc-bar" id="fxCalcBar">
+    <div class="container fx-calc-inner">
+      <span class="fx-calc-label">🧮 계산기</span>
+      <input type="number" id="fxCalcAmount" class="fx-calc-input" placeholder="금액 입력" inputmode="decimal" oninput="calcFx()" min="0">
+      <select id="fxCalcFrom" class="fx-calc-sel" onchange="calcFx()">
+        <option value="KRW">원(KRW)</option>
+        <option value="USD">달러($)</option>
+        <option value="JPY">엔(¥)</option>
+        <option value="EUR">유로(€)</option>
+        <option value="VND">동(₫)</option>
+        <option value="THB">밧(฿)</option>
+      </select>
+      <span class="fx-calc-arrow">→</span>
+      <div class="fx-calc-results" id="fxCalcResults"><span class="fx-calc-hint">금액을 입력하세요</span></div>
+    </div>
+  </div>
+
   <!-- ── HERO ── -->
   <section class="hero">
     <div class="hero-overlay"></div>
