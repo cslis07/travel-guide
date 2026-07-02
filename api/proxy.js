@@ -9,12 +9,14 @@
 
 export const config = { runtime: 'edge' };
 
-const KEY  = '9ae1336587e873e0ff6a0524e0b0cc0333868f67f9fb4180c0be654fb7794615';
+// 인천공항 공공데이터 키 — 환경변수 우선, 없으면 폴백 (환경변수 등록 후 폴백 제거 권장)
+const KEY  = process.env.ICN_API_KEY || '9ae1336587e873e0ff6a0524e0b0cc0333868f67f9fb4180c0be654fb7794615';
 const BASE = 'https://apis.data.go.kr/B551177';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET,OPTIONS',
+  'Access-Control-Expose-Headers': 'Cache-Control',
 };
 
 export default async function handler(req) {

@@ -22,6 +22,7 @@ const FALLBACK_KEY = '9ae1336587e873e0ff6a0524e0b0cc0333868f67f9fb4180c0be654fb7
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET,OPTIONS',
+  'Access-Control-Expose-Headers': 'Cache-Control, X-Tour-Cache-TTL',
 };
 
 // 엔드포인트별 캐시 TTL (초)
