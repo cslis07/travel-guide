@@ -70,6 +70,30 @@
 }
 .tt-cta:hover{filter:brightness(.96)}
 .tt-compare-lbl{font-size:12px;font-weight:700;color:var(--gray-600);margin:18px 0 8px;text-align:center}
+.tt-btn:disabled{opacity:.55;cursor:not-allowed}
+
+/* 빈 초기 상태 */
+.tt-empty{text-align:center;padding:44px 20px;color:var(--gray-400)}
+.tt-empty-icon{font-size:34px;margin-bottom:10px}
+.tt-empty-ex{font-size:12px;color:var(--gray-400);margin-top:10px;line-height:1.7}
+
+/* 항공편 카드 */
+.tt-flight-head{font-size:13px;font-weight:700;color:var(--gray-600);margin-bottom:10px;padding:0 2px}
+.tt-flight-card{
+  display:block;background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);
+  padding:15px 18px;box-shadow:var(--shadow);margin-bottom:10px;transition:.15s;position:relative;
+}
+a.tt-flight-card:hover{border-color:var(--primary);box-shadow:var(--shadow-hover)}
+.tt-flight-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.tt-flight-air{font-size:15px;font-weight:700;color:var(--dark)}
+.tt-flight-no{font-size:12px;font-weight:500;color:var(--gray-400)}
+.tt-flight-badge{background:#FFF3E9;color:var(--accent-dark);font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+.tt-flight-price{margin-left:auto;font-size:17px;font-weight:800;color:var(--primary)}
+.tt-flight-leg{font-size:13px;color:var(--gray-600);line-height:1.9}
+.tt-flight-leg b{color:var(--dark);font-weight:700}
+.tt-leg-tag{display:inline-block;font-size:10px;font-weight:700;color:var(--gray-400);background:var(--gray-100);padding:1px 6px;border-radius:5px;margin-right:4px}
+.tt-leg-dur{font-size:11px;color:var(--gray-400);margin-left:4px}
+.tt-flight-cta{display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:var(--accent-dark)}
 .tt-note{font-size:11.5px;color:var(--gray-400);text-align:center;margin-top:22px;line-height:1.7}
 @media(max-width:640px){
   .tours-hero h1{font-size:24px}
@@ -185,11 +209,17 @@
     <button class="tt-btn" onclick="ttRunIntl()">🔍 국제 항공권 검색</button>
   </div>
 
-  <div class="tt-results" id="tt-results"></div>
+  <div class="tt-results" id="tt-results" aria-live="polite">
+    <div class="tt-empty">
+      <div class="tt-empty-icon">🔍</div>
+      검색어를 입력하고 검색을 눌러보세요.
+      <div class="tt-empty-ex">예: 오사카 유니버설 · 다낭 바나힐 · 부산 해운대 · 방콕 왕궁</div>
+    </div>
+  </div>
 
   <p class="tt-note">
-    마이리얼트립 공개 데이터를 조회합니다. 가격·재고·예약 가능 여부는 실시간 변동될 수 있으며,<br>
-    예약·결제는 마이리얼트립에서 직접 진행하세요.
+    마이리얼트립 실시간 데이터 + 클룩·KKday·부킹닷컴·아고다 비교 링크를 제공합니다.<br>
+    가격·재고·예약 가능 여부는 실시간 변동될 수 있으며, 예약·결제는 각 플랫폼에서 직접 진행하세요.
   </p>
 </div>
 
@@ -242,12 +272,18 @@ function partnerUrl(p, query){
 
 // 탭 종류(type)에 맞는 파트너 비교 CTA HTML
 function partnerCtas(query, type){
+  const safeQ = esc(query);
   return PARTNERS.filter(p => p.types.includes(type)).map(p =>
-    `<a class="tt-cta" style="background:${p.bg};color:${p.color}" href="${partnerUrl(p, query)}" target="_blank" rel="noopener">🔎 ${p.label}에서 "${query}" 비교 ↗</a>`
+    `<a class="tt-cta" style="background:${p.bg};color:${p.color}" href="${esc(partnerUrl(p, query))}" target="_blank" rel="noopener">🔎 ${esc(p.label)}에서 "${safeQ}" 비교 ↗</a>`
   ).join('');
 }
 
 const $ = id => document.getElementById(id);
+
+// HTML 이스케이프 (사용자 입력 안전 삽입)
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 
 function ttSwitch(tab, btn){
   document.querySelectorAll('.tt-tab').forEach(t => t.classList.remove('active'));
@@ -257,12 +293,25 @@ function ttSwitch(tab, btn){
   $('tt-results').innerHTML = '';
 }
 
+// 오늘 날짜(YYYY-MM-DD)
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+
 (function initDates(){
   const d = new Date();
   const iso = n => new Date(d.getTime() + n*864e5).toISOString().slice(0,10);
-  $('stay-in').value = iso(1); $('stay-out').value = iso(2);
-  $('dom-date').value = iso(1);
-  $('intl-date').value = iso(1); $('intl-return').value = iso(5);
+  const t = todayISO();
+  // 기본값 + 과거 날짜 선택 방지(min)
+  [['stay-in',iso(1)],['stay-out',iso(2)],['dom-date',iso(1)],['intl-date',iso(1)],['intl-return',iso(5)]]
+    .forEach(([id,v]) => { const el=$(id); if(el){ el.value=v; el.min=t; } });
+  // 체크인 바뀌면 체크아웃 최소값도 갱신
+  $('stay-in').addEventListener('change', () => {
+    const ci=$('stay-in').value; $('stay-out').min = ci || t;
+    if($('stay-out').value <= ci){ const nx=new Date(new Date(ci).getTime()+864e5).toISOString().slice(0,10); $('stay-out').value=nx; }
+  });
+  $('intl-date').addEventListener('change', () => {
+    const dp=$('intl-date').value; $('intl-return').min = dp || t;
+    if($('intl-return').value < dp) $('intl-return').value = dp;
+  });
 })();
 
 function renderMd(txt){
@@ -283,8 +332,17 @@ async function callMrt(tool, args){
   if(!data.ok) throw new Error(data.error || '검색 실패');
   return data;
 }
-function ttLoading(m){ $('tt-results').innerHTML = `<div class="tt-loading"><div class="tt-spin"></div>${m||'검색 중...'}</div>`; }
-function ttError(m){ $('tt-results').innerHTML = `<div class="tt-err">⚠️ ${m}<br><small>잠시 후 다시 시도하거나 조건을 바꿔보세요.</small></div>`; }
+let _ttBusy = false;
+function ttLockBtns(lock){
+  _ttBusy = lock;
+  document.querySelectorAll('.tt-btn').forEach(b => { b.disabled = lock; });
+}
+function scrollToResults(){
+  const el = $('tt-results');
+  if(el && window.innerWidth <= 900) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function ttLoading(m){ $('tt-results').innerHTML = `<div class="tt-loading"><div class="tt-spin"></div>${esc(m||'검색 중...')}</div>`; scrollToResults(); }
+function ttError(m){ $('tt-results').innerHTML = `<div class="tt-err">⚠️ ${esc(m)}<br><small>잠시 후 다시 시도하거나 조건을 바꿔보세요.</small></div>`; }
 function ttShow(data, ctaUrl, ctaLabel, partnerQuery, partnerType){
   const text = data.copyText || data.text;
   let inner;
@@ -298,57 +356,105 @@ function ttShow(data, ctaUrl, ctaLabel, partnerQuery, partnerType){
     if(ctas) inner += `<p class="tt-compare-lbl">💰 다른 플랫폼 가격 비교</p>` + ctas;
   }
   $('tt-results').innerHTML = inner;
+  scrollToResults();
 }
 function summarize(d){
   const list = d.products || d.stays || [];
   if(!list.length) return '검색 결과가 없습니다. 다른 조건으로 시도해보세요.';
   return list.slice(0,5).map((p,i)=>{
-    const name = p.title||p.name||p.productName||'(이름 없음)';
+    const name = esc(p.title||p.name||p.productName||'(이름 없음)');
     const price = p.priceFrom||p.price||p.lowestPrice||'';
     const rating = p.rating||p.reviewScore||'';
-    return `${i+1}. <strong>${name}</strong>`+(rating?` <span class="star">⭐${rating}</span>`:'')+(price?`\n   <span class="price">${Number(price).toLocaleString()}원~</span>`:'');
+    const priceNum = Number(String(price).replace(/[^\d.]/g,''));
+    return `${i+1}. <strong>${name}</strong>`+(rating?` <span class="star">⭐${esc(rating)}</span>`:'')+(price&&priceNum?`\n   <span class="price">${priceNum.toLocaleString()}원~</span>`:'');
   }).join('\n');
 }
 
+// 항공편 결과 카드 렌더 (data.result.items)
+function renderFlights(d){
+  const res = d.data?.result || {};
+  const items = res.items || [];
+  if(!items.length) return `<div class="tt-err">검색된 항공편이 없습니다.<br><small>날짜나 노선을 바꿔 다시 시도해보세요.</small></div>`;
+  const fmtDur = m => m ? `${Math.floor(m/60)}시간 ${String(m%60).padStart(2,'0')}분` : '';
+  const cheapest = res.summary?.cheapestTotal;
+  let html = `<div class="tt-flight-head">✈ 총 ${res.summary?.totalOutbound ?? items.length}편 중 ${items.length}편` +
+             (cheapest?` · 최저 <span class="price">${Number(cheapest).toLocaleString()}원</span>`:'') + `</div>`;
+  html += items.slice(0,8).map(f => {
+    const air = esc(f.airline?.name || f.airline?.code || '항공사');
+    const ob = f.outbound || {};
+    const ib = f.inbound || null;
+    const price = f.price?.total || ob.legPrice || 0;
+    const url = f.reservationUrl ? esc(f.reservationUrl) : '';
+    const badge = f.isCheapest ? `<span class="tt-flight-badge">최저가</span>` : '';
+    const legLine = (leg, label) => leg ? `<div class="tt-flight-leg"><span class="tt-leg-tag">${label}</span> ${esc(leg.departCity||'')} <b>${esc(leg.departTime||'')}</b> → ${esc(leg.arriveCity||'')} <b>${esc(leg.arriveTime||'')}</b> <span class="tt-leg-dur">${fmtDur(leg.durationMinutes)}</span></div>` : '';
+    const inner =
+      `<div class="tt-flight-top"><span class="tt-flight-air">${air} <span class="tt-flight-no">${esc(ob.flightNumber||'')}</span></span>${badge}<span class="tt-flight-price">${Number(price).toLocaleString()}원</span></div>` +
+      legLine(ob, ib?'가는편':'') +
+      legLine(ib, '오는편');
+    return url
+      ? `<a class="tt-flight-card" href="${url}" target="_blank" rel="noopener">${inner}<span class="tt-flight-cta">예약하기 ↗</span></a>`
+      : `<div class="tt-flight-card">${inner}</div>`;
+  }).join('');
+  return html;
+}
+
 async function ttRunTna(){
+  if(_ttBusy) return;
   const q = $('tna-q').value.trim(); if(!q){ $('tna-q').focus(); return; }
-  ttLoading('투어·티켓 검색 중...');
+  ttLockBtns(true); ttLoading('투어·티켓 검색 중...');
   try{
     const data = await callMrt('searchTnas', { query:q, perPage:8, sort:$('tna-sort').value });
     ttShow(data, 'https://www.myrealtrip.com/search?q=' + encodeURIComponent(q), '마이리얼트립에서 전체 보기', q, 'tna');
   }catch(e){ ttError(e.message); }
+  finally{ ttLockBtns(false); }
 }
 async function ttRunStay(){
+  if(_ttBusy) return;
   const q = $('stay-q').value.trim(); if(!q){ $('stay-q').focus(); return; }
-  ttLoading('숙소 검색 중...');
+  const ci = $('stay-in').value, co = $('stay-out').value;
+  if(ci && co && co <= ci){ ttError('체크아웃 날짜는 체크인보다 뒤여야 합니다.'); return; }
+  ttLockBtns(true); ttLoading('숙소 검색 중...');
   try{
     const data = await callMrt('searchStays', {
-      keyword:q, checkIn:$('stay-in').value, checkOut:$('stay-out').value,
+      keyword:q, checkIn:ci, checkOut:co,
       adultCount:Number($('stay-adult').value), childCount:0, isDomestic:$('stay-domestic').value==='true'
     });
     ttShow(data, 'https://www.myrealtrip.com/accommodations?keyword=' + encodeURIComponent(q), '마이리얼트립에서 예약하기', q, 'stay');
   }catch(e){ ttError(e.message); }
+  finally{ ttLockBtns(false); }
 }
 async function ttRunDom(){
+  if(_ttBusy) return;
   const from=$('dom-from').value, to=$('dom-to').value;
   if(from===to){ ttError('출발지와 도착지가 같습니다.'); return; }
-  ttLoading('국내 항공권 검색 중...');
+  ttLockBtns(true); ttLoading('국내 항공권 검색 중...');
   try{
     const data = await callMrt('searchDomesticFlights', { origin:from, destination:to, departDate:$('dom-date').value, tripType:'ONE_WAY', maxResults:8 });
-    ttShow(data, 'https://flights.myrealtrip.com/', '마이리얼트립 항공에서 보기');
+    ttShowFlights(data);
   }catch(e){ ttError(e.message); }
+  finally{ ttLockBtns(false); }
 }
 async function ttRunIntl(){
+  if(_ttBusy) return;
   const from=$('intl-from').value, to=$('intl-to').value;
-  ttLoading('국제 항공권 검색 중...');
+  const dep=$('intl-date').value, ret=$('intl-return').value;
+  if(ret && dep && ret < dep){ ttError('오는 날은 가는 날 이후여야 합니다.'); return; }
+  ttLockBtns(true); ttLoading('국제 항공권 검색 중...');
   try{
     const data = await callMrt('searchInternationalFlights', {
       tripType:'ROUND_TRIP', origin:from, destination:to,
-      departDate:$('intl-date').value, returnDate:$('intl-return').value,
+      departDate:dep, returnDate:ret,
       passengers:{adults:1,children:0,infants:0}, maxResults:6
     });
-    ttShow(data, 'https://flights.myrealtrip.com/', '마이리얼트립 항공에서 보기');
+    ttShowFlights(data);
   }catch(e){ ttError(e.message); }
+  finally{ ttLockBtns(false); }
+}
+
+// 항공편 전용 표시 (카드 + 예약 링크)
+function ttShowFlights(data){
+  $('tt-results').innerHTML = renderFlights(data);
+  scrollToResults();
 }
 
 // 모바일 메뉴
