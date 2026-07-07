@@ -94,6 +94,39 @@ a.tt-flight-card:hover{border-color:var(--primary);box-shadow:var(--shadow-hover
 .tt-leg-tag{display:inline-block;font-size:10px;font-weight:700;color:var(--gray-400);background:var(--gray-100);padding:1px 6px;border-radius:5px;margin-right:4px}
 .tt-leg-dur{font-size:11px;color:var(--gray-400);margin-left:4px}
 .tt-flight-cta{display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:var(--accent-dark)}
+.tt-flight-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tt-flight-head>span{flex:1;min-width:0}
+.tt-sort{border:1px solid var(--gray-200);border-radius:8px;padding:6px 10px;font-size:12.5px;font-family:inherit;color:var(--dark);background:#fff;cursor:pointer;outline:none}
+
+/* 서브 버튼 (캘린더) */
+.tt-btn-sub{background:#fff;color:var(--primary);border:1.5px solid var(--primary);margin-top:8px}
+.tt-btn-sub:hover{background:var(--primary-lt)}
+
+/* 검색 히스토리 */
+.tt-history{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tt-history:empty{display:none}
+.tt-hist-lbl{font-size:12px;font-weight:700;color:var(--gray-400);margin-right:2px}
+.tt-hist-chip{
+  background:#fff;border:1px solid var(--gray-200);border-radius:999px;padding:6px 13px;
+  font-size:12.5px;font-family:inherit;color:var(--gray-600);cursor:pointer;transition:.12s;
+}
+.tt-hist-chip:hover{border-color:var(--primary);color:var(--primary)}
+.tt-hist-clear{background:none;border:none;color:var(--gray-400);cursor:pointer;font-size:13px;padding:4px}
+.tt-hist-clear:hover{color:#C92A2A}
+
+/* 날짜별 최저가 캘린더 */
+.tt-fare-notice{background:#FFFBEB;border:1px solid #FCD34D;color:#92400E;border-radius:10px;padding:11px 14px;font-size:12.5px;margin-bottom:12px;line-height:1.6}
+.tt-fare-best{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:12px;padding:0 2px}
+.tt-fare-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.tt-fare-cell{
+  display:flex;flex-direction:column;gap:3px;align-items:flex-start;
+  background:#fff;border:1px solid var(--gray-200);border-radius:10px;padding:11px 13px;
+  font-family:inherit;cursor:pointer;transition:.12s;text-align:left;
+}
+.tt-fare-cell:hover{border-color:var(--primary);box-shadow:var(--shadow)}
+.tt-fare-date{font-size:12.5px;font-weight:600;color:var(--dark)}
+.tt-fare-price{font-size:15px;font-weight:800;color:var(--primary)}
+.tt-fare-air{font-size:11px;color:var(--gray-400)}
 .tt-note{font-size:11.5px;color:var(--gray-400);text-align:center;margin-top:22px;line-height:1.7}
 @media(max-width:640px){
   .tours-hero h1{font-size:24px}
@@ -207,8 +240,10 @@ a.tt-flight-card:hover{border-color:var(--primary);box-shadow:var(--shadow-hover
       <div class="tt-field"><label>오는 날</label><input type="date" id="intl-return"></div>
     </div>
     <button class="tt-btn" onclick="ttRunIntl()">🔍 국제 항공권 검색</button>
+    <button class="tt-btn tt-btn-sub" onclick="ttRunFareCalendar()">📅 날짜별 최저가 보기</button>
   </div>
 
+  <div class="tt-history" id="tt-history"></div>
   <div class="tt-results" id="tt-results" aria-live="polite">
     <div class="tt-empty">
       <div class="tt-empty-icon">🔍</div>
@@ -283,6 +318,44 @@ const $ = id => document.getElementById(id);
 // HTML 이스케이프 (사용자 입력 안전 삽입)
 function esc(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// 항공사 코드 → 한글명
+const AIRLINE = {
+  KE:'대한항공', OZ:'아시아나', '7C':'제주항공', LJ:'진에어', TW:'티웨이',
+  BX:'에어부산', RS:'에어서울', RF:'에어로케이', YP:'에어프레미아', ZE:'이스타항공',
+  JL:'일본항공', NH:'전일본공수', MU:'중국동방', CZ:'중국남방', CI:'중화항공',
+  BR:'에바항공', TG:'타이항공', VN:'베트남항공', VJ:'비엣젯', SQ:'싱가포르항공',
+};
+function airlineName(code){ return AIRLINE[code] || code || '항공사'; }
+
+/* ── 검색 히스토리 (localStorage, 최근 8건) ── */
+const TT_HIST_KEY = 'tt_search_history';
+function getHist(){ try{ return JSON.parse(localStorage.getItem(TT_HIST_KEY)||'[]'); }catch{ return []; } }
+function saveHist(entry){
+  let h = getHist().filter(x => x.label !== entry.label);
+  h.unshift(entry); h = h.slice(0, 8);
+  localStorage.setItem(TT_HIST_KEY, JSON.stringify(h));
+  renderHistory();
+}
+function clearHist(){ localStorage.removeItem(TT_HIST_KEY); renderHistory(); }
+function renderHistory(){
+  const box = $('tt-history'); if(!box) return;
+  const h = getHist();
+  if(!h.length){ box.innerHTML=''; return; }
+  box.innerHTML = `<span class="tt-hist-lbl">🕘 최근 검색</span>` +
+    h.map((e,i)=>`<button class="tt-hist-chip" onclick="applyHist(${i})">${esc(e.label)}</button>`).join('') +
+    `<button class="tt-hist-clear" onclick="clearHist()" title="전체 삭제">✕</button>`;
+}
+function applyHist(i){
+  const e = getHist()[i]; if(!e) return;
+  // 탭 전환
+  const tabBtn = [...document.querySelectorAll('.tt-tab')].find(b => b.dataset.tab === e.tab);
+  if(tabBtn) ttSwitch(e.tab, tabBtn);
+  // 필드 복원 후 검색
+  const f = e.fields || {};
+  Object.entries(f).forEach(([id,v]) => { const el=$(id); if(el) el.value=v; });
+  ({tna:ttRunTna, stay:ttRunStay, dom:ttRunDom, intl:ttRunIntl}[e.tab] || (()=>{}))();
 }
 
 function ttSwitch(tab, btn){
@@ -370,20 +443,35 @@ function summarize(d){
   }).join('\n');
 }
 
+// 항공편 결과 상태 (정렬용)
+let _lastFlights = null;
+let _flightSort = 'price';
+
+function _flightPrice(f){ return f.price?.total || f.outbound?.legPrice || 0; }
+function _flightDepMin(f){ const t=f.outbound?.departTime||'99:99'; const [h,m]=t.split(':').map(Number); return (h||0)*60+(m||0); }
+function _flightDur(f){ return f.outbound?.durationMinutes || 0; }
+
+function sortFlights(mode){ _flightSort = mode; if(_lastFlights) ttShowFlights(_lastFlights); }
+
 // 항공편 결과 카드 렌더 (data.result.items)
 function renderFlights(d){
   const res = d.data?.result || {};
-  const items = res.items || [];
+  let items = (res.items || []).slice();
   if(!items.length) return `<div class="tt-err">검색된 항공편이 없습니다.<br><small>날짜나 노선을 바꿔 다시 시도해보세요.</small></div>`;
+  // 클라이언트 정렬
+  const cmp = { price:(a,b)=>_flightPrice(a)-_flightPrice(b), depart:(a,b)=>_flightDepMin(a)-_flightDepMin(b), duration:(a,b)=>_flightDur(a)-_flightDur(b) };
+  items.sort(cmp[_flightSort] || cmp.price);
   const fmtDur = m => m ? `${Math.floor(m/60)}시간 ${String(m%60).padStart(2,'0')}분` : '';
   const cheapest = res.summary?.cheapestTotal;
-  let html = `<div class="tt-flight-head">✈ 총 ${res.summary?.totalOutbound ?? items.length}편 중 ${items.length}편` +
-             (cheapest?` · 최저 <span class="price">${Number(cheapest).toLocaleString()}원</span>`:'') + `</div>`;
-  html += items.slice(0,8).map(f => {
-    const air = esc(f.airline?.name || f.airline?.code || '항공사');
+  const opt = (v,l)=>`<option value="${v}"${_flightSort===v?' selected':''}>${l}</option>`;
+  let html = `<div class="tt-flight-head"><span>✈ 총 ${res.summary?.totalOutbound ?? items.length}편 중 ${items.length}편` +
+             (cheapest?` · 최저 <span class="price">${Number(cheapest).toLocaleString()}원</span>`:'') + `</span>` +
+             `<select class="tt-sort" onchange="sortFlights(this.value)">${opt('price','가격 낮은순')}${opt('depart','출발 빠른순')}${opt('duration','소요 짧은순')}</select></div>`;
+  html += items.slice(0,10).map(f => {
+    const air = esc(f.airline?.name || airlineName(f.airline?.code));
     const ob = f.outbound || {};
     const ib = f.inbound || null;
-    const price = f.price?.total || ob.legPrice || 0;
+    const price = _flightPrice(f);
     const url = f.reservationUrl ? esc(f.reservationUrl) : '';
     const badge = f.isCheapest ? `<span class="tt-flight-badge">최저가</span>` : '';
     const legLine = (leg, label) => leg ? `<div class="tt-flight-leg"><span class="tt-leg-tag">${label}</span> ${esc(leg.departCity||'')} <b>${esc(leg.departTime||'')}</b> → ${esc(leg.arriveCity||'')} <b>${esc(leg.arriveTime||'')}</b> <span class="tt-leg-dur">${fmtDur(leg.durationMinutes)}</span></div>` : '';
@@ -398,6 +486,31 @@ function renderFlights(d){
   return html;
 }
 
+// 날짜별 최저가 캘린더 렌더 (flightsFareCalendar)
+function renderFareCalendar(d){
+  const res = d.data?.result || {};
+  const items = (res.items || []).slice().sort((a,b)=>a.totalPrice-b.totalPrice);
+  if(!items.length) return `<div class="tt-err">날짜별 최저가 데이터가 없습니다.</div>`;
+  const cheap = res.cheapest;
+  let html = `<div class="tt-fare-notice">📅 <strong>날짜별 최저가</strong> — 이 가격은 <u>실시간이 아니며</u> 예약 시점에 변동될 수 있습니다.</div>`;
+  if(cheap) html += `<div class="tt-fare-best">🏆 최저가 <span class="price">${Number(cheap.totalPrice).toLocaleString()}원</span> · ${esc(cheap.departureDate)} ~ ${esc(cheap.returnDate)} (${esc(airlineName(cheap.airline))})</div>`;
+  html += `<div class="tt-fare-grid">` + items.slice(0,12).map(it => {
+    const dep = esc(it.departureDate), ret = esc(it.returnDate);
+    return `<button class="tt-fare-cell" onclick="applyFareDate('${dep}','${ret}')">
+      <span class="tt-fare-date">${dep.slice(5)} → ${ret.slice(5)}</span>
+      <span class="tt-fare-price">${Number(it.totalPrice).toLocaleString()}원</span>
+      <span class="tt-fare-air">${esc(airlineName(it.airline))}</span>
+    </button>`;
+  }).join('') + `</div>`;
+  html += `<p class="tt-compare-lbl" style="margin-top:14px">날짜를 누르면 위 검색 폼에 자동 입력됩니다</p>`;
+  return html;
+}
+function applyFareDate(dep, ret){
+  $('intl-date').value = dep; $('intl-return').value = ret;
+  $('intl-date').scrollIntoView({ behavior:'smooth', block:'center' });
+  ttRunIntl();
+}
+
 async function ttRunTna(){
   if(_ttBusy) return;
   const q = $('tna-q').value.trim(); if(!q){ $('tna-q').focus(); return; }
@@ -405,6 +518,7 @@ async function ttRunTna(){
   try{
     const data = await callMrt('searchTnas', { query:q, perPage:8, sort:$('tna-sort').value });
     ttShow(data, 'https://www.myrealtrip.com/search?q=' + encodeURIComponent(q), '마이리얼트립에서 전체 보기', q, 'tna');
+    saveHist({ tab:'tna', label:'🎟 '+q, fields:{'tna-q':q} });
   }catch(e){ ttError(e.message); }
   finally{ ttLockBtns(false); }
 }
@@ -420,6 +534,7 @@ async function ttRunStay(){
       adultCount:Number($('stay-adult').value), childCount:0, isDomestic:$('stay-domestic').value==='true'
     });
     ttShow(data, 'https://www.myrealtrip.com/accommodations?keyword=' + encodeURIComponent(q), '마이리얼트립에서 예약하기', q, 'stay');
+    saveHist({ tab:'stay', label:'🏨 '+q, fields:{'stay-q':q} });
   }catch(e){ ttError(e.message); }
   finally{ ttLockBtns(false); }
 }
@@ -431,6 +546,7 @@ async function ttRunDom(){
   try{
     const data = await callMrt('searchDomesticFlights', { origin:from, destination:to, departDate:$('dom-date').value, tripType:'ONE_WAY', maxResults:8 });
     ttShowFlights(data);
+    saveHist({ tab:'dom', label:`🛫 ${from}→${to}`, fields:{'dom-from':from,'dom-to':to,'dom-date':$('dom-date').value} });
   }catch(e){ ttError(e.message); }
   finally{ ttLockBtns(false); }
 }
@@ -447,19 +563,37 @@ async function ttRunIntl(){
       passengers:{adults:1,children:0,infants:0}, maxResults:6
     });
     ttShowFlights(data);
+    saveHist({ tab:'intl', label:`🌏 ${from}→${to}`, fields:{'intl-from':from,'intl-to':to,'intl-date':dep,'intl-return':ret} });
   }catch(e){ ttError(e.message); }
   finally{ ttLockBtns(false); }
 }
 
-// 항공편 전용 표시 (카드 + 예약 링크)
+// 항공편 전용 표시 (카드 + 정렬 + 예약 링크)
 function ttShowFlights(data){
+  _lastFlights = data;
   $('tt-results').innerHTML = renderFlights(data);
   scrollToResults();
+}
+
+// 날짜별 최저가 캘린더
+async function ttRunFareCalendar(){
+  if(_ttBusy) return;
+  const from=$('intl-from').value, to=$('intl-to').value, dep=$('intl-date').value;
+  ttLockBtns(true); ttLoading('날짜별 최저가 조회 중...');
+  try{
+    const data = await callMrt('flightsFareCalendar', { from, to, departureDate:dep, period:4, international:true });
+    $('tt-results').innerHTML = renderFareCalendar(data);
+    scrollToResults();
+  }catch(e){ ttError(e.message); }
+  finally{ ttLockBtns(false); }
 }
 
 // 모바일 메뉴
 const _mb = document.getElementById('menuBtn'), _nav = document.getElementById('nav');
 if(_mb && _nav){ _mb.addEventListener('click', () => _nav.classList.toggle('open')); }
+
+// 페이지 로드 시 검색 히스토리 렌더
+renderHistory();
 
 // URL 파라미터로 도시 자동 검색 (목적지 페이지에서 링크: tours.html?city=오사카)
 (function initFromQuery(){
