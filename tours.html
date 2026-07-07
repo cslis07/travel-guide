@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투어·티켓·숙소 검색 | 트립가이드</title>
+<meta name="description" content="마이리얼트립 실시간 투어·티켓·숙소·항공권 검색 — 트립가이드">
+<meta property="og:title" content="트립가이드 — 투어·티켓·숙소 검색">
+<meta property="og:description" content="마이리얼트립 실시간 여행 상품 검색">
+<meta property="og:url" content="https://travel-guide-cslis07.vercel.app/tours.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ── tours 전용 ── */
+.tours-hero{
+  background:linear-gradient(135deg,#1640B0 0%,#1B4FD8 55%,#F97316 130%);
+  color:#fff;padding:56px 20px 48px;text-align:center;
+}
+.tours-hero h1{font-size:30px;font-weight:900;margin-bottom:10px;letter-spacing:-.02em}
+.tours-hero p{font-size:15px;opacity:.9}
+.tours-wrap{max-width:820px;margin:0 auto;padding:0 16px 60px}
+
+.tt-tabs{
+  display:flex;gap:6px;overflow-x:auto;margin:-26px 0 18px;padding:6px;
+  background:#fff;border-radius:14px;box-shadow:var(--shadow);position:relative;z-index:10;
+}
+.tt-tabs::-webkit-scrollbar{display:none}
+.tt-tab{
+  flex:1;white-space:nowrap;padding:12px;border:none;background:none;border-radius:10px;
+  font-family:inherit;font-size:14px;font-weight:700;color:var(--gray-600);cursor:pointer;
+  transition:.15s;min-width:max-content;
+}
+.tt-tab.active{background:var(--primary);color:#fff}
+
+.tt-panel{display:none;background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
+.tt-panel.active{display:block}
+.tt-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tt-field{flex:1;min-width:120px;display:flex;flex-direction:column;gap:5px}
+.tt-field label{font-size:12px;font-weight:600;color:var(--gray-600)}
+.tt-field input,.tt-field select{
+  border:1px solid var(--gray-200);border-radius:10px;padding:12px;font-size:15px;
+  font-family:inherit;color:var(--dark);outline:none;background:#fff;
+}
+.tt-field input:focus,.tt-field select:focus{border-color:var(--primary)}
+.tt-btn{
+  width:100%;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:15px;
+  font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;transition:.15s;margin-top:4px;
+}
+.tt-btn:hover{background:var(--primary-dark)}
+.tt-btn:disabled{opacity:.6;cursor:not-allowed}
+
+.tt-results{margin-top:4px}
+.tt-card{
+  background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);
+  padding:18px 20px;box-shadow:var(--shadow);white-space:pre-wrap;font-size:14.5px;line-height:1.95;
+}
+.tt-card strong{color:var(--primary-dark);font-weight:700}
+.tt-card .star{color:#F59E0B}
+.tt-card .price{color:var(--accent-dark);font-weight:700}
+.tt-loading{text-align:center;padding:40px;color:var(--gray-400);font-size:14px}
+.tt-spin{width:28px;height:28px;border:3px solid var(--gray-200);border-top-color:var(--primary);
+  border-radius:50%;animation:ttspin .8s linear infinite;margin:0 auto 12px}
+@keyframes ttspin{to{transform:rotate(360deg)}}
+.tt-err{background:#FFF5F5;border:1px solid #FFD0D0;color:#C92A2A;border-radius:12px;padding:14px 16px;font-size:13.5px}
+.tt-cta{
+  display:block;text-align:center;margin-top:14px;background:#FFF3E9;color:var(--accent-dark);
+  border-radius:12px;padding:14px;font-size:14px;font-weight:700;transition:.15s;
+}
+.tt-cta:hover{background:#FFE4CE}
+.tt-note{font-size:11.5px;color:var(--gray-400);text-align:center;margin-top:22px;line-height:1.7}
+@media(max-width:640px){
+  .tours-hero h1{font-size:24px}
+  .tt-field input,.tt-field select{font-size:16px} /* iOS 줌 방지 */
+}
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="header" id="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">✈ 트립가이드</a>
+    <nav class="nav" id="nav">
+      <a href="index.html#destinations">여행지</a>
+      <a href="tours.html" style="color:#1B4FD8;font-weight:600;">🎟 투어·티켓</a>
+      <a href="guide.html">📖 이용가이드</a>
+      <a href="airport.html" style="color:#3b82f6;font-weight:600;">✈ 인천공항</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+  </div>
+</header>
+
+<!-- 히어로 -->
+<section class="tours-hero">
+  <h1>투어·티켓·숙소 검색</h1>
+  <p>마이리얼트립 실시간 여행 상품을 한 화면에서</p>
+</section>
+
+<div class="tours-wrap">
+
+  <div class="tt-tabs">
+    <button class="tt-tab active" data-tab="tna" onclick="ttSwitch('tna',this)">🎟 투어·티켓</button>
+    <button class="tt-tab" data-tab="stay" onclick="ttSwitch('stay',this)">🏨 숙소</button>
+    <button class="tt-tab" data-tab="dom" onclick="ttSwitch('dom',this)">🛫 국내항공</button>
+    <button class="tt-tab" data-tab="intl" onclick="ttSwitch('intl',this)">🌏 국제항공</button>
+  </div>
+
+  <!-- 투어·티켓 -->
+  <div class="tt-panel active" id="tt-panel-tna">
+    <div class="tt-row">
+      <div class="tt-field" style="flex:2">
+        <label>검색어 (도시 또는 상품명)</label>
+        <input id="tna-q" placeholder="예: 오사카 유니버설, 다낭 바나힐, 방콕 왕궁" onkeydown="if(event.key==='Enter')ttRunTna()">
+      </div>
+      <div class="tt-field" style="flex:1">
+        <label>정렬</label>
+        <select id="tna-sort">
+          <option value="recommended">추천순</option>
+          <option value="price_asc">가격 낮은순</option>
+          <option value="review_score_desc">평점순</option>
+          <option value="selling_count_desc">인기순</option>
+        </select>
+      </div>
+    </div>
+    <button class="tt-btn" onclick="ttRunTna()">🔍 투어·티켓 검색</button>
+  </div>
+
+  <!-- 숙소 -->
+  <div class="tt-panel" id="tt-panel-stay">
+    <div class="tt-row">
+      <div class="tt-field" style="flex:2">
+        <label>지역/숙소명</label>
+        <input id="stay-q" placeholder="예: 부산 해운대, 제주 서귀포, 도쿄 신주쿠" onkeydown="if(event.key==='Enter')ttRunStay()">
+      </div>
+    </div>
+    <div class="tt-row">
+      <div class="tt-field"><label>체크인</label><input type="date" id="stay-in"></div>
+      <div class="tt-field"><label>체크아웃</label><input type="date" id="stay-out"></div>
+      <div class="tt-field"><label>인원</label>
+        <select id="stay-adult"><option value="1">성인 1</option><option value="2" selected>성인 2</option><option value="3">성인 3</option><option value="4">성인 4</option></select>
+      </div>
+    </div>
+    <div class="tt-row">
+      <div class="tt-field"><label>국내/해외</label>
+        <select id="stay-domestic"><option value="true">국내</option><option value="false">해외</option></select>
+      </div>
+    </div>
+    <button class="tt-btn" onclick="ttRunStay()">🔍 숙소 검색</button>
+  </div>
+
+  <!-- 국내항공 -->
+  <div class="tt-panel" id="tt-panel-dom">
+    <div class="tt-row">
+      <div class="tt-field"><label>출발</label>
+        <select id="dom-from"><option value="GMP">김포 GMP</option><option value="CJU">제주 CJU</option><option value="PUS">부산 PUS</option></select>
+      </div>
+      <div class="tt-field"><label>도착</label>
+        <select id="dom-to"><option value="CJU">제주 CJU</option><option value="GMP">김포 GMP</option><option value="PUS">부산 PUS</option><option value="TAE">대구 TAE</option><option value="KWJ">광주 KWJ</option></select>
+      </div>
+    </div>
+    <div class="tt-row"><div class="tt-field"><label>가는 날</label><input type="date" id="dom-date"></div></div>
+    <button class="tt-btn" onclick="ttRunDom()">🔍 국내 항공권 검색</button>
+  </div>
+
+  <!-- 국제항공 -->
+  <div class="tt-panel" id="tt-panel-intl">
+    <div class="tt-row">
+      <div class="tt-field"><label>출발</label>
+        <select id="intl-from"><option value="ICN">인천 ICN</option><option value="GMP">김포 GMP</option><option value="PUS">부산 PUS</option></select>
+      </div>
+      <div class="tt-field"><label>도착</label>
+        <select id="intl-to">
+          <option value="KIX">오사카 KIX</option><option value="NRT">도쿄 나리타 NRT</option><option value="FUK">후쿠오카 FUK</option>
+          <option value="BKK">방콕 BKK</option><option value="DAD">다낭 DAD</option><option value="SIN">싱가포르 SIN</option>
+        </select>
+      </div>
+    </div>
+    <div class="tt-row">
+      <div class="tt-field"><label>가는 날</label><input type="date" id="intl-date"></div>
+      <div class="tt-field"><label>오는 날</label><input type="date" id="intl-return"></div>
+    </div>
+    <button class="tt-btn" onclick="ttRunIntl()">🔍 국제 항공권 검색</button>
+  </div>
+
+  <div class="tt-results" id="tt-results"></div>
+
+  <p class="tt-note">
+    마이리얼트립 공개 데이터를 조회합니다. 가격·재고·예약 가능 여부는 실시간 변동될 수 있으며,<br>
+    예약·결제는 마이리얼트립에서 직접 진행하세요.
+  </p>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   제휴(어필리에이트) 설정
+   마이리얼트립 파트너스 가입 후 발급받은 값을 넣으면
+   모든 예약 링크에 자동으로 추적 파라미터가 붙습니다.
+   미설정(빈 문자열) 시 일반 링크로 동작합니다.
+   ═══════════════════════════════════════════ */
+const MRT_AFFILIATE = { param: 'utm_source', value: 'tripguide' }; // TODO: 파트너스 발급값으로 교체
+
+function affLink(baseUrl){
+  if(!MRT_AFFILIATE.value) return baseUrl;
+  const u = new URL(baseUrl);
+  u.searchParams.set(MRT_AFFILIATE.param, MRT_AFFILIATE.value);
+  u.searchParams.set('utm_medium', 'referral');
+  u.searchParams.set('utm_campaign', 'tripguide');
+  return u.toString();
+}
+
+const $ = id => document.getElementById(id);
+
+function ttSwitch(tab, btn){
+  document.querySelectorAll('.tt-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tt-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  $('tt-panel-' + tab).classList.add('active');
+  $('tt-results').innerHTML = '';
+}
+
+(function initDates(){
+  const d = new Date();
+  const iso = n => new Date(d.getTime() + n*864e5).toISOString().slice(0,10);
+  $('stay-in').value = iso(1); $('stay-out').value = iso(2);
+  $('dom-date').value = iso(1);
+  $('intl-date').value = iso(1); $('intl-return').value = iso(5);
+})();
+
+function renderMd(txt){
+  if(!txt) return '';
+  return txt
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/(⭐[\d.]+)/g,'<span class="star">$1</span>')
+    .replace(/([\d,]+원(?:\/박)?)/g,'<span class="price">$1</span>');
+}
+
+async function callMrt(tool, args){
+  const res = await fetch('/api/mrt', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ tool, arguments: args })
+  });
+  const data = await res.json();
+  if(!data.ok) throw new Error(data.error || '검색 실패');
+  return data;
+}
+function ttLoading(m){ $('tt-results').innerHTML = `<div class="tt-loading"><div class="tt-spin"></div>${m||'검색 중...'}</div>`; }
+function ttError(m){ $('tt-results').innerHTML = `<div class="tt-err">⚠️ ${m}<br><small>잠시 후 다시 시도하거나 조건을 바꿔보세요.</small></div>`; }
+function ttShow(data, ctaUrl, ctaLabel){
+  const text = data.copyText || data.text;
+  let inner;
+  if(text) inner = `<div class="tt-card">${renderMd(text)}</div>`;
+  else if(data.data) inner = `<div class="tt-card">${summarize(data.data)}</div>`;
+  else inner = `<div class="tt-err">표시할 결과가 없습니다.</div>`;
+  if(ctaUrl) inner += `<a class="tt-cta" href="${affLink(ctaUrl)}" target="_blank" rel="noopener">${ctaLabel} ↗</a>`;
+  $('tt-results').innerHTML = inner;
+}
+function summarize(d){
+  const list = d.products || d.stays || [];
+  if(!list.length) return '검색 결과가 없습니다. 다른 조건으로 시도해보세요.';
+  return list.slice(0,5).map((p,i)=>{
+    const name = p.title||p.name||p.productName||'(이름 없음)';
+    const price = p.priceFrom||p.price||p.lowestPrice||'';
+    const rating = p.rating||p.reviewScore||'';
+    return `${i+1}. <strong>${name}</strong>`+(rating?` <span class="star">⭐${rating}</span>`:'')+(price?`\n   <span class="price">${Number(price).toLocaleString()}원~</span>`:'');
+  }).join('\n');
+}
+
+async function ttRunTna(){
+  const q = $('tna-q').value.trim(); if(!q){ $('tna-q').focus(); return; }
+  ttLoading('투어·티켓 검색 중...');
+  try{
+    const data = await callMrt('searchTnas', { query:q, perPage:8, sort:$('tna-sort').value });
+    ttShow(data, 'https://www.myrealtrip.com/search?q=' + encodeURIComponent(q), '마이리얼트립에서 전체 보기');
+  }catch(e){ ttError(e.message); }
+}
+async function ttRunStay(){
+  const q = $('stay-q').value.trim(); if(!q){ $('stay-q').focus(); return; }
+  ttLoading('숙소 검색 중...');
+  try{
+    const data = await callMrt('searchStays', {
+      keyword:q, checkIn:$('stay-in').value, checkOut:$('stay-out').value,
+      adultCount:Number($('stay-adult').value), childCount:0, isDomestic:$('stay-domestic').value==='true'
+    });
+    ttShow(data, 'https://www.myrealtrip.com/accommodations?keyword=' + encodeURIComponent(q), '마이리얼트립에서 예약하기');
+  }catch(e){ ttError(e.message); }
+}
+async function ttRunDom(){
+  const from=$('dom-from').value, to=$('dom-to').value;
+  if(from===to){ ttError('출발지와 도착지가 같습니다.'); return; }
+  ttLoading('국내 항공권 검색 중...');
+  try{
+    const data = await callMrt('searchDomesticFlights', { origin:from, destination:to, departDate:$('dom-date').value, tripType:'ONE_WAY', maxResults:8 });
+    ttShow(data, 'https://flights.myrealtrip.com/', '마이리얼트립 항공에서 보기');
+  }catch(e){ ttError(e.message); }
+}
+async function ttRunIntl(){
+  const from=$('intl-from').value, to=$('intl-to').value;
+  ttLoading('국제 항공권 검색 중...');
+  try{
+    const data = await callMrt('searchInternationalFlights', {
+      tripType:'ROUND_TRIP', origin:from, destination:to,
+      departDate:$('intl-date').value, returnDate:$('intl-return').value,
+      passengers:{adults:1,children:0,infants:0}, maxResults:6
+    });
+    ttShow(data, 'https://flights.myrealtrip.com/', '마이리얼트립 항공에서 보기');
+  }catch(e){ ttError(e.message); }
+}
+
+// 모바일 메뉴
+const _mb = document.getElementById('menuBtn'), _nav = document.getElementById('nav');
+if(_mb && _nav){ _mb.addEventListener('click', () => _nav.classList.toggle('open')); }
+
+// URL 파라미터로 도시 자동 검색 (목적지 페이지에서 링크: tours.html?city=오사카)
+(function initFromQuery(){
+  const p = new URLSearchParams(location.search);
+  const city = p.get('city');
+  if(city){ $('tna-q').value = city; ttRunTna(); }
+})();
+</script>
+</body>
+</html>
