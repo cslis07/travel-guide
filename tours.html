@@ -68,9 +68,8 @@
   display:block;text-align:center;margin-top:14px;background:#FFF3E9;color:var(--accent-dark);
   border-radius:12px;padding:14px;font-size:14px;font-weight:700;transition:.15s;
 }
-.tt-cta:hover{background:#FFE4CE}
-.tt-cta-klook{background:#FFF0F3;color:#e8384f}
-.tt-cta-klook:hover{background:#FFDCE3}
+.tt-cta:hover{filter:brightness(.96)}
+.tt-compare-lbl{font-size:12px;font-weight:700;color:var(--gray-600);margin:18px 0 8px;text-align:center}
 .tt-note{font-size:11.5px;color:var(--gray-400);text-align:center;margin-top:22px;line-height:1.7}
 @media(max-width:640px){
   .tours-hero h1{font-size:24px}
@@ -203,11 +202,6 @@
    ═══════════════════════════════════════════ */
 const MRT_AFFILIATE = { param: 'utm_source', value: 'tripguide' }; // TODO: 마이리얼트립 파트너스 발급값으로 교체
 
-// 클룩(Klook)은 공개 검색 API가 없어 라이브 결과는 못 띄운다.
-// 대신 검색어를 클룩 검색 페이지로 넘기는 제휴 딥링크로 처리한다.
-// aid = Klook 어필리에이트 ID (Impact/Partnerize 발급). 미설정 시 일반 링크.
-const KLOOK_AFFILIATE = { aid: '', aff_adid: '' }; // TODO: 클룩 어필리에이트 발급값으로 교체
-
 function affLink(baseUrl){
   if(!MRT_AFFILIATE.value) return baseUrl;
   const u = new URL(baseUrl);
@@ -217,13 +211,40 @@ function affLink(baseUrl){
   return u.toString();
 }
 
-// 클룩 검색 딥링크 (제휴 추적 파라미터 자동 부착)
-function klookLink(query){
-  const u = new URL('https://www.klook.com/ko/search/');
-  u.searchParams.set('query', query);
-  if(KLOOK_AFFILIATE.aid) u.searchParams.set('aid', KLOOK_AFFILIATE.aid);
-  if(KLOOK_AFFILIATE.aff_adid) u.searchParams.set('aff_adid', KLOOK_AFFILIATE.aff_adid);
+/* ═══════════════════════════════════════════
+   메타서치 제휴 파트너 레지스트리
+   마이리얼트립 외 플랫폼은 공개 검색 API가 없어 라이브 결과 대신
+   검색어를 각 플랫폼 검색 페이지로 넘기는 "제휴 딥링크"로 처리한다.
+   aff 값을 채우면 추적 파라미터가 자동으로 붙는다(미설정 시 일반 링크).
+   types: 'tna'(투어·티켓) / 'stay'(숙소)
+   ═══════════════════════════════════════════ */
+const PARTNERS = [
+  { key:'klook',   label:'클룩',      color:'#e8384f', bg:'#FFF0F3',
+    base:'https://www.klook.com/ko/search/', qkey:'query', types:['tna','stay'],
+    aff:{} /* {aid, aff_adid} */ },
+  { key:'kkday',   label:'KKday',     color:'#ff5b00', bg:'#FFF1E8',
+    base:'https://www.kkday.com/ko/product/productlist', qkey:'keyword', types:['tna'],
+    aff:{} /* {cid} */ },
+  { key:'booking', label:'부킹닷컴',   color:'#003580', bg:'#EAF0FF',
+    base:'https://www.booking.com/searchresults.ko.html', qkey:'ss', types:['stay'],
+    aff:{} /* {aid} */ },
+  { key:'agoda',   label:'아고다',     color:'#c1272d', bg:'#FDECEA',
+    base:'https://www.agoda.com/ko-kr/search', qkey:'textToSearch', types:['stay'],
+    aff:{} /* {cid} */ },
+];
+
+function partnerUrl(p, query){
+  const u = new URL(p.base);
+  u.searchParams.set(p.qkey, query);
+  for(const [k,v] of Object.entries(p.aff || {})){ if(v) u.searchParams.set(k, v); }
   return u.toString();
+}
+
+// 탭 종류(type)에 맞는 파트너 비교 CTA HTML
+function partnerCtas(query, type){
+  return PARTNERS.filter(p => p.types.includes(type)).map(p =>
+    `<a class="tt-cta" style="background:${p.bg};color:${p.color}" href="${partnerUrl(p, query)}" target="_blank" rel="noopener">🔎 ${p.label}에서 "${query}" 비교 ↗</a>`
+  ).join('');
 }
 
 const $ = id => document.getElementById(id);
@@ -264,15 +285,18 @@ async function callMrt(tool, args){
 }
 function ttLoading(m){ $('tt-results').innerHTML = `<div class="tt-loading"><div class="tt-spin"></div>${m||'검색 중...'}</div>`; }
 function ttError(m){ $('tt-results').innerHTML = `<div class="tt-err">⚠️ ${m}<br><small>잠시 후 다시 시도하거나 조건을 바꿔보세요.</small></div>`; }
-function ttShow(data, ctaUrl, ctaLabel, klookQuery){
+function ttShow(data, ctaUrl, ctaLabel, partnerQuery, partnerType){
   const text = data.copyText || data.text;
   let inner;
   if(text) inner = `<div class="tt-card">${renderMd(text)}</div>`;
   else if(data.data) inner = `<div class="tt-card">${summarize(data.data)}</div>`;
   else inner = `<div class="tt-err">표시할 결과가 없습니다.</div>`;
   if(ctaUrl) inner += `<a class="tt-cta" href="${affLink(ctaUrl)}" target="_blank" rel="noopener">${ctaLabel} ↗</a>`;
-  // 클룩 비교 딥링크 (투어·티켓/숙소일 때만)
-  if(klookQuery) inner += `<a class="tt-cta tt-cta-klook" href="${klookLink(klookQuery)}" target="_blank" rel="noopener">🎫 클룩에서 "${klookQuery}" 비교 검색 ↗</a>`;
+  // 타 플랫폼 비교 딥링크 (투어·티켓/숙소일 때만)
+  if(partnerQuery && partnerType){
+    const ctas = partnerCtas(partnerQuery, partnerType);
+    if(ctas) inner += `<p class="tt-compare-lbl">💰 다른 플랫폼 가격 비교</p>` + ctas;
+  }
   $('tt-results').innerHTML = inner;
 }
 function summarize(d){
@@ -291,7 +315,7 @@ async function ttRunTna(){
   ttLoading('투어·티켓 검색 중...');
   try{
     const data = await callMrt('searchTnas', { query:q, perPage:8, sort:$('tna-sort').value });
-    ttShow(data, 'https://www.myrealtrip.com/search?q=' + encodeURIComponent(q), '마이리얼트립에서 전체 보기', q);
+    ttShow(data, 'https://www.myrealtrip.com/search?q=' + encodeURIComponent(q), '마이리얼트립에서 전체 보기', q, 'tna');
   }catch(e){ ttError(e.message); }
 }
 async function ttRunStay(){
@@ -302,7 +326,7 @@ async function ttRunStay(){
       keyword:q, checkIn:$('stay-in').value, checkOut:$('stay-out').value,
       adultCount:Number($('stay-adult').value), childCount:0, isDomestic:$('stay-domestic').value==='true'
     });
-    ttShow(data, 'https://www.myrealtrip.com/accommodations?keyword=' + encodeURIComponent(q), '마이리얼트립에서 예약하기', q + ' 호텔');
+    ttShow(data, 'https://www.myrealtrip.com/accommodations?keyword=' + encodeURIComponent(q), '마이리얼트립에서 예약하기', q, 'stay');
   }catch(e){ ttError(e.message); }
 }
 async function ttRunDom(){
