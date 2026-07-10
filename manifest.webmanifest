@@ -1,26 +1,52 @@
 {
-  "name": "트립가이드 - 인천공항 실시간",
-  "short_name": "ICN Now",
-  "description": "인천공항 출국장 혼잡도·날씨·대기질·항공편·주차 실시간 정보",
-  "start_url": "/airport.html",
+  "id": "/",
+  "name": "트립가이드 — 여행 + 인천공항 실시간",
+  "short_name": "트립가이드",
+  "description": "국내·해외 여행 정보, 인천공항 실시간 대시보드, 투어·숙소·항공권 메타서치를 하나로.",
+  "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait",
-  "background_color": "#0c0f1e",
-  "theme_color": "#00c8f0",
+  "background_color": "#ffffff",
+  "theme_color": "#1B4FD8",
   "lang": "ko-KR",
+  "dir": "ltr",
+  "categories": ["travel", "navigation", "utilities"],
   "icons": [
     {
-      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%230c0f1e'/><text x='96' y='130' font-size='110' text-anchor='middle' fill='%2300c8f0'>%E2%9C%88</text></svg>",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='84' fill='%230c0f1e'/><text x='256' y='340' font-size='280' text-anchor='middle' fill='%2300c8f0'>%E2%9C%88</text></svg>",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "인천공항 실시간",
+      "short_name": "인천공항",
+      "description": "혼잡도·주차·항공편 실시간 조회",
+      "url": "/airport?source=pwa-shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "투어·숙소 검색",
+      "short_name": "투어검색",
+      "description": "투어·티켓·숙소·항공권 메타서치",
+      "url": "/tours?source=pwa-shortcut",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }
