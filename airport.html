@@ -959,10 +959,22 @@ button,select,input,a{touch-action:manipulation}
   .tab-panel{padding:12px 12px calc(20px + env(safe-area-inset-bottom))}
   .card{padding:12px;margin-bottom:8px}
 
-  /* TABLES → 모바일에서 카드형 */
-  .tbl-wrap{margin:0 -12px;border-radius:0}
-  .tbl-wrap table{font-size:.7rem}
-  .tbl-wrap th,.tbl-wrap td{padding:8px 9px}
+  /* TABLES — 좌측 잘림 방지: 음수 마진 제거 + 첫 열 고정(sticky) */
+  .tbl-wrap{
+    margin:0;border-radius:var(--rb);overflow-x:auto;
+    -webkit-overflow-scrolling:touch;border:1px solid var(--border);
+  }
+  .tbl-wrap::-webkit-scrollbar{height:4px}
+  .tbl-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+  .tbl-wrap table{font-size:.78rem;min-width:100%}
+  .tbl-wrap th,.tbl-wrap td{padding:10px 11px;white-space:nowrap}
+  /* 첫 열을 왼쪽에 고정해 가로 스크롤해도 라벨이 보이게 */
+  .tbl-wrap th:first-child,.tbl-wrap td:first-child{
+    position:sticky;left:0;z-index:2;
+    background:var(--card);box-shadow:1px 0 0 var(--border);
+    font-weight:600;
+  }
+  .tbl-wrap th:first-child{background:var(--bg);z-index:3}
 
   /* FAV — 카운트다운 강조 + 카드 큰 글씨 */
   .fav-card{padding:12px;gap:10px}
@@ -1040,13 +1052,62 @@ button,select,input,a{touch-action:manipulation}
   .qs-item-sub{font-size:.72rem;line-height:1.4}
   .qs-foot{padding:10px 14px;padding-bottom:calc(10px + env(safe-area-inset-bottom));font-size:.66rem}
 
-  /* PARKING / SHUTTLE / FLIGHT 그리드 모바일 */
+  /* PARKING 그리드 */
   .park-grid{grid-template-columns:1fr 1fr !important}
-  .flt-grid,.flt-cols{grid-template-columns:1fr !important;gap:8px !important}
 
-  /* FAC 필터 줄 깔끔하게 */
+  /* ── 항공편 현황: 3열 나란히 → 터미널별 세로 스택(전폭) ── */
+  .flt-board2{flex-direction:column;gap:12px}
+  .flt-col2{flex:none !important;width:100%}
+  .flt-col2-hdr{
+    position:sticky;top:0;z-index:5;background:var(--card2);
+    padding:9px 10px;border-radius:var(--rb) var(--rb) 0 0;
+    flex-wrap:wrap;gap:6px;
+  }
+  .flt-col2-label{font-size:.92rem}
+  /* SEC 칩: 여러 줄 wrap → 한 줄 가로 스크롤 */
+  .flt-sec-tabs{
+    flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    width:100%;padding-bottom:2px;gap:4px;
+  }
+  .flt-sec-tabs::-webkit-scrollbar{display:none}
+  .flt-sec-btn{flex-shrink:0;padding:5px 10px;font-size:.68rem;min-height:28px}
+  /* 카드 목록: 터미널별 내부 스크롤(페이지 폭주 방지) + 2열 */
+  .flt-col2-body{max-height:62vh;overflow-y:auto}
+  .flt-grid{grid-template-columns:repeat(2,1fr) !important;gap:7px;padding:8px}
+  .flt-col2.single .flt-grid{grid-template-columns:repeat(2,1fr) !important}
+  /* 항공편 카드 가독성 */
+  .flt-card2{padding:10px !important}
+  .flt-c2-time{font-size:.9rem !important}
+  .flt-c2-flt{font-size:.92rem !important}
+  .flt-c2-dest{font-size:.8rem !important;white-space:normal !important;overflow:visible !important;text-overflow:clip !important;line-height:1.35}
+  .flt-c2-air{font-size:.7rem !important;white-space:normal !important;overflow:visible !important;text-overflow:clip !important}
+  .flt-c2-info{font-size:.68rem !important;white-space:normal !important;overflow:visible !important;text-overflow:clip !important;line-height:1.4}
+  /* 검색창 전폭 */
+  .flt-controls{gap:8px}
+  .flt-search{flex:1 1 100%;font-size:16px;min-height:40px}
+  .flt-term-tabs{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .flt-term-tabs::-webkit-scrollbar{display:none}
+  .flt-term-btn{flex-shrink:0;min-height:34px;padding:6px 14px;font-size:.74rem}
+  .flt-count{font-size:.72rem}
+
+  /* ── 출·입국장 혼잡도 가독성 ── */
+  .cong-sec-hdr h3{font-size:.95rem}
+  .cong-stat-strip{grid-template-columns:1fr 1fr 1fr}
+  .cong-stat-card{padding:10px 8px}
+  .cong-stat-lbl{font-size:.64rem}
+  .cong-stat-val{font-size:1rem}
+  .cong-stat-sub{font-size:.6rem;line-height:1.35}
+
+  /* FAC 필터 + 카드 가독성 */
   .fac-filter-row{gap:5px}
-  .fac-filter-row .sub-btn{font-size:.7rem;padding:7px 11px;min-height:32px}
+  .fac-filter-row .sub-btn{font-size:.72rem;padding:7px 12px;min-height:32px}
+  .fac-search{font-size:16px;padding:11px 13px;min-height:42px}
+  .fac-grid{grid-template-columns:1fr;gap:8px}
+  .fac-card{padding:13px}
+  .fac-card-name{font-size:.95rem;margin-bottom:7px}
+  .fac-loc,.fac-time,.fac-tel{font-size:.76rem;line-height:1.65}
+  .fac-tag{font-size:.68rem;padding:3px 8px}
+  .fac-count{font-size:.72rem}
 
   /* NOTICE 바 */
   .notice-bar{font-size:.62rem;padding:4px 12px}
