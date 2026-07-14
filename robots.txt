@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://travel-guide-cslis07.vercel.app/sitemap.xml
