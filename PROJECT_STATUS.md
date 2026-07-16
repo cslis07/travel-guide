@@ -113,15 +113,21 @@
    - `PARTNERS[].aff` (클룩 aid, KKday cid, 부킹 aid, 아고다 cid)
 
 ### 🟡 기능 개선
-- **미생성 목적지 페이지**: `index.html` 목적지 카드가 존재하지 않는 페이지를 링크 (fukuoka·tokyo·kyoto·bangkok·danang·bali·singapore·jeju·busan·gangneung.html → 404). 현재 존재: `osaka.html`만.
-  - 대안: 카드 버튼을 `tours.html?city=<도시>`로 연결하거나 페이지 생성
+- **목적지 가이드 확장**: 현재 오사카·후쿠오카·도쿄 3곳 완성. 나머지(교토·방콕·다낭·발리·싱가포르·제주·부산·강릉)는 `tours.html?city=` 실시간 검색으로 우회 중 → 원하면 가이드 페이지 추가 제작
 - **Vercel KV 캐싱**: 트래픽 5K+ PV/일 도달 시 `api/tour.js`에 KV 추가 (가이드: `API_SECURITY.md`)
-- osaka.html 외 목적지 페이지에도 투어 검색 CTA 확대
+- **GA4 활성화**: `analytics.js`의 `GA4_ID`에 측정 ID 입력 시 방문·전환 수집 시작
+- airport.html 경량화(gzip 후 45KB로 실사용 무리 없음, 필요 시 데이터 외부화)
 
 ### 🟢 아이디어
 - 메인 페이지에 인기 투어 위젯
 - 관심 상품 저장(찜)
 - SEO용 블로그 콘텐츠 (수익화 논의에서 제안됨)
+
+### ✅ 완료된 완성도 보강 (2026-07-07)
+- 깨진 목적지 링크 21개 제거, SEO 메타(OG·JSON-LD·sitemap·robots·canonical) 완비
+- OG 이미지·favicon 생성, PWA 설치 지원(PNG 아이콘·shortcuts)
+- 법적 페이지(privacy·terms), 애널리틱스 로더, 전역 에러 핸들러
+- Chart.js 지연 로딩(모바일 미로드), 스모크 테스트(`scripts/smoke_test.mjs`)
 
 ---
 
@@ -138,6 +144,13 @@ npx serve -l 3333 .         # http://localhost:3333  (검색 기능은 404)
 # 배포
 git push origin master      # → Vercel 자동 프로덕션 배포
 npx vercel --prod           # 수동 배포
+
+# 프로덕션 스모크 테스트 (핵심 14페이지 + 2 API 자동 점검)
+node scripts/smoke_test.mjs
+
+# 아이콘·OG 이미지 재생성 (Pillow 필요)
+py scripts/make_icons.py    # PWA 아이콘 PNG
+py scripts/make_og.py       # OG 소셜 이미지
 
 # (있다면) .claude/launch.json 에 두 설정 등록됨:
 #   travel-guide-api (vercel dev, 3000) / travel-guide (serve, 3333)
