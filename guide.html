@@ -303,6 +303,7 @@ kbd{
 </style>
   <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
   <meta name="theme-color" content="#1B4FD8">
@@ -982,7 +983,7 @@ kbd{
 <footer class="guide-footer">
   <p><strong>✈ 트립가이드</strong> — 국내·해외 여행 + 인천공항 실시간 통합 가이드</p>
   <p style="margin-top:8px">데이터 출처: 한국관광공사 TourAPI · 인천공항공사 공공데이터 · Open-Meteo · open.er-api.com</p>
-  <p style="margin-top:8px"><a href="/">메인</a> · <a href="/airport">인천공항</a> · <a href="https://github.com/cslis07/travel-guide" target="_blank" rel="noopener">GitHub</a></p>
+  <p style="margin-top:8px"><a href="/">메인</a> · <a href="/airport">인천공항</a> · <a href="/privacy">개인정보처리방침</a> · <a href="/terms">이용약관</a> · <a href="https://github.com/cslis07/travel-guide" target="_blank" rel="noopener">GitHub</a></p>
   <p style="margin-top:16px;font-size:11px;color:#64748b">© 2026 트립가이드. 공공데이터를 활용한 비상업 정보 제공 서비스입니다.</p>
 </footer>
 
@@ -1031,5 +1032,6 @@ if('serviceWorker' in navigator){
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 }
 </script>
+  <script src="/analytics.js"></script>
 </body>
 </html>

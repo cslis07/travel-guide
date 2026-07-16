@@ -27,6 +27,7 @@
   </script>
   <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
   <meta name="theme-color" content="#1B4FD8">
@@ -617,6 +618,7 @@
       <div class="footer-bottom">
         <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
         <p>© 2026 트립가이드 · TripGuide</p>
+        <p style="margin-top:6px"><a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
       </div>
     </div>
   </footer>
@@ -652,5 +654,6 @@ if('serviceWorker' in navigator){
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 }
 </script>
+  <script src="/analytics.js"></script>
 </body>
 </html>
