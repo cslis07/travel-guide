@@ -1,5 +1,7 @@
 # ✈ 트립가이드 (TripGuide)
 
+![트립가이드](og-image.png)
+
 > 국내·해외 여행 정보 + **인천공항 실시간 대시보드** + **여행 상품 메타서치**를 하나로 묶은 한국 여행자용 웹 서비스.
 > 5개 외부 데이터 소스를 서버리스 Edge Function 뒤에서 안전하게 통합했습니다.
 
@@ -158,26 +160,34 @@ git push origin master   # → Vercel 자동 프로덕션 배포
 
 ## 📸 스크린샷
 
-> 포트폴리오용 스크린샷을 여기에 추가하세요 (`docs/` 폴더 권장).
-> 추천 컷: ① 인천공항 실시간 대시보드 ② 메타서치 결과 화면 ③ T1/T2 평면도 ④ 모바일 뷰
+라이브 데모에서 직접 확인하거나, 아래 자리에 캡처를 추가하세요 (`docs/` 폴더 권장).
 
-```
-docs/
-├─ screenshot-airport.png
-├─ screenshot-metasearch.png
-├─ screenshot-map.png
-└─ screenshot-mobile.png
-```
-<!-- ![인천공항 대시보드](docs/screenshot-airport.png) -->
+| 화면 | 캡처 자리 |
+|------|----------|
+| 인천공항 실시간 대시보드 | `docs/airport.png` |
+| 투어·숙소 메타서치 결과 | `docs/metasearch.png` |
+| T1/T2 SVG 평면도 | `docs/map.png` |
+| 모바일 뷰 (PWA) | `docs/mobile.png` |
+
+<!-- 캡처 추가 후 아래 주석 해제:
+![인천공항 대시보드](docs/airport.png)
+![메타서치](docs/metasearch.png)
+-->
+
+> 💡 캡처 팁: Chrome DevTools(F12) → 기기 툴바(Ctrl+Shift+M) → iPhone 14 Pro 선택 →
+> ⋮ 메뉴 → "Capture screenshot"으로 모바일 뷰를 깔끔하게 저장할 수 있습니다.
 
 ---
 
 ## 🗺 로드맵
 
-- [ ] 목적지 가이드 페이지 확장 (현재 오사카)
+- [x] 목적지 가이드 페이지 (오사카·후쿠오카·도쿄)
+- [x] SEO 기반 (OG 이미지·JSON-LD·sitemap·canonical)
+- [x] PWA 설치 지원 (PNG 아이콘·shortcuts)
+- [ ] 목적지 가이드 추가 확장 (교토·방콕·다낭 등)
 - [ ] Vercel KV 캐싱 (트래픽 증가 시)
 - [ ] 제휴 어필리에이트 발급값 연동
-- [ ] SEO 콘텐츠 (수하물·면세·환율 정보 글)
+- [ ] SEO 콘텐츠 글 (수하물·면세·환율 정보)
 
 ---
 
