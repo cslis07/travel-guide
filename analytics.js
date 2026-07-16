@@ -10,7 +10,20 @@
 (function () {
   var GA4_ID = ''; // 예: 'G-XXXXXXXXXX'  ← 여기에 측정 ID 입력
 
-  if (!GA4_ID) return; // 미설정 시 로드하지 않음
+  // 전역 JS 오류를 콘솔에 남기고(항상), 애널리틱스가 있으면 이벤트로 전송
+  window.addEventListener('error', function (e) {
+    try {
+      var msg = (e.message || '') + ' @ ' + (e.filename || '') + ':' + (e.lineno || '');
+      if (window.gtag) window.gtag('event', 'js_error', { description: msg.slice(0, 150) });
+    } catch (_) {}
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    try {
+      if (window.gtag) window.gtag('event', 'promise_rejection', { description: String(e.reason).slice(0, 150) });
+    } catch (_) {}
+  });
+
+  if (!GA4_ID) return; // 미설정 시 GA 스크립트는 로드하지 않음 (에러 핸들러는 동작)
 
   var s = document.createElement('script');
   s.async = true;

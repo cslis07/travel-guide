@@ -38,7 +38,20 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="트립가이드">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<!-- Chart.js는 차트가 실제로 보일 때만 지연 로드 (모바일·저사양 절약) -->
+<script>
+window._loadChartJs = function(){
+  if (window._chartJsPromise) return window._chartJsPromise;
+  window._chartJsPromise = new Promise(function(resolve, reject){
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+  return window._chartJsPromise;
+};
+</script>
 <script>(function(){
   // 저장된 테마 우선, 없으면 시스템 prefers-color-scheme 감지
   let t = localStorage.getItem('icn-theme');
@@ -2044,13 +2057,16 @@ async function loadPaxChart() {
     const n=new Date(); const days=['일','월','화','수','목','금','토'];
     const paxLbl=el('pax-date-lbl');
     if(paxLbl) paxLbl.textContent=_chartDay===0?`${n.getMonth()+1}월 ${n.getDate()}일 (${days[n.getDay()]}) 오늘`:'내일';
-    // render chart (always visible)
+    // 차트 캔버스가 화면에 표시될 때만 렌더 (모바일은 CSS로 숨김 → 라이브러리 로드 생략)
+    const canvas=el('paxChart');
+    if(!canvas || canvas.offsetParent===null) return;  // 숨김 상태면 차트 스킵
+    await window._loadChartJs();                        // Chart.js 지연 로드
     const nowH=new Date().getHours();
     const labels=Array.from({length:24},(_,i)=>i+'시');
     const datasets=[];
     if(_chartMode!=='T2') datasets.push({label:'T1',data:t1h,borderColor:'#00c8ff',backgroundColor:'rgba(0,200,255,.08)',borderWidth:2,tension:.4,fill:true,pointRadius:t1h.map((_,i)=>i===t1pkH?4:i===nowH?3:0),pointBackgroundColor:'#00c8ff'});
     if(_chartMode!=='T1') datasets.push({label:'T2',data:t2h,borderColor:'#f97316',backgroundColor:'rgba(249,115,22,.07)',borderWidth:2,tension:.4,fill:true,pointRadius:t2h.map((_,i)=>i===t2pkH?4:i===nowH?3:0),pointBackgroundColor:'#f97316'});
-    const ctx=el('paxChart').getContext('2d');
+    const ctx=canvas.getContext('2d');
     if(_paxChart) _paxChart.destroy();
     const isLight=document.documentElement.getAttribute('data-theme')==='light';
     const gc=isLight?'rgba(0,0,0,.07)':'rgba(255,255,255,.06)';
