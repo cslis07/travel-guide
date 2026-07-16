@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="도쿄 여행 완벽 가이드 — 3박 4일 추천 일정, 예산, 추천 숙소, 현지 팁. 시부야·아사쿠사·시내 명소까지.">
+  <title>도쿄 여행 가이드 | 트립가이드</title>
+  <link rel="canonical" href="https://travel-guide-cslis07.vercel.app/tokyo">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="도쿄 여행 가이드 | 트립가이드">
+  <meta property="og:description" content="3박 4일 추천 일정·예산·숙소·현지 팁. 볼거리·먹거리·쇼핑의 도시, 도쿄.">
+  <meta property="og:url" content="https://travel-guide-cslis07.vercel.app/tokyo">
+  <meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "도쿄",
+    "url": "https://travel-guide-cslis07.vercel.app/tokyo",
+    "description": "도쿄 여행 가이드 — 3박 4일 일정, 예산, 추천 숙소, 현지 팁",
+    "inLanguage": "ko-KR",
+    "geo": { "@type": "GeoCoordinates", "latitude": 35.6762, "longitude": 139.6503 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트립가이드">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">✈ 트립가이드</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;">🎟 투어·티켓</a>
+        <a href="guide.html">📖 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;">✈ 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates"><span class="fx-skeleton">로딩 중…</span></div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#1E293B 0%,#334155 40%,#3B82F6 110%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">🗼</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">🇯🇵 일본 · 간토 지방</span>
+      <h1>도쿄</h1>
+      <p>볼거리·먹거리·쇼핑 최강 도시 — 시부야·아사쿠사·아키하바라, 3박 4일도 부족한 메가시티</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 나리타/하네다 약 2시간 20분</small></div>
+        <div class="hero-stat"><strong>💴 환율</strong><small>¥1 ≈ 9.5원 (2026 기준)</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>한국과 동일 (KST)</small></div>
+        <div class="hero-stat"><strong>🌸 추천 시기</strong><small>3~4월(벚꽃), 10~11월(단풍)</small></div>
+      </div>
+      <a href="tours.html?city=도쿄" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 도쿄 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 일정 ── -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">🗓 추천 일정</span>
+        <h2>3박 4일 추천 코스</h2>
+        <p>지역별로 묶어 이동 최소화 — 도쿄는 동선이 핵심</p>
+      </div>
+
+      <div class="day-tabs" id="day-tabs">
+        <button class="day-tab active" onclick="showDay(1,this)">1일차</button>
+        <button class="day-tab" onclick="showDay(2,this)">2일차</button>
+        <button class="day-tab" onclick="showDay(3,this)">3일차</button>
+        <button class="day-tab" onclick="showDay(4,this)">4일차</button>
+      </div>
+
+      <div class="day-content active" id="day1">
+        <div class="day-header">
+          <span class="day-num-badge">DAY 1</span>
+          <div><h3>도착 → 신주쿠</h3><p>공항에서 시내 진입, 첫날은 신주쿠 야경</p></div>
+        </div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 나리타/하네다 도착</h4><p>하네다는 시내 30~40분, 나리타는 60~90분. 나리타 익스프레스·스카이라이너 또는 리무진 버스 이용</p></div></div>
+          <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>신주쿠·시부야·도쿄역 근처 추천. JR·지하철 환승 편한 곳이 동선에 유리</p></div></div>
+          <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🏙 신주쿠 도청 전망대</h4><p>무료 전망대(202m). 맑은 날 후지산까지 조망. 야경 명소</p></div></div>
+          <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍜 신주쿠 저녁 & 오모이데요코초</h4><p>골든가이·오모이데요코초의 좁은 골목 이자카야. 라멘·야키토리·스시로 첫날 마무리</p></div></div>
+        </div>
+      </div>
+
+      <div class="day-content" id="day2">
+        <div class="day-header">
+          <span class="day-num-badge">DAY 2</span>
+          <div><h3>아사쿠사 → 우에노 → 아키하바라</h3><p>전통과 서브컬처를 하루에</p></div>
+        </div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>⛩ 아사쿠사 센소지</h4><p>도쿄 최고(最古) 사찰. 카미나리몬·나카미세 상점가. 인력거·기모노 체험 인기</p></div></div>
+          <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🗼 도쿄 스카이트리</h4><p>634m 전망 타워. 아사쿠사에서 도보·전철 10분. 전망대 ¥2,100~. 밑 솔라마치 쇼핑몰</p></div></div>
+          <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🌳 우에노 공원 & 박물관</h4><p>도쿄국립박물관·과학박물관·동물원. 벚꽃 명소. 아메요코 시장에서 길거리 먹거리</p></div></div>
+          <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🎮 아키하바라</h4><p>전자상가·애니·게임의 성지. 요도바시 카메라, 굿즈샵, 메이드카페. 오타쿠 문화 체험</p></div></div>
+          <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🍣 저녁 스시/텐동</h4><p>아키하바라·우에노 일대 회전스시·텐동 맛집. 가성비 좋은 도쿄 미식</p></div></div>
+        </div>
+      </div>
+
+      <div class="day-content" id="day3">
+        <div class="day-header">
+          <span class="day-num-badge">DAY 3</span>
+          <div><h3>시부야 → 하라주쿠 → 오다이바</h3><p>트렌드·쇼핑·워터프론트</p></div>
+        </div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🐕 시부야 스크램블 & 하치코</h4><p>세계에서 가장 붐비는 교차로. 시부야 스카이 전망대, 시부야109 쇼핑</p></div></div>
+          <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🛍 하라주쿠 & 오모테산도</h4><p>타케시타 거리(10대 패션)와 오모테산도(명품). 메이지 신궁 산책도 인접</p></div></div>
+          <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🌊 오다이바</h4><p>레인보우브릿지·자유의여신상·팀랩. 다이버시티의 건담 동상. 워터프론트 야경</p></div></div>
+          <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍖 저녁 & 쇼핑</h4><p>오다이바 아쿠아시티·다이버시티 몰에서 저녁·쇼핑. 온천 테마파크도 선택지</p></div></div>
+        </div>
+      </div>
+
+      <div class="day-content" id="day4">
+        <div class="day-header">
+          <span class="day-num-badge">DAY 4</span>
+          <div><h3>도쿄역·긴자 → 귀국</h3><p>마지막 쇼핑 후 공항</p></div>
+        </div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🏛 도쿄역 & 마루노우치</h4><p>고풍스러운 도쿄역사, 인접 KITTE·다이마루. 이치란·라멘스트리트에서 마지막 라멘</p></div></div>
+          <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>💎 긴자 쇼핑</h4><p>도쿄 최고급 쇼핑가. 유니클로 플래그십·긴자식스·돈키호테. ¥5,000↑ 면세</p></div></div>
+          <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>하네다 30분·나리타 60~90분. 짐 많으면 리무진 버스가 편리. 비행 2~3시간 전 도착</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 예산 ── -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💰 예산 가이드</span>
+        <h2>3박 4일 예상 경비</h2>
+        <p>1인 기준 · 환율 ¥1 = 9.5원</p>
+      </div>
+      <div class="budget-grid">
+        <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">150,000 ~ 350,000원</span><span class="budget-note">LCC ~ 대형항공사</span></div></div>
+        <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박)</h4><span class="budget-range">120,000 ~ 350,000원</span><span class="budget-note">캡슐 ~ 시티 호텔</span></div></div>
+        <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4일)</h4><span class="budget-range">40,000 ~ 70,000원</span><span class="budget-note">스이카·공항 이동 포함</span></div></div>
+        <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">120,000 ~ 200,000원</span><span class="budget-note">1끼 ¥1,000~2,500</span></div></div>
+        <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">40,000 ~ 90,000원</span><span class="budget-note">스카이트리·전망대·팀랩</span></div></div>
+        <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">80,000 ~ 250,000원</span><span class="budget-note">쇼핑·기념품</span></div></div>
+      </div>
+      <div class="budget-total">
+        <div>
+          <span class="total-label">3박 4일 1인 총 예상 경비</span>
+          <span class="total-amount">550,000 ~ 1,310,000원</span>
+        </div>
+        <span class="total-note">절약형(LCC+캡슐) ~ 여유형(FSC+시티 호텔) 기준</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 숙소 ── -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">🏨 숙소 추천</span>
+        <h2>어디에 묵을까</h2>
+        <p>환승 편한 JR 야마노테선 역세권이 정석</p>
+      </div>
+      <div class="hotel-grid">
+        <div class="hotel-card">
+          <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+          <div class="hotel-body">
+            <h3>캡슐·게스트하우스</h3>
+            <p class="hotel-location">📍 신주쿠·아사쿠사·우에노</p>
+            <p>도쿄는 캡슐호텔 문화의 본고장. 최신식 캡슐이 주요 역 주변에 밀집. 혼여행·가성비 최고</p>
+            <div class="hotel-price">1박 <strong>¥4,000~7,000</strong> (~38,000원~)</div>
+            <div class="hotel-tags"><span>캡슐</span><span>Wi-Fi</span><span>역세권</span></div>
+            <a href="https://www.agoda.com/ko-kr/search?textToSearch=도쿄 신주쿠 캡슐" target="_blank" rel="noopener" class="hotel-cta">아고다에서 검색</a>
+          </div>
+        </div>
+        <div class="hotel-card">
+          <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+          <div class="hotel-body">
+            <h3>시부야·신주쿠 비즈니스 호텔</h3>
+            <p class="hotel-location">📍 야마노테선 역 도보권</p>
+            <p>쇼핑·미식·야경 중심지. 도미·APA·선루트 등 깔끔한 비즈니스 호텔. 어디든 이동 편리</p>
+            <div class="hotel-price">1박 <strong>¥10,000~18,000</strong> (~95,000원~)</div>
+            <div class="hotel-tags"><span>1인실</span><span>번화가</span><span>환승 편의</span></div>
+            <a href="https://www.agoda.com/ko-kr/search?textToSearch=도쿄 시부야 호텔" target="_blank" rel="noopener" class="hotel-cta">아고다에서 검색</a>
+          </div>
+        </div>
+        <div class="hotel-card">
+          <div class="hotel-badge-row"><span class="hotel-badge fam">가족·편의</span></div>
+          <div class="hotel-body">
+            <h3>도쿄역·긴자 시티 호텔</h3>
+            <p class="hotel-location">📍 도쿄역·긴자 인접</p>
+            <p>공항 이동·쇼핑의 허브. 넓은 객실·부대시설. 짐 많은 가족·비즈니스에 적합</p>
+            <div class="hotel-price">1박 <strong>¥18,000~35,000</strong> (~171,000원~)</div>
+            <div class="hotel-tags"><span>넓은 객실</span><span>공항 접근</span><span>부대시설</span></div>
+            <a href="https://www.agoda.com/ko-kr/search?textToSearch=도쿄 긴자 호텔" target="_blank" rel="noopener" class="hotel-cta">아고다에서 검색</a>
+          </div>
+        </div>
+      </div>
+      <div class="aff-cta">
+        <a href="tours.html?city=도쿄" class="cta-btn primary">🎟 도쿄 투어·티켓 검색</a>
+        <a href="https://www.booking.com/searchresults.ko.html?ss=도쿄" target="_blank" rel="noopener" class="cta-btn secondary">🏨 부킹닷컴 숙소 비교</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 현지 팁 ── -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>알아두면 좋은 정보</h2>
+      </div>
+      <div class="budget-grid">
+        <div class="budget-card"><span class="budget-icon">🚃</span><div class="budget-info"><h4>교통</h4><span class="budget-note">스이카/파스모 교통카드 필수. JR·지하철·사철 복잡 → 구글맵 환승 안내 활용</span></div></div>
+        <div class="budget-card"><span class="budget-icon">🌸</span><div class="budget-info"><h4>시즌</h4><span class="budget-note">3월말~4월초 벚꽃, 11월 단풍이 최고 인기. 이 시기 항공·숙박 조기 예약 필수</span></div></div>
+        <div class="budget-card"><span class="budget-icon">🎡</span><div class="budget-info"><h4>당일치기</h4><span class="budget-note">디즈니랜드/시(우라야스), 하코네 온천, 가마쿠라 대불 등 근교 당일 여행 풍부</span></div></div>
+        <div class="budget-card"><span class="budget-icon">💳</span><div class="budget-info"><h4>결제</h4><span class="budget-note">대도시라 카드·간편결제 잘 됨. 단 소규모 식당·신사는 현금 준비</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="logo">✈ 트립가이드</span>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="tours.html?city=교토">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="tours.html?city=방콕">방콕</a>
+            <a href="tours.html?city=다낭">다낭</a>
+            <a href="tours.html?city=발리">발리</a>
+            <a href="tours.html?city=싱가포르">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="tours.html?city=제주">제주도</a>
+            <a href="tours.html?city=부산">부산</a>
+            <a href="tours.html?city=강릉">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트립가이드 · TripGuide</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    function initDayTabs() {}
+    function showDay(day, btn) {
+      document.querySelectorAll('#day-tabs .day-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('day' + day)?.classList.add('active');
+    }
+  </script>
+  <script>
+    if('serviceWorker' in navigator){
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+    }
+  </script>
+</body>
+</html>
