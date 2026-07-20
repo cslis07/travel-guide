@@ -10,6 +10,7 @@ const checks = [
   ['/', 200, '트립가이드'],
   ['/airport', 200, 'ICN'],
   ['/tours', 200, 'tt-tabs'],
+  ['/mytrip', 200, '내 여행'],
   ['/guide', 200, 'sidebar'],
   ['/osaka', 200, '오사카'],
   ['/fukuoka', 200, '하카타'],

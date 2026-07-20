@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="트립가이드 내 여행 — 찜한 장소, 내 편명, 체크리스트, 최근 검색을 한곳에서. 다른 기기로 내보내기.">
+  <title>내 여행 | 트립가이드</title>
+  <link rel="canonical" href="https://travel-guide-cslis07.vercel.app/mytrip">
+  <meta name="robots" content="noindex,follow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트립가이드">
+  <style>
+    .mt-hero{background:linear-gradient(135deg,#1640B0,#1B4FD8 60%,#F97316 130%);color:#fff;padding:44px 20px 36px;text-align:center}
+    .mt-hero h1{font-size:28px;font-weight:900;margin-bottom:6px}
+    .mt-hero p{font-size:14px;opacity:.9}
+    .mt-wrap{max-width:900px;margin:0 auto;padding:24px 16px 60px}
+    .mt-card{background:#fff;border:1px solid var(--gray-200);border-radius:14px;box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+    .mt-card-head{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+    .mt-card-head h2{font-size:16px;font-weight:800;color:var(--dark)}
+    .mt-count{background:var(--primary-lt,#eff6ff);color:var(--primary);font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px}
+    .mt-card-head a{margin-left:auto;font-size:13px;color:var(--primary);font-weight:700}
+    .mt-empty{color:var(--gray-400);font-size:13.5px;padding:8px 0}
+    .mt-list{display:flex;flex-direction:column;gap:8px}
+    .mt-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--gray-100);border-radius:10px;font-size:14px}
+    .mt-row .mt-ic{font-size:16px}
+    .mt-row .mt-main{font-weight:600;color:var(--dark);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .mt-row .mt-sub{margin-left:auto;font-size:12px;color:var(--gray-400);white-space:nowrap}
+    .mt-progress{height:10px;background:var(--gray-200);border-radius:5px;overflow:hidden;margin:6px 0}
+    .mt-progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .3s}
+    .mt-chips{display:flex;flex-wrap:wrap;gap:6px}
+    .mt-chip{background:var(--gray-100);border:1px solid var(--gray-200);border-radius:999px;padding:6px 12px;font-size:12.5px;color:var(--gray-600)}
+    /* 내보내기 카드 */
+    .mt-export{background:#0f172a;color:#e2e8f0;border:none}
+    .mt-export h2{color:#fff}
+    .mt-export p{font-size:13px;color:#94a3b8;line-height:1.6;margin-bottom:14px}
+    .mt-btn-row{display:flex;gap:8px;flex-wrap:wrap}
+    .mt-btn{border:none;border-radius:10px;padding:12px 18px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;transition:.15s}
+    .mt-btn-primary{background:var(--primary);color:#fff}
+    .mt-btn-primary:hover{background:var(--primary-dark)}
+    .mt-btn-ghost{background:#1e293b;color:#cbd5e1;border:1px solid #334155}
+    .mt-btn-ghost:hover{border-color:#64748b}
+    #mt-qr{margin-top:16px;text-align:center;display:none}
+    #mt-qr canvas,#mt-qr img{background:#fff;padding:12px;border-radius:12px}
+    #mt-qr p{font-size:12px;color:#94a3b8;margin-top:8px}
+    .mt-import-note{background:#FFFBEB;border:1px solid #FCD34D;color:#78350f;border-radius:12px;padding:14px 16px;font-size:13.5px;margin-bottom:16px;line-height:1.6}
+    .mt-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#0f172a;color:#fff;border:1px solid var(--primary);padding:11px 18px;border-radius:12px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:100}
+    .mt-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  </style>
+</head>
+<body>
+
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">✈ 트립가이드</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;">🎟 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;">🧳 내 여행</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;">✈ 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <section class="mt-hero">
+    <h1>🧳 내 여행</h1>
+    <p>찜한 장소·내 편명·체크리스트·최근 검색을 한곳에서 · 다른 기기로 옮기기</p>
+  </section>
+
+  <div class="mt-wrap">
+    <div id="mt-import-area"></div>
+
+    <!-- 찜한 장소 -->
+    <div class="mt-card">
+      <div class="mt-card-head">
+        <span>💗</span><h2>찜한 장소</h2><span class="mt-count" id="c-saved">0</span>
+        <a href="index.html#savedSection">전체 보기 →</a>
+      </div>
+      <div id="mt-saved"></div>
+    </div>
+
+    <!-- 내 편명 -->
+    <div class="mt-card">
+      <div class="mt-card-head">
+        <span>⭐</span><h2>내 편명</h2><span class="mt-count" id="c-flights">0</span>
+        <a href="airport.html#tab=fav">인천공항에서 →</a>
+      </div>
+      <div id="mt-flights"></div>
+    </div>
+
+    <!-- 출국 체크리스트 -->
+    <div class="mt-card">
+      <div class="mt-card-head">
+        <span>✅</span><h2>출국 체크리스트</h2>
+        <a href="airport.html#tab=prep">체크하러 →</a>
+      </div>
+      <div id="mt-checklist"></div>
+    </div>
+
+    <!-- 최근 검색 -->
+    <div class="mt-card">
+      <div class="mt-card-head">
+        <span>🕘</span><h2>최근 검색</h2><span class="mt-count" id="c-history">0</span>
+        <a href="tours.html">투어 검색 →</a>
+      </div>
+      <div id="mt-history"></div>
+    </div>
+
+    <!-- 내보내기/가져오기 -->
+    <div class="mt-card mt-export">
+      <div class="mt-card-head"><span>📤</span><h2>다른 기기로 옮기기</h2></div>
+      <p>이 기기에 저장된 여행 데이터(찜·편명·체크리스트·검색)를 링크나 QR로 내보내고, 다른 기기에서 열어 가져올 수 있어요. 로그인 없이 동작합니다.</p>
+      <div class="mt-btn-row">
+        <button class="mt-btn mt-btn-primary" onclick="exportLink()">🔗 링크 복사</button>
+        <button class="mt-btn mt-btn-ghost" onclick="showQR()">📱 QR 코드</button>
+      </div>
+      <div id="mt-qr"></div>
+    </div>
+  </div>
+
+  <div class="mt-toast" id="mt-toast"></div>
+
+  <script>
+  // 옮길 localStorage 키 목록
+  var KEYS = ['tripguide_saved_places','icn_fav_flights','icn_checklist','icn_checklist_custom','icn_depart_step','tt_search_history','tripguide_prefs'];
+  var $ = function(id){ return document.getElementById(id); };
+  function jget(k, def){ try{ return JSON.parse(localStorage.getItem(k) || def); }catch(e){ return JSON.parse(def); } }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function toast(m){ var t=$('mt-toast'); t.textContent=m; t.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(function(){t.classList.remove('show');},2200); }
+
+  // ── 대시보드 렌더 ──
+  function render(){
+    // 찜
+    var saved = jget('tripguide_saved_places','[]');
+    $('c-saved').textContent = saved.length;
+    $('mt-saved').innerHTML = saved.length
+      ? '<div class="mt-list">' + saved.slice(0,5).map(function(p){
+          return '<div class="mt-row"><span class="mt-ic">📍</span><span class="mt-main">'+esc(p.title||'')+'</span><span class="mt-sub">'+esc((p.addr1||'').split(' ')[0]||'')+'</span></div>';
+        }).join('') + '</div>' + (saved.length>5?'<div class="mt-empty">외 '+(saved.length-5)+'곳</div>':'')
+      : '<div class="mt-empty">아직 찜한 장소가 없어요. 국내여행 검색에서 하트를 눌러보세요.</div>';
+
+    // 편명
+    var flights = jget('icn_fav_flights','[]');
+    $('c-flights').textContent = flights.length;
+    $('mt-flights').innerHTML = flights.length
+      ? '<div class="mt-list">' + flights.map(function(f){
+          return '<div class="mt-row"><span class="mt-ic">'+(f.dir==='dep'?'🛫':'🛬')+'</span><span class="mt-main">'+esc(f.flightId||'')+'</span><span class="mt-sub">'+(f.dir==='dep'?'출발':'도착')+'</span></div>';
+        }).join('') + '</div>'
+      : '<div class="mt-empty">추적 중인 편명이 없어요.</div>';
+
+    // 체크리스트 진행
+    var state = jget('icn_checklist','{}');
+    var custom = jget('icn_checklist_custom','[]');
+    // 기본 34 + 커스텀 개수로 total 추정 (기본 그룹 항목 수는 고정 34)
+    var DEFAULT_TOTAL = 34;
+    var total = DEFAULT_TOTAL + custom.length;
+    var done = Object.keys(state).filter(function(k){return state[k];}).length;
+    var pct = total ? Math.round(done*100/total) : 0;
+    $('mt-checklist').innerHTML =
+      '<div style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:4px">'+done+' / '+total+' 완료 ('+pct+'%)</div>' +
+      '<div class="mt-progress"><div class="mt-progress-fill" style="width:'+pct+'%"></div></div>' +
+      (custom.length ? '<div class="mt-empty">내가 추가한 항목 '+custom.length+'개 포함</div>' : '');
+
+    // 최근 검색
+    var hist = jget('tt_search_history','[]');
+    $('c-history').textContent = hist.length;
+    $('mt-history').innerHTML = hist.length
+      ? '<div class="mt-chips">' + hist.slice(0,10).map(function(h){ return '<span class="mt-chip">'+esc(h.label||'')+'</span>'; }).join('') + '</div>'
+      : '<div class="mt-empty">최근 검색 기록이 없어요.</div>';
+  }
+
+  // ── 내보내기 (URL 직렬화) ──
+  function serialize(){
+    var data = {};
+    KEYS.forEach(function(k){ var v = localStorage.getItem(k); if(v!=null) data[k]=v; });
+    var json = JSON.stringify(data);
+    // 유니코드 안전 base64
+    return btoa(unescape(encodeURIComponent(json)));
+  }
+  function exportURL(){
+    return location.origin + '/mytrip#data=' + serialize();
+  }
+  function exportLink(){
+    var url = exportURL();
+    if(url.length > 8000){ toast('데이터가 너무 커서 링크가 길어요. QR 대신 링크를 사용하세요.'); }
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(url).then(function(){ toast('🔗 링크 복사됨 — 다른 기기에서 열어 가져오기'); })
+        .catch(function(){ prompt('아래 링크를 복사하세요', url); });
+    } else { prompt('아래 링크를 복사하세요', url); }
+  }
+  function showQR(){
+    var url = exportURL();
+    var box = $('mt-qr');
+    box.style.display = 'block';
+    box.innerHTML = '<p>QR 생성 중…</p>';
+    if(url.length > 2000){
+      box.innerHTML = '<p>⚠️ 데이터가 많아 QR로는 담기 어려워요. "🔗 링크 복사"를 사용하세요.</p>';
+      return;
+    }
+    // QR 라이브러리 지연 로드
+    loadQRLib().then(function(){
+      box.innerHTML = '';
+      var typeNumber = 0; // auto
+      var qr = qrcode(typeNumber, 'M');
+      qr.addData(url);
+      qr.make();
+      box.innerHTML = qr.createImgTag(5, 8) + '<p>휴대폰 카메라로 스캔 → 자동으로 가져오기</p>';
+    }).catch(function(){
+      box.innerHTML = '<p>QR 라이브러리를 불러오지 못했어요. "🔗 링크 복사"를 사용하세요.</p>';
+    });
+  }
+  var _qrPromise = null;
+  function loadQRLib(){
+    if(window.qrcode) return Promise.resolve();
+    if(_qrPromise) return _qrPromise;
+    _qrPromise = new Promise(function(resolve, reject){
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js';
+      s.onload = resolve; s.onerror = reject;
+      document.head.appendChild(s);
+    });
+    return _qrPromise;
+  }
+
+  // ── 가져오기 (URL #data= 감지) ──
+  function checkImport(){
+    var m = location.hash.match(/data=([^&]+)/);
+    if(!m) return;
+    var area = $('mt-import-area');
+    area.innerHTML = '<div class="mt-import-note">📥 다른 기기의 여행 데이터가 감지됐어요. 가져오면 <strong>이 기기의 기존 데이터를 덮어씁니다.</strong><div class="mt-btn-row" style="margin-top:10px"><button class="mt-btn mt-btn-primary" onclick="doImport()">가져오기</button><button class="mt-btn mt-btn-ghost" onclick="cancelImport()">취소</button></div></div>';
+  }
+  function doImport(){
+    var m = location.hash.match(/data=([^&]+)/);
+    if(!m) return;
+    try{
+      var json = decodeURIComponent(escape(atob(m[1])));
+      var data = JSON.parse(json);
+      Object.keys(data).forEach(function(k){
+        if(KEYS.indexOf(k) !== -1) localStorage.setItem(k, data[k]);
+      });
+      history.replaceState(null, '', '/mytrip');
+      $('mt-import-area').innerHTML = '';
+      render();
+      toast('✅ 가져오기 완료 — 이 기기에 반영됐어요');
+    }catch(e){ toast('가져오기 실패: 데이터가 손상됐어요'); }
+  }
+  function cancelImport(){
+    history.replaceState(null, '', '/mytrip');
+    $('mt-import-area').innerHTML = '';
+  }
+
+  // 모바일 메뉴
+  var _mb=document.getElementById('menuBtn'), _nav=document.getElementById('nav');
+  if(_mb&&_nav){ _mb.addEventListener('click', function(){ _nav.classList.toggle('open'); }); }
+
+  render();
+  checkImport();
+  </script>
+  <script>
+    if('serviceWorker' in navigator){ window.addEventListener('load', function(){ navigator.serviceWorker.register('/sw.js').catch(function(){}); }); }
+  </script>
+  <script src="/pwa-install.js" defer></script>
+</body>
+</html>
