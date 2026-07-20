@@ -523,7 +523,8 @@ async function _fetchDomesticPage(append) {
       domShow('domesticError');
       document.getElementById('domesticErrorMsg').innerHTML =
         `<strong>일시적인 문제가 발생했어요.</strong><br>` +
-        `<small>${err.message}<br>잠시 후 다시 시도해주세요. 한국관광공사 API 응답이 늦거나 점검 중일 수 있습니다.</small>`;
+        `<small>${err.message}<br>한국관광공사 API 응답이 늦거나 점검 중일 수 있습니다.</small><br>` +
+        `<button class="retry-btn" onclick="domHide('domesticError');_fetchDomesticPage(false)">🔄 다시 시도</button>`;
     }
   } finally {
     _dom.loading = false;
@@ -836,7 +837,8 @@ async function loadExchangeRates() {
       upd.textContent = `${d.getMonth()+1}/${d.getDate()} 기준`;
     }
   } catch {
-    el.innerHTML = '<span class="fx-skeleton">환율 정보를 불러올 수 없습니다</span>';
+    el.innerHTML = '<span class="fx-skeleton">환율 정보를 불러올 수 없습니다</span> ' +
+      '<button class="retry-btn" onclick="loadExchangeRates()">🔄 다시 시도</button>';
   }
 }
 

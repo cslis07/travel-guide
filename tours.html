@@ -69,6 +69,8 @@
   border-radius:50%;animation:ttspin .8s linear infinite;margin:0 auto 12px}
 @keyframes ttspin{to{transform:rotate(360deg)}}
 .tt-err{background:#FFF5F5;border:1px solid #FFD0D0;color:#C92A2A;border-radius:12px;padding:14px 16px;font-size:13.5px}
+.tt-retry{margin-top:10px;padding:8px 16px;border:1px solid var(--primary);background:#fff;color:var(--primary);border-radius:8px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer}
+.tt-retry:hover{background:var(--primary);color:#fff}
 .tt-cta{
   display:block;text-align:center;margin-top:14px;background:#FFF3E9;color:var(--accent-dark);
   border-radius:12px;padding:14px;font-size:14px;font-weight:700;transition:.15s;
@@ -431,7 +433,11 @@ function scrollToResults(){
   if(el && window.innerWidth <= 900) el.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 function ttLoading(m){ $('tt-results').innerHTML = `<div class="tt-loading"><div class="tt-spin"></div>${esc(m||'검색 중...')}</div>`; scrollToResults(); }
-function ttError(m){ $('tt-results').innerHTML = `<div class="tt-err">⚠️ ${esc(m)}<br><small>잠시 후 다시 시도하거나 조건을 바꿔보세요.</small></div>`; }
+let _lastRun = null;  // 마지막 검색 함수 (재시도용)
+function ttError(m){
+  const retry = _lastRun ? `<br><button class="tt-retry" onclick="if(_lastRun)_lastRun()">🔄 다시 시도</button>` : '';
+  $('tt-results').innerHTML = `<div class="tt-err">⚠️ ${esc(m)}<br><small>잠시 후 다시 시도하거나 조건을 바꿔보세요.</small>${retry}</div>`;
+}
 function ttShow(data, ctaUrl, ctaLabel, partnerQuery, partnerType){
   const text = data.copyText || data.text;
   let inner;
@@ -530,7 +536,7 @@ function applyFareDate(dep, ret){
 async function ttRunTna(){
   if(_ttBusy) return;
   const q = $('tna-q').value.trim(); if(!q){ $('tna-q').focus(); return; }
-  ttLockBtns(true); ttLoading('투어·티켓 검색 중...');
+  _lastRun=ttRunTna; ttLockBtns(true); ttLoading('투어·티켓 검색 중...');
   try{
     const data = await callMrt('searchTnas', { query:q, perPage:8, sort:$('tna-sort').value });
     ttShow(data, 'https://www.myrealtrip.com/search?q=' + encodeURIComponent(q), '마이리얼트립에서 전체 보기', q, 'tna');
@@ -543,7 +549,7 @@ async function ttRunStay(){
   const q = $('stay-q').value.trim(); if(!q){ $('stay-q').focus(); return; }
   const ci = $('stay-in').value, co = $('stay-out').value;
   if(ci && co && co <= ci){ ttError('체크아웃 날짜는 체크인보다 뒤여야 합니다.'); return; }
-  ttLockBtns(true); ttLoading('숙소 검색 중...');
+  _lastRun=ttRunStay; ttLockBtns(true); ttLoading('숙소 검색 중...');
   try{
     const data = await callMrt('searchStays', {
       keyword:q, checkIn:ci, checkOut:co,
@@ -558,7 +564,7 @@ async function ttRunDom(){
   if(_ttBusy) return;
   const from=$('dom-from').value, to=$('dom-to').value;
   if(from===to){ ttError('출발지와 도착지가 같습니다.'); return; }
-  ttLockBtns(true); ttLoading('국내 항공권 검색 중...');
+  _lastRun=ttRunDom; ttLockBtns(true); ttLoading('국내 항공권 검색 중...');
   try{
     const data = await callMrt('searchDomesticFlights', { origin:from, destination:to, departDate:$('dom-date').value, tripType:'ONE_WAY', maxResults:8 });
     ttShowFlights(data);
@@ -571,7 +577,7 @@ async function ttRunIntl(){
   const from=$('intl-from').value, to=$('intl-to').value;
   const dep=$('intl-date').value, ret=$('intl-return').value;
   if(ret && dep && ret < dep){ ttError('오는 날은 가는 날 이후여야 합니다.'); return; }
-  ttLockBtns(true); ttLoading('국제 항공권 검색 중...');
+  _lastRun=ttRunIntl; ttLockBtns(true); ttLoading('국제 항공권 검색 중...');
   try{
     const data = await callMrt('searchInternationalFlights', {
       tripType:'ROUND_TRIP', origin:from, destination:to,

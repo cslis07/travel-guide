@@ -2506,3 +2506,13 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
   .icn-banner-live { padding: 3px 8px; font-size: .62rem; }
   .icn-banner-arrow { font-size: 1.1rem; }
 }
+
+/* ── 재시도 버튼 (에러 복구) ── */
+.retry-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 8px; padding: 7px 15px; border: 1px solid var(--primary);
+  background: var(--white); color: var(--primary);
+  border-radius: 8px; font-size: 13px; font-weight: 700;
+  font-family: inherit; cursor: pointer; transition: .15s;
+}
+.retry-btn:hover { background: var(--primary); color: #fff; }
