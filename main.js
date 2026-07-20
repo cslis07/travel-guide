@@ -124,6 +124,38 @@ function initDates() {
 }
 
 /* ═══════════════════════════════════════════
+   검색 위젯 + 환율 계산기 상태 유지 (localStorage)
+   ═══════════════════════════════════════════ */
+const _PREFS_KEY = 'tripguide_prefs';
+function _getPrefs() {
+  try { return JSON.parse(localStorage.getItem(_PREFS_KEY) || '{}'); }
+  catch { return {}; }
+}
+function _savePref(key, val) {
+  const p = _getPrefs(); p[key] = val;
+  localStorage.setItem(_PREFS_KEY, JSON.stringify(p));
+}
+// 페이지 로드 시 마지막 선택값 복원 (날짜는 제외 — 항상 미래로)
+function restorePrefs() {
+  const p = _getPrefs();
+  const set = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
+  set('sw-to', p.flightTo); set('sw-pax', p.flightPax);
+  set('sw-hcity', p.hotelCity); set('sw-guests', p.hotelGuests);
+  // 환율 계산기
+  if (p.fxAmount != null) set('fxCalcAmount', p.fxAmount);
+  set('fxCalcFrom', p.fxFrom);
+  // 계산기 값 있으면 즉시 계산
+  if (p.fxAmount) { try { calcFx(); } catch {} }
+  // 변경 시 자동 저장 바인딩
+  const bind = (id, key) => { const el = document.getElementById(id); if (el) el.addEventListener('change', () => _savePref(key, el.value)); };
+  bind('sw-to', 'flightTo'); bind('sw-pax', 'flightPax');
+  bind('sw-hcity', 'hotelCity'); bind('sw-guests', 'hotelGuests');
+  bind('fxCalcFrom', 'fxFrom');
+  const amtEl = document.getElementById('fxCalcAmount');
+  if (amtEl) amtEl.addEventListener('input', () => _savePref('fxAmount', amtEl.value));
+}
+
+/* ═══════════════════════════════════════════
    검색 위젯
    ═══════════════════════════════════════════ */
 
@@ -937,6 +969,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDates();
   loadExchangeRates();
   _renderSavedPlaces();   // 찜한 장소 복원
+  restorePrefs();         // 검색 위젯·계산기 마지막 값 복원
 
   // 모달 닫기 이벤트
   const _ov = document.getElementById('tourModalOverlay');
