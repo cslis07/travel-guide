@@ -556,6 +556,85 @@ function _updateDomMoreBtn() {
 
 const _tourItemCache = new Map();
 
+/* ═══════════════════════════════════════════
+   관광지·맛집 찜 (localStorage)
+   ═══════════════════════════════════════════ */
+const _SAVED_KEY = 'tripguide_saved_places';
+function getSavedPlaces() {
+  try { return JSON.parse(localStorage.getItem(_SAVED_KEY) || '[]'); }
+  catch { return []; }
+}
+function isSaved(cid) {
+  return getSavedPlaces().some(p => p.contentid === cid);
+}
+function toggleSavePlace(cid, e) {
+  if (e) { e.stopPropagation(); }
+  const item = _tourItemCache.get(cid);
+  let saved = getSavedPlaces();
+  if (saved.some(p => p.contentid === cid)) {
+    saved = saved.filter(p => p.contentid !== cid);
+  } else if (item) {
+    // 재방문 시 복원에 필요한 최소 필드만 저장
+    saved.unshift({
+      contentid: item.contentid, contenttypeid: item.contenttypeid,
+      title: item.title, addr1: item.addr1 || '', tel: item.tel || '',
+      firstimage: item.firstimage || '', mapx: item.mapx || '', mapy: item.mapy || '',
+    });
+    saved = saved.slice(0, 100);
+  }
+  localStorage.setItem(_SAVED_KEY, JSON.stringify(saved));
+  _syncSaveButtons(cid);
+  _renderSavedPlaces();
+}
+// 화면의 해당 cid 하트 버튼 상태 동기화 (카드 하트 + 모달 텍스트 버튼)
+function _syncSaveButtons(cid) {
+  const on = isSaved(cid);
+  document.querySelectorAll(`.save-btn[data-cid="${cid}"]`).forEach(b => {
+    b.classList.toggle('active', on);
+    if (b.classList.contains('tmd-save-btn')) {
+      b.textContent = on ? '♥ 찜 저장됨' : '♡ 찜하기';
+    } else {
+      b.textContent = on ? '♥' : '♡';
+      b.title = on ? '찜 해제' : '찜하기';
+    }
+  });
+}
+function _renderSavedPlaces() {
+  const sec  = document.getElementById('savedSection');
+  const grid = document.getElementById('savedGrid');
+  const cnt  = document.getElementById('savedCount');
+  if (!sec || !grid) return;
+  const saved = getSavedPlaces();
+  if (!saved.length) { sec.classList.add('hidden'); return; }
+  sec.classList.remove('hidden');
+  if (cnt) cnt.textContent = `${saved.length}곳`;
+  grid.innerHTML = saved.map(item => {
+    _tourItemCache.set(item.contentid, item);
+    const icon  = CTYPE_ICON[item.contenttypeid] || '🗺';
+    const thumb = item.firstimage
+      ? `<div class="dom-thumb"><img src="${item.firstimage}" alt="${item.title}" loading="lazy" onerror="domImgError(this)"></div>`
+      : `<div class="dom-thumb dom-thumb--empty"><span class="dom-nimg-icon">${icon}</span><span class="dom-nimg-name">${item.title}</span></div>`;
+    return `
+    <div class="dom-card dom-card--link" data-cid="${item.contentid}">
+      ${thumb}
+      <button class="save-btn active" data-cid="${item.contentid}" onclick="toggleSavePlace('${item.contentid}',event)" title="찜 해제">♥</button>
+      <div class="dom-body">
+        <span class="dom-ctype-tag">${icon} ${CTYPE_MAP[item.contenttypeid]||''}</span>
+        <h3>${item.title}</h3>
+        ${item.addr1 ? `<p class="dom-addr">📍 ${item.addr1}</p>` : ''}
+        <p class="dom-more">상세보기 →</p>
+      </div>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('.dom-card--link').forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.classList.contains('save-btn')) return;
+      const it = _tourItemCache.get(card.dataset.cid);
+      if (it) openTourDetail(it.contentid, it.contenttypeid, it.mapx, it.mapy);
+    });
+  });
+}
+
 function renderDomestic(items, append = false) {
   const grid = document.getElementById('domesticGrid');
   items.forEach(it => _tourItemCache.set(it.contentid, it));
@@ -565,9 +644,11 @@ function renderDomestic(items, append = false) {
     const thumb = item.firstimage
       ? `<div class="dom-thumb"><img src="${item.firstimage}" alt="${item.title}" loading="lazy" onerror="domImgError(this)"></div>`
       : `<div class="dom-thumb dom-thumb--empty"><span class="dom-nimg-icon">${icon}</span><span class="dom-nimg-name">${item.title}</span></div>`;
+    const sv = isSaved(item.contentid);
     return `
     <div class="dom-card dom-card--link" data-cid="${item.contentid}">
       ${thumb}
+      <button class="save-btn${sv?' active':''}" data-cid="${item.contentid}" onclick="toggleSavePlace('${item.contentid}',event)" title="${sv?'찜 해제':'찜하기'}">${sv?'♥':'♡'}</button>
       <div class="dom-body">
         <span class="dom-ctype-tag">${icon} ${CTYPE_MAP[item.contenttypeid]||''}</span>
         <h3>${item.title}</h3>
@@ -587,7 +668,8 @@ function renderDomestic(items, append = false) {
   // 새로 추가된 카드에만 이벤트 등록
   grid.querySelectorAll('.dom-card--link:not([data-bound])').forEach(card => {
     card.dataset.bound = '1';
-    card.addEventListener('click', () => {
+    card.addEventListener('click', e => {
+      if (e.target.classList.contains('save-btn')) return;
       const it = _tourItemCache.get(card.dataset.cid);
       if (it) openTourDetail(it.contentid, it.contenttypeid, it.mapx, it.mapy);
     });
@@ -689,11 +771,14 @@ function _renderTourModal({ detail, intro, imgArr, nbArr, cached }) {
   if (heroImg) html += `<div class="tmd-hero"><img src="${heroImg}" alt="${title}"></div>`;
   html += `<div class="tmd-content">`;
 
-  // 제목·주소·연락처
+  // 제목·주소·연락처 + 찜 버튼
+  const _cid   = detail?.contentid || cached?.contentid || '';
+  const _svOn  = _cid && isSaved(_cid);
   html += `<div class="tmd-head">
     <h2 class="tmd-name">${title}</h2>
     ${addr ? `<p class="tmd-addr">📍 ${addr}</p>` : ''}
     ${tel  ? `<p class="tmd-tel">📞 ${tel}</p>`   : ''}
+    ${_cid ? `<button class="tmd-save-btn save-btn${_svOn?' active':''}" data-cid="${_cid}" onclick="toggleSavePlace('${_cid}',event)">${_svOn?'♥ 찜 저장됨':'♡ 찜하기'}</button>` : ''}
   </div>`;
 
   // 지도 버튼
@@ -851,6 +936,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDestNav();
   initDates();
   loadExchangeRates();
+  _renderSavedPlaces();   // 찜한 장소 복원
 
   // 모달 닫기 이벤트
   const _ov = document.getElementById('tourModalOverlay');

@@ -1880,6 +1880,30 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
   overflow: hidden;
   box-shadow: var(--shadow);
   transition: transform .2s, box-shadow .2s;
+  position: relative;
+}
+
+/* 찜(하트) 버튼 — 카드 우상단 */
+.save-btn {
+  position: absolute; top: 8px; right: 8px; z-index: 3;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: none; background: rgba(255,255,255,.92);
+  color: #cbd5e1; font-size: 18px; line-height: 1; cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,.18); transition: .15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.save-btn:hover { transform: scale(1.12); }
+.save-btn.active { color: #EF4444; }
+/* 모달 안의 찜 버튼은 인라인 텍스트형 */
+.tmd-save-btn {
+  position: static; width: auto; height: auto; border-radius: 999px;
+  padding: 8px 16px; margin-top: 10px; font-size: 13px; font-weight: 700;
+  background: var(--gray-100); color: var(--gray-600);
+  box-shadow: none; gap: 4px;
+}
+.tmd-save-btn.active { background: #FEE2E2; color: #EF4444; }
+.saved-count-badge {
+  font-size: 14px; color: var(--primary); font-weight: 700;
 }
 
 .dom-card:hover {
