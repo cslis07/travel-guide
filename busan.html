@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="부산 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
+  <title>부산 여행 가이드 | 트립가이드</title>
+<link rel="canonical" href="https://travel-guide-cslis07.vercel.app/busan">
+<meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "부산",
+    "url": "https://travel-guide-cslis07.vercel.app/busan",
+    "description": "부산 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
+    "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
+    "geo": { "@type": "GeoCoordinates", "latitude": 35.1796, "longitude": 129.0756 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트립가이드">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">✈ 트립가이드</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;">🎟 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;">🧳 내 여행</a>
+        <a href="guide.html">📖 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;">✈ 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#1D4ED8 0%,#3B82F6 45%,#60A5FA 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">🐠</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">🐠 국내 · 부산광역시</span>
+      <h1>부산</h1>
+      <p>바다와 도시의 매력 — 해운대·감천문화마을·자갈치, KTX 2시간 반의 주말 여행</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>🚄 KTX</strong><small>서울 → 부산 약 2시간 30분</small></div>
+        <div class="hero-stat"><strong>🚗 이동</strong><small>도시철도·버스로 편리하게</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>없음 (국내 여행)</small></div>
+        <div class="hero-stat"><strong>🌤 추천 시기</strong><small>봄·가을, 여름 해수욕</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
+      </div>
+      <a href="tours.html?city=부산" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 부산 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
+    <div class="container">
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>1박 2일 추천 일정</h2>
+          <p>나만의 페이스로 즐기는 혼여행 코스 — 해운대·원도심 자유롭게</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 해운대권 탐방</h3><p>KTX 도착 후 해운대로 이동, 저녁은 광안리 야경의 중심에서</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">10:30</div><div class="tl-body"><h4>🚄 부산역 도착</h4><p>서울역 08:00 출발 KTX(약 2h30m)로 도착. 도시철도 1호선으로 서면·해운대 방면 이동</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🏨 숙소 짐 보관</h4><p>해운대·서면 숙소에 짐 맡기기. 혼여행은 게스트하우스·비즈니스 호텔이 가성비 최고</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍚 돼지국밥 점심</h4><p>부산 대표 소울푸드. 서면·범일동 노포에서 진한 국밥 한 그릇(8,000~10,000원). 부추·정구지 무침 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🏖 해운대해수욕장 & 더베이101</h4><p>백사장 산책 후 동백섬 누리마루 코스. 더베이101에서 마린시티 야경 감상 명소로 유명</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🌉 광안리 & 광안대교 야경</h4><p>도시철도 2호선으로 광안리 이동. 해변 카페·회센터. 광안대교 조명 켜지는 저녁이 절정</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🍺 광안리 밤바다 산책</h4><p>편의점 맥주 들고 백사장 산책 — 혼여행 묘미. 주말엔 버스킹 공연도 자주 열림</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>원도심권 + 귀경</h3><p>감천문화마을·자갈치·국제시장을 하루에 알차게 돌아보는 코스</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🎨 감천문화마을</h4><p>산비탈 알록달록 골목 미술마을. 어린왕자 포토존 필수. 입장 무료, 스탬프 지도 2,000원. 도보·경사 많음</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🐟 자갈치시장 & 회 점심</h4><p>국내 최대 수산시장. 활어회 골라 2층 초장집에서. 1인 회정식 15,000~25,000원. 곰장어도 별미</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🛍 국제시장 & 부평깡통시장</h4><p>영화 배경지 국제시장 도보 5분. 씨앗호떡(2,000원)·비빔당면·먹거리 골목 필수. 야시장도 유명</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🗼 용두산공원 & 부산타워</h4><p>국제시장 도보 10분. 전망대 입장 12,000원. 부산항·영도 조망. 초량 이바구길 연계 산책도 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🚄 부산역 → 귀경</h4><p>용두산공원에서 부산역 도보·버스 10분. 저녁 KTX로 서울 도착. 부산어묵 기념품은 역사 매장에서</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>1박 2일 · KTX 왕복 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">🚄</span><div class="budget-info"><h4>교통 (KTX 왕복)</h4><span class="budget-range">54,000 ~ 120,000원</span><span class="budget-note">SRT/할인 ~ KTX 정상가</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (1박)</h4><span class="budget-range">40,000 ~ 120,000원</span><span class="budget-note">게스트하우스 ~ 오션뷰 호텔</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>시내 교통 (2일)</h4><span class="budget-range">8,000 ~ 15,000원</span><span class="budget-note">도시철도·버스 이용</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍚</span><div class="budget-info"><h4>식비</h4><span class="budget-range">40,000 ~ 80,000원</span><span class="budget-note">1끼 8,000~25,000원 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">10,000 ~ 30,000원</span><span class="budget-note">부산타워·스카이캡슐 등</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">20,000 ~ 60,000원</span><span class="budget-note">기념품·간식·카페</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">1박 2일 1인 총 예상 경비</span>
+            <span class="total-amount">172,000 ~ 425,000원</span>
+          </div>
+          <span class="total-note">절약형(SRT+게스트하우스) ~ 여유형(KTX+오션뷰 호텔) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>블루보트 게스트하우스 남포점</h3>
+              <p class="hotel-location">📍 남포동 · 자갈치역 도보 5분</p>
+              <p>원도심 중심 위치. 도미토리·1인실 선택 가능. 국제시장·자갈치·용두산공원 모두 도보권. 혼여행 커뮤니티 활발</p>
+              <div class="hotel-price">1박 <strong>25,000~45,000원</strong></div>
+              <div class="hotel-tags"><span>도미토리</span><span>공용주방</span><span>Wi-Fi</span><span>세탁</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Busan" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>스탠포드 호텔 부산</h3>
+              <p class="hotel-location">📍 서면역 도보 5분</p>
+              <p>교통 중심 서면의 비즈니스 호텔. 지하철 1·2호선 환승역 인접으로 해운대·광안리·원도심 모두 편리</p>
+              <div class="hotel-price">1박 <strong>60,000~90,000원</strong></div>
+              <div class="hotel-tags"><span>1인실</span><span>조식</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Busan" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">감성형</span></div>
+            <div class="hotel-body">
+              <h3>광안리 오션뷰 호텔</h3>
+              <p class="hotel-location">📍 광안리해수욕장 도보 3분</p>
+              <p>객실에서 광안대교 야경 조망. 혼자만의 오션뷰 감성 여행에 최적. 해변 카페거리 인접</p>
+              <div class="hotel-price">1박 <strong>90,000~140,000원</strong></div>
+              <div class="hotel-tags"><span>오션뷰</span><span>광안대교뷰</span><span>Wi-Fi</span><span>카페 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Busan" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Busan" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Busan" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>1박 2일 추천 일정</h2>
+          <p>같이 먹고 웃고 즐기는 부산 완전 정복 — 블루라인파크·낙곱새 포함</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 블루라인파크 & 해운대</h3><p>부산 도착 첫날, 청사포 스카이캡슐과 해운대 먹방 투어</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">10:30</div><div class="tl-body"><h4>🚄 부산역 도착</h4><p>KTX로 도착 후 도시철도로 해운대 이동. 짐 맡기고 바로 출발. 친구끼리 SRT 예매하면 더 저렴</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🚋 블루라인파크 스카이캡슐</h4><p>청사포~미포 해안 4인 캡슐(2인 44,000원~). 예약 필수·인기 시간대 매진. 해변열차와 함께 인생샷 명소</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>🏖 해운대해수욕장 & 더베이101</h4><p>백사장 산책 후 더베이101 카페에서 마린시티 뷰. 친구끼리 인증샷 퀄리티 최고 명소</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍲 낙곱새 저녁</h4><p>낙지·곱창·새우 매콤 볶음. 부산 대표 술안주. 2~3인 세트 40,000~60,000원. 소주와 환상 궁합</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:30</div><div class="tl-body"><h4>🌉 광안리 밤바다 & 2차</h4><p>광안대교 야경 배경 해변 산책. 해변 포차·펍에서 2차. 주말 버스킹·불꽃 이벤트 자주 열림</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>원도심 감성 코스 → 귀경</h3><p>흰여울문화마을·태종대·감천마을 중 선택하며 원도심 감성</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🌊 흰여울문화마을 (영도)</h4><p>영화 '변호인' 배경. 절벽 위 흰 집들과 남항 바다뷰. 흰여울해안터널·감성 카페 골목 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🪨 태종대 유람선 & 절벽</h4><p>영도 최남단 기암절벽. 다누비열차(4,000원)로 순환. 유람선에서 오륙도 조망. 자연 절경 코스</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍜 밀면 점심</h4><p>부산식 냉면 밀면. 시원한 물밀면·매콤 비빔밀면(8,000~9,000원). 여름 별미. 돼지국밥집과 함께 파는 곳 많음</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>☕ 전포카페거리</h4><p>서면 옆 힙한 카페 골목. 로스터리·디저트 카페 밀집. 친구끼리 감성 카페 투어·기념품 쇼핑</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🚄 부산역 → 귀경</h4><p>서면역에서 부산역 도시철도 10분. 저녁 KTX로 귀경. 부산어묵·씨앗호떡 기념품 챙기기</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>1박 2일 · 스카이캡슐 포함 · 2인 기준으로 나눈 숙박비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">🚄</span><div class="budget-info"><h4>교통 (KTX 왕복)</h4><span class="budget-range">54,000 ~ 120,000원</span><span class="budget-note">SRT/할인 ~ KTX 정상가</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (1박 · 1인당)</h4><span class="budget-range">30,000 ~ 80,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚋</span><div class="budget-info"><h4>액티비티</h4><span class="budget-range">25,000 ~ 45,000원</span><span class="budget-note">스카이캡슐·유람선 등</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍲</span><div class="budget-info"><h4>식비</h4><span class="budget-range">50,000 ~ 90,000원</span><span class="budget-note">낙곱새·회·카페 2일 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>시내 교통</h4><span class="budget-range">8,000 ~ 15,000원</span><span class="budget-note">도시철도·버스</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">20,000 ~ 70,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">1박 2일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">187,000 ~ 420,000원</span>
+          </div>
+          <span class="total-note">절약형(SRT+2인 쉐어) ~ 여유형(KTX+오션뷰 호텔)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>해운대·광안리 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>이비스 앰배서더 부산 시티센터</h3>
+              <p class="hotel-location">📍 서면역 도보 3분</p>
+              <p>교통 중심 서면의 인기 체인 호텔. 트윈룸 가성비 좋고 지하철 접근성 최고. 해운대·광안리·원도심 모두 편리</p>
+              <div class="hotel-price">2인 1박 <strong>90,000~120,000원</strong> (1인당 ~45,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>Wi-Fi</span><span>서면 중심</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Busan" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>호텔 1 해운대</h3>
+              <p class="hotel-location">📍 해운대해수욕장 앞</p>
+              <p>해운대 백사장 바로 앞 라이프스타일 호텔. 오션뷰 객실·루프탑에서 친구끼리 인생샷. 야경 명소</p>
+              <div class="hotel-price">2인 1박 <strong>140,000~220,000원</strong> (1인당 ~70,000원~)</div>
+              <div class="hotel-tags"><span>오션뷰</span><span>루프탑</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Busan" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">광안리 특화</span></div>
+            <div class="hotel-body">
+              <h3>광안리 앰배서더 풀만</h3>
+              <p class="hotel-location">📍 광안리해수욕장 도보 2분</p>
+              <p>광안대교 야경이 한눈에. 객실·루프탑 바에서 밤바다 뷰. 친구 여행 감성 극대화. 해변 포차거리 인접</p>
+              <div class="hotel-price">2인 1박 <strong>160,000~260,000원</strong> (1인당 ~80,000원~)</div>
+              <div class="hotel-tags"><span>광안대교뷰</span><span>루프탑바</span><span>트윈룸</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Busan" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Busan" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Busan" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>아이와 함께하는 부산 — 해운대·수족관·송정·해동용궁사 2박 3일</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 해운대 & 아쿠아리움</h3><p>바닷속 친구들로 아이들 첫인사 — 상어와 가오리가 기다린다</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">10:30</div><div class="tl-body"><h4>🚄 부산역 도착</h4><p>짐 많은 가족은 KTX 특실·유아 동반석 추천. 도시철도로 해운대 이동, 짐은 숙소에 먼저 보관</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍚 돼지국밥·밀면 점심</h4><p>아이 있는 가족은 순한 맛 국밥집으로. 밀면은 아이도 잘 먹는 부산 별미. 1인 8,000~10,000원</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🦈 씨라이프 부산 아쿠아리움</h4><p>해운대 백사장 앞 대형 수족관. 상어·펭귄·수달. 어른 29,000원 / 어린이 24,000원(온라인 할인). 약 2시간</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🏖 해운대해수욕장 물놀이</h4><p>여름엔 백사장 물놀이·모래놀이. 봄가을엔 산책·연날리기. 더베이101에서 가족 간식·야경</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍽 해운대 저녁 후 체크인</h4><p>패밀리 식당에서 가족 저녁. 이후 오션뷰 숙소 체크인. 아이 일찍 재워 내일 일정 충전</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>송정·해동용궁사 & 블루라인파크</h3><p>바다열차와 해안 절경으로 아이가 평생 기억할 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🚋 블루라인파크 해변열차</h4><p>미포~송정 해안 따라 달리는 관광열차(1구간 7,000원). 아이와 바다뷰 즐기며 이동. 스카이캡슐 병행 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:30</div><div class="tl-body"><h4>🏖 송정해변</h4><p>해운대보다 한적한 가족 친화 해변. 얕은 수심으로 아이 물놀이 안전. 서핑 스팟으로도 유명</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍤 기장 점심 (해산물·칼국수)</h4><p>기장 방면 이동 중 점심. 대게·멸치·손칼국수 등. 가족 단위 식당 많음. 1인 12,000~20,000원</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🛕 해동용궁사</h4><p>바다 위에 세워진 절경 사찰. 파도 치는 해안 경관과 함께. 입장 무료. 아이와 소원 빌고 사진 명소</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🌉 광안리 저녁 & 야경</h4><p>광안대교 야경 보며 가족 저녁. 회·낙곱새(순한맛)·분식. 백사장 산책으로 하루 마무리</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>감천문화마을 → 마지막 먹거리 → 귀경</h3><p>알록달록 마을 구경 후 국제시장 먹방으로 마무리</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🎨 감천문화마을</h4><p>산비탈 컬러풀 마을. 어린왕자 포토존·스탬프 투어로 아이와 재미있게. 경사·계단 많으니 편한 신발 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🐟 자갈치·국제시장 먹방</h4><p>씨앗호떡(2,000원)·비빔당면·어묵·군것질. 아이들 좋아하는 먹거리 골목. 부산어묵 기념품도 구매</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🗼 용두산공원 산책</h4><p>국제시장 도보 10분. 부산타워 전망(어른 12,000원). 아이와 여유롭게 부산항 조망하며 마무리</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🚄 부산역 → 귀경</h4><p>아이 동반 가족은 여유 있게 부산역 이동. 오후 KTX로 귀경. 역사에서 부산 명물 기념품 챙기기</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>2박 3일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">🚄</span><div class="budget-info"><h4>교통 (4인 KTX 왕복)</h4><span class="budget-range">280,000 ~ 460,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박 · 가족룸)</h4><span class="budget-range">200,000 ~ 500,000원</span><span class="budget-note">4인 가족룸/오션뷰 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🦈</span><div class="budget-info"><h4>아쿠아리움·액티비티 (4인)</h4><span class="budget-range">120,000 ~ 200,000원</span><span class="budget-note">씨라이프·블루라인파크</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍚</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">180,000 ~ 350,000원</span><span class="budget-note">4인 1끼 40,000~80,000원</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>시내 교통 (4인)</h4><span class="budget-range">30,000 ~ 60,000원</span><span class="budget-note">도시철도·버스·택시</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 150,000원</span><span class="budget-note">기념품·간식·카페</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">860,000 ~ 1,720,000원</span>
+          </div>
+          <span class="total-note">절약형(SRT+가족룸 공유) ~ 여유형(KTX+오션뷰 호텔)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>가족룸·오션뷰·편의 시설이 잘 갖춰진 곳</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>베스트웨스턴 해운대</h3>
+              <p class="hotel-location">📍 해운대역 도보 5분</p>
+              <p>해운대 백사장 도보권 가족 친화 호텔. 넓은 트윈·패밀리룸 보유. 아쿠아리움·해변 모두 도보 이동</p>
+              <div class="hotel-price">가족룸 1박 <strong>120,000~180,000원</strong></div>
+              <div class="hotel-tags"><span>패밀리룸</span><span>조식</span><span>Wi-Fi</span><span>해변 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Busan" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>파라다이스 호텔 부산</h3>
+              <p class="hotel-location">📍 해운대해수욕장 바로 앞</p>
+              <p>해운대 대표 5성 리조트. 노천 스파·야외 수영장·가족룸 완비. 아이 어메니티·키즈 시설 풍부. 오션뷰 명당</p>
+              <div class="hotel-price">가족룸 1박 <strong>300,000~500,000원</strong></div>
+              <div class="hotel-tags"><span>오션뷰</span><span>스파·수영장</span><span>키즈 어메니티</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Busan" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">가족 특화</span></div>
+            <div class="hotel-body">
+              <h3>아난티 앳 부산 (힐튼·아난티)</h3>
+              <p class="hotel-location">📍 기장 · 해동용궁사 인근</p>
+              <p>기장 해안 복합 리조트. 인피니티풀·워터하우스·서점·아이 놀이시설 풍부. 가족 워케이션 명소</p>
+              <div class="hotel-price">가족룸 1박 <strong>280,000~450,000원</strong></div>
+              <div class="hotel-tags"><span>인피니티풀</span><span>키즈시설</span><span>가족룸</span><span>오션뷰</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Busan" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Busan" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Busan" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 서울 ↔ 부산 KTX·교통
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">🚄 교통</span>
+        <h2>서울 ↔ 부산 KTX·교통</h2>
+        <p>KTX 약 2시간 30분 · 서울역 → 부산역 / 다양한 교통편 비교</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>교통편</th><th>구분</th><th>소요시간</th><th>편도요금</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">🚄 KTX</span></td><td>서울역 → 부산역</td><td>2h 30m</td><td class="price-cell">59,800원</td><td><a href="https://www.letskorail.com/" target="_blank" rel="noopener" class="book-btn">코레일</a></td></tr>
+            <tr><td><span class="airline-badge">🚄 SRT</span></td><td>수서역 → 부산역</td><td>2h 40m</td><td class="price-cell">53,900원</td><td><a href="https://etk.srail.kr/" target="_blank" rel="noopener" class="book-btn">SRT</a></td></tr>
+            <tr><td><span class="airline-badge">🚌 고속버스</span></td><td>서울 → 부산</td><td>약 4h 20m</td><td class="price-cell">27,000원~</td><td><a href="https://www.kobus.co.kr/" target="_blank" rel="noopener" class="book-btn">코버스</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 항공</span></td><td>김포 GMP → 김해 PUS</td><td>1h 00m</td><td class="price-cell">특가 있음</td><td><a href="https://www.skyscanner.co.kr/transport/flights/gmp/pus/" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aff-cta">
+        <a href="https://www.letskorail.com/" target="_blank" rel="noopener" class="cta-btn primary">🚄 코레일 KTX 예매</a>
+        <a href="https://etk.srail.kr/" target="_blank" rel="noopener" class="cta-btn accent">🚄 SRT 예매</a>
+        <a href="https://www.kobus.co.kr/" target="_blank" rel="noopener" class="cta-btn secondary">🚌 고속버스 예매</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>부산 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">🚄</span><h3>KTX 조기예매 할인</h3><p>코레일·SRT 모두 출발 한 달 전부터 예매 가능. 주말·성수기는 금세 매진. 특가·할인석은 조기 예매가 정답. 왕복 동시 예매 추천</p></div>
+        <div class="tip-card"><span class="tip-icon">🎫</span><h3>도시철도 1일권</h3><p>부산 도시철도 1일권(5,500원)이면 하루 무제한. 해운대·서면·자갈치 여러 곳 도는 날엔 교통비 절약. 편의점·역에서 구매</p></div>
+        <div class="tip-card"><span class="tip-icon">🚋</span><h3>스카이캡슐 예약 필수</h3><p>블루라인파크 스카이캡슐은 인기 시간대 조기 매진. 공식 홈페이지 사전 예약 강력 추천. 해변열차는 현장 구매도 가능</p></div>
+        <div class="tip-card"><span class="tip-icon">🎨</span><h3>감천마을 도보·경사</h3><p>산비탈 마을이라 계단·오르막이 많음. 편한 운동화 필수. 마을버스·택시로 정상까지 올라가 내려오며 구경하면 편함</p></div>
+        <div class="tip-card"><span class="tip-icon">🍚</span><h3>돼지국밥 노포</h3><p>서면·범일동 일대에 원조 노포 밀집. 새우젓·부추무침으로 간 맞추기. 수육백반·순대국밥도 별미. 24시간 영업 많음</p></div>
+        <div class="tip-card"><span class="tip-icon">🏖</span><h3>해수욕 성수기 혼잡</h3><p>7~8월 해운대·광안리는 인파 절정. 숙소·교통 미리 예약 필수. 한적함 원하면 송정·다대포 추천. 이른 오전이 여유</p></div>
+        <div class="tip-card"><span class="tip-icon">🎆</span><h3>광안리 불꽃축제 시즌</h3><p>매년 가을 부산불꽃축제는 광안리 일대 초대형 인파. 숙소·명당은 몇 달 전 마감. 축제일엔 도시철도 이용·조기 이동 필수</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">✈ 트립가이드</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="tours.html?city=교토">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="tours.html?city=방콕">방콕</a>
+            <a href="tours.html?city=다낭">다낭</a>
+            <a href="tours.html?city=발리">발리</a>
+            <a href="tours.html?city=싱가포르">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="tours.html?city=제주">제주도</a>
+            <a href="tours.html?city=부산">부산</a>
+            <a href="tours.html?city=강릉">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트립가이드 · TripGuide</p>
+        <p style="margin-top:6px"><a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
+    }
+  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+  <script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=35.1796&longitude=129.0756'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FSeoul';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
+</body>
+</html>

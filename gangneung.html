@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="강릉 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
+  <title>강릉 여행 가이드 | 트립가이드</title>
+<link rel="canonical" href="https://travel-guide-cslis07.vercel.app/gangneung">
+<meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "강릉",
+    "url": "https://travel-guide-cslis07.vercel.app/gangneung",
+    "description": "강릉 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
+    "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
+    "geo": { "@type": "GeoCoordinates", "latitude": 37.7519, "longitude": 128.8761 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트립가이드">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">✈ 트립가이드</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;">🎟 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;">🧳 내 여행</a>
+        <a href="guide.html">📖 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;">✈ 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#92400E 0%,#D97706 45%,#FCD34D 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">☕</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">☕ 국내 · 강원특별자치도</span>
+      <h1>강릉</h1>
+      <p>커피와 바다의 도시 — 안목해변·경포·오죽헌, KTX 2시간의 감성 여행</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>🚄 KTX</strong><small>청량리 → 강릉 약 1시간 54분</small></div>
+        <div class="hero-stat"><strong>🚗 이동</strong><small>시내버스·렌터카로 관광지 순환</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>없음 (국내 여행)</small></div>
+        <div class="hero-stat"><strong>🌤 추천 시기</strong><small>사계절 (여름 해변·겨울 커피)</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
+      </div>
+      <a href="tours.html?city=강릉" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 강릉 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
+    <div class="container">
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>1박 2일 추천 일정</h2>
+          <p>나만의 페이스로 즐기는 감성 혼여행 — 커피거리·바다·오죽헌 자유롭게</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 안목 커피거리 & 강문 바다</h3><p>KTX 타고 도착, 첫날은 커피와 오션뷰로 감성 충전</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🚄 강릉역 도착</h4><p>청량리→강릉 KTX 약 1시간 54분(27,600원). 역 앞에서 시내버스·택시로 안목해변 이동(택시 약 8,000원)</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>☕ 안목 커피거리 카페 투어</h4><p>바다 앞 카페 40여 곳. 핸드드립·에스프레소 아메리카노 4,500~6,000원. 오션뷰 창가에서 첫 커피 한 잔</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍲 초당순두부 점심</h4><p>초당순두부마을로 이동. 순두부백반·짬뽕순두부 9,000~12,000원. 바닷물로 간을 맞춘 강릉 명물</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>🏖 강문해변 산책</h4><p>안목과 경포 사이 아담한 해변. 소원의 다리·바다 포토존. 혼자 걷기 좋은 조용한 백사장</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🌅 경포해변 & 경포호 노을</h4><p>강릉 대표 해변. 경포호 둘레길(4.3km) 자전거 대여 3,000원. 호수 너머 지는 노을이 압권</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🦑 저녁 & 야경</h4><p>경포·강문 일대 물회(15,000원~)나 오징어순대. 밤에는 커피거리로 돌아와 야간 오션뷰 카페</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>오죽헌 → 중앙시장 → 귀가</h3><p>역사 명소와 전통시장으로 마무리하는 알찬 둘째 날</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🏛 오죽헌</h4><p>신사임당·율곡 이이의 생가. 입장료 3,000원. 검은 대나무(오죽) 정원과 율곡기념관. 강릉 5천원권의 그곳</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🏘 오죽한옥마을</h4><p>오죽헌 옆 한옥 단지. 툇마루에 앉아 차 한 잔, 한복 산책. 조용한 아침 감성 사진 스팟</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🛍 강릉중앙시장 점심</h4><p>닭강정·감자옹심이·수제어묵. 시장 먹거리 순례 1만 원이면 충분. 청년몰·먹자골목 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>☕ 마지막 커피 & 원두 구입</h4><p>테라로사·보헤미안 등 강릉 로스터리에서 마지막 커피와 원두 선물. 강릉역 도보/버스권 카페도 다수</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🚄 강릉역 → 귀가</h4><p>출발 20~30분 전 도착 권장. 성수기·주말 KTX는 조기 매진되니 왕복 사전 예매 필수</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>1박 2일 · 국내 여행 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">🚄</span><div class="budget-info"><h4>KTX (왕복)</h4><span class="budget-range">55,000 ~ 60,000원</span><span class="budget-note">청량리↔강릉 편도 27,600원</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (1박)</h4><span class="budget-range">50,000 ~ 130,000원</span><span class="budget-note">게스트하우스 ~ 오션뷰 호텔</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚌</span><div class="budget-info"><h4>현지 교통 (2일)</h4><span class="budget-range">15,000 ~ 40,000원</span><span class="budget-note">시내버스·택시 (렌터카 제외)</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍲</span><div class="budget-info"><h4>식비</h4><span class="budget-range">40,000 ~ 70,000원</span><span class="budget-note">1끼 9,000~15,000원 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">☕</span><div class="budget-info"><h4>커피·카페</h4><span class="budget-range">15,000 ~ 30,000원</span><span class="budget-note">커피거리 투어 하루 2~3잔</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>입장료·기타</h4><span class="budget-range">10,000 ~ 30,000원</span><span class="budget-note">오죽헌·자전거·기념품</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">1박 2일 1인 총 예상 경비</span>
+            <span class="total-amount">185,000 ~ 360,000원</span>
+          </div>
+          <span class="total-note">절약형(게하+대중교통) ~ 여유형(오션뷰 호텔+렌터카)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>강릉역 게스트하우스</h3>
+              <p class="hotel-location">📍 강릉역 도보 5분</p>
+              <p>KTX 뚜벅이에 최적. 도미토리·1인실 선택 가능. 라운지에서 여행자 교류, 커피거리·시장 접근 편리</p>
+              <div class="hotel-price">1박 <strong>30,000~50,000원</strong></div>
+              <div class="hotel-tags"><span>역세권</span><span>1인실</span><span>Wi-Fi</span><span>공용 라운지</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Gangneung" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>안목해변 오션뷰 스테이</h3>
+              <p class="hotel-location">📍 안목 커피거리 도보 2분</p>
+              <p>객실 창문이 곧 바다. 아침에 커튼 열면 파도. 1층은 카페, 커피거리 한복판 감성 숙소</p>
+              <div class="hotel-price">1박 <strong>70,000~110,000원</strong></div>
+              <div class="hotel-tags"><span>오션뷰</span><span>카페 인접</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Gangneung" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
+            <div class="hotel-body">
+              <h3>세인트존스 호텔 (강문·경포)</h3>
+              <p class="hotel-location">📍 강문해변 앞</p>
+              <p>강릉 대표 대형 오션뷰 호텔. 혼자여도 오션뷰 스탠다드룸으로 여유롭게. 조식·부대시설 우수</p>
+              <div class="hotel-price">1박 <strong>120,000~180,000원</strong></div>
+              <div class="hotel-tags"><span>오션뷰</span><span>조식</span><span>Wi-Fi</span><span>대형 호텔</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Gangneung" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Gangneung" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Gangneung" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>1박 2일 추천 일정</h2>
+          <p>렌터카로 달리는 강릉 완전 정복 — 정동진·주문진·커피거리</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 커피거리 → 정동진</h3><p>렌터카 픽업 후 해변 드라이브, 저녁은 정동진 감성</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🚄 강릉역 도착 & 렌터카 픽업</h4><p>역 앞 렌터카 업체에서 픽업(경차 1일 5~7만 원대). 친구끼리 나누면 대중교통보다 자유롭고 저렴</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>☕ 안목 커피거리</h4><p>바다 앞 카페에서 아메리카노 한 잔(4,500원~). 테이크아웃 들고 방파제 산책하며 인증샷</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍜 짬뽕순두부 점심</h4><p>초당동 순두부마을. 얼큰한 짬뽕순두부(10,000원)와 순두부전골. 두부 요리 코스로 든든하게</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>🚂 정동진 모래시계공원</h4><p>세계 최대 모래시계·정동진역(바다에서 가장 가까운 역). 드라마 '모래시계' 성지. 레일바이크도 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🌊 정동심곡 바다부채길</h4><p>2천만 년 해안단구 위 데크길. 입장 3,000원. 절벽과 파도가 만드는 절경 트레킹(약 1시간)</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍺 강문·경포 저녁 & 술 한잔</h4><p>물회(15,000원~)·조개구이에 소주 한잔. 밤에는 경포 카페거리나 야간 해변 산책으로 마무리</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>주문진 → 하슬라 → 귀가</h3><p>수산시장 회 한 접시와 예술 공간으로 알찬 둘째 날</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🐟 주문진 수산시장</h4><p>즉석 회·대게·홍게. 시장에서 사서 초장집 상차림(1인 2만 원대). 아침부터 활기 넘치는 항구</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>📸 주문진 드라마 촬영지</h4><p>'도깨비' 방파제 촬영지. 빨간 목도리 소품으로 인증샷 필수. 등대·방파제 포토 스팟 즐비</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🎨 하슬라아트월드</h4><p>바다 위 언덕 조각공원+미술관. 입장 12,000원. 오션뷰 카페와 야외 설치미술. 사진 명소로 유명</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>☕ 마지막 커피 & 원두 쇼핑</h4><p>테라로사 본점(구정면)이나 보헤미안에서 마지막 커피. 원두·굿즈 선물 구입</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🚄 렌터카 반납 → 귀가</h4><p>강릉역 반납 후 KTX 탑승. 주말 저녁 열차는 매진 잦으니 왕복 사전 예매가 안전</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>1박 2일 · 렌터카 포함 · 2인 기준으로 나눈 비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">🚄</span><div class="budget-info"><h4>KTX (왕복)</h4><span class="budget-range">55,000 ~ 60,000원</span><span class="budget-note">청량리↔강릉 편도 27,600원</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (1박 · 1인당)</h4><span class="budget-range">35,000 ~ 90,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚗</span><div class="budget-info"><h4>렌터카 (1인당)</h4><span class="budget-range">30,000 ~ 45,000원</span><span class="budget-note">경차·소형 2일 + 유류비 반씩</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">50,000 ~ 90,000원</span><span class="budget-note">회·물회·순두부 3~4끼</span></div></div>
+          <div class="budget-card"><span class="budget-icon">☕</span><div class="budget-info"><h4>커피·입장료</h4><span class="budget-range">25,000 ~ 45,000원</span><span class="budget-note">카페·바다부채길·하슬라</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>기타·기념품</h4><span class="budget-range">20,000 ~ 50,000원</span><span class="budget-note">원두·굿즈·간식</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">1박 2일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">215,000 ~ 380,000원</span>
+          </div>
+          <span class="total-note">절약형(게하+경차 쉐어) ~ 여유형(오션뷰 호텔+소형차)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>해변 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>경포 풀빌라 펜션</h3>
+              <p class="hotel-location">📍 경포해변 차량 5분</p>
+              <p>친구끼리 놀기 좋은 독채 펜션. 바비큐·개별 마당. 경포·강문 해변 모두 가까워 이동 편리</p>
+              <div class="hotel-price">2인 1박 <strong>90,000~140,000원</strong> (1인당 45,000원~)</div>
+              <div class="hotel-tags"><span>독채</span><span>바비큐</span><span>Wi-Fi</span><span>주차</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Gangneung" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>스카이베이 호텔 경포</h3>
+              <p class="hotel-location">📍 경포해변 앞</p>
+              <p>인피니티풀로 유명한 오션뷰 호텔. 옥상 수영장에서 바다 배경 인생샷. 트윈룸 친구 여행 인기</p>
+              <div class="hotel-price">2인 1박 <strong>150,000~230,000원</strong> (1인당 75,000원~)</div>
+              <div class="hotel-tags"><span>인피니티풀</span><span>오션뷰</span><span>트윈룸</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Gangneung" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">감성</span></div>
+            <div class="hotel-body">
+              <h3>안목해변 감성 스테이</h3>
+              <p class="hotel-location">📍 안목 커피거리 도보 3분</p>
+              <p>커피거리 한복판 감성 숙소. 아침엔 오션뷰 카페, 밤엔 방파제 야경. 2~4인 객실로 친구 여행 최적</p>
+              <div class="hotel-price">2인 1박 <strong>110,000~170,000원</strong> (1인당 55,000원~)</div>
+              <div class="hotel-tags"><span>오션뷰</span><span>커피거리</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Gangneung" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Gangneung" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Gangneung" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>아이와 함께하는 강릉 — 바다·오죽헌·양떼목장 2박 3일</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 경포 해변·경포호</h3><p>강릉 대표 해변에서 아이들과 첫 바다 인사</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🚄 강릉역 도착 & 렌터카</h4><p>짐 많은 가족은 렌터카(중형 1일 7~9만 원)가 편리. 카시트 사전 예약 필수. 역 앞 픽업 후 출발</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍲 초당순두부 점심</h4><p>온 가족 든든하게. 순두부백반·순두부전골(9,000~13,000원). 아이용 순한 순두부도 주문 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🏖 경포해변 물놀이</h4><p>넓고 완만한 백사장. 여름엔 튜브·모래놀이. 안전요원 상주 구간에서 아이들과 물놀이(성수기 파라솔 대여)</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🚲 경포호 가족 자전거</h4><p>경포호 둘레길에서 2~4인 가족 자전거(대여 5,000~10,000원). 호수·철새 구경하며 여유로운 라이딩</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍽 저녁 후 체크인</h4><p>경포·강문 오션뷰 호텔 체크인. 저녁은 가족 식당에서 생선구이·해물탕. 아이 재우고 야경 감상</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>오죽헌 → 대관령 양떼목장</h3><p>역사 공부와 자연 체험을 하루에</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🏛 오죽헌</h4><p>신사임당·율곡 이이 생가. 입장 어른 3,000원 / 청소년 2,000원 / 어린이 1,000원. 아이와 5천원권·5만원권 이야기</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🏘 오죽한옥마을</h4><p>한옥 정원 산책·전통 체험. 아이들 한복 입고 사진. 툇마루에서 잠깐 쉬어가기 좋은 코스</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍚 감자옹심이 점심</h4><p>강원도 향토음식 감자옹심이·메밀전(8,000~12,000원). 쫄깃한 옹심이는 아이들도 잘 먹는 별미</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>🐑 대관령 양떼목장 (근교)</h4><p>강릉 근교 평창 대관령. 입장 7,000원. 초원 산책로 1.2km, 양 먹이주기 체험(1,000원). 아이 최애 코스</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>☕ 안목 커피거리 & 저녁</h4><p>돌아오는 길 커피거리에서 부모는 커피, 아이는 음료·아이스크림. 저녁은 해변가 식당에서 마무리</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>주문진 → 중앙시장 → 귀가</h3><p>수산시장 구경과 시장 먹거리로 마무리</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🐟 주문진 수산시장</h4><p>살아있는 대게·홍게·오징어 구경. 아이들에겐 살아있는 해산물이 신기한 체험. 회·조개구이 아침 겸 점심</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>📸 주문진 드라마 촬영지</h4><p>'도깨비' 방파제에서 가족 사진. 등대·바다 배경 포토존. 아이들과 바닷바람 산책</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍗 강릉중앙시장 먹거리</h4><p>닭강정(온 가족 인기!)·수제어묵·꽈배기. 시장 구경하며 간식 순례. 닭강정은 포장해 열차에서 먹기 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🚄 렌터카 반납 → 귀가</h4><p>강릉역 반납 후 KTX 탑승. 아이 동반은 여유 있게 출발 30분 전 도착. 왕복 좌석 사전 예매 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>2박 3일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">🚄</span><div class="budget-info"><h4>KTX (4인 왕복)</h4><span class="budget-range">180,000 ~ 220,000원</span><span class="budget-note">어린이 50% 할인 적용</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박 · 가족룸)</h4><span class="budget-range">200,000 ~ 400,000원</span><span class="budget-note">오션뷰 4인 객실 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚗</span><div class="budget-info"><h4>렌터카 (2일)</h4><span class="budget-range">140,000 ~ 200,000원</span><span class="budget-note">중형+유류비·카시트 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">200,000 ~ 350,000원</span><span class="budget-note">순두부·회·향토음식 3일</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>입장·체험 (4인)</h4><span class="budget-range">50,000 ~ 90,000원</span><span class="budget-note">오죽헌·양떼목장·자전거</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>커피·기념품</h4><span class="budget-range">40,000 ~ 80,000원</span><span class="budget-note">카페·원두·시장 간식</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">810,000 ~ 1,340,000원</span>
+          </div>
+          <span class="total-note">절약형(펜션+중형차 공유) ~ 여유형(오션뷰 호텔+체험 풀코스)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>가족룸·키즈 어메니티·편의 시설이 잘 갖춰진 곳</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>경포 가족 풀빌라 펜션</h3>
+              <p class="hotel-location">📍 경포해변 차량 5분</p>
+              <p>가족 단위 독채 펜션. 취사·바비큐 가능해 아이 식사 챙기기 편리. 마당에서 아이들 뛰놀기 좋음</p>
+              <div class="hotel-price">가족룸 1박 <strong>130,000~200,000원</strong></div>
+              <div class="hotel-tags"><span>독채</span><span>취사 가능</span><span>바비큐</span><span>주차</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Gangneung" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>세인트존스 호텔</h3>
+              <p class="hotel-location">📍 강문해변 앞</p>
+              <p>강릉 대표 대형 오션뷰 호텔. 실내 수영장·조식 뷔페·넓은 패밀리룸. 아이 동반 가족에 인기</p>
+              <div class="hotel-price">가족룸 1박 <strong>180,000~280,000원</strong></div>
+              <div class="hotel-tags"><span>패밀리룸</span><span>실내 수영장</span><span>조식 뷔페</span><span>오션뷰</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Gangneung" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">키즈 특화</span></div>
+            <div class="hotel-body">
+              <h3>스카이베이 호텔 경포</h3>
+              <p class="hotel-location">📍 경포해변 앞</p>
+              <p>인피니티풀·키즈 시설 갖춘 대형 호텔. 사계절 수영장으로 겨울에도 물놀이. 넓은 객실과 조식으로 가족에 최적</p>
+              <div class="hotel-price">가족룸 1박 <strong>200,000~320,000원</strong></div>
+              <div class="hotel-tags"><span>인피니티풀</span><span>키즈 시설</span><span>오션뷰</span><span>조식</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Gangneung" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Gangneung" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Gangneung" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: KTX·교통
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">🚄 KTX·교통</span>
+        <h2>서울 ↔ 강릉 KTX·교통</h2>
+        <p>KTX 약 1시간 54분 · 청량리 → 강릉</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>교통편</th><th>구분</th><th>소요시간</th><th>편도요금</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">🚄 KTX</span></td><td>청량리 → 강릉</td><td>1h 54m</td><td class="price-cell">27,600원</td><td><a href="https://www.letskorail.com/" target="_blank" rel="noopener" class="book-btn">코레일</a></td></tr>
+            <tr><td><span class="airline-badge">🚆 KTX-이음</span></td><td>서울역 방면 연계</td><td>약 2h 10m</td><td class="price-cell">27,600원~</td><td><a href="https://www.letskorail.com/" target="_blank" rel="noopener" class="book-btn">코레일</a></td></tr>
+            <tr><td><span class="airline-badge">🚂 무궁화·ITX</span></td><td>정동진 방면 연계</td><td>노선별 상이</td><td class="price-cell">노선별</td><td><a href="https://www.letskorail.com/" target="_blank" rel="noopener" class="book-btn">코레일</a></td></tr>
+            <tr><td><span class="airline-badge">🚌 고속버스</span></td><td>서울(센트럴시티) → 강릉</td><td>약 2h 40m</td><td class="price-cell">15,000원~</td><td><a href="https://www.kobus.co.kr/" target="_blank" rel="noopener" class="book-btn">고속버스</a></td></tr>
+            <tr><td><span class="airline-badge">🚐 시외버스</span></td><td>동서울 → 강릉</td><td>약 2h 40m</td><td class="price-cell">15,000원~</td><td><a href="https://www.kobus.co.kr/" target="_blank" rel="noopener" class="book-btn">고속버스</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aff-cta">
+        <a href="https://www.letskorail.com/" target="_blank" rel="noopener" class="cta-btn primary">🚄 코레일 KTX 예매</a>
+        <a href="https://www.kobus.co.kr/" target="_blank" rel="noopener" class="cta-btn accent">🚌 고속버스 예매</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>강릉 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">🚄</span><h3>KTX 조기 예매 필수</h3><p>주말·성수기 강릉행 KTX는 며칠 전 매진. 코레일 앱에서 왕복 동시 예매하고, 인기 시간대는 오픈되자마자 확보</p></div>
+        <div class="tip-card"><span class="tip-icon">☕</span><h3>커피거리 카페 투어</h3><p>안목 커피거리는 40여 곳이 밀집. 테라로사·보헤미안 등 로스터리 순례가 강릉 여행의 핵심. 원두 선물도 인기</p></div>
+        <div class="tip-card"><span class="tip-icon">🌅</span><h3>정동진 일출 명소</h3><p>바다에서 가장 가까운 정동진역 일출은 강릉 대표 풍경. 새해엔 인파 몰림. 정동진 레일바이크·모래시계공원도 함께</p></div>
+        <div class="tip-card"><span class="tip-icon">🍲</span><h3>순두부·물회 맛집</h3><p>초당동 순두부마을에서 순두부·짬뽕순두부, 여름엔 물회가 별미. 유명 맛집은 웨이팅 길어 오픈런 또는 애매한 시간 방문</p></div>
+        <div class="tip-card"><span class="tip-icon">🏖</span><h3>여름 해변 성수기·주차</h3><p>7~8월 경포·안목은 인파·주차난 심각. 대중교통·시내버스 활용하거나 아침 일찍 도착. 파라솔·물놀이 용품 대여 가능</p></div>
+        <div class="tip-card"><span class="tip-icon">🚗</span><h3>대관령 근교 드라이브</h3><p>렌터카가 있다면 대관령 양떼목장·안반데기·하늘목장까지. 초원과 풍력발전기 풍경이 이국적. 겨울엔 눈길 운전 주의</p></div>
+        <div class="tip-card"><span class="tip-icon">❄️</span><h3>겨울 눈꽃 & 커피축제</h3><p>겨울 강릉은 눈꽃 명소이자 '강릉커피축제'(가을~겨울) 개최지. 따뜻한 카페와 바다·눈 풍경이 어우러진 감성 여행 시즌</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">✈ 트립가이드</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="tours.html?city=교토">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="tours.html?city=방콕">방콕</a>
+            <a href="tours.html?city=다낭">다낭</a>
+            <a href="tours.html?city=발리">발리</a>
+            <a href="tours.html?city=싱가포르">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="tours.html?city=제주">제주도</a>
+            <a href="tours.html?city=부산">부산</a>
+            <a href="tours.html?city=강릉">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트립가이드 · TripGuide</p>
+        <p style="margin-top:6px"><a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
+    }
+  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+  <script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=37.7519&longitude=128.8761'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FSeoul';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
+</body>
+</html>

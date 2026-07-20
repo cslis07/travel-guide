@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="교토 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
+  <title>교토 여행 가이드 | 트립가이드</title>
+<link rel="canonical" href="https://travel-guide-cslis07.vercel.app/kyoto">
+<meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "교토",
+    "url": "https://travel-guide-cslis07.vercel.app/kyoto",
+    "description": "교토 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
+    "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
+    "geo": { "@type": "GeoCoordinates", "latitude": 35.0116, "longitude": 135.7681 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트립가이드">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">✈ 트립가이드</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;">🎟 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;">🧳 내 여행</a>
+        <a href="guide.html">📖 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;">✈ 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#065F46 0%,#0E9F6E 45%,#34D399 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">⛩</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">⛩ 일본 · 간사이 지방</span>
+      <h1>교토</h1>
+      <p>천 년 고도의 정수 — 후시미이나리·아라시야마·기온, 전통 일본을 만나는 곳</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 간사이 약 1시간 45분 (하루카 특급 75분)</small></div>
+        <div class="hero-stat"><strong>💴 환율</strong><small>¥1 ≈ 9.5원 (2026 기준)</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 1시간 느림 (KST-1)</small></div>
+        <div class="hero-stat"><strong>🌸 추천 시기</strong><small>3~5월 벚꽃, 11월 단풍</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
+      </div>
+      <a href="tours.html?city=교토" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 교토 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
+    <div class="container">
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>나만의 페이스로 걷는 고도 산책 — 사찰·다도·골목을 자유롭게</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 기온·히가시야마 산책</h3><p>간사이 공항에서 교토로 이동, 저녁은 전통 골목 기온에서</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 간사이 공항 도착</h4><p>JR 하루카 특급(¥3,600, 75분)으로 교토역까지 직행. ICOCA 사면 하루카 할인권도 판매</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>교토역 주변 비즈니스호텔에 짐 맡기기. 혼여행은 게스트하우스·캡슐이 가성비 최고</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🍵 기요미즈데라 & 산넨자카</h4><p>청수사(입장료 ¥500) 무대에서 시내 조망. 산넨자카·니넨자카 돌길에서 말차 아이스크림(¥400~)</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🏮 기온·하나미코지 야경</h4><p>목조 찻집 골목. 해 질 무렵 운 좋으면 마이코와 마주침. 저녁은 오반자이(교토 가정식) ¥1,500~2,500</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body"><h4>🍶 폰토초 강변 산책</h4><p>가모강 변 좁은 골목의 이자카야 거리. 편의점 맥주 들고 혼자 야간 산책 — 혼여행 묘미</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>후시미이나리 + 금각사</h3><p>도리이 터널과 황금 사찰을 하루에 — 교토 대표 명소 정복</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:00</div><div class="tl-body"><h4>⛩ 후시미이나리 도리이 터널</h4><p>수천 개 붉은 도리이. 24시간 개방·입장 무료. 이른 아침이 가장 한적. 정상 왕복 2~3시간</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🍜 이나리 니신소바 점심</h4><p>신사 앞 노포에서 청어 조림을 얹은 니신소바(¥900~1,200). 여우 유부초밥 이나리즈시도 별미</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🏯 킨카쿠지 (금각사)</h4><p>연못에 비친 황금 누각. 입장료 ¥500. 교토 사진 1순위 명소. 오후 햇살에 더 빛남</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🥢 니시키 시장 먹방</h4><p>'교토의 부엌' 400m 아케이드. 두부·즈케모노(절임)·말차 스위츠·꼬치 시식하며 구경</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍲 유도후 저녁</h4><p>교토 명물 두부 전골 유도후. 담백한 정진요리 코스 ¥2,000~3,500. 사바즈시(고등어 초밥)도 곁들이기</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>철학의 길 → 니조성 → 귀국</h3><p>마지막 날 조용한 산책로와 세계유산 성곽으로 마무리</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🌸 철학의 길 & 긴카쿠지</h4><p>수로 따라 이어진 산책로. 긴카쿠지(은각사) 입장료 ¥500. 봄 벚꽃·가을 단풍 최고의 길</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🏯 니조성 (세계유산)</h4><p>도쿠가와 막부의 성. 입장료 ¥1,300(어른). 밟으면 소리 나는 '휘파람 마루' 복도가 명물</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍵 마지막 말차 파르페</h4><p>교토역 인근 카페에서 진한 말차 파르페(¥900~1,300). 우지 말차 스위츠로 여행 마무리</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>교토역 → JR 하루카 특급(¥3,600, 75분). 비행 2.5~3시간 전 공항 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>2박 3일 · 환율 ¥1 = 9.5원 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">89,000 ~ 250,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박)</h4><span class="budget-range">55,000 ~ 170,000원</span><span class="budget-note">게스트하우스 ~ 비즈니스 호텔</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (3일)</h4><span class="budget-range">30,000 ~ 50,000원</span><span class="budget-note">공항 하루카·버스 1일권 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">90,000 ~ 150,000원</span><span class="budget-note">1끼 ¥900~2,500 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">25,000 ~ 55,000원</span><span class="budget-note">사찰·니조성 입장료</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">40,000 ~ 130,000원</span><span class="budget-note">말차·기념품·부채</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 1인 총 예상 경비</span>
+            <span class="total-amount">329,000 ~ 805,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+게스트하우스) ~ 여유형(FSC+비즈니스 호텔) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>피스 호스텔 교토역</h3>
+              <p class="hotel-location">📍 교토역 도보 5분</p>
+              <p>깔끔한 도미토리·1인실 게스트하우스. 공용 라운지에서 여행자 교류. 하루카·버스 접근 최고</p>
+              <div class="hotel-price">1박 <strong>¥3,500~6,000</strong> (~33,000원~)</div>
+              <div class="hotel-tags"><span>도미토리</span><span>공용라운지</span><span>Wi-Fi</span><span>코인 세탁</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kyoto" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>기온 마치야 게스트하우스</h3>
+              <p class="hotel-location">📍 기온 도보 3분</p>
+              <p>전통 마치야(목조 가옥) 개조 숙소. 다다미 방에서 하룻밤. 히가시야마 사찰 산책에 최적</p>
+              <div class="hotel-price">1박 <strong>¥5,000~8,000</strong> (~48,000원~)</div>
+              <div class="hotel-tags"><span>마치야</span><span>다다미</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kyoto" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
+            <div class="hotel-body">
+              <h3>도요코 인 교토역 카라스마 구치</h3>
+              <p class="hotel-location">📍 교토역 도보 5분</p>
+              <p>1인실 비즈니스 호텔의 정석. 무료 조식·청결한 시설. 혼여행 가성비 최고의 선택</p>
+              <div class="hotel-price">1박 <strong>¥7,500~12,000</strong> (~71,000원~)</div>
+              <div class="hotel-tags"><span>1인실</span><span>무료 조식</span><span>Wi-Fi</span><span>편의점 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kyoto" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Kyoto" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Kyoto" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>같이 걷고 찍고 즐기는 교토 감성 여행 — 기모노·아라시야마 필수</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 기온 기모노 산책</h3><p>교토 도착 첫날, 기모노 입고 히가시야마 골목 인생샷 투어</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 간사이 공항 도착</h4><p>JR 하루카 특급(¥3,600, 75분)으로 교토역 직행. 짐 맡기고 바로 출발</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>👘 기모노 렌털</h4><p>기요미즈데라 인근 렌털샵. 기모노 1일 대여 ¥3,000~5,000. 헤어 세팅 포함 플랜 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🍵 산넨자카·니넨자카 인생샷</h4><p>돌길 골목에서 친구랑 서로 사진 찍기. 기요미즈데라(¥500) 무대 배경으로 단체컷 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🏮 기온 하나미코지 저녁</h4><p>목조 골목의 오반자이 정식(¥1,800~3,000). 운 좋으면 마이코와 마주칠 수도</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body"><h4>🍶 폰토초 이자카야</h4><p>가모강 변 좁은 골목 이자카야. 나마비루(생맥주)·꼬치·사케로 첫날 마무리. 1인 ¥2,500~4,000</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>아라시야마 온종일</h3><p>대나무 숲·도게츠교·원숭이 공원 — 교토 자연 풀코스</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🎋 치쿠린 대나무 숲</h4><p>아라시야마 상징. 오전 일찍이 한적. 하늘 찌르는 대숲 길에서 감성 사진. 입장 무료</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🐒 이와타야마 원숭이 공원</h4><p>산 정상까지 20분 등반. 입장료 ¥550. 원숭이에게 먹이 주기 + 교토 시내 전망 한눈에</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍱 도게츠교 근처 점심</h4><p>강 건너는 다리 도게츠교 앞 식당가. 유도후·소바 정식(¥1,200~2,000). 다리 위 단체 사진</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>🚂 사가노 토롯코 열차</h4><p>협곡 따라 달리는 관광 열차(¥880). 봄 벚꽃·가을 단풍이 창밖으로. 사전 예매 권장</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍜 시내 복귀 & 라멘 저녁</h4><p>가와라마치로 이동해 교토식 진한 라멘(¥900~1,300). 니시키 시장 야식 순례도 좋음</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>후시미이나리 or 오사카 당일치기</h3><p>도리이 터널 등반 또는 전철 30분 오사카 나들이 중 선택</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:00</div><div class="tl-body"><h4>⛩ 후시미이나리 (선택A)</h4><p>수천 개 도리이 터널. 24시간·무료. 이른 아침이 한적. 정상 왕복 2~3시간, 등반 각오 필요</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🚆 오사카 이동 (선택B)</h4><p>JR 신쾌속 교토역→오사카역 28분 ¥570, 또는 한큐 카와라마치→우메다 43분 ¥410</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🐙 도톤보리 or 니시키 점심</h4><p>오사카행이면 도톤보리 타코야키·글리코상 인증. 교토 잔류면 니시키 시장 먹방으로 대체</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🛍 가와라마치 쇼핑</h4><p>테라마치·신쿄고쿠 아케이드. 요지야 화장품·말차 과자·잡화. 면세 신청 잊지 말기</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>교토역 하루카 막차 시간 사전 확인 필수. 오사카에 있었다면 간사이공항까지 바로 이동도 가능</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>2박 3일 · 기모노·토롯코 포함 · 2인 기준으로 나눈 숙박비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">89,000 ~ 250,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박 · 1인당)</h4><span class="budget-range">65,000 ~ 180,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">👘</span><div class="budget-info"><h4>기모노·체험</h4><span class="budget-range">30,000 ~ 60,000원</span><span class="budget-note">기모노 렌털·토롯코 열차</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">100,000 ~ 170,000원</span><span class="budget-note">오반자이·이자카야 3일 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통</h4><span class="budget-range">35,000 ~ 60,000원</span><span class="budget-note">오사카 당일치기 포함 시</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 180,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">369,000 ~ 900,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+2인 쉐어) ~ 여유형(FSC+마치야 료칸+체험 풀옵션)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>기온·가와라마치 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>더 로열 파크 호텔 교토 산조</h3>
+              <p class="hotel-location">📍 산조역 도보 1분 · 가와라마치 도보 5분</p>
+              <p>세련된 디자인 호텔. 트윈룸 가성비 최고. 지하철·버스 접근성 좋아 기온·아라시야마 모두 편리</p>
+              <div class="hotel-price">2인 1박 <strong>¥12,000~17,000</strong> (1인당 ~76,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>Wi-Fi</span><span>편의점 2분</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kyoto" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>크로스 호텔 교토</h3>
+              <p class="hotel-location">📍 가와라마치·니시키 시장 도보 3분</p>
+              <p>트렌디한 인테리어 도심 호텔. 가와라마치 쇼핑·기온 접근 최고. 옥상 라운지에서 야경 감상</p>
+              <div class="hotel-price">2인 1박 <strong>¥16,000~24,000</strong> (1인당 ~100,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>루프탑</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kyoto" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">전통 체험</span></div>
+            <div class="hotel-body">
+              <h3>기온 마치야 료칸</h3>
+              <p class="hotel-location">📍 기온 도보 5분</p>
+              <p>전통 료칸에서 다다미·가이세키 저녁·온천 체험. 친구와 함께라면 잊지 못할 교토의 밤</p>
+              <div class="hotel-price">2인 1박 <strong>¥24,000~40,000</strong> (1인당 ~152,000원~)</div>
+              <div class="hotel-tags"><span>료칸</span><span>가이세키 조·석식</span><span>다다미</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kyoto" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Kyoto" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Kyoto" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>아이와 함께하는 교토 — 원숭이 공원·철도박물관·오사카 연계 3박 4일</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 교토 철도박물관</h3><p>기차 좋아하는 아이 첫날 사로잡기 — 실물 증기기관차가 기다린다</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 간사이 공항 도착</h4><p>짐 많은 가족은 JR 하루카 특급(1인 ¥3,600, 75분) 추천. 유모차도 지정석 짐칸 활용 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🚂 교토 철도박물관</h4><p>증기기관차 실물·운전 시뮬레이터. 입장 어른 ¥1,500 / 초·중생 ¥500 / 유아 ¥200. 약 2시간</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🗼 교토타워 전망대</h4><p>교토역 앞 전망대(어른 ¥900 / 어린이 ¥400). 시내 야경 조망. 아이들 좋아하는 포토 스팟</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍽 교토역 저녁 후 체크인</h4><p>이세탄·포르타 식당가에서 가족 저녁. 이후 교토역 인근 숙소로. 내일 일정 위해 일찍 취침</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>아라시야마 — 대나무 숲과 원숭이</h3><p>대나무 숲·원숭이 공원·토롯코 열차 아이 맞춤 코스</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🎋 치쿠린 대나무 숲</h4><p>아라시야마 상징. 오전 일찍이 한적. 유모차도 다닐 만한 평탄한 산책로. 가족 포토존 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🐒 이와타야마 원숭이 공원</h4><p>아이들 최애! 입장료 어른 ¥550 / 어린이 ¥250. 원숭이에게 직접 먹이 주기 체험. 정상 등반 20분</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍱 도게츠교 점심 & 산책</h4><p>도게츠교(달 건너는 다리) 근처 식당. 두부 요리·소바. 다리 위 가족 사진, 강변 유람선(¥1,200)도 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>🚂 사가노 토롯코 열차</h4><p>협곡 따라 달리는 관광 열차(어른 ¥880 / 어린이 ¥440). 아이들 창밖 풍경에 신남. 사전 예매 권장</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🍮 시내 복귀 & 저녁</h4><p>가와라마치로 이동해 패밀리 레스토랑 저녁. 말차 파르페로 아이 디저트 챙기기. 일찍 귀숙</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>후시미이나리 → 금각사</h3><p>도리이 터널 탐험과 황금 사찰로 교토 대표 명소 정복</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>⛩ 후시미이나리 도리이 터널</h4><p>수천 개 붉은 도리이. 무료·24시간. 아이와는 초입~중턱까지만 30~40분 코스로. 여우 그림 에마 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🍜 이나리 니신소바 점심</h4><p>신사 앞 노포에서 청어 소바·이나리즈시(유부초밥). 아이도 좋아하는 달콤한 유부. 1인 ¥900~1,300</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🏯 킨카쿠지 (금각사)</h4><p>연못에 비친 황금 누각. 입장료 어른 ¥500 / 어린이 ¥300. 산책로 평탄해 아이와 걷기 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🥢 니시키 시장 & 기념품</h4><p>'교토의 부엌'에서 두부·말차 과자 시식. 요지야·닌텐도 발상지 잡화점에서 아이 기념품. 예산 사전 설정</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>기요미즈데라 → 마지막 쇼핑 → 귀국</h3><p>청수사 산책 후 오사카 경유 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🍵 기요미즈데라 & 산넨자카</h4><p>청수사 입장료 어른 ¥500 / 초등생 ¥200. 무대에서 시내 조망. 산넨자카 돌길에서 말차 아이스크림</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🛍 가와라마치 마지막 쇼핑</h4><p>테라마치·신쿄고쿠 아케이드에서 과자·캐릭터 상품. 헬로키티·스미코구라시 아이들 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이 동반 가족은 3시간 전 공항 도착 권장. 교토역 하루카 특급이 짐 많을 때 가장 편함</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>3박 4일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">400,000 ~ 900,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 가족룸)</h4><span class="budget-range">280,000 ~ 650,000원</span><span class="budget-note">4인 가족룸 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·체험 (4인)</h4><span class="budget-range">120,000 ~ 200,000원</span><span class="budget-note">철도박물관·원숭이공원·토롯코</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">320,000 ~ 520,000원</span><span class="budget-note">4인 1끼 ¥4,000~8,000</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4인)</h4><span class="budget-range">100,000 ~ 170,000원</span><span class="budget-note">하루카·버스 1일권 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">80,000 ~ 200,000원</span><span class="budget-note">기념품·아이 굿즈</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">1,300,000 ~ 2,640,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+가족룸 공유) ~ 여유형(FSC+4성 호텔+체험 풀옵션)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>가족룸·키즈 어메니티·편의 시설이 잘 갖춰진 곳</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>비아 인 프라이미오 교토역</h3>
+              <p class="hotel-location">📍 교토역 도보 3분</p>
+              <p>교토역 초근접 도시형 호텔. 4인 가족룸 보유. 하루카·버스·신칸센 접근 최고로 아이 동반 이동 편리</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥18,000~28,000</strong> (~171,000원~)</div>
+              <div class="hotel-tags"><span>가족룸</span><span>조식 뷔페</span><span>Wi-Fi</span><span>역 도보 3분</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kyoto" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>더 사우전드 교토</h3>
+              <p class="hotel-location">📍 교토역 도보 2분</p>
+              <p>모던 럭셔리 호텔. 넓은 패밀리룸·수영장·조식 뷔페 완비. 아이 어메니티 충실. 믿을 수 있는 시설</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥30,000~50,000</strong> (~285,000원~)</div>
+              <div class="hotel-tags"><span>패밀리룸</span><span>수영장</span><span>어린이 어메니티</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kyoto" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">전통 체험</span></div>
+            <div class="hotel-body">
+              <h3>아라시야마 온천 료칸</h3>
+              <p class="hotel-location">📍 아라시야마역 도보 5분</p>
+              <p>강변 전통 료칸. 가족 온천·가이세키 저녁으로 특별한 하룻밤. 대나무 숲·원숭이 공원과 가까움</p>
+              <div class="hotel-price">가족 1박(2식) <strong>¥40,000~70,000</strong> (~380,000원~)</div>
+              <div class="hotel-tags"><span>온천</span><span>가이세키 조·석식</span><span>다다미 가족실</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kyoto" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Kyoto" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Kyoto" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 항공권
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">✈ 항공권</span>
+        <h2>인천 ↔ 교토 (간사이 경유) 항공권</h2>
+        <p>비행시간 약 1시간 45분 · 인천 ICN → 간사이 KIX · 공항→교토역 JR 하루카 특급 75분 ¥3,600</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">✈ 이스타항공</span></td><td>LCC 직항</td><td>1h 50m</td><td class="price-cell">79,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/KIX/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 제주항공</span></td><td>LCC 직항</td><td>1h 50m</td><td class="price-cell">89,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/KIX/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 진에어</span></td><td>LCC 직항</td><td>1h 50m</td><td class="price-cell">89,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/KIX/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 티웨이항공</span></td><td>LCC 직항</td><td>1h 50m</td><td class="price-cell">85,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/KIX/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 아시아나항공</span></td><td>FSC 직항</td><td>1h 45m</td><td class="price-cell">180,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/KIX/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>1h 45m</td><td class="price-cell">200,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/KIX/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aff-cta">
+        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/KIX/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
+        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=KIX&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
+        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DKIX&leg2=from%3DKIX%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>교토 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">💳</span><h3>ICOCA / 스이카 교통카드</h3><p>간사이 공항에서 바로 구매 가능. 지하철·버스·편의점 결제까지 한 장으로. ¥2,000(보증금 ¥500 포함)으로 시작. 스이카도 그대로 호환</p></div>
+        <div class="tip-card"><span class="tip-icon">🚌</span><h3>버스 1일권 필수</h3><p>교토는 지하철보다 버스 중심 도시. 시영 버스 1일권 ¥700으로 사찰 대부분 커버. 킨카쿠지·기요미즈데라 등 버스가 가장 편함</p></div>
+        <div class="tip-card"><span class="tip-icon">⛩</span><h3>유네스코 사찰 입장료</h3><p>기요미즈데라·킨카쿠지·긴카쿠지 각 ¥500, 니조성 ¥1,300. 후시미이나리·기온은 무료. 현금 준비하면 편함</p></div>
+        <div class="tip-card"><span class="tip-icon">📸</span><h3>기온 마이코 촬영 매너</h3><p>기온 사도 골목은 사유지 구간 촬영 금지. 마이코·게이코 무단 촬영·추격 금지(벌금 부과). 존중하는 관람이 기본</p></div>
+        <div class="tip-card"><span class="tip-icon">🌸</span><h3>벚꽃·단풍 성수기 혼잡</h3><p>3월 말~4월 벚꽃, 11월 단풍은 세계적 인파. 유명 사찰은 개장 직후(오전) 방문 필수. 숙소는 2~3개월 전 예약 권장</p></div>
+        <div class="tip-card"><span class="tip-icon">🚆</span><h3>오사카 당일치기 연계</h3><p>JR 신쾌속으로 오사카역까지 28분 ¥570, 한큐로 우메다까지 43분 ¥410. 교토 숙박 + 오사카 나들이 조합 인기</p></div>
+        <div class="tip-card"><span class="tip-icon">🍵</span><h3>료칸·다다미 문화</h3><p>료칸에선 신발 벗고 다다미 위 슬리퍼도 벗기. 유카타 착용·가이세키 저녁·공용 온천 매너 지키기. 문신 있으면 온천 사전 확인</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">✈ 트립가이드</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="tours.html?city=교토">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="tours.html?city=방콕">방콕</a>
+            <a href="tours.html?city=다낭">다낭</a>
+            <a href="tours.html?city=발리">발리</a>
+            <a href="tours.html?city=싱가포르">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="tours.html?city=제주">제주도</a>
+            <a href="tours.html?city=부산">부산</a>
+            <a href="tours.html?city=강릉">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트립가이드 · TripGuide</p>
+        <p style="margin-top:6px"><a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
+    }
+  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+  <script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=35.0116&longitude=135.7681'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
+</body>
+</html>

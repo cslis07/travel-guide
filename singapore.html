@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="싱가포르 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
+  <title>싱가포르 여행 가이드 | 트립가이드</title>
+<link rel="canonical" href="https://travel-guide-cslis07.vercel.app/singapore">
+<meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "싱가포르",
+    "url": "https://travel-guide-cslis07.vercel.app/singapore",
+    "description": "싱가포르 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
+    "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
+    "geo": { "@type": "GeoCoordinates", "latitude": 1.3521, "longitude": 103.8198 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트립가이드">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">✈ 트립가이드</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;">🎟 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;">🧳 내 여행</a>
+        <a href="guide.html">📖 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;">✈ 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#7C3AED 0%,#A855F7 45%,#C084FC 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">🌆</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">🌆 싱가포르</span>
+      <h1>싱가포르</h1>
+      <p>정원 속 미래도시 — 마리나베이·센토사·호커센터, 안전하고 깔끔한 도시국가</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 싱가포르 약 6시간 20분 직항</small></div>
+        <div class="hero-stat"><strong>💴 환율</strong><small>S$1 ≈ 1,000원 (2026 기준)</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 1시간 느림 (KST-1)</small></div>
+        <div class="hero-stat"><strong>🌤 추천 시기</strong><small>연중 고온다습, 2~4월 쾌적</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
+      </div>
+      <a href="tours.html?city=싱가포르" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 싱가포르 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
+    <div class="container">
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>안전하고 깔끔한 도시국가에서 즐기는 혼여행 — 마리나베이·차이나타운·호커 자유롭게</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('solo',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 마리나베이 야경</h3><p>창이공항 도착 후 시내로, 첫날 밤은 마리나베이 스펙타 쇼로</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>✈ 창이공항 도착 & 주얼 창이</h4><p>세계 최고 공항. 입국 후 주얼 창이의 레인 보텍스(세계 최대 실내폭포) 무료 관람. MRT로 시내 이동</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>차이나타운·부기스 근처 숙소에 짐 맡기기. 혼여행은 캡슐호텔·호스텔이 가성비 최고(S$40~)</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🌳 가든스 바이 더 베이</h4><p>슈퍼트리 그로브 무료 산책. 클라우드 포레스트·플라워돔 통합권 S$53. 미래도시 정원의 상징</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:45</div><div class="tl-body"><h4>💡 가든 랩소디 라이트쇼</h4><p>슈퍼트리 무료 조명·음악쇼(19:45·20:45 2회). 잔디밭에 누워 감상 — 혼여행 힐링 명장면</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body"><h4>🌊 스펙트라 워터쇼 & 머라이언</h4><p>마리나베이샌즈 앞 무료 분수·레이저쇼(20:00·21:00). 머라이언 파크에서 야경 인증샷</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>문화 지구 탐방 + 호커 먹방</h3><p>차이나타운·리틀인디아·아랍스트리트를 하루에 걸어서</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🏮 차이나타운 & 불아사</h4><p>불아사(부처 치아 사원) 무료 관람. 파고다 스트리트 골목 산책. 아침 딤섬(S$8~12)으로 시작</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🍛 맥스웰 호커센터 점심</h4><p>천천치킨라이스(하이난치킨라이스, S$5~6) 원조 맛집. 미슐랭 빕구르망 노점 다수. 혼밥 최적</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🕌 아랍스트리트 & 하지레인</h4><p>술탄 모스크 앞 부기스 지역. 하지레인 감성 카페·부티크. 아이스 코피(S$2)로 더위 식히기</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🛕 리틀인디아</h4><p>스리 비라마칼리암만 사원·무스타파 센터(24시간 쇼핑몰). 인도 커리·테타릭(밀크티) 체험</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🦀 클락키 리버크루즈 & 저녁</h4><p>싱가포르강 리버크루즈(S$28, 40분) 야경 투어. 클락키 강변 레스토랑에서 칠리크랩(S$60~) 도전</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>센토사 섬 하루</h3><p>유니버설·SEA아쿠아리움·루지로 놀이의 섬 완전 정복</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🚡 센토사 익스프레스 입도</h4><p>비보시티 3층에서 센토사 익스프레스(S$4). 또는 케이블카(S$35)로 하버프론트에서 공중 진입</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🎢 유니버설 스튜디오 싱가포르</h4><p>1일권 S$83. 트랜스포머·배틀스타 갤럭티카(무료낙하). 오전 인기 어트랙션부터 공략</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🐠 SEA 아쿠아리움</h4><p>세계 최대급 수족관, 입장 S$44. 거대 오션 갤러리 수조 앞 벤치에서 혼자 멍때리기 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🛷 스카이라인 루지</h4><p>스릴 만점 카트 다운힐(2회권 S$25). 스카이라이드 리프트로 정상까지. 시원한 바닷바람 코스</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🏖 팔라완 비치 & 실로소 저녁</h4><p>아시아 최남단 포인트 인증. 해변 비치바에서 석양 맥주(S$12~). 여유로운 마무리</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>오차드 쇼핑 → 귀국</h3><p>마지막 날 오차드로드에서 기념품·쇼핑 후 창이로</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🛍 오차드로드 쇼핑</h4><p>ION 오차드·타카시마야·니안시티. 카야잼·TWG 티·부엉이 커피 기념품. 락사·바쿠테 소스도 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>☕ 카야토스트 마지막 브런치</h4><p>야쿤 카야토스트에서 카야토스트+반숙란+코피 세트(S$6). 싱가포르식 아침의 정석</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>MRT로 창이공항까지 약 40분(S$2~3). 주얼 창이 면세·푸드홀 즐기고 비행 3시간 전 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>3박 4일 · 환율 S$1 = 1,000원 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">280,000 ~ 700,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박)</h4><span class="budget-range">120,000 ~ 360,000원</span><span class="budget-note">호스텔 ~ 비즈니스 호텔</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4일)</h4><span class="budget-range">25,000 ~ 45,000원</span><span class="budget-note">EZ링크·공항 이동 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">120,000 ~ 220,000원</span><span class="budget-note">호커 S$5 ~ 레스토랑 S$30</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">120,000 ~ 200,000원</span><span class="budget-note">유니버설·가든스·아쿠아리움</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 150,000원</span><span class="budget-note">기념품·카야잼·TWG 티</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 1인 총 예상 경비</span>
+            <span class="total-amount">715,000 ~ 1,675,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+호스텔+호커) ~ 여유형(FSC+비즈니스 호텔) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>더 포드 부티크 캡슐 호텔</h3>
+              <p class="hotel-location">📍 부기스역 도보 5분</p>
+              <p>세련된 우주선 콘셉트 캡슐 호텔. 개인 캡슐 넓고 청결. 부기스·아랍스트리트 도보권, 혼여행 인기</p>
+              <div class="hotel-price">1박 <strong>S$45~65</strong> (~45,000원~)</div>
+              <div class="hotel-tags"><span>캡슐</span><span>공용라운지</span><span>Wi-Fi</span><span>조식</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Singapore" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>호텔 몬드리안 던컨 (부기스)</h3>
+              <p class="hotel-location">📍 부기스·리틀인디아 사이</p>
+              <p>합리적인 부티크 호텔. 1인 이용에 딱 좋은 콤팩트룸. 호커센터·MRT 접근성 좋아 동선 편리</p>
+              <div class="hotel-price">1박 <strong>S$90~130</strong> (~90,000원~)</div>
+              <div class="hotel-tags"><span>싱글룸</span><span>MRT 인접</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Singapore" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
+            <div class="hotel-body">
+              <h3>이비스 싱가포르 온 벤쿨렌</h3>
+              <p class="hotel-location">📍 부기스역 도보 3분</p>
+              <p>글로벌 비즈니스 호텔의 정석. 청결한 시설·안정적 서비스. 혼여행 가성비와 안전 모두 잡은 선택</p>
+              <div class="hotel-price">1박 <strong>S$120~170</strong> (~120,000원~)</div>
+              <div class="hotel-tags"><span>1인실</span><span>조식</span><span>Wi-Fi</span><span>편의점 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Singapore" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Singapore" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Singapore" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>같이 먹고 놀고 즐기는 싱가포르 완전 정복 — 센토사·루프탑바 필수 포함</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('friends',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 마리나베이 야경 투어</h3><p>싱가포르 도착 첫날, 마리나베이 중심으로 야경 명소 순례</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>✈ 창이공항 도착 & 레인 보텍스</h4><p>주얼 창이 세계 최대 실내폭포 앞 단체 사진. MRT로 시내 이동 후 짐 맡기고 바로 출발</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🌳 가든스 바이 더 베이</h4><p>슈퍼트리 그로브·OCBC 스카이웨이(S$14) 공중 산책. 클라우드 포레스트 안개 폭포에서 인증샷</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:45</div><div class="tl-body"><h4>💡 가든 랩소디 라이트쇼</h4><p>슈퍼트리 무료 조명·음악쇼(19:45·20:45). 잔디밭에 앉아 친구들과 함께 감상하는 명장면</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body"><h4>🍸 세라비 or 루프탑바</h4><p>마리나베이샌즈 57층 세라비 스카이바(음료 S$25~). 무료 스펙트라 워터쇼도 강변에서 함께 관람</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>센토사 온종일</h3><p>유니버설 스튜디오·SEA아쿠아리움·루지 풀코스</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🎢 유니버설 스튜디오 싱가포르</h4><p>1일권 S$83. 배틀스타 갤럭티카(듀얼 롤러코스터)·트랜스포머 라이드. Express 패스(S$50~)로 대기 단축</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🐠 SEA 아쿠아리움</h4><p>입장 S$44. 세계 최대급 수조와 오션 돔. 상어·만타가오리 관람. 더위 피하기에도 최적</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🛷 스카이라인 루지 대결</h4><p>친구끼리 루지 다운힐 레이스(3회권 S$31). 스카이라이드로 올라가 반복. 센토사 최고 인기 액티비티</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🏖 실로소 비치 & 저녁</h4><p>비치 클럽 오라(Ola)에서 석양 맥주. 해변 라운지에서 칵테일·해산물 안주로 하루 마무리(1인 S$40~)</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🎆 윙스 오브 타임 나이트쇼</h4><p>실로소 비치 분수·레이저·불꽃쇼(S$19). 야외 좌석에서 스펙터클 마무리</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>문화 지구 & 호커 먹방 투어</h3><p>차이나타운·아랍스트리트·클락키로 먹고 마시는 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🏮 차이나타운 & 맥스웰 호커</h4><p>천천치킨라이스(S$5~6)·바쿠테(육골차, S$9~). 친구끼리 여러 노점 나눠 먹으면 진짜 호커 정복</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🕌 아랍스트리트 & 하지레인</h4><p>술탄 모스크 앞 감성 골목. 하지레인 부티크·카페 쇼핑. 아이스 코피(S$2)로 더위 식히기</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🎡 싱가포르 플라이어 or 낮잠</h4><p>대관람차(S$40) 도심 조망, 또는 호텔에서 잠깐 휴식 후 밤 일정 대비. 낮 더위엔 실내 쇼핑몰 추천</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🦀 클락키 칠리크랩 만찬</h4><p>점보 씨푸드에서 칠리크랩·시리얼 새우(2인 S$120~). 볶음빵으로 소스 찍어먹기 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body"><h4>🍺 클락키 리버사이드 바</h4><p>강변 펍·클럽 밀집 구역. 라이브 음악과 함께 2차. 심야까지 이어지는 싱가포르 나이트라이프</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>오차드 쇼핑 → 귀국</h3><p>마지막 날 오차드로드 쇼핑 후 창이로</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🛍 오차드로드 쇼핑</h4><p>ION 오차드·타카시마야. 카야잼·TWG 티·부엉이 커피 기념품. GST 환급(S$100↑ 구매 시) 잊지 말기</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>☕ 락사·카야토스트 마지막 식사</h4><p>328 카통 락사(S$7) 또는 야쿤 카야토스트 세트(S$6). 싱가포르 대표 맛 마지막 정리</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>MRT로 창이공항 약 40분. 주얼 창이 쇼핑·푸드홀 즐기고 비행 3시간 전 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>3박 4일 · 센토사 포함 · 2인 기준으로 나눈 숙박비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">280,000 ~ 700,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 1인당)</h4><span class="budget-range">150,000 ~ 360,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎢</span><div class="budget-info"><h4>센토사·유니버설</h4><span class="budget-range">130,000 ~ 190,000원</span><span class="budget-note">유니버설 S$83 + 루지 등</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">150,000 ~ 260,000원</span><span class="budget-note">호커·칠리크랩·바 3일 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통</h4><span class="budget-range">25,000 ~ 45,000원</span><span class="budget-note">EZ링크·공항 이동 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 200,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">785,000 ~ 1,755,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+2인 쉐어+호커) ~ 여유형(FSC+4성 호텔+Express 패스)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>마리나베이·클락키 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>호텔 G 싱가포르</h3>
+              <p class="hotel-location">📍 부기스·시티홀 도보 8분</p>
+              <p>세련된 디자인 호텔. 트윈룸 가성비 최고. MRT 접근성 좋아 마리나베이·차이나타운 모두 편리</p>
+              <div class="hotel-price">2인 1박 <strong>S$150~200</strong> (1인당 ~75,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>Wi-Fi</span><span>바 라운지</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Singapore" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>스탠다드 스튜디오 클락키</h3>
+              <p class="hotel-location">📍 클락키 도보 5분</p>
+              <p>강변 나이트라이프 중심 트렌디 호텔. 밤 늦게까지 놀기 좋은 위치, 루프탑에서 야경 감상</p>
+              <div class="hotel-price">2인 1박 <strong>S$220~300</strong> (1인당 ~110,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>클락키 인접</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Singapore" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">뷰 특화</span></div>
+            <div class="hotel-body">
+              <h3>마리나 베이 샌즈</h3>
+              <p class="hotel-location">📍 마리나베이 중심</p>
+              <p>친구 여행이라면 한 번쯤 도전! 지상 200m 인피니티풀·스카이파크. 마리나베이 야경 정중앙 뷰</p>
+              <div class="hotel-price">2인 1박 <strong>S$550~900</strong> (1인당 ~275,000원~)</div>
+              <div class="hotel-tags"><span>인피니티풀</span><span>스카이파크</span><span>트윈룸</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Singapore" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Singapore" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Singapore" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>아이와 함께하는 싱가포르 — 센토사·아쿠아리움·가든스 3박 4일</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 주얼 창이 & 가든스</h3><p>세계 최고 공항의 실내폭포로 아이들 첫인사, 저녁은 슈퍼트리 라이트쇼</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 창이공항 도착 & 주얼 창이</h4><p>레인 보텍스(세계 최대 실내폭포) 앞 가족 사진. 캐노피 파크 놀이시설(S$5~)로 아이 에너지 발산. 짐 많으면 택시(S$25~) 추천</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>마리나베이·시티홀 근처 가족룸 숙소에 짐 풀기. 유모차·아기 침대 사전 요청 확인</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🌳 가든스 바이 더 베이</h4><p>슈퍼트리 그로브 무료 산책. 아이들은 어린이 정원 물놀이터(무료) 좋아함. 클라우드 포레스트는 유아 동반 편리</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:45</div><div class="tl-body"><h4>💡 가든 랩소디 & 스펙트라</h4><p>슈퍼트리 무료 라이트쇼(19:45) 후 마리나베이샌즈 앞 스펙트라 워터쇼(21:00). 아이 눈높이 최고의 무료 볼거리</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>센토사 — 아이가 평생 기억할 하루</h3><p>유니버설·SEA아쿠아리움·아드벤처코브 아이 맞춤 공략</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🎢 유니버설 스튜디오 싱가포르</h4><p>1일권 어른 S$83 / 어린이 S$62. 세서미 스트리트·슈렉 4D·마다가스카 등 유아 친화 어트랙션 풍부</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍔 파크 내 점심 & 휴식</h4><p>유니버설 내 레스토랑에서 가족 점심(1인 S$18~). 더운 낮엔 실내 어트랙션·에어컨 공간 위주로</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>🐠 SEA 아쿠아리움</h4><p>입장 어른 S$44 / 어린이 S$33. 세계 최대급 수조 앞에서 아이들 감탄. 유모차 이동 편리</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🏊 아드벤처 코브 워터파크</h4><p>어른 S$40 / 어린이 S$32. 아이와 물놀이·유수풀·수중 열대어 스노클링. 여벌 옷·수영복 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍽 비보시티 저녁 & 귀숙</h4><p>비보시티 푸드코트·패밀리 레스토랑에서 가족 저녁. 아이 일찍 재워 내일을 위해 충전</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>싱가포르 동물원 & 리버 원더스</h3><p>세계 최고 동물원에서 판다·오랑우탄과 자연 속 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🦁 싱가포르 동물원</h4><p>세계 최고 오픈형 동물원. 입장 어른 S$48 / 어린이 S$33. 오랑우탄·화이트타이거. 트램 타고 이동</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🐼 리버 원더스 (판다)</h4><p>동물원 옆 강 테마 파크. 자이언트 판다·매너티. 아마존 리버퀘스트 보트(S$5). 통합권으로 절약</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🍱 파크 내 점심 & 휴식</h4><p>동물원 내 레스토랑에서 점심(1인 S$15~). 오랑우탄과 아침식사 프로그램은 사전 예약 필요</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🛍 시내 귀환 & 오차드 산책</h4><p>택시·MRT로 시내 복귀. ION 오차드에서 아이 기념품·간식. 더위 피해 실내 쇼핑몰 위주</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>머라이언 & 마지막 쇼핑 → 귀국</h3><p>싱가포르 상징 머라이언 인증 후 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🦁 머라이언 파크 & 마리나베이 산책</h4><p>싱가포르 상징 머라이언상 앞 가족 인증샷. 마리나베이 프롬나드 아침 산책. 무료 명소</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🛍 마지막 쇼핑 & 브런치</h4><p>마리나베이샌즈 몰·오차드에서 카야잼·TWG 티·부엉이 커피 기념품. 카야토스트 세트(S$6) 브런치</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이 동반 가족은 택시(S$25~)가 가장 편함. 주얼 창이 캐노피 파크 마지막 놀이 후 비행 3시간 전 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>3박 4일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">1,100,000 ~ 2,400,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 가족룸)</h4><span class="budget-range">500,000 ~ 1,100,000원</span><span class="budget-note">4인 가족룸 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎢</span><div class="budget-info"><h4>센토사·유니버설 (4인)</h4><span class="budget-range">500,000 ~ 650,000원</span><span class="budget-note">유니버설+아쿠아리움+워터파크</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🦁</span><div class="budget-info"><h4>동물원·관광 (4인)</h4><span class="budget-range">250,000 ~ 350,000원</span><span class="budget-note">동물원·리버원더스 통합권</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">400,000 ~ 700,000원</span><span class="budget-note">호커·패밀리 레스토랑 혼합</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4인)</h4><span class="budget-range">100,000 ~ 180,000원</span><span class="budget-note">택시·MRT·공항 이동 포함</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">2,850,000 ~ 5,380,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+가족룸+호커) ~ 여유형(FSC+4성 호텔+통합권 4인)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>가족룸·키즈 어메니티·편의 시설이 잘 갖춰진 곳</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>빌리지 호텔 센토사</h3>
+              <p class="hotel-location">📍 센토사 섬 내 · 리조트월드 인근</p>
+              <p>센토사 섬 안 가족형 리조트. 4개 야외 수영장·워터슬라이드. 유니버설·아쿠아리움 도보권으로 아이 동선 편리</p>
+              <div class="hotel-price">가족룸 1박 <strong>S$220~320</strong> (~220,000원~)</div>
+              <div class="hotel-tags"><span>가족룸</span><span>수영장 4개</span><span>Wi-Fi</span><span>센토사 내</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Singapore" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>샹그릴라 싱가포르</h3>
+              <p class="hotel-location">📍 오차드로드 인근</p>
+              <p>넓은 정원·키즈클럽·가족 수영장 완비. 어린이 어메니티·키즈 메뉴 풍부. 믿을 수 있는 럭셔리 브랜드</p>
+              <div class="hotel-price">가족룸 1박 <strong>S$400~600</strong> (~400,000원~)</div>
+              <div class="hotel-tags"><span>키즈클럽</span><span>정원 수영장</span><span>어린이 어메니티</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Singapore" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">테마 특화</span></div>
+            <div class="hotel-body">
+              <h3>페스티브 호텔 (리조트월드 센토사)</h3>
+              <p class="hotel-location">📍 유니버설 도보 3분</p>
+              <p>패밀리 특화 호텔. 벙커베드 가족룸·라군풀. 유니버설·SEA아쿠아리움 코앞. 아이 있는 가족에 최적</p>
+              <div class="hotel-price">가족룸 1박 <strong>S$350~500</strong> (~350,000원~)</div>
+              <div class="hotel-tags"><span>벙커베드룸</span><span>라군풀</span><span>유니버설 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Singapore" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Singapore" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Singapore" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 항공권
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">✈ 항공권</span>
+        <h2>인천 ↔ 싱가포르 항공권</h2>
+        <p>비행시간 약 6시간 20분 · 인천 ICN → 싱가포르 SIN</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">✈ 스쿠트</span></td><td>LCC 직항</td><td>6h 30m</td><td class="price-cell">280,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/SIN/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 제주항공</span></td><td>LCC 직항</td><td>6h 25m</td><td class="price-cell">310,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/SIN/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 싱가포르항공</span></td><td>FSC 직항</td><td>6h 20m</td><td class="price-cell">550,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/SIN/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 아시아나항공</span></td><td>FSC 직항</td><td>6h 25m</td><td class="price-cell">600,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/SIN/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>6h 20m</td><td class="price-cell">650,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/SIN/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aff-cta">
+        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/SIN/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
+        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=SIN&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
+        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DSIN&leg2=from%3DSIN%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>싱가포르 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">💳</span><h3>EZ링크 카드 & MRT</h3><p>공항·MRT역에서 EZ링크 카드 구매(S$10, 잔액 포함). MRT는 깨끗하고 시간 정확. 해외결제 가능한 신용카드로 개찰구 태그도 가능(SimplyGo)</p></div>
+        <div class="tip-card"><span class="tip-icon">🚗</span><h3>그랩(Grab) 활용</h3><p>더울 때·짐 많을 때 그랩 택시가 편리. 앱으로 요금 사전 확정. 공항→시내 약 S$25~30. 가족·심야 이동에 특히 유용</p></div>
+        <div class="tip-card"><span class="tip-icon">🍛</span><h3>호커센터로 식비 절약</h3><p>물가 높은 싱가포르에서 호커센터가 구세주. 맥스웰·라우파삿·차이나타운 컴플렉스에서 S$5~7 한 끼. 레스토랑은 세금+봉사료 17% 별도</p></div>
+        <div class="tip-card"><span class="tip-icon">🚫</span><h3>벌금 문화 주의</h3><p>지하철·거리 껌 씹기, 흡연(지정구역 외), 무단횡단, 음식물 반입 모두 벌금 대상(최대 S$1,000↑). 깨끗한 도시엔 이유가 있음</p></div>
+        <div class="tip-card"><span class="tip-icon">🎟</span><h3>어트랙션 통합권</h3><p>유니버설·SEA아쿠아리움·동물원 등은 클룩·마이리얼트립 사전 예약이 현장보다 저렴. 통합권·콤보권으로 최대 30% 절약</p></div>
+        <div class="tip-card"><span class="tip-icon">🛂</span><h3>무비자 & SG Arrival Card</h3><p>한국 여권 90일 무비자. 단 입국 3일 전부터 전자입국카드(SG Arrival Card) 온라인 사전 제출 필수. 무료·공식 사이트만 이용</p></div>
+        <div class="tip-card"><span class="tip-icon">🌡</span><h3>습도·실내 냉방 대비</h3><p>연중 30°C·습도 80%대. 자외선 차단·물 자주 마시기. 반면 실내·MRT는 냉방 강함 — 얇은 겉옷 필수. 우기 대비 우산도 챙기기</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">✈ 트립가이드</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="tours.html?city=교토">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="tours.html?city=방콕">방콕</a>
+            <a href="tours.html?city=다낭">다낭</a>
+            <a href="tours.html?city=발리">발리</a>
+            <a href="tours.html?city=싱가포르">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="tours.html?city=제주">제주도</a>
+            <a href="tours.html?city=부산">부산</a>
+            <a href="tours.html?city=강릉">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트립가이드 · TripGuide</p>
+        <p style="margin-top:6px"><a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
+    }
+  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+  <script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=1.3521&longitude=103.8198'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FSingapore';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
+</body>
+</html>

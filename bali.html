@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="발리 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 풀빌라를 정리했습니다.">
+  <title>발리 여행 가이드 | 트립가이드</title>
+<link rel="canonical" href="https://travel-guide-cslis07.vercel.app/bali">
+<meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "발리",
+    "url": "https://travel-guide-cslis07.vercel.app/bali",
+    "description": "발리 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 풀빌라",
+    "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
+    "geo": { "@type": "GeoCoordinates", "latitude": -8.4095, "longitude": 115.1889 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트립가이드">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">✈ 트립가이드</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;">🎟 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;">🧳 내 여행</a>
+        <a href="guide.html">📖 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;">✈ 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#166534 0%,#22C55E 45%,#86EFAC 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">🌺</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">🌺 인도네시아 · 발리</span>
+      <h1>발리</h1>
+      <p>신들의 섬 — 우붓·따나롯·꾸따, 힐링과 자연이 공존하는 휴양지</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 덴파사르 약 7시간 직항</small></div>
+        <div class="hero-stat"><strong>💴 환율</strong><small>Rp10,000 ≈ 850원 (2026 기준)</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 1시간 느림 (KST-1)</small></div>
+        <div class="hero-stat"><strong>🌤 추천 시기</strong><small>4~10월 (건기)</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
+      </div>
+      <a href="tours.html?city=발리" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 발리 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
+    <div class="container">
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>나만의 페이스로 즐기는 힐링 혼여행 — 우붓 요가·따나롯 석양·비치클럽</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('solo',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 스미냑 정착</h3><p>덴파사르 공항 도착 후 스미냑으로, 첫날은 선셋 비치클럽에서 여독 풀기</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>✈ 응우라라이 공항(DPS) 도착</h4><p>공항에서 그랩(Grab)/고젝(Gojek) 호출로 스미냑 이동(약 30분, Rp70,000~120,000 · 약 6,000~10,000원). 공항 택시는 정찰제라 다소 비쌈</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>스미냑 도보권 게스트하우스·부티크에 짐 풀기. 혼여행은 조식 포함 부티크가 가성비 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🌅 선셋 비치클럽</h4><p>포테이토 헤드·라 플란차 등 스미냑 해변 비치클럽에서 석양. 칵테일 1잔 Rp90,000~150,000(약 8,000~13,000원). 미리 예약 권장</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🍜 나시고랭 저녁</h4><p>워룽(현지 식당)에서 나시고랭·미고랭(Rp30,000~60,000, 약 3,000~5,000원). 로컬 맛집이 관광지 식당보다 훨씬 저렴</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:30</div><div class="tl-body"><h4>🛵 스미냑 야간 산책</h4><p>에잇 스퀘어·스미냑 스퀘어 주변 카페·바 산책. 혼자여도 안전한 편이지만 밤 스쿠터 이동은 주의</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>우붓 자연 & 힐링</h3><p>라이스테라스·몽키포레스트·요가 — 발리 내륙의 초록빛 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:00</div><div class="tl-body"><h4>🚗 우붓 이동</h4><p>프라이빗 드라이버 하루 대절(8~10시간 Rp600,000~800,000, 약 51,000~68,000원). 혼자면 조인 투어가 더 저렴</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🌾 뜨갈랄랑 라이스테라스</h4><p>계단식 논의 상징적 풍경. 입장료 Rp25,000(약 2,100원)+기부. 정글 스윙·발리 그네(Rp150,000~) 포토존 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🐒 몽키포레스트</h4><p>우붓 중심 원숭이 성역. 입장료 Rp80,000(약 6,800원). 선글라스·모자·먹거리는 원숭이가 채가니 가방 단속 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍲 나시짬뿌르 점심</h4><p>우붓 워룽에서 나시짬뿌르(밥+반찬 모둠, Rp35,000~60,000). 발리 커피(코피 툽룩) 한 잔으로 마무리</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🧘 요가 클래스 & 우붓왕궁</h4><p>요가반 스튜디오 드롭인 클래스(Rp130,000~, 약 11,000원). 이후 우붓왕궁(무료)·전통시장 산책</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🌙 스미냑 복귀</h4><p>드라이버로 스미냑 귀환(약 1.5시간). 저녁은 숙소 근처에서 가볍게, 내일 따나롯 위해 일찍 휴식</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>따나롯 사원 & 짱구</h3><p>바다 위 사원의 석양과 서핑 마을 짱구의 카페 감성</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🏄 짱구 서핑 & 브런치</h4><p>초보 서핑 강습(2시간 Rp350,000~450,000, 약 30,000~38,000원). 이후 짱구 감성 카페에서 브런치(Rp60,000~120,000)</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>☕ 짱구 카페 & 라이스필드</h4><p>더 라운지·크레이트 등 인스타 감성 카페. 짱구는 노마드·서퍼 성지. 오토바이 렌트(하루 Rp70,000~)로 자유롭게</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>⛩ 따나롯 사원</h4><p>바다 위 바위섬 사원. 입장료 Rp60,000(약 5,100원). 발리 최고 석양 명소 — 해질녘 도착 타이밍이 핵심</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🌅 석양 감상</h4><p>사원 실루엣 뒤로 지는 해. 인파가 많으니 30분 전 자리 선점. 삼각대·휴대폰 짐벌 있으면 인생샷</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🍢 사떼 & 바비굴링 저녁</h4><p>귀환 길 워룽에서 사떼(꼬치, Rp30,000~)·바비굴링(돼지통구이, Rp45,000~). 발리 대표 음식으로 하루 마무리</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>울루와뚜 → 귀국</h3><p>절벽 사원 케착 댄스와 꾸따 비치를 끝으로 발리와 작별</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🏖 꾸따 비치 마지막 물놀이</h4><p>공항 근처 꾸따 해변 산책·서핑. 짐은 숙소 또는 공항 락커에 맡기고 가볍게. 서핑보드 렌트 Rp50,000~</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🛍 꾸따 쇼핑 & 점심</h4><p>비치워크·디스커버리몰에서 기념품·발리 커피 원두 쇼핑. 로컬 워룽에서 마지막 나시고랭</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>⛩ 울루와뚜 사원 (선택)</h4><p>절벽 위 사원 + 케착 댄스(공연 Rp150,000, 약 13,000원). 야간 항공이면 방문 후 공항으로, 오후 항공이면 생략</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>그랩/드라이버로 공항 이동. 국제선은 3시간 전 도착 권장. 공항 출국세는 항공권에 대개 포함</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>3박 4일 · 환율 Rp10,000 = 850원 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">400,000 ~ 950,000원</span><span class="budget-note">경유 LCC ~ 직항 FSC</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박)</h4><span class="budget-range">60,000 ~ 300,000원</span><span class="budget-note">게스트하우스 ~ 풀빌라</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚗</span><div class="budget-info"><h4>교통 (드라이버·그랩)</h4><span class="budget-range">60,000 ~ 120,000원</span><span class="budget-note">지역 간 이동 길어 대절 유리</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">80,000 ~ 180,000원</span><span class="budget-note">워룽 ~ 비치클럽 혼합</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">30,000 ~ 70,000원</span><span class="budget-note">사원·라이스테라스 등</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 150,000원</span><span class="budget-note">커피 원두·기념품</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 1인 총 예상 경비</span>
+            <span class="total-amount">680,000 ~ 1,770,000원</span>
+          </div>
+          <span class="total-note">절약형(경유+게스트하우스) ~ 여유형(직항+풀빌라) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기 — 발리는 1박 풀빌라도 가성비 좋음</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>우붓 정글뷰 게스트하우스</h3>
+              <p class="hotel-location">📍 우붓 중심 · 몽키포레스트 도보권</p>
+              <p>논·정글 전망 조식 포함 게스트하우스. 요가·트레킹 접근성 좋고 혼여행자 교류 활발</p>
+              <div class="hotel-price">1박 <strong>Rp250,000~450,000</strong> (~21,000원~)</div>
+              <div class="hotel-tags"><span>정글뷰</span><span>조식 포함</span><span>Wi-Fi</span><span>스쿠터 렌트</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Ubud%20Bali" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>짱구 부티크 서프 스테이</h3>
+              <p class="hotel-location">📍 짱구 · 바뚜볼롱 비치 도보 5분</p>
+              <p>서퍼·디지털노마드 성지 짱구의 부티크 숙소. 공용 수영장·카페 인접, 감성 인테리어</p>
+              <div class="hotel-price">1박 <strong>Rp450,000~750,000</strong> (~38,000원~)</div>
+              <div class="hotel-tags"><span>수영장</span><span>서핑 접근</span><span>카페</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Canggu%20Bali" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">풀빌라</span></div>
+            <div class="hotel-body">
+              <h3>스미냑 프라이빗 풀빌라</h3>
+              <p class="hotel-location">📍 스미냑 · 비치클럽 도보권</p>
+              <p>1인도 부담 없는 소형 프라이빗 풀빌라. 개인 수영장·조식·데일리 클리닝. 발리의 진짜 매력</p>
+              <div class="hotel-price">1박 <strong>Rp900,000~1,600,000</strong> (~77,000원~)</div>
+              <div class="hotel-tags"><span>프라이빗 풀</span><span>조식</span><span>Wi-Fi</span><span>데일리 클리닝</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Seminyak%20Bali" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Bali" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Bali" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>서핑·비치클럽·누사페니다 — 친구들과 즐기는 발리 액티비티 완전 정복</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('friends',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 스미냑 비치클럽</h3><p>발리 도착 첫날, 스미냑·짱구 비치클럽에서 선셋 파티</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>✈ 덴파사르 공항 도착</h4><p>친구 인원수만큼 그랩/블루버드 택시 나눠 타면 1인 부담 적음. 스미냑까지 약 30분</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🏨 풀빌라 체크인</h4><p>2~4인 프라이빗 풀빌라에 짐 풀고 개인 수영장에서 수영. 친구 여행은 빌라 쉐어가 가성비 최고</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍹 포테이토 헤드 비치클럽</h4><p>스미냑 대표 비치클럽. 선셋+DJ+칵테일. 미니멈 차지 있으니 예약 권장. 1인 Rp200,000~350,000(약 17,000~30,000원)</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:30</div><div class="tl-body"><h4>🍖 씨푸드 BBQ 저녁</h4><p>짐바란 해변 씨푸드 그릴 또는 스미냑 레스토랑. 새우·생선 구이. 1인 Rp150,000~250,000</p></div></div>
+            <div class="tl-item"><div class="tl-time">22:00</div><div class="tl-body"><h4>🎶 스미냑 나이트라이프</h4><p>라 파벨라·미친(Mrs Sippy) 등 바 투어. 발리 클럽은 새벽까지. 귀가는 그랩으로 안전하게</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>누사페니다 근교 투어</h3><p>켈링킹 비치·엔젤빌라봉 — 발리 최고 인생샷 스팟</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">07:00</div><div class="tl-body"><h4>⛴ 사누르항 → 누사페니다</h4><p>스피드보트 왕복(약 40분, 왕복 Rp250,000~350,000, 약 21,000~30,000원). 조인 데이투어(입장·차량·점심 포함)가 편리</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🦖 켈링킹 비치</h4><p>티라노사우루스 모양 절벽 해변. 발리 대표 포토존. 해변까지 하산은 가파르니 운동화 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🏊 엔젤빌라봉 & 브로큰 비치</h4><p>천연 인피니티풀 엔젤빌라봉과 브로큰 비치 절벽. 물때 확인 필수. 스노클링 옵션도 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🍱 섬 현지 점심</h4><p>투어 포함 뷔페 또는 워룽. 나시짬뿌르·미고랭. 오후 햇볕 강하니 선크림·물 넉넉히</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>⛴ 발리 본섬 귀환</h4><p>마지막 보트로 사누르 복귀. 파도 높으면 배 멀미약 준비. 저녁은 사누르·스미냑에서 가볍게</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>우붓 액티비티 데이</h3><p>래프팅·라이스테라스·정글 스윙으로 아드레날린 충전</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚣 아융강 래프팅</h4><p>우붓 근교 아융강 화이트워터 래프팅(2시간, 1인 Rp400,000~550,000, 약 34,000~47,000원). 친구끼리 최고 인기 액티비티</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🌾 뜨갈랄랑 라이스테라스 & 정글 스윙</h4><p>계단식 논 배경 발리 그네(Rp150,000~300,000). 커플·친구 사진 명소. 입장료 Rp25,000</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🍲 우붓 워룽 점심</h4><p>바비굴링·나시짬뿌르. 우붓 유명 바비굴링 이부오카(Ibu Oka) 추천. 1인 Rp45,000~70,000</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>💧 띠르따 엠풀 정화의식</h4><p>성수 사원에서 정화의식(믈루카트) 체험. 입장료 Rp75,000. 사롱 대여 포함. 젖을 옷·여벌 준비</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍜 스미냑 복귀 & 저녁</h4><p>드라이버로 귀환. 저녁은 스미냑 감성 레스토랑에서 친구들과 하루 마무리. 1인 Rp120,000~200,000</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>울루와뚜 & 꾸따 → 귀국</h3><p>절벽 사원 케착 댄스와 마지막 쇼핑 후 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🏄 울루와뚜 서핑 스팟 & 절벽</h4><p>세계적 서핑 포인트 울루와뚜. 초보는 관람만, 상급자는 도전. 절벽 카페 싱글핀에서 브런치</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>⛩ 울루와뚜 사원</h4><p>절벽 위 사원. 입장료 Rp50,000. 원숭이 소지품 주의. 낮에도 뷰가 압권</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🛍 꾸따 비치워크 쇼핑</h4><p>비치워크·디스커버리몰에서 마지막 쇼핑. 발리 커피·수제 비누·라탄 소품. 면세는 크지 않으니 참고</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>공항 근처라 이동 20분 내. 국제선 3시간 전 도착. 케착 댄스(석양 공연)는 야간 항공일 때만 추가</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>3박 4일 · 누사페니다·래프팅 포함 · 2인 기준으로 나눈 풀빌라 숙박비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">400,000 ~ 950,000원</span><span class="budget-note">경유 LCC ~ 직항 FSC</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 1인당)</h4><span class="budget-range">90,000 ~ 300,000원</span><span class="budget-note">풀빌라 2인 쉐어 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏄</span><div class="budget-info"><h4>액티비티</h4><span class="budget-range">80,000 ~ 200,000원</span><span class="budget-note">누사페니다·래프팅·서핑</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">100,000 ~ 220,000원</span><span class="budget-note">비치클럽·씨푸드 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚗</span><div class="budget-info"><h4>교통 (드라이버)</h4><span class="budget-range">40,000 ~ 90,000원</span><span class="budget-note">프라이빗 드라이버 인원 분할</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 200,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">760,000 ~ 1,960,000원</span>
+          </div>
+          <span class="total-note">절약형(경유+빌라 쉐어) ~ 여유형(직항+비치클럽+풀 액티비티)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>스미냑·짱구 접근성 좋은 프라이빗 풀빌라 위주</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>짱구 2베드 프라이빗 풀빌라</h3>
+              <p class="hotel-location">📍 짱구 · 서핑 비치 차로 5분</p>
+              <p>개인 수영장 딸린 2베드 빌라. 친구 4명이 나누면 1인당 저렴. 서핑·카페 성지 접근 최고</p>
+              <div class="hotel-price">빌라 1박 <strong>Rp1,300,000~2,000,000</strong> (1인당 ~28,000원~)</div>
+              <div class="hotel-tags"><span>프라이빗 풀</span><span>2베드</span><span>Wi-Fi</span><span>주방</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Canggu%20villa%20Bali" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>스미냑 디자인 풀빌라</h3>
+              <p class="hotel-location">📍 스미냑 · 비치클럽 도보권</p>
+              <p>비치클럽·나이트라이프 접근 최고. 넓은 개인 풀·데일리 조식. 친구 여행 인생샷 명소</p>
+              <div class="hotel-price">빌라 1박 <strong>Rp1,800,000~3,000,000</strong> (1인당 ~38,000원~)</div>
+              <div class="hotel-tags"><span>프라이빗 풀</span><span>조식</span><span>비치클럽 근처</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Seminyak%20villa%20Bali" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">럭셔리</span></div>
+            <div class="hotel-body">
+              <h3>울루와뚜 절벽 리조트</h3>
+              <p class="hotel-location">📍 울루와뚜 · 오션뷰 절벽</p>
+              <p>인도양이 한눈에 들어오는 절벽 리조트. 인피니티풀·선셋뷰. 특별한 날 친구 여행 강력 추천</p>
+              <div class="hotel-price">2인 1박 <strong>Rp2,500,000~4,500,000</strong> (1인당 ~106,000원~)</div>
+              <div class="hotel-tags"><span>오션뷰</span><span>인피니티풀</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Uluwatu%20Bali" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Bali" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Bali" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>아이와 함께하는 발리 — 워터봄·코끼리·라이스테라스 3박 4일</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 누사두아 리조트</h3><p>가족 여행은 안전하고 조용한 누사두아 리조트에 베이스 캠프</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 덴파사르 공항 도착</h4><p>짐 많은 가족은 리조트 픽업 차량(사전 예약, 편도 Rp150,000~250,000) 추천. 카시트 필요 시 미리 요청</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🏨 누사두아 리조트 체크인</h4><p>가족룸·키즈풀 완비 리조트. 공항 20분 거리로 아이 이동 부담 적음. 짐 풀고 리조트 수영장에서 물놀이</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🏖 누사두아 비치 산책</h4><p>파도 잔잔하고 깨끗한 가족 친화 해변. 아이와 모래놀이·조개 줍기. 워터스포츠 부스도 많음</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍽 패밀리 레스토랑 저녁</h4><p>바쿠셔몰·리조트 내 레스토랑. 나시고랭·볶음밥·과일주스 등 아이 입맛 무난. 4인 Rp350,000~600,000</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🛌 일찍 휴식</h4><p>첫날은 시차·이동 피로로 일찍 취침. 내일 워터봄을 위해 컨디션 조절. 모기 기피제 준비</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>워터봄 발리 — 아이가 사랑할 하루</h3><p>아시아 최고 워터파크에서 온종일 물놀이</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🎢 워터봄 발리 입장</h4><p>꾸따 소재 아시아 톱 워터파크. 입장료 어른 Rp595,000 / 어린이 Rp495,000(약 50,000원/42,000원). 개장 시각 도착이 여유로움</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🌊 슬라이드 & 유수풀</h4><p>스릴 슬라이드부터 아이용 키즈존까지 다양. 라커·튜브 대여. 열대 정원 속이라 그늘도 충분</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍔 파크 내 점심</h4><p>워터봄 내 푸드코트에서 가족 점심. 외부 음식 반입 제한이니 참고. 4인 Rp300,000~500,000</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🏊 오후 물놀이 & 휴식</h4><p>선베드에서 부모 교대 휴식. 아이는 얕은 풀에서 안전하게. 자외선 강하니 래시가드·선크림 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🛍 꾸따 비치워크 & 저녁</h4><p>워터봄 인근 비치워크몰에서 저녁·쇼핑. 아이 기념품·발리 커피. 리조트 복귀 후 일찍 휴식</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>우붓 자연 & 동물 체험</h3><p>라이스테라스·코끼리 보호구역으로 온 가족 힐링</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚗 우붓 이동 (드라이버 대절)</h4><p>가족은 프라이빗 드라이버 하루 대절(Rp700,000~900,000, 약 60,000~77,000원)이 가장 편함. 카시트 요청 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🐘 마스 코끼리 보호구역</h4><p>구조된 코끼리 먹이주기·목욕 체험(패키지 Rp400,000~, 약 34,000원~). 아이들 최애 프로그램. 윤리적 보호구역 선택</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🌾 뜨갈랄랑 라이스테라스 점심</h4><p>계단식 논 뷰 레스토랑에서 가족 점심. 나시짬뿌르·볶음면. 발리 그네는 아이 키·안전 확인 후 선택</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>🐒 몽키포레스트 (선택)</h4><p>원숭이 성역. 어린 아이는 원숭이가 다가올 수 있으니 손 꼭 잡고 소지품 주의. 입장 어른 Rp80,000</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🍜 누사두아 복귀 & 저녁</h4><p>드라이버로 리조트 귀환(약 1.5시간). 아이 피곤하면 리조트 내에서 저녁. 조식 뷔페 다음날 대비 일찍 취침</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>따나롯 → 마지막 쇼핑 → 귀국</h3><p>바다 위 사원 구경 후 기념품 쇼핑, 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>⛩ 따나롯 사원 (낮)</h4><p>바다 위 사원. 입장료 어른 Rp60,000 / 어린이 Rp30,000. 낮에는 인파 적고 아이와 산책하기 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🛍 꾸따·짐바란 쇼핑</h4><p>비치워크·디스커버리몰에서 마지막 쇼핑. 발리 커피 원두·라탄 가방·수제 비누 등 가족 기념품</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🦐 짐바란 씨푸드 점심</h4><p>짐바란 해변 씨푸드 그릴에서 마지막 발리 만찬. 새우·생선 구이. 4인 Rp400,000~700,000</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이 동반 가족은 3시간 전 공항 도착 권장. 짐바란·꾸따에서 공항까지 20~30분. 리조트 픽업 차량 이용 편리</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>3박 4일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">1,600,000 ~ 3,600,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 리조트·빌라)</h4><span class="budget-range">450,000 ~ 1,200,000원</span><span class="budget-note">4인 가족룸·풀빌라 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎢</span><div class="budget-info"><h4>액티비티 (4인)</h4><span class="budget-range">150,000 ~ 350,000원</span><span class="budget-note">워터봄·코끼리·사원</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">350,000 ~ 700,000원</span><span class="budget-note">4인 1끼 Rp350,000~700,000</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚗</span><div class="budget-info"><h4>교통 (프라이빗 드라이버)</h4><span class="budget-range">200,000 ~ 400,000원</span><span class="budget-note">4일 대절·픽업 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">100,000 ~ 300,000원</span><span class="budget-note">기념품·커피 원두</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">2,850,000 ~ 6,550,000원</span>
+          </div>
+          <span class="total-note">절약형(경유+가족룸) ~ 여유형(직항+풀빌라+프라이빗 드라이버)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>키즈풀·가족룸·안전한 위치의 리조트와 풀빌라</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>누사두아 패밀리 리조트</h3>
+              <p class="hotel-location">📍 누사두아 · 비치 도보 5분</p>
+              <p>파도 잔잔한 누사두아의 가족 친화 리조트. 키즈풀·조식 뷔페·넓은 가족룸. 안전하고 조용</p>
+              <div class="hotel-price">가족룸 1박 <strong>Rp1,200,000~2,000,000</strong> (~102,000원~)</div>
+              <div class="hotel-tags"><span>키즈풀</span><span>가족룸</span><span>조식 뷔페</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Nusa%20Dua%20Bali" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>스미냑 4인 프라이빗 풀빌라</h3>
+              <p class="hotel-location">📍 스미냑 · 비치 차로 5분</p>
+              <p>개인 수영장 딸린 2~3베드 풀빌라. 아이가 눈치 없이 물놀이 가능. 주방·데일리 조식 서비스</p>
+              <div class="hotel-price">빌라 1박 <strong>Rp2,000,000~3,500,000</strong> (~170,000원~)</div>
+              <div class="hotel-tags"><span>프라이빗 풀</span><span>2~3베드</span><span>주방</span><span>데일리 조식</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Seminyak%20villa%20Bali" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">럭셔리</span></div>
+            <div class="hotel-body">
+              <h3>누사두아 5성 비치 리조트</h3>
+              <p class="hotel-location">📍 누사두아 · 프라이빗 비치</p>
+              <p>키즈클럽·워터슬라이드·프라이빗 비치 완비 5성 리조트. 아이 프로그램 풍부, 부모는 스파로 휴식</p>
+              <div class="hotel-price">가족룸 1박 <strong>Rp3,500,000~6,000,000</strong> (~298,000원~)</div>
+              <div class="hotel-tags"><span>키즈클럽</span><span>워터슬라이드</span><span>프라이빗 비치</span><span>스파</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Nusa%20Dua%20resort%20Bali" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Bali" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Bali" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 항공권
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">✈ 항공권</span>
+        <h2>인천 ↔ 발리 (덴파사르) 항공권</h2>
+        <p>비행시간 직항 약 7시간 · 인천 ICN → 덴파사르 DPS</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">✈ 에어아시아</span></td><td>LCC 경유</td><td>10~14h</td><td class="price-cell">380,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/DPS/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 스쿠트</span></td><td>LCC 경유</td><td>11~15h</td><td class="price-cell">420,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/DPS/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 싱가포르항공</span></td><td>FSC 경유</td><td>12~16h</td><td class="price-cell">650,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/DPS/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 가루다인도네시아</span></td><td>FSC 직항</td><td>7h 05m</td><td class="price-cell">700,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/DPS/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>7h 00m</td><td class="price-cell">750,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/DPS/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aff-cta">
+        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/DPS/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
+        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=DPS&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
+        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DDPS&leg2=from%3DDPS%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>발리 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">🚕</span><h3>그랩·고젝 앱 필수</h3><p>택시 바가지를 피하려면 그랩(Grab)·고젝(Gojek) 앱으로 정찰 요금 호출. 오토바이 택시(고젝 바이크)는 더 저렴. 일부 관광지는 픽업 제한 구역 있음</p></div>
+        <div class="tip-card"><span class="tip-icon">💵</span><h3>환전은 시내 공식 환전소</h3><p>달러·원화 지참 후 시내 공식 환전소(PT 인가) 이용이 공항보다 유리. 무허가 환전소 계산 사기 주의 — 앞에서 직접 세어 확인. ATM 인출도 가능</p></div>
+        <div class="tip-card"><span class="tip-icon">🧣</span><h3>사원엔 사롱 착용</h3><p>따나롯·울루와뚜·띠르따 엠풀 등 사원 입장 시 사롱(허리 천)·어깨 가리개 필수. 대개 입구에서 무료·소액 대여. 노출 복장은 제한</p></div>
+        <div class="tip-card"><span class="tip-icon">🛵</span><h3>스쿠터엔 국제면허</h3><p>스쿠터 렌트(하루 Rp70,000~) 시 국제운전면허증 필수. 미소지 시 경찰 단속·벌금. 헬멧 착용 의무. 도로 사정 험하니 초보는 드라이버 권장</p></div>
+        <div class="tip-card"><span class="tip-icon">🌧</span><h3>우기(11~3월) 참고</h3><p>11~3월은 우기로 소나기·습도 높음. 4~10월 건기가 최적. 우기에도 하루 종일 비는 드물지만 방수 대비·실내 액티비티 여유 있게</p></div>
+        <div class="tip-card"><span class="tip-icon">🏝</span><h3>풀빌라 가성비 활용</h3><p>발리는 프라이빗 풀빌라가 호텔 대비 가성비 훌륭. 인원이 많을수록 1인 부담↓. 위치(우붓 정글/스미냑 비치)·조식 포함 여부 확인 후 예약</p></div>
+        <div class="tip-card"><span class="tip-icon">🍹</span><h3>비치클럽은 예약 권장</h3><p>포테이토 헤드·라 브리사 등 인기 비치클럽은 선셋 시간 만석. 데이베드는 미니멈 차지·사전 예약 필수. 현금·카드 모두 준비</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">✈ 트립가이드</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="tours.html?city=교토">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="tours.html?city=방콕">방콕</a>
+            <a href="tours.html?city=다낭">다낭</a>
+            <a href="bali.html">발리</a>
+            <a href="tours.html?city=싱가포르">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="tours.html?city=제주">제주도</a>
+            <a href="tours.html?city=부산">부산</a>
+            <a href="tours.html?city=강릉">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트립가이드 · TripGuide</p>
+        <p style="margin-top:6px"><a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
+    }
+  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+  <script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=-8.4095&longitude=115.1889'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FMakassar';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
+</body>
+</html>

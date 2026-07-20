@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="파리 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
+  <title>파리 여행 가이드 | 트립가이드</title>
+<link rel="canonical" href="https://travel-guide-cslis07.vercel.app/paris">
+<meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "파리",
+    "url": "https://travel-guide-cslis07.vercel.app/paris",
+    "description": "파리 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
+    "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
+    "geo": { "@type": "GeoCoordinates", "latitude": 48.8566, "longitude": 2.3522 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트립가이드">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">✈ 트립가이드</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;">🎟 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;">🧳 내 여행</a>
+        <a href="guide.html">📖 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;">✈ 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#1E3A5F 0%,#3B6BA5 45%,#7CA9D9 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">🗼</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">🗼 프랑스 · 파리</span>
+      <h1>파리</h1>
+      <p>낭만의 수도 — 에펠탑·루브르·몽마르뜨, 예술과 미식이 흐르는 유럽 여행의 정점</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 파리 약 14시간 직항</small></div>
+        <div class="hero-stat"><strong>💶 환율</strong><small>€1 ≈ 1,450원 (2026 기준)</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 7시간 느림 (KST-7, 서머타임)</small></div>
+        <div class="hero-stat"><strong>🌸 추천 시기</strong><small>4~6월, 9~10월</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
+      </div>
+      <a href="tours.html?city=파리" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 파리 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
+    <div class="container">
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>나만의 페이스로 즐기는 혼여행 코스 — 미술관·카페·산책 자유롭게</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('solo',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 에펠탑 야경</h3><p>장거리 비행 후 도착, 첫날 밤은 파리의 상징 에펠탑 반짝임으로</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>✈ 샤를드골 공항(CDG) 도착</h4><p>RER B선(€11.80, 약 35분)으로 시내 이동. 짐 많으면 웰컴 픽업·공항버스(르뷔스 디렉트 €16)도 편리</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>1~2구(루브르·오페라) 도보권 숙소에 짐 풀기. 혼여행은 부티크 호텔·호스텔이 가성비 최고</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🥖 동네 비스트로 저녁</h4><p>스테이크 프리트·어니언 수프에 하우스 와인 한 잔(플라 뒤 주르 €16~22). 혼밥 부담 없는 카운터석 추천</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body"><h4>🗼 에펠탑 야경 & 샹드마르스</h4><p>매시 정각 5분간 반짝이는 조명쇼. 트로카데로 광장이 최고의 포토존. 잔디밭 샹드마르스에서 여유롭게 감상(무료)</p></div></div>
+            <div class="tl-item"><div class="tl-time">22:00</div><div class="tl-body"><h4>☕ 야간 카페 & 산책</h4><p>세느강변 산책 후 노천 카페에서 에스프레소(€2~3). 혼자만의 파리 첫 밤을 천천히 음미</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>루브르 + 오르세 미술관</h3><p>세계 최고의 미술관 두 곳을 하루에 — 뮤지엄 패스로 알차게</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🖼 루브르 박물관</h4><p>모나리자·밀로의 비너스·나폴레옹 대관식. 입장 €22(뮤지엄 패스 포함). 개장 직후 입장해 모나리자 먼저, 오전 2~3시간 집중</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🌳 튈르리 정원 & 점심</h4><p>루브르~콩코르드 잇는 정원 산책. 노점 크레페(€4~6) 또는 근처 브라스리 점심. 벤치에서 파리지앵처럼 휴식</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🎨 오르세 미술관</h4><p>옛 기차역을 개조한 인상파의 성지. 입장 €16. 모네·르누아르·반 고흐·드가. 5층 대형 시계창 포토존 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🌉 세느강변 & 생제르맹</h4><p>퐁데자르(사랑의 다리) 건너 생제르맹데프레로. 카페 드 플로르·레 되 마고 등 문학 카페 거리 산책</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🐌 에스카르고 저녁</h4><p>정통 프렌치 비스트로에서 에스카르고(달팽이 요리, €12~16)·오리 콩피. 와인과 함께 혼자 즐기는 미식 코스</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>몽마르뜨 + 개선문·샹젤리제</h3><p>언덕 위 예술가 마을과 파리 최고의 대로를 하루에</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>⛪ 사크레쾨르 성당 & 몽마르뜨</h4><p>파리 최고점 언덕 위 하얀 성당(입장 무료). 계단 대신 푸니쿨라(메트로 티켓 €2.15) 이용. 테라스에서 파리 전경 조망</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🎨 테르트르 광장 & 골목</h4><p>초상화 화가들이 모인 예술가 광장. 아멜리에 촬영지 카페 '레 되 물랭', 좁은 골목 감성 산책</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🧀 크레페 점심 & 치즈</h4><p>몽마르뜨 크레페리에서 갈레트(메밀 크레페) + 시드르(€12~16). 프로마주리에서 치즈 한 조각 맛보기</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🏛 개선문 전망대</h4><p>나폴레옹 개선문 옥상 전망대(€16). 12갈래 방사형 도로가 뻗은 에투알 광장의 장관. 계단 284개 주의</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🛍 샹젤리제 거리 & 마카롱</h4><p>개선문~콩코르드 잇는 파리 최고의 대로. 라뒤레·피에르 에르메 마카롱(6개 €18~) 쇼핑. 세포라·플래그십 매장 구경</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>시테섬 → 귀국</h3><p>노트르담·생트샤펠 둘러본 뒤 마지막 미식과 함께 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>⛪ 노트르담 대성당 & 시테섬</h4><p>재개장한 고딕 대성당(외관·광장 무료). 근처 생트샤펠 스테인드글라스(€13)는 파리 최고의 숨은 명소</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🚢 바토무슈 세느강 유람선</h4><p>에펠탑·루브르·오르세를 강 위에서 한 번에. 1시간 코스 €16. 파리 명소를 마지막으로 눈에 담기 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🥐 마지막 브런치 & 기념품</h4><p>크루아상·카페오레로 마무리(€8~12). 갤러리 라파예트 옥상 무료 전망, 프랑스산 버터·차·초콜릿 기념품 구매</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>RER B선 또는 공항버스로 CDG 이동. 세금 환급(택스리펀드) 키오스크는 출국 3시간 전 여유 있게. EU 출국 심사 대기 긺</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>3박 4일 · 환율 €1 = 1,450원 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">750,000 ~ 1,800,000원</span><span class="budget-note">경유 특가 ~ 직항 성수기</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박)</h4><span class="budget-range">240,000 ~ 600,000원</span><span class="budget-note">호스텔 ~ 부티크 호텔</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4일)</h4><span class="budget-range">40,000 ~ 70,000원</span><span class="budget-note">나비고 이지 + 공항 왕복</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🥐</span><div class="budget-info"><h4>식비</h4><span class="budget-range">150,000 ~ 280,000원</span><span class="budget-note">1끼 €12~30 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">100,000 ~ 150,000원</span><span class="budget-note">뮤지엄 패스·에펠탑 등</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">100,000 ~ 400,000원</span><span class="budget-note">마카롱·향수·기념품</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 1인 총 예상 경비</span>
+            <span class="total-amount">1,380,000 ~ 3,300,000원</span>
+          </div>
+          <span class="total-note">절약형(경유+호스텔) ~ 여유형(직항+부티크 호텔) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>제너레이터 파리 (호스텔)</h3>
+              <p class="hotel-location">📍 10구 · 콜론셀 파비앙역 도보 3분</p>
+              <p>운하 옆 세련된 디자인 호스텔. 1인 도미토리·루프탑 바로 여행자 교류 활발. 혼여행 가성비 최고</p>
+              <div class="hotel-price">1박 <strong>€45~75</strong> (~65,000원~)</div>
+              <div class="hotel-tags"><span>도미토리</span><span>루프탑 바</span><span>Wi-Fi</span><span>조식 옵션</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Paris" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>호텔 조프루아 (부티크)</h3>
+              <p class="hotel-location">📍 10구 · 가르 드 레스트역 도보 5분</p>
+              <p>아담한 프렌치 감성 부티크 호텔. 1인실 깔끔하고 교통 편리. 몽마르뜨·오페라 접근성 좋음</p>
+              <div class="hotel-price">1박 <strong>€90~140</strong> (~130,000원~)</div>
+              <div class="hotel-tags"><span>싱글룸</span><span>조식</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Paris" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
+            <div class="hotel-body">
+              <h3>시티즌엠 파리 오페라</h3>
+              <p class="hotel-location">📍 9구 · 오페라 가르니에 도보 5분</p>
+              <p>스마트 체크인·킹사이즈 침대의 도심 감각 호텔. 루브르·백화점 도보권. 혼자 편하게 머물기 좋음</p>
+              <div class="hotel-price">1박 <strong>€150~230</strong> (~220,000원~)</div>
+              <div class="hotel-tags"><span>더블룸</span><span>스마트 체크인</span><span>Wi-Fi</span><span>중심가</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Paris" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Paris" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Paris" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>같이 걷고 먹고 사진 찍는 파리 완전 정복 — 베르사유 근교까지</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('friends',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 에펠탑 & 세느강 유람선</h3><p>파리 첫날, 상징 명소로 분위기 잡고 야경 유람선까지</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>✈ 샤를드골 공항(CDG) 도착</h4><p>RER B선(€11.80) 또는 공항버스(르뷔스 디렉트 €16)로 시내 이동. 나비고 이지 카드는 공항 자판기에서 바로 구매</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🗼 에펠탑 전망대</h4><p>친구끼리 꼭대기 전망대(€29)까지. 트로카데로 광장 점프샷·단체 사진 필수. 매시 정각 반짝임쇼 타이밍 맞추기</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🍷 비스트로 저녁 & 와인</h4><p>스테이크 프리트·치즈 플래터에 보르도 와인 한 병 나눠 마시기(1인 €25~35). 파리 첫 밤 건배</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:30</div><div class="tl-body"><h4>🚢 바토무슈 야간 유람선</h4><p>불 밝힌 에펠탑·루브르·노트르담을 강 위에서(€16). 파리 야경 명소를 한 번에 담는 최고의 코스</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>루브르 → 마레지구 감성 투어</h3><p>세계 최고 미술관과 파리에서 가장 힙한 동네를 하루에</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🖼 루브르 박물관</h4><p>모나리자·비너스·유리 피라미드 인증샷(€22). 사전 온라인 예약 필수. 하이라이트만 2시간 압축 관람</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🎨 오랑주리 미술관</h4><p>모네 '수련' 대형 파노라마 전시관(€12.5). 튈르리 정원 안 아담한 미술관. 사진 명소로 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🥙 마레지구 점심 & 팔라펠</h4><p>유대인 거리 로지에의 명물 팔라펠(€8~10). 줄 서는 라스 뒤 팔라펠 강추. 골목마다 빈티지숍·편집숍</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🛍 보주 광장 & 편집숍 쇼핑</h4><p>파리에서 가장 오래된 아름다운 광장. 주변 셀렉트숍·향수·소품 쇼핑. 친구끼리 감성 사진 명당</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍸 오베르캄프 바 거리</h4><p>파리 젊은이들의 밤 거리. 크래프트 비어·칵테일 바 순회. 1인 음료 €8~12. 늦게까지 활기찬 분위기</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>베르사유 궁전 당일치기</h3><p>파리 근교 최고의 궁전 — 화려한 거울의 방과 정원</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚆 베르사유 이동</h4><p>RER C선 종점 베르사유 리브고슈역까지 약 40분(€3.65). 개장 직후 입장해야 거울의 방 인파 피함</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🏰 궁전 내부 & 거울의 방</h4><p>루이 14세의 절대왕정 궁전. 파스포트 통합권 €32(정원 분수쇼 포함). 거울의 방·왕의 침실 화려함의 극치</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🌷 정원 & 대운하 피크닉</h4><p>광활한 프랑스식 정원. 여름 분수쇼(뮤지컬 파운틴). 대운하에서 보트(€18/시간) 또는 잔디 피크닉</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🍽 마리 앙투아네트의 촌락</h4><p>정원 끝 왕비의 전원 마을·트리아농 궁. 자전거 대여(€8~)로 넓은 부지 돌기. 파리 귀환</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🧀 라클렛·퐁뒤 저녁</h4><p>파리 복귀 후 치즈 녹여 먹는 라클렛·퐁뒤 전문점(1인 €22~28). 친구끼리 나눠 먹기 딱 좋은 프렌치 겨울 별미</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>몽마르뜨 → 샹젤리제 쇼핑 → 귀국</h3><p>마지막 날 언덕 감성과 대로 쇼핑으로 마무리</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>⛪ 사크레쾨르 & 몽마르뜨</h4><p>언덕 위 하얀 성당(무료)·테르트르 광장 화가들. 좁은 골목·계단에서 파리 감성 인생샷. 크루아상 아침</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🛍 갤러리 라파예트 백화점</h4><p>돔형 스테인드글라스 천장이 압권. 명품·화장품·프랑스 브랜드. 옥상 무료 전망대에서 파리 파노라마</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍰 마카롱 & 마지막 점심</h4><p>피에르 에르메·라뒤레 마카롱 선물 세트(€18~). 근처 브라스리에서 마지막 프렌치 점심</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>세금 환급 키오스크(€100 이상 구매 시)는 여유 있게. RER B선/공항버스로 CDG. 출국 3시간 전 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>3박 4일 · 베르사유 포함 · 2인 기준으로 나눈 숙박비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">750,000 ~ 1,800,000원</span><span class="budget-note">경유 특가 ~ 직항 성수기</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 1인당)</h4><span class="budget-range">200,000 ~ 500,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>입장·투어</h4><span class="budget-range">120,000 ~ 180,000원</span><span class="budget-note">에펠탑·베르사유·미술관</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🥐</span><div class="budget-info"><h4>식비</h4><span class="budget-range">180,000 ~ 320,000원</span><span class="budget-note">비스트로·바 4일 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통</h4><span class="budget-range">45,000 ~ 80,000원</span><span class="budget-note">베르사유 RER 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">150,000 ~ 500,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">1,445,000 ~ 3,380,000원</span>
+          </div>
+          <span class="total-note">절약형(경유+2인 쉐어) ~ 여유형(직항+4성 호텔) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>중심가 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>호텔 가브리엘 파리</h3>
+              <p class="hotel-location">📍 10구 · 레퓌블리크 광장 도보 5분</p>
+              <p>세련된 트윈룸 중급 호텔. 마레·오베르캄프 나이트라이프 접근 최고. 친구 여행 이동 편한 위치</p>
+              <div class="hotel-price">2인 1박 <strong>€120~170</strong> (1인당 ~90,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>Wi-Fi</span><span>지하철 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Paris" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>호텔 두 마레</h3>
+              <p class="hotel-location">📍 3구 마레지구 중심</p>
+              <p>파리에서 가장 힙한 마레 한복판. 감성 인테리어 트윈룸. 편집숍·카페·바 도보권으로 친구 여행 최적</p>
+              <div class="hotel-price">2인 1박 <strong>€180~250</strong> (1인당 ~135,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>마레 중심</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Paris" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">뷰 특화</span></div>
+            <div class="hotel-body">
+              <h3>퓔만 파리 투르 에펠</h3>
+              <p class="hotel-location">📍 7구 · 에펠탑 도보 5분</p>
+              <p>일부 객실에서 에펠탑 직관. 친구끼리 창밖 에펠탑 반짝임 감상. 특별한 파리 기념일 여행에 인기</p>
+              <div class="hotel-price">2인 1박 <strong>€280~420</strong> (1인당 ~205,000원~)</div>
+              <div class="hotel-tags"><span>에펠탑 뷰</span><span>트윈룸</span><span>피트니스</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Paris" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Paris" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Paris" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>4박 5일 추천 일정</h2>
+          <p>아이와 함께하는 파리 — 디즈니랜드·에펠탑·베르사유 4박 5일</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
+          <button class="day-tab" onclick="showDay('family',5,this)">5일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 에펠탑 & 샹드마르스</h3><p>장거리 비행 후 도착, 첫날은 무리 없이 에펠탑 잔디밭에서</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>✈ 샤를드골 공항(CDG) 도착</h4><p>짐 많은 가족은 공항 택시(정액제 우안 €56/좌안 €65) 또는 웰컴 픽업 추천. 유모차는 짐칸 활용</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🏨 숙소 체크인 & 휴식</h4><p>가족룸에 짐 풀고 아이 컨디션 회복. 시차 적응을 위해 첫날은 가볍게. 근처 마트에서 물·간식 장보기</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🗼 에펠탑 & 샹드마르스 잔디밭</h4><p>잔디밭에서 아이와 여유롭게 에펠탑 감상(무료). 매시 정각 반짝임쇼에 아이들 환호. 무리한 전망대 등반은 다음날로</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:30</div><div class="tl-body"><h4>🍕 패밀리 레스토랑 저녁</h4><p>아이 입맛에 맞는 크레페·파스타·감자튀김(플라 뒤 주르 €12~18). 일찍 귀숙해 내일 디즈니랜드 충전</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>디즈니랜드 파리 — 아이 평생 기억할 하루</h3><p>유럽 유일 디즈니랜드에서 온종일 동심 폭발</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚆 디즈니랜드 이동</h4><p>RER A선 종점 마른라발레-쉐시역까지 약 45분(€8.45). 개장 전 도착해 인기 어트랙션 먼저. 티켓은 공식 앱 사전 구매</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🏰 디즈니랜드 파크</h4><p>잠자는 숲속의 공주 성·잇츠 어스몰월드·피터팬. 1일 1파크 €62~(성수기 변동). 프리미어 액세스로 대기 단축 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍔 파크 내 점심 & 퍼레이드</h4><p>캐릭터 다이닝 또는 퀵서비스(1인 €15~25). 오후 디즈니 퍼레이드는 아이 최애. 자리 미리 잡기</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🎢 월트 디즈니 스튜디오</h4><p>파크 옵션 추가 시 라따뚜이 라이드·어벤져스 캠퍼스. 아이 키 제한 확인. 굿즈숍에서 기념품</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🎆 야간 불꽃쇼 & 귀숙</h4><p>성 위로 펼쳐지는 디즈니 일루미네이션 불꽃쇼로 하루 마무리. RER A선으로 파리 귀환</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>루브르 → 세느강 유람선</h3><p>세계 최고 미술관을 아이 눈높이로, 오후엔 강 위 유람</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🖼 루브르 박물관 (하이라이트)</h4><p>모나리자·비너스·유리 피라미드만 골라 1.5시간 압축(어른 €22, 18세 미만 무료). 아이용 오디오가이드로 흥미 유발</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🎠 튈르리 정원 & 회전목마</h4><p>정원 내 회전목마·트램폴린(€3~5)으로 아이 에너지 발산. 벤치 점심 피크닉. 여름엔 놀이공원도 열림</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🚢 바토무슈 세느강 유람선</h4><p>에펠탑·오르세·노트르담을 앉아서 관람(어른 €16, 어린이 €8). 유모차·아이와 이동 없이 명소 감상 최고</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🍦 트로카데로 & 아이스크림</h4><p>에펠탑 정면 트로카데로 광장에서 가족 사진. 베르티용 아이스크림(€4~6)으로 간식 타임</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍝 이른 저녁 & 귀숙</h4><p>아이 친화 브라스리에서 이른 저녁. 크로크무슈·파스타·감자튀김. 일찍 쉬고 내일 베르사유 대비</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>베르사유 궁전 & 정원</h3><p>넓은 정원에서 아이들 뛰놀기 좋은 궁전 나들이</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🚆 베르사유 이동</h4><p>RER C선 베르사유 리브고슈역 약 40분(€3.65). 유모차 동반 가능. 오전 일찍 가야 궁전 인파 피함</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:30</div><div class="tl-body"><h4>🏰 궁전 내부 & 거울의 방</h4><p>거울의 방·왕의 침실 화려함(어른 €21, 18세 미만 무료). 아이는 짧게 둘러본 뒤 정원으로 이동이 정답</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🚲 정원 & 대운하 자전거·보트</h4><p>광활한 정원에서 자전거(€8~)·전동카트, 대운하 보트(€18/시간). 여름 분수쇼 시간대. 잔디 피크닉 명소</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🐑 마리 앙투아네트 촌락</h4><p>왕비의 전원 마을에 진짜 양·염소가 있어 아이들 좋아함. 트리아농 정원 산책 후 파리 귀환</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🧀 라클렛 가족 저녁</h4><p>치즈 녹여 감자·햄에 얹어 먹는 라클렛(1인 €22~28). 아이도 좋아하는 인터랙티브 프렌치 식사</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day5">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 5</span>
+            <div><h3>자연사박물관 → 마지막 쇼핑 → 귀국</h3><p>공룡·동물 박물관으로 마무리하고 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🦕 국립자연사박물관 대진화관</h4><p>거대 고래 골격·동물 행렬 전시로 아이 인기 폭발(어른 €13, 어린이 €10). 식물원(자르댕 데 플랑트) 산책 겸</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🛍 백화점·마트 마지막 쇼핑</h4><p>갤러리 라파예트·모노프리에서 프랑스 초콜릿·버터·아이 옷·기념품. 옥상 무료 전망대에서 가족 사진</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🥐 마지막 브런치</h4><p>크루아상·팽오쇼콜라·카페오레로 파리 마지막 식사(가족 €30~50). 아이 좋아하는 크레페 한 판 추가</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이 동반 가족은 3시간 전 공항 도착 권장. 택시·웰컴 픽업이 짐 많을 때 가장 편함. 세금 환급 잊지 말기</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>4박 5일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">2,800,000 ~ 6,000,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (4박 · 가족룸)</h4><span class="budget-range">800,000 ~ 1,600,000원</span><span class="budget-note">4인 가족룸/아파트 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏰</span><div class="budget-info"><h4>디즈니랜드 (4인)</h4><span class="budget-range">380,000 ~ 550,000원</span><span class="budget-note">1일권 €62~ (성수기 변동)</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장 (4인)</h4><span class="budget-range">150,000 ~ 250,000원</span><span class="budget-note">18세 미만 미술관 무료</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🥐</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">600,000 ~ 1,000,000원</span><span class="budget-note">4인 1끼 €50~90</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4인)</h4><span class="budget-range">150,000 ~ 280,000원</span><span class="budget-note">공항 택시·근교 RER 포함</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">4박 5일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">4,880,000 ~ 9,680,000원</span>
+          </div>
+          <span class="total-note">절약형(경유+아파트+대중교통) ~ 여유형(직항+4성 호텔+프리미어 액세스)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>가족룸·주방·편의 시설이 잘 갖춰진 곳</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>시티즌 아파트먼트 파리 (레지던스)</h3>
+              <p class="hotel-location">📍 15구 · 몽파르나스 인근</p>
+              <p>주방·세탁기 갖춘 아파트형 레지던스. 아이 이유식·간식 조리 가능. 마트 인접해 장기 가족 여행 경제적</p>
+              <div class="hotel-price">가족룸 1박 <strong>€140~200</strong> (~205,000원~)</div>
+              <div class="hotel-tags"><span>주방</span><span>세탁기</span><span>가족룸</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Paris" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>노보텔 파리 레 알</h3>
+              <p class="hotel-location">📍 1구 · 루브르·시테섬 도보권</p>
+              <p>아이 동반에 친화적인 패밀리 브랜드. 가족룸·키즈 어메니티·조식 뷔페. 중심가라 어디든 이동 편함</p>
+              <div class="hotel-price">가족룸 1박 <strong>€220~320</strong> (~320,000원~)</div>
+              <div class="hotel-tags"><span>가족룸</span><span>조식 뷔페</span><span>중심가</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Paris" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">디즈니 특화</span></div>
+            <div class="hotel-body">
+              <h3>디즈니 호텔 뉴포트 베이 클럽</h3>
+              <p class="hotel-location">📍 디즈니랜드 파리 셔틀 5분</p>
+              <p>디즈니 공식 호텔. 파크 얼리 입장 특전·캐릭터 조식. 디즈니 일정 있는 가족에게 압도적 편의</p>
+              <div class="hotel-price">가족룸 1박 <strong>€250~400</strong> (~360,000원~)</div>
+              <div class="hotel-tags"><span>파크 얼리입장</span><span>캐릭터 조식</span><span>수영장</span><span>셔틀</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Disneyland+Paris" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Paris" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Paris" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 항공권
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">✈ 항공권</span>
+        <h2>인천 ↔ 파리 (샤를드골) 항공권</h2>
+        <p>직항 비행시간 약 14시간 · 인천 ICN → 파리 CDG</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">✈ 카타르항공</span></td><td>경유(도하)</td><td>18~22h</td><td class="price-cell">750,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CDG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 에미레이트항공</span></td><td>경유(두바이)</td><td>19~23h</td><td class="price-cell">820,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CDG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 에어프랑스</span></td><td>FSC 직항</td><td>13h 30m</td><td class="price-cell">1,250,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CDG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>14h 00m</td><td class="price-cell">1,350,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CDG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 아시아나항공</span></td><td>FSC 직항</td><td>14h 05m</td><td class="price-cell">1,380,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CDG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aff-cta">
+        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/CDG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
+        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=CDG&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
+        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DCDG&leg2=from%3DCDG%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>파리 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">🎫</span><h3>파리 뮤지엄 패스</h3><p>루브르·오르세·개선문·베르사유 등 50여 곳 무료입장. 2일권 €70·4일권 €90. 미술관 3곳 이상 갈 계획이면 본전 이상. 줄도 단축</p></div>
+        <div class="tip-card"><span class="tip-icon">🚇</span><h3>나비고 이지 교통카드</h3><p>메트로·버스·RER 충전식 카드(카드값 €2). 단권 €2.15, 10회권(카르네) 할인. 공항 자판기에서 바로 구매. 파리 여행 필수템</p></div>
+        <div class="tip-card"><span class="tip-icon">👜</span><h3>소매치기 주의</h3><p>에펠탑·샹젤리제·지하철·역 근처가 위험. 가방은 앞으로, 지퍼 잠금. '서명해달라'·'반지 주웠다' 접근은 무조건 무시. 붐빌 때 특히 주의</p></div>
+        <div class="tip-card"><span class="tip-icon">📅</span><h3>휴관일 확인 필수</h3><p>루브르는 화요일, 오르세는 월요일 휴관. 대부분 미술관이 월·화 중 하루 쉼. 상점은 일요일 문 닫는 곳 많음. 일정 짤 때 반드시 확인</p></div>
+        <div class="tip-card"><span class="tip-icon">💶</span><h3>팁·서비스요금</h3><p>식당 요금에 서비스료 포함이라 팁 의무 아님. 만족 시 €1~2 또는 잔돈 정도. 카페 카운터가 테이블보다 저렴. 물은 'une carafe d'eau'(수돗물) 무료</p></div>
+        <div class="tip-card"><span class="tip-icon">🛂</span><h3>무비자 & ETIAS</h3><p>90일 이내 무비자. 2026년부터 유럽 입국 전 ETIAS 사전등록(온라인 €7, 수 분 소요) 필요할 수 있으니 출발 전 최신 규정 확인</p></div>
+        <div class="tip-card"><span class="tip-icon">🧾</span><h3>세금 환급(택스리펀드)</h3><p>한 매장 €100 이상 구매 시 부가세 환급 가능. 매장에서 서류 받고 공항 팹리(PABLO) 키오스크에서 스캔. 출국 3시간 전 여유 있게 처리</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">✈ 트립가이드</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="tours.html?city=교토">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="tours.html?city=방콕">방콕</a>
+            <a href="tours.html?city=다낭">다낭</a>
+            <a href="tours.html?city=발리">발리</a>
+            <a href="tours.html?city=싱가포르">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="tours.html?city=제주">제주도</a>
+            <a href="tours.html?city=부산">부산</a>
+            <a href="tours.html?city=강릉">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트립가이드 · TripGuide</p>
+        <p style="margin-top:6px"><a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
+    }
+  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+  <script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=48.8566&longitude=2.3522'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FParis';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
+</body>
+</html>
