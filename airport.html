@@ -781,6 +781,23 @@ tr:hover td{background:var(--a-hover)}
 .check-item.done .check-box{background:var(--g);border-color:var(--g)}
 .check-label{font-size:.78rem;color:var(--text);flex:1}
 .check-item.done .check-label{color:var(--muted);text-decoration:line-through}
+.check-del{
+  margin-left:auto;background:none;border:none;color:var(--muted);
+  cursor:pointer;font-size:.8rem;padding:2px 6px;border-radius:4px;opacity:.6;
+}
+.check-del:hover{color:var(--r);opacity:1;background:rgba(239,68,68,.1)}
+.check-add-row{display:flex;gap:6px;margin-top:8px}
+.check-custom-input{
+  flex:1;background:var(--card2);border:1px solid var(--border);border-radius:var(--rb);
+  padding:8px 11px;color:var(--text);font-size:.78rem;font-family:inherit;outline:none;
+}
+.check-custom-input:focus{border-color:var(--accent)}
+.check-add-btn{
+  background:var(--accent);color:#001a24;border:none;border-radius:var(--rb);
+  padding:8px 16px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;
+}
+.check-add-btn:hover{opacity:.85}
+@media(max-width:560px){ .check-custom-input{font-size:16px;min-height:38px} .check-add-btn{min-height:38px} }
 
 .rule-grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
@@ -3824,12 +3841,37 @@ const CHECK_GROUPS = [
     '간식 / 컵라면', '여행 일정표 / 가이드북',
   ]},
 ];
+const CHECK_CUSTOM_KEY = 'icn_checklist_custom';
 function getCheckState(){
   try { return JSON.parse(localStorage.getItem(CHECK_KEY) || '{}'); }
   catch(e){ return {}; }
 }
 function setCheckState(s){
   localStorage.setItem(CHECK_KEY, JSON.stringify(s));
+}
+// 커스텀 항목: [{id, text}] — 사용자가 추가한 준비물
+function getCustomItems(){
+  try { return JSON.parse(localStorage.getItem(CHECK_CUSTOM_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function setCustomItems(arr){
+  localStorage.setItem(CHECK_CUSTOM_KEY, JSON.stringify(arr));
+}
+function addCustomCheckItem(){
+  const inp = el('check-custom-input');
+  const text = (inp?.value || '').trim();
+  if(!text) { inp?.focus(); return; }
+  const arr = getCustomItems();
+  arr.push({ id: 'c' + Date.now() + Math.floor(Math.random()*1000), text });
+  setCustomItems(arr);
+  if(inp) inp.value = '';
+  renderChecklist();
+}
+function removeCustomCheckItem(id, e){
+  if(e) e.stopPropagation();
+  setCustomItems(getCustomItems().filter(x => x.id !== id));
+  const s = getCheckState(); delete s[id]; setCheckState(s);
+  renderChecklist();
 }
 function toggleCheck(key){
   const s = getCheckState();
@@ -3838,7 +3880,7 @@ function toggleCheck(key){
   renderChecklist();
 }
 function resetChecklist(){
-  if(!confirm('체크 상태를 모두 초기화할까요?')) return;
+  if(!confirm('체크 상태를 모두 초기화할까요? (추가한 항목은 유지됩니다)')) return;
   setCheckState({});
   renderChecklist();
 }
@@ -3847,13 +3889,13 @@ function renderChecklist(){
   if(!area) return;
   const state = getCheckState();
   let total = 0, done = 0;
-  const groupsHtml = CHECK_GROUPS.map(g => {
-    const itemsHtml = g.items.map(it => {
-      const key = g.title + '|' + it;
+  // 기본 그룹 — 안정적 키(d그룹_항목, 텍스트와 무관)
+  const groupsHtml = CHECK_GROUPS.map((g, gi) => {
+    const itemsHtml = g.items.map((it, ii) => {
+      const key = `d${gi}_${ii}`;
       const checked = !!state[key];
-      total++;
-      if(checked) done++;
-      return `<div class="check-item${checked?' done':''}" onclick="toggleCheck('${key.replace(/'/g,"\\'")}')">
+      total++; if(checked) done++;
+      return `<div class="check-item${checked?' done':''}" onclick="toggleCheck('${key}')">
         <div class="check-box">${checked ? '✓' : ''}</div>
         <div class="check-label">${it}</div>
       </div>`;
@@ -3863,7 +3905,26 @@ function renderChecklist(){
       <div class="check-items">${itemsHtml}</div>
     </div>`;
   }).join('');
-  area.innerHTML = groupsHtml;
+  // 커스텀 그룹 — 추가 입력 + 삭제 가능 항목
+  const custom = getCustomItems();
+  const customItemsHtml = custom.map(c => {
+    const checked = !!state[c.id];
+    total++; if(checked) done++;
+    return `<div class="check-item${checked?' done':''}" onclick="toggleCheck('${c.id}')">
+      <div class="check-box">${checked ? '✓' : ''}</div>
+      <div class="check-label">${c.text.replace(/</g,'&lt;')}</div>
+      <button class="check-del" onclick="removeCustomCheckItem('${c.id}',event)" title="삭제">✕</button>
+    </div>`;
+  }).join('');
+  const customGroupHtml = `<div class="check-group">
+    <div class="check-group-title">➕ 나만의 준비물</div>
+    <div class="check-items">${customItemsHtml || ''}</div>
+    <div class="check-add-row">
+      <input class="check-custom-input" id="check-custom-input" placeholder="예: 멀미약, 아이 여권, 우산…" onkeydown="if(event.key==='Enter')addCustomCheckItem()">
+      <button class="check-add-btn" onclick="addCustomCheckItem()">추가</button>
+    </div>
+  </div>`;
+  area.innerHTML = groupsHtml + customGroupHtml;
   const lbl = el('check-progress-lbl');
   const fill = el('check-fill');
   if(lbl) lbl.textContent = `${done} / ${total} 완료`;
