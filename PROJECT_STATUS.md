@@ -4,18 +4,18 @@
 > **프로젝트 경로**: `C:\Users\GB\Documents\travel-guide`
 > **GitHub**: `cslis07/travel-guide` (Public) · 기본 브랜치 **`master`** (main 아님)
 > **배포**: https://travel-guide-cslis07.vercel.app · **Vercel** (GitHub push 자동 배포)
-> **규모**: HTML 페이지 10개 · Edge Function 3개(`api/`) · 공용 JS 4개 · 유틸 스크립트 3개(`scripts/`)
+> **규모**: HTML 페이지 11개 · Edge Function 3개(`api/`) · 공용 JS 4개 · 유틸 스크립트 3개(`scripts/`)
 
 ---
 
 ## 0. 지금 하던 일 (WIP)
 
-**깨끗한 상태** — `git status` 미커밋 변경 없음. 최종 커밋 `49d4fe7`(STATUS 재작성)까지 푸시 완료.
+**깨끗한 상태** — `git status` 미커밋 변경 없음. 최종 커밋 `44dfcc5`(갭7 내 여행 허브)까지 푸시·배포·검증 완료.
 
-이번 세션 마지막 작업: `feature-gap-finder` 에이전트로 **기능 갭 감사 완료**(코드 근거 파일:라인 포함). 결과는 §4의 "🆕 기능 갭 감사 결과"에 우선순위별로 정리해둠. **구현은 아직 0건** — 사용자가 "전부 진행"을 승인했으나 실제 착수 전에 이 문서 갱신 요청으로 전환됨.
+이번 세션: `feature-gap-finder` 감사 → **갭 7가지 전부 구현 완료**(§4 참조). 프로덕션 스모크 테스트 **17/17 통과**. 새 페이지 `/mytrip` 추가.
 
 **다음 채팅이 가장 먼저 해야 할 한 가지**:
-§4 "🆕 기능 갭 감사 결과"의 **1번(알림 문구 정직화 + ICS 리마인더 강화)**부터 착수. 신뢰 갭이라 가장 중요하고 순수 문구·코드 수정이라 빠름. Google Search Console 소유권 인증은 사용자가 인증 코드를 줘야 진행 가능(대기).
+남은 코드 작업 없음(감사 갭 7종 완료). **Google Search Console 소유권 인증**이 유일한 대기 항목 — 사용자가 인증 코드(`content="..."` 또는 `googleXXXX.html`)를 주면 `index.html` 삽입 → 인증 → sitemap 제출. 이어서 새 기능을 원하면 §4 "🟢 아이디어" 또는 목적지 가이드 추가(교토·방콕 등).
 
 ---
 
@@ -52,7 +52,8 @@
 | `airport.html` | 인천공항 대시보드 (단일 파일 175KB, gzip 45KB, CSS/JS 인라인) |
 | `tours.html` 🆕 | 메타서치 (파트너 레지스트리 `PARTNERS`, 제휴설정 `MRT_AFFILIATE`) |
 | `guide.html` 🆕 | 이용가이드 |
-| `fukuoka.html` `tokyo.html` 🆕 | 목적지 가이드 (osaka 템플릿 기반) |
+| `fukuoka.html` `tokyo.html` 🆕 | 목적지 가이드 (osaka 템플릿 기반, Open-Meteo 날씨 위젯) |
+| `mytrip.html` 🆕 | "내 여행" 허브 — localStorage 집계 + base64 URL/QR 내보내기·가져오기 (`robots noindex`) |
 | `privacy.html` `terms.html` 🆕 | 법적 페이지 |
 | `main.js` | 메인 로직 — 환율/계산기, TourAPI(프록시 경유 `_callTourApi`), 상세모달 |
 | `style.css` | 공용 스타일 (`--primary:#1B4FD8`, `--accent:#F97316`) |
@@ -65,7 +66,7 @@
 | `manifest.webmanifest` | PWA (start_url `/`, shortcuts 인천공항·투어검색) |
 | `icons/` `og-image.png` `favicon.ico` 🆕 | Pillow 생성 아이콘·소셜이미지 |
 | `scripts/make_icons.py` `make_og.py` 🆕 | 아이콘/OG 재생성기 (폰트 비의존 도형 렌더) |
-| `scripts/smoke_test.mjs` 🆕 | 프로덕션 14페이지+2API 자동점검 |
+| `scripts/smoke_test.mjs` 🆕 | 프로덕션 15페이지+2API(총 17) 자동점검 — 17/17 통과 |
 | `sitemap.xml` `robots.txt` 🆕 | SEO |
 
 ---
@@ -79,18 +80,20 @@
 4. **GA4 측정 ID** — *안 한 이유: GA 계정 필요.* `analytics.js`의 `GA4_ID`
 5. **Google Search Console 소유권 인증** — *진행 중: 사용자가 콘솔 가입 완료, 인증 코드(`content="..."` 또는 `googleXXXX.html` 파일명) 전달 대기.* 받으면 `index.html`에 meta 태그 삽입 → 인증 → `sitemap.xml` 제출(이미 배포됨) → 핵심 3페이지 색인 요청
 
-### 🆕 기능 갭 감사 결과 (2026-07-07, feature-gap-finder) — 우선순위순, **미구현**
-> 전부 localStorage + 프론트 수정으로 가능(스키마 변경 불필요). "전부 진행" 승인됨 → 1번부터 착수 예정.
+### ✅ 기능 갭 감사 결과 (2026-07-07, feature-gap-finder) — **7종 전부 구현 완료**
+> 스모크 테스트 17/17 통과. 전부 localStorage + 프론트 수정으로 구현(스키마 변경 없음).
 
-| # | 항목 | 근거 | 난이도 |
-|---|------|------|:---:|
-| 1 | 🔴 **알림 문구 정직화 + ICS 리마인더 강화** — "게이트 변경 알림"은 탭 열려있을 때만 동작(`airport.html:3522` 폴링, `sw.js`에 push 핸들러 0건). Web Push는 §10 구조적 불가 → 문구 정직화 + `downloadFavIcs`(`airport.html:3128`)를 게이트 이동 리마인더로 전면 배치 | 탭 닫으면 알림 침묵 | 하 |
-| 2 | 🔴 **재시도 버튼 3곳** — 환율(`main.js:838`)·국내여행(`main.js:522`)·MRT(`tours.html:434`) 에러가 텍스트만, 재시도 버튼 없음 | 실패 시 처음부터 재입력 | 하 |
-| 3 | 🟠 **관광지·맛집 찜(localStorage)** — 항공편만 즐겨찾기(`airport.html:3279`), 상세모달(`main.js:670`)에 저장 버튼 없음 | 발견한 장소 소실 | 하 |
-| 4 | 🟠 **목적지 날씨 이식** — `loadWeather()`(`airport.html:2003`)가 인천공항 좌표에만. osaka/tokyo/fukuoka엔 0건 → 좌표만 교체 | 정작 목적지 날씨 없음 | 하~중 |
-| 5 | 🟡 **홈 검색 위젯·환율 계산기 상태 유지** — `initDates`(`main.js:110`) 매번 리셋, `calcFx` 저장 없음 | 재방문 시 재입력 | 하 |
-| 6 | 🟡 **커스텀 체크리스트 항목 + 안정적 저장 키** — `CHECK_GROUPS` 고정, 키가 항목 텍스트 포함(`airport.html:3831`)이라 문구 변경 시 체크 소실 | 개인 항목 못 넣음 | 하 |
-| 7 | 🟠 **"내 여행" 허브 + URL/QR 내보내기** — 상태가 페이지마다 사일로, 기기 간 이동 불가 | 흩어진 상태 | 중 |
+| # | 항목 | 구현 내용 |
+|---|------|-----------|
+| 1 | ✅ 알림 문구 정직화 + ICS 강화 | "탭 열려있을 때만" 명시 + `.fav-notice` 안내 박스, ICS 알람 2개(출발편: 공항출발 3h전 + 게이트이동 1h전) |
+| 2 | ✅ 재시도 버튼 3곳 | 환율(`loadExchangeRates` 재호출)·국내여행(`_fetchDomesticPage`)·MRT(`_lastRun` 재실행) + `.retry-btn`/`.tt-retry` |
+| 3 | ✅ 관광지·맛집 찜 | `tripguide_saved_places`, 카드 하트 + 모달 저장, index `#savedSection`. `toggleSavePlace`/`_renderSavedPlaces` |
+| 4 | ✅ 목적지 날씨 | osaka/fukuoka/tokyo 히어로에 Open-Meteo(프록시 경유) 현재 날씨, WMO 이모지 맵 |
+| 5 | ✅ 검색위젯·계산기 상태 유지 | `tripguide_prefs` — 도착지·인원·금액·통화 복원(`restorePrefs`). 날짜는 제외 |
+| 6 | ✅ 커스텀 체크리스트 + 안정적 키 | 키 `d{그룹}_{항목}`(텍스트 무관), `icn_checklist_custom` 개인 항목 추가/삭제 |
+| 7 | ✅ 내 여행 허브 + URL/QR | **`/mytrip` 신규** — 집계 대시보드 + base64 URL 직렬화(링크복사/QR 지연로드) + `#data=` 가져오기 |
+
+> localStorage 키 전체: `tripguide_saved_places`, `tripguide_prefs`, `icn_fav_flights`, `icn_fav_snapshot`, `icn_checklist`, `icn_checklist_custom`, `icn_depart_step`, `tt_search_history`, `icn-theme`, `icn-lang`. mytrip 내보내기는 이 중 7개를 번들.
 
 ### 🟡 코드 개선 (선택)
 - 목적지 가이드 추가(교토·방콕·다낭 등) — *안 한 이유: 콘텐츠 정확성 검증 부담, 현재 `tours?city=` 검색으로 우회 중이라 급하지 않음*
