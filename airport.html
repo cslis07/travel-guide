@@ -632,6 +632,16 @@ tr:hover td{background:var(--a-hover)}
   cursor:pointer;font-family:inherit;transition:.15s;
 }
 .fav-notify-btn:hover{border-color:var(--accent);color:var(--accent)}
+.fav-notice{
+  margin-top:12px;padding:10px 13px;border-radius:var(--rb);
+  background:var(--a-dim);border:1px solid var(--border);
+  font-size:.72rem;line-height:1.6;color:var(--text2);
+}
+.fav-notice strong{color:var(--text)}
+.fav-notice-ics{
+  display:inline-block;background:var(--card2);border:1px solid var(--border);
+  border-radius:5px;padding:0 5px;font-size:.7rem;
+}
 .fav-card-actions{display:flex;gap:4px;align-items:center}
 .fav-ics-btn{
   background:none;border:1px solid var(--border);color:var(--muted);
@@ -1432,7 +1442,7 @@ button,select,input,a{touch-action:manipulation}
   <div class="fav-intro">
     <div class="fav-intro-text">
       <strong>⭐ 내 편명 추적</strong>
-      <span>편명을 저장하면 출발 카운트다운·게이트 변경 알림을 받을 수 있어요. 60초마다 자동 갱신. localStorage 영구 저장.</span>
+      <span>편명을 저장하면 출발 카운트다운과 게이트·시간 변경을 확인할 수 있어요. localStorage 영구 저장.</span>
     </div>
     <div class="fav-add-row">
       <input class="fav-add-input" id="fav-add-q" list="fav-suggestions" placeholder="편명 입력 (예: KE901, OZ102)" oninput="updateFavSuggestions()" onkeydown="if(event.key==='Enter')addFavFlight()">
@@ -1442,7 +1452,11 @@ button,select,input,a{touch-action:manipulation}
         <option value="arr">도착편</option>
       </select>
       <button class="fav-add-btn" onclick="addFavFlight()">⭐ 추가</button>
-      <button class="fav-notify-btn" onclick="requestFavNotifyPermission()" title="게이트/시간 변경 시 OS 알림">🔔 알림 켜기</button>
+      <button class="fav-notify-btn" onclick="requestFavNotifyPermission()" title="이 탭이 열려 있을 때 게이트/시간 변경 시 알림">🔔 알림 켜기</button>
+    </div>
+    <div class="fav-notice">
+      ⏰ <strong>확실한 알림은 캘린더로.</strong> OS 알림은 <u>이 탭이 열려 있을 때만</u> 뜹니다(브라우저 제약).
+      폰을 잠가도 받으려면 각 편명 카드의 <span class="fav-notice-ics">📅</span> 버튼으로 <strong>캘린더에 저장</strong>하세요 — 출발 준비 시각에 자동 알림이 옵니다.
     </div>
   </div>
   <div id="fav-area"><div class="loading" style="color:var(--muted);padding:30px">저장된 편명이 없습니다.<br>위에 편명을 입력해 추가하세요.</div></div>
@@ -3153,6 +3167,15 @@ async function downloadFavIcs(flightId, dir){
     term ? `터미널: ${term}` : '',
     `https://travel-guide-cslis07.vercel.app/airport`,
   ].filter(Boolean).join('\\n');
+  // 알람: 출발편은 2개(공항 출발 시각 + 게이트 이동 권장=출발 1시간 전), 도착편은 1개
+  const alarms = isDep
+    ? [
+        // DTSTART(=출발 3시간 전) 시점 → "공항으로 출발"
+        ['PT0S', `${flightId} 공항으로 출발할 시간 (출발 3시간 전)`],
+        // DTSTART + 2시간 = 출발 1시간 전 → "게이트로 이동"
+        ['PT2H', `${flightId} 게이트로 이동하세요 (출발 1시간 전)`],
+      ]
+    : [['PT0S', `${flightId} 곧 도착 — 짐 찾기·입국심사 준비`]];
   const ics = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
@@ -3165,11 +3188,9 @@ async function downloadFavIcs(flightId, dir){
     `SUMMARY:${title}`,
     `DESCRIPTION:${desc}`,
     `LOCATION:인천국제공항 ${term}`,
-    'BEGIN:VALARM',
-    'ACTION:DISPLAY',
-    `DESCRIPTION:${title} ${isDep?'3시간':'1시간'} 전 알림`,
-    'TRIGGER:-PT30M',
-    'END:VALARM',
+    ...alarms.flatMap(([trig, d]) => [
+      'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${d}`, `TRIGGER:${trig}`, 'END:VALARM',
+    ]),
     'END:VEVENT',
     'END:VCALENDAR'
   ].join('\r\n');
