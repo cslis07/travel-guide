@@ -37,6 +37,15 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="트립가이드">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
 </head>
 <body>
 
@@ -76,6 +85,12 @@
         <div class="hero-stat"><strong>💴 환율</strong><small>¥1 ≈ 9.5원 (2026 기준)</small></div>
         <div class="hero-stat"><strong>🕐 시차</strong><small>한국과 동일 (KST)</small></div>
         <div class="hero-stat"><strong>🌸 추천 시기</strong><small>3~5월, 10~11월</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
       </div>
       <a href="tours.html?city=후쿠오카" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 후쿠오카 투어·티켓 실시간 검색 →</a>
     </div>
@@ -286,5 +301,29 @@
   </script>
   <script src="/analytics.js"></script>
 <script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=33.5904&longitude=130.4017'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
 </body>
 </html>
