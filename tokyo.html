@@ -3,16 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="도쿄 여행 완벽 가이드 — 3박 4일 추천 일정, 예산, 추천 숙소, 현지 팁. 시부야·아사쿠사·시내 명소까지.">
+  <meta name="description" content="도쿄 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
   <title>도쿄 여행 가이드 | 트립가이드</title>
-  <link rel="canonical" href="https://travel-guide-cslis07.vercel.app/tokyo">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="도쿄 여행 가이드 | 트립가이드">
-  <meta property="og:description" content="3박 4일 추천 일정·예산·숙소·현지 팁. 볼거리·먹거리·쇼핑의 도시, 도쿄.">
-  <meta property="og:url" content="https://travel-guide-cslis07.vercel.app/tokyo">
-  <meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+<link rel="canonical" href="https://travel-guide-cslis07.vercel.app/tokyo">
+<meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -22,8 +19,9 @@
     "@type": "TouristDestination",
     "name": "도쿄",
     "url": "https://travel-guide-cslis07.vercel.app/tokyo",
-    "description": "도쿄 여행 가이드 — 3박 4일 일정, 예산, 추천 숙소, 현지 팁",
+    "description": "도쿄 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
     "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
     "geo": { "@type": "GeoCoordinates", "latitude": 35.6762, "longitude": 139.6503 }
   }
   </script>
@@ -68,24 +66,26 @@
   <div class="fx-bar" id="fxBar">
     <div class="container fx-inner">
       <span class="fx-label">💱 환율</span>
-      <div class="fx-rates" id="fxRates"><span class="fx-skeleton">로딩 중…</span></div>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
       <span class="fx-updated" id="fxUpdated"></span>
     </div>
   </div>
 
   <!-- ── HERO ── -->
-  <section class="dest-hero" style="background:linear-gradient(135deg,#1E293B 0%,#334155 40%,#3B82F6 110%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+  <section class="dest-hero" style="background:linear-gradient(135deg,#1E3A5F 0%,#2E5A8F 45%,#3B82F6 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
     <div class="dest-hero-bg">🗼</div>
     <div class="dest-hero-overlay"></div>
     <div class="dest-hero-content">
-      <span class="dest-hero-badge">🇯🇵 일본 · 간토 지방</span>
+      <span class="dest-hero-badge">🗼 일본 · 간토 지방</span>
       <h1>도쿄</h1>
-      <p>볼거리·먹거리·쇼핑 최강 도시 — 시부야·아사쿠사·아키하바라, 3박 4일도 부족한 메가시티</p>
+      <p>볼거리·먹거리·쇼핑의 최강 도시 — 시부야·아사쿠사·디즈니랜드, 몇 번을 가도 새로운 곳</p>
       <div class="dest-hero-stats">
-        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 나리타/하네다 약 2시간 20분</small></div>
+        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 도쿄 약 2시간 20분</small></div>
         <div class="hero-stat"><strong>💴 환율</strong><small>¥1 ≈ 9.5원 (2026 기준)</small></div>
         <div class="hero-stat"><strong>🕐 시차</strong><small>한국과 동일 (KST)</small></div>
-        <div class="hero-stat"><strong>🌸 추천 시기</strong><small>3~4월(벚꽃), 10~11월(단풍)</small></div>
+        <div class="hero-stat"><strong>🌸 추천 시기</strong><small>3~4월 벚꽃, 10~11월 단풍</small></div>
       </div>
       <div class="dest-weather" id="destWeather" hidden>
         <span class="dw-icon" id="dwIcon">⛅</span>
@@ -97,174 +97,525 @@
     </div>
   </section>
 
-  <!-- ── 일정 ── -->
-  <section class="section">
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
     <div class="container">
-      <div class="section-header">
-        <span class="section-badge">🗓 추천 일정</span>
-        <h2>3박 4일 추천 코스</h2>
-        <p>지역별로 묶어 이동 최소화 — 도쿄는 동선이 핵심</p>
-      </div>
-
-      <div class="day-tabs" id="day-tabs">
-        <button class="day-tab active" onclick="showDay(1,this)">1일차</button>
-        <button class="day-tab" onclick="showDay(2,this)">2일차</button>
-        <button class="day-tab" onclick="showDay(3,this)">3일차</button>
-        <button class="day-tab" onclick="showDay(4,this)">4일차</button>
-      </div>
-
-      <div class="day-content active" id="day1">
-        <div class="day-header">
-          <span class="day-num-badge">DAY 1</span>
-          <div><h3>도착 → 신주쿠</h3><p>공항에서 시내 진입, 첫날은 신주쿠 야경</p></div>
-        </div>
-        <div class="timeline">
-          <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 나리타/하네다 도착</h4><p>하네다는 시내 30~40분, 나리타는 60~90분. 나리타 익스프레스·스카이라이너 또는 리무진 버스 이용</p></div></div>
-          <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>신주쿠·시부야·도쿄역 근처 추천. JR·지하철 환승 편한 곳이 동선에 유리</p></div></div>
-          <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🏙 신주쿠 도청 전망대</h4><p>무료 전망대(202m). 맑은 날 후지산까지 조망. 야경 명소</p></div></div>
-          <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍜 신주쿠 저녁 & 오모이데요코초</h4><p>골든가이·오모이데요코초의 좁은 골목 이자카야. 라멘·야키토리·스시로 첫날 마무리</p></div></div>
-        </div>
-      </div>
-
-      <div class="day-content" id="day2">
-        <div class="day-header">
-          <span class="day-num-badge">DAY 2</span>
-          <div><h3>아사쿠사 → 우에노 → 아키하바라</h3><p>전통과 서브컬처를 하루에</p></div>
-        </div>
-        <div class="timeline">
-          <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>⛩ 아사쿠사 센소지</h4><p>도쿄 최고(最古) 사찰. 카미나리몬·나카미세 상점가. 인력거·기모노 체험 인기</p></div></div>
-          <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🗼 도쿄 스카이트리</h4><p>634m 전망 타워. 아사쿠사에서 도보·전철 10분. 전망대 ¥2,100~. 밑 솔라마치 쇼핑몰</p></div></div>
-          <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🌳 우에노 공원 & 박물관</h4><p>도쿄국립박물관·과학박물관·동물원. 벚꽃 명소. 아메요코 시장에서 길거리 먹거리</p></div></div>
-          <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🎮 아키하바라</h4><p>전자상가·애니·게임의 성지. 요도바시 카메라, 굿즈샵, 메이드카페. 오타쿠 문화 체험</p></div></div>
-          <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🍣 저녁 스시/텐동</h4><p>아키하바라·우에노 일대 회전스시·텐동 맛집. 가성비 좋은 도쿄 미식</p></div></div>
-        </div>
-      </div>
-
-      <div class="day-content" id="day3">
-        <div class="day-header">
-          <span class="day-num-badge">DAY 3</span>
-          <div><h3>시부야 → 하라주쿠 → 오다이바</h3><p>트렌드·쇼핑·워터프론트</p></div>
-        </div>
-        <div class="timeline">
-          <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🐕 시부야 스크램블 & 하치코</h4><p>세계에서 가장 붐비는 교차로. 시부야 스카이 전망대, 시부야109 쇼핑</p></div></div>
-          <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🛍 하라주쿠 & 오모테산도</h4><p>타케시타 거리(10대 패션)와 오모테산도(명품). 메이지 신궁 산책도 인접</p></div></div>
-          <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🌊 오다이바</h4><p>레인보우브릿지·자유의여신상·팀랩. 다이버시티의 건담 동상. 워터프론트 야경</p></div></div>
-          <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍖 저녁 & 쇼핑</h4><p>오다이바 아쿠아시티·다이버시티 몰에서 저녁·쇼핑. 온천 테마파크도 선택지</p></div></div>
-        </div>
-      </div>
-
-      <div class="day-content" id="day4">
-        <div class="day-header">
-          <span class="day-num-badge">DAY 4</span>
-          <div><h3>도쿄역·긴자 → 귀국</h3><p>마지막 쇼핑 후 공항</p></div>
-        </div>
-        <div class="timeline">
-          <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🏛 도쿄역 & 마루노우치</h4><p>고풍스러운 도쿄역사, 인접 KITTE·다이마루. 이치란·라멘스트리트에서 마지막 라멘</p></div></div>
-          <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>💎 긴자 쇼핑</h4><p>도쿄 최고급 쇼핑가. 유니클로 플래그십·긴자식스·돈키호테. ¥5,000↑ 면세</p></div></div>
-          <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>하네다 30분·나리타 60~90분. 짐 많으면 리무진 버스가 편리. 비행 2~3시간 전 도착</p></div></div>
-        </div>
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
       </div>
     </div>
   </section>
 
-  <!-- ── 예산 ── -->
-  <section class="section section-alt">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">💰 예산 가이드</span>
-        <h2>3박 4일 예상 경비</h2>
-        <p>1인 기준 · 환율 ¥1 = 9.5원</p>
-      </div>
-      <div class="budget-grid">
-        <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">150,000 ~ 350,000원</span><span class="budget-note">LCC ~ 대형항공사</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박)</h4><span class="budget-range">120,000 ~ 350,000원</span><span class="budget-note">캡슐 ~ 시티 호텔</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4일)</h4><span class="budget-range">40,000 ~ 70,000원</span><span class="budget-note">스이카·공항 이동 포함</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">120,000 ~ 200,000원</span><span class="budget-note">1끼 ¥1,000~2,500</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">40,000 ~ 90,000원</span><span class="budget-note">스카이트리·전망대·팀랩</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">80,000 ~ 250,000원</span><span class="budget-note">쇼핑·기념품</span></div></div>
-      </div>
-      <div class="budget-total">
-        <div>
-          <span class="total-label">3박 4일 1인 총 예상 경비</span>
-          <span class="total-amount">550,000 ~ 1,310,000원</span>
-        </div>
-        <span class="total-note">절약형(LCC+캡슐) ~ 여유형(FSC+시티 호텔) 기준</span>
-      </div>
-    </div>
-  </section>
 
-  <!-- ── 숙소 ── -->
-  <section class="section">
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>나만의 페이스로 누비는 메가시티 — 미식·서브컬처·야경을 자유롭게</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 신주쿠 야경</h3><p>공항에서 시내 진입, 첫날은 신주쿠 골목 이자카야에서</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 나리타/하네다 도착</h4><p>하네다는 시내 30분, 나리타는 60~90분. 나리타 익스프레스(¥3,070)·게이세이 스카이라이너(¥2,580) 또는 리무진 버스 이용</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>신주쿠 도보권 숙소에 짐 맡기기. 혼여행은 캡슐호텔·게스트하우스가 가성비 최고</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🏙 도쿄도청 전망대</h4><p>무료 전망대(202m). 맑은 날 후지산까지 조망. 해 질 무렵 올라가면 야경까지 한 번에</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍜 오모이데요코초 & 골든가이</h4><p>좁은 골목 이자카야 거리. 야키토리·라멘·생맥주로 첫날 마무리. 1인 ¥2,000~3,500</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body"><h4>🌃 시부야 스크램블 야경</h4><p>신주쿠에서 전철 5분. 세계에서 가장 붐비는 교차로 밤 풍경. 편의점 커피 들고 혼자 야간 산책 — 혼여행 묘미</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>아사쿠사 → 아키하바라</h3><p>전통 사찰과 서브컬처의 성지를 하루에</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>⛩ 아사쿠사 센소지</h4><p>도쿄에서 가장 오래된 사찰. 카미나리몬·나카미세 상점가. 입장 무료. 아침 일찍 가면 한적하게 사진 촬영</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🗼 도쿄 스카이트리</h4><p>634m 전망 타워. 아사쿠사에서 도보·전철 10분. 전망대 ¥2,100~. 밑 솔라마치 쇼핑몰에서 기념품</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍣 토요스 시장 스시 점심</h4><p>구 츠키지를 대체한 도매시장. 신선한 참치 스시·해산물 덮밥(¥2,000~3,500). 장외 츠키지 시장 먹거리도 별미</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🎮 아키하바라</h4><p>전자상가·애니·게임의 성지. 요도바시 카메라, 굿즈샵, 레트로 게임샵, 메이드카페. 오타쿠 문화 체험</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍢 저녁 규카츠 or 텐동</h4><p>아키하바라 일대 규카츠·텐동 노포. 혼밥하기 좋은 카운터석 많음. 1인 ¥1,300~2,200</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>시모키타자와 → 긴자 → 귀국</h3><p>마지막 날 빈티지 골목과 럭셔리 쇼핑가로 마무리</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🎧 시모키타자와 골목 산책</h4><p>도쿄 힙스터의 동네. 빈티지숍·독립 카페·레코드샵. 혼자 걷기 좋은 감성 골목. 핸드드립 커피 ¥500~700</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>💎 긴자 쇼핑 & 마지막 점심</h4><p>유니클로 플래그십·긴자식스·돈키호테. 약국(마츠모토 키요시)에서 약·화장품. ¥5,000↑ 면세. 점심은 라멘·회덮밥</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>하네다 30분·나리타 60~90분. 나리타 익스프레스·스카이라이너 지정석이 쾌적. 비행 2.5~3시간 전 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>2박 3일 · 환율 ¥1 = 9.5원 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">150,000 ~ 350,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박)</h4><span class="budget-range">60,000 ~ 180,000원</span><span class="budget-note">캡슐호텔 ~ 비즈니스 호텔</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (3일)</h4><span class="budget-range">35,000 ~ 60,000원</span><span class="budget-note">스이카·공항 이동 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">100,000 ~ 160,000원</span><span class="budget-note">1끼 ¥1,000~2,500 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">25,000 ~ 55,000원</span><span class="budget-note">스카이트리·팀랩 등</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">60,000 ~ 180,000원</span><span class="budget-note">약국·기념품 쇼핑</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 1인 총 예상 경비</span>
+            <span class="total-amount">430,000 ~ 985,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+캡슐) ~ 여유형(FSC+비즈니스 호텔) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>나인아워스 신주쿠 캡슐</h3>
+              <p class="hotel-location">📍 신주쿠역 도보 5분</p>
+              <p>미니멀 디자인 캡슐호텔. 넓은 샤워실·라운지. 혼여행자에게 인기. 주요 노선 환승 최고 입지</p>
+              <div class="hotel-price">1박 <strong>¥4,000~6,500</strong> (~38,000원~)</div>
+              <div class="hotel-tags"><span>캡슐</span><span>샤워실</span><span>Wi-Fi</span><span>코인 세탁</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Shinjuku%20Tokyo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>UNPLAN 시부야 호스텔</h3>
+              <p class="hotel-location">📍 시부야역 도보 8분</p>
+              <p>디자인 호스텔. 도미토리·1인실 선택 가능. 카페 바·공용 라운지에서 세계 여행자와 교류</p>
+              <div class="hotel-price">1박 <strong>¥4,500~7,500</strong> (~43,000원~)</div>
+              <div class="hotel-tags"><span>도미토리</span><span>카페 바</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Shibuya%20Tokyo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
+            <div class="hotel-body">
+              <h3>도요코 인 도쿄 아사쿠사</h3>
+              <p class="hotel-location">📍 아사쿠사역 도보 5분</p>
+              <p>1인실 비즈니스 호텔의 정석. 무료 조식·청결한 시설. 센소지·스카이트리 접근 좋아 혼여행 가성비 최고</p>
+              <div class="hotel-price">1박 <strong>¥8,000~12,000</strong> (~76,000원~)</div>
+              <div class="hotel-tags"><span>1인실</span><span>무료 조식</span><span>Wi-Fi</span><span>편의점 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Asakusa%20Tokyo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Tokyo" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Tokyo" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>같이 먹고 찍고 즐기는 도쿄 완전 정복 — 디즈니·팀랩·시부야 필수</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('friends',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 시부야·신주쿠 먹방</h3><p>도쿄 도착 첫날, 시부야에서 신주쿠까지 밤거리 투어</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 나리타/하네다 도착</h4><p>스카이라이너(¥2,580)·나리타 익스프레스(¥3,070) 또는 리무진 버스로 시내 이동. 짐 맡기고 바로 출발</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🐕 시부야 스크램블 & 하치코</h4><p>세계에서 가장 붐비는 교차로에서 단체 인증샷. 시부야 스카이 전망대(¥2,500)에서 도쿄 파노라마</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍖 시부야 야키니쿠·이자카야</h4><p>센터가이 골목 야키니쿠·이자카야. 나마비루(생맥주)·안주로 실컷. 1인 ¥3,000~4,500</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:30</div><div class="tl-body"><h4>🌃 신주쿠 골든가이 2차</h4><p>전철 5분 신주쿠로 이동. 골든가이·가부키초 좁은 바 골목 순례. 각기 다른 콘셉트 바 hopping</p></div></div>
+            <div class="tl-item"><div class="tl-time">22:00</div><div class="tl-body"><h4>🍜 심야 라멘 마무리</h4><p>이치란·후운지 등 심야 라멘으로 마무리. 신주쿠는 24시간 도시라 야식 걱정 없음</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>도쿄 디즈니랜드 온종일</h3><p>친구와 함께라면 하루가 모자란 꿈의 왕국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:00</div><div class="tl-body"><h4>🎢 개장 전 디즈니랜드 도착</h4><p>마이하마역 하차. 1데이 패스포트 ¥7,900~10,900(날짜 변동제). 개장 30분 전 대기 필수. 앱 미리 설치</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🎟 프리미어 액세스 공략</h4><p>미녀와 야수·베이맥스 등 인기 어트랙션은 유료 프리미어 액세스(¥1,500~2,000/건)로 대기 단축. 앱으로 실시간 예약</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍔 파크 내 점심 & 팝콘</h4><p>레스토랑 예약 or 스낵. 시즌별 팝콘 버킷·츄로스는 친구끼리 필수 인증. 캐릭터 굿즈 쇼핑도</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🎠 어트랙션 & 퍼레이드</h4><p>스플래시 마운틴·빅선더 마운틴 등. 오후 데이 퍼레이드 관람 명당 미리 확보</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🎆 나이트 퍼레이드 & 불꽃</h4><p>일렉트리컬 퍼레이드·성 프로젝션 쇼로 하루 마무리. 폐장까지 즐기고 마이하마역에서 귀숙</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>팀랩 → 하라주쿠 → 오다이바</h3><p>몰입형 미디어아트와 트렌드 쇼핑, 그리고 워터프론트</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🌈 팀랩 플래닛/보더리스</h4><p>몰입형 디지털 아트 뮤지엄. 입장 ¥3,800~. 물·거울·꽃 공간에서 친구끼리 인생샷. 사전 온라인 예매 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🧁 하라주쿠 타케시타 거리</h4><p>10대 패션의 성지. 레인보우 크레페(¥600~800)·솜사탕 인증샷. 오모테산도로 넘어가면 명품 거리</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🌊 오다이바</h4><p>레인보우브릿지·자유의여신상·유니콘 건담 동상. 다이버시티·아쿠아시티 몰 쇼핑. 워터프론트 야경 감상</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍖 오다이바 저녁 & 온천</h4><p>몰 식당가에서 저녁. 오에도 온천 등 테마 온천에서 하루 피로 풀기. 야경 배경 단체 사진</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>도쿄역·긴자 → 귀국</h3><p>마지막 쇼핑 후 공항으로</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🏛 도쿄역 & 라멘 스트리트</h4><p>고풍스러운 도쿄역사·KITTE. 지하 라멘 스트리트에서 마지막 라멘. 캐릭터 스트리트에서 굿즈 쇼핑</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>💎 긴자 마지막 쇼핑</h4><p>유니클로 플래그십·긴자식스·돈키호테. 약국·화장품·기념품 폭풍 쇼핑. ¥5,000↑ 면세 신청 잊지 말기</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>야간 항공 이용 시 저녁 식사 후 출발. 나리타 익스프레스·스카이라이너 막차 시간 사전 확인</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>3박 4일 · 디즈니 포함 · 2인 기준으로 나눈 숙박비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">150,000 ~ 350,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 1인당)</h4><span class="budget-range">120,000 ~ 300,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎢</span><div class="budget-info"><h4>디즈니·팀랩</h4><span class="budget-range">120,000 ~ 180,000원</span><span class="budget-note">디즈니 1데이 + 팀랩 입장</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">130,000 ~ 210,000원</span><span class="budget-note">이자카야·맛집 4일 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통</h4><span class="budget-range">45,000 ~ 75,000원</span><span class="budget-note">디즈니·오다이바 이동 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">70,000 ~ 250,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">635,000 ~ 1,365,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+2인 쉐어) ~ 여유형(FSC+프리미어 액세스+시티 호텔)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>번화가·디즈니 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>APA 호텔 신주쿠 카부키초</h3>
+              <p class="hotel-location">📍 신주쿠역 도보 7분</p>
+              <p>깔끔한 비즈니스 호텔 체인. 트윈룸 가성비 최고. 신주쿠 중심이라 시부야·디즈니·오다이바 모두 편리</p>
+              <div class="hotel-price">2인 1박 <strong>¥12,000~18,000</strong> (1인당 ~76,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>대욕장</span><span>Wi-Fi</span><span>편의점 2분</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Shinjuku%20Tokyo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>시부야 스트림 엑셀 호텔 도큐</h3>
+              <p class="hotel-location">📍 시부야역 직결</p>
+              <p>트렌디한 도심 호텔. 시부야 스크램블 접근 최고. 밤거리 즐기고 걸어서 귀숙 가능한 최적 입지</p>
+              <div class="hotel-price">2인 1박 <strong>¥18,000~28,000</strong> (1인당 ~114,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>역 직결</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Shibuya%20Tokyo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">디즈니 특화</span></div>
+            <div class="hotel-body">
+              <h3>도쿄 베이 마이하마 호텔</h3>
+              <p class="hotel-location">📍 마이하마역·디즈니 셔틀 5분</p>
+              <p>디즈니 오피셜 호텔. 파크 개장 전 입장 특전·무료 셔틀. 디즈니 하루 통째로 쓰려면 이만한 위치 없음</p>
+              <div class="hotel-price">2인 1박 <strong>¥20,000~32,000</strong> (1인당 ~124,000원~)</div>
+              <div class="hotel-tags"><span>디즈니 셔틀</span><span>트윈룸</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Maihama%20Tokyo%20Disney" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Tokyo" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Tokyo" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>아이와 함께하는 도쿄 — 디즈니·지브리·우에노 동물원 3박 4일</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 우에노 동물원</h3><p>공항에서 시내로, 첫날은 판다가 기다리는 동물원으로</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 나리타/하네다 도착</h4><p>짐 많은 가족은 리무진 버스가 편함. 나리타 익스프레스도 유모차 짐칸 활용 가능. 하네다면 시내 30분</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🐼 우에노 동물원</h4><p>일본 최초 동물원, 자이언트 판다로 유명. 입장 어른 ¥600 / 중학생 ¥200 / 초등 이하 무료. 아이들 첫 도쿄 인사</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🍢 아메요코 시장 저녁거리</h4><p>우에노 공원 옆 활기찬 시장. 타코야키·꼬치·타이야키 간식. 가족이 나눠 먹으며 산책</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍽 패밀리 레스토랑 저녁 후 체크인</h4><p>사이제리야·가스토 등 가성비 패밀리 레스토랑에서 가족 저녁. 이후 숙소로. 내일 디즈니 위해 일찍 취침</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>도쿄 디즈니랜드 — 아이가 평생 기억할 하루</h3><p>퍼레이드·캐릭터·어트랙션 아이 맞춤 공략</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:00</div><div class="tl-body"><h4>🎢 디즈니랜드 오픈런</h4><p>마이하마역 하차. 1데이 패스포트 어른 ¥7,900~10,900 / 어린이 ¥4,700~5,600. 유모차 대여 가능(¥1,000)</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🏰 판타지랜드 어린이 코스</h4><p>푸의 허니헌트·피터팬·잇츠 어 스몰 월드 등 키 제한 없는 어트랙션 위주. 캐릭터 그리팅 동선 앱으로 확인</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍔 파크 점심 & 팝콘</h4><p>레스토랑 사전 예약 추천. 아이는 미키 모양 간식·시즌 팝콘 버킷에 열광. 오후 더위 대비 휴식</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🎠 데이 퍼레이드 관람</h4><p>퍼레이드 30분 전 명당 확보. 아이 어깨목 or 돗자리. 캐릭터와 손 흔들기 — 가족 최고의 순간</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🎆 일찍 귀숙 or 야간 쇼</h4><p>어린 아이는 저녁 퍼레이드 전 귀숙해 컨디션 관리. 초등 고학년은 성 프로젝션 쇼까지 관람 후 귀숙</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>지브리 미술관 → 이노카시라 공원</h3><p>토토로의 세계와 자연 속 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🎬 미타카 지브리 미술관</h4><p>미야자키 하야오의 애니 뮤지엄. 입장 어른 ¥1,000 / 초등 ¥400 / 유아 ¥100. 한 달 전 온라인 사전 예약 필수(당일권 없음)</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🌳 이노카시라 공원 & 보트</h4><p>지브리 미술관 옆 공원. 백조 보트(30분 ¥800)·산책로. 아이와 자연 속에서 도시락 점심 즐기기</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🌈 팀랩 플래닛 (선택)</h4><p>물·꽃 몰입 아트. 아이도 좋아하는 인터랙티브 공간. 입장 어른 ¥3,800 / 어린이 ¥1,500. 사전 예매 필수. 맨발 체험이라 아이도 재밌어함</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍜 시내 복귀 & 저녁</h4><p>가족 라멘·회전스시(스시로·쿠라스시)로 저녁. 회전스시는 아이들이 특히 좋아함. 1접시 ¥120~</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>아사쿠사 → 마지막 쇼핑 → 귀국</h3><p>전통 사찰 구경 후 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>⛩ 아사쿠사 센소지 & 인력거</h4><p>도쿄 최고(最古) 사찰. 나카미세 상점가 간식. 인력거 체험(1구간 ¥3,000~)은 아이에게 특별한 추억</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🛍 마지막 쇼핑</h4><p>스카이트리 솔라마치 or 돈키호테에서 약·과자·캐릭터 상품. 포켓몬·산리오·토토로 굿즈 아이들 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이 동반 가족은 3시간 전 공항 도착 권장. 짐 많을 땐 리무진 버스가 가장 편함</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>3박 4일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">640,000 ~ 1,300,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 가족룸)</h4><span class="budget-range">330,000 ~ 700,000원</span><span class="budget-note">4인 가족룸 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎢</span><div class="budget-info"><h4>디즈니 (4인)</h4><span class="budget-range">240,000 ~ 340,000원</span><span class="budget-note">어른 ¥9,400 / 어린이 ¥5,600</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🐼</span><div class="budget-info"><h4>지브리·동물원·팀랩 (4인)</h4><span class="budget-range">90,000 ~ 150,000원</span><span class="budget-note">지브리·우에노·팀랩 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">320,000 ~ 520,000원</span><span class="budget-note">4인 1끼 ¥4,000~8,000</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4인)</h4><span class="budget-range">100,000 ~ 170,000원</span><span class="budget-note">공항 리무진·시내 이동 포함</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">1,720,000 ~ 3,180,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+가족룸 공유) ~ 여유형(FSC+4성 호텔+프리미어 액세스 4인)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>가족룸·키즈 어메니티·편의 시설이 잘 갖춰진 곳</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>미츠이 가든 호텔 우에노</h3>
+              <p class="hotel-location">📍 우에노역 도보 2분</p>
+              <p>우에노역 초근접 도시형 호텔. 4인 트리플·패밀리룸 보유. 동물원·박물관·아사쿠사 접근 최고로 아이 동반 편리</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥20,000~30,000</strong> (~190,000원~)</div>
+              <div class="hotel-tags"><span>가족룸</span><span>대욕장</span><span>Wi-Fi</span><span>역 도보 2분</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Ueno%20Tokyo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>힐튼 도쿄 (신주쿠)</h3>
+              <p class="hotel-location">📍 신주쿠역 무료 셔틀</p>
+              <p>넓은 패밀리룸·수영장·조식 뷔페 완비. 어린이 어메니티 충실. 믿을 수 있는 브랜드로 가족 여행에 안심</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥30,000~48,000</strong> (~285,000원~)</div>
+              <div class="hotel-tags"><span>패밀리룸</span><span>수영장</span><span>어린이 어메니티</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Shinjuku%20Tokyo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">디즈니 공식</span></div>
+            <div class="hotel-body">
+              <h3>도쿄 디즈니랜드 호텔</h3>
+              <p class="hotel-location">📍 디즈니랜드 정문 도보 5분</p>
+              <p>디즈니 공식 호텔. 캐릭터 테마룸·개장 전 입장 특전·모노레일 접근. 아이에게 꿈같은 하룻밤 선사</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥45,000~75,000</strong> (~428,000원~)</div>
+              <div class="hotel-tags"><span>디즈니 얼리입장</span><span>캐릭터룸</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Maihama%20Tokyo%20Disney" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Tokyo" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Tokyo" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 항공권
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
     <div class="container">
       <div class="section-header">
-        <span class="section-badge">🏨 숙소 추천</span>
-        <h2>어디에 묵을까</h2>
-        <p>환승 편한 JR 야마노테선 역세권이 정석</p>
+        <span class="section-badge">✈ 항공권</span>
+        <h2>인천 ↔ 도쿄 항공권</h2>
+        <p>비행시간 약 2시간 20분 · 인천 ICN → 나리타 NRT / 하네다 HND</p>
       </div>
-      <div class="hotel-grid">
-        <div class="hotel-card">
-          <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
-          <div class="hotel-body">
-            <h3>캡슐·게스트하우스</h3>
-            <p class="hotel-location">📍 신주쿠·아사쿠사·우에노</p>
-            <p>도쿄는 캡슐호텔 문화의 본고장. 최신식 캡슐이 주요 역 주변에 밀집. 혼여행·가성비 최고</p>
-            <div class="hotel-price">1박 <strong>¥4,000~7,000</strong> (~38,000원~)</div>
-            <div class="hotel-tags"><span>캡슐</span><span>Wi-Fi</span><span>역세권</span></div>
-            <a href="https://www.agoda.com/ko-kr/search?textToSearch=도쿄 신주쿠 캡슐" target="_blank" rel="noopener" class="hotel-cta">아고다에서 검색</a>
-          </div>
-        </div>
-        <div class="hotel-card">
-          <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
-          <div class="hotel-body">
-            <h3>시부야·신주쿠 비즈니스 호텔</h3>
-            <p class="hotel-location">📍 야마노테선 역 도보권</p>
-            <p>쇼핑·미식·야경 중심지. 도미·APA·선루트 등 깔끔한 비즈니스 호텔. 어디든 이동 편리</p>
-            <div class="hotel-price">1박 <strong>¥10,000~18,000</strong> (~95,000원~)</div>
-            <div class="hotel-tags"><span>1인실</span><span>번화가</span><span>환승 편의</span></div>
-            <a href="https://www.agoda.com/ko-kr/search?textToSearch=도쿄 시부야 호텔" target="_blank" rel="noopener" class="hotel-cta">아고다에서 검색</a>
-          </div>
-        </div>
-        <div class="hotel-card">
-          <div class="hotel-badge-row"><span class="hotel-badge fam">가족·편의</span></div>
-          <div class="hotel-body">
-            <h3>도쿄역·긴자 시티 호텔</h3>
-            <p class="hotel-location">📍 도쿄역·긴자 인접</p>
-            <p>공항 이동·쇼핑의 허브. 넓은 객실·부대시설. 짐 많은 가족·비즈니스에 적합</p>
-            <div class="hotel-price">1박 <strong>¥18,000~35,000</strong> (~171,000원~)</div>
-            <div class="hotel-tags"><span>넓은 객실</span><span>공항 접근</span><span>부대시설</span></div>
-            <a href="https://www.agoda.com/ko-kr/search?textToSearch=도쿄 긴자 호텔" target="_blank" rel="noopener" class="hotel-cta">아고다에서 검색</a>
-          </div>
-        </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>항공사</th><th>구분</th><th>도착 공항</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">✈ 제주항공</span></td><td>LCC 직항</td><td>나리타 NRT</td><td>2h 20m</td><td class="price-cell">120,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/NRT/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 진에어</span></td><td>LCC 직항</td><td>나리타 NRT</td><td>2h 20m</td><td class="price-cell">125,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/NRT/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 티웨이항공</span></td><td>LCC 직항</td><td>나리타 NRT</td><td>2h 25m</td><td class="price-cell">119,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/NRT/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 아시아나항공</span></td><td>FSC 직항</td><td>하네다 HND</td><td>2h 15m</td><td class="price-cell">230,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/HND/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>하네다 HND</td><td>2h 15m</td><td class="price-cell">250,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/HND/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
       </div>
+
       <div class="aff-cta">
-        <a href="tours.html?city=도쿄" class="cta-btn primary">🎟 도쿄 투어·티켓 검색</a>
-        <a href="https://www.booking.com/searchresults.ko.html?ss=도쿄" target="_blank" rel="noopener" class="cta-btn secondary">🏨 부킹닷컴 숙소 비교</a>
+        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/NRT/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
+        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=NRT&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
+        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DNRT&leg2=from%3DNRT%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
       </div>
     </div>
   </section>
 
-  <!-- ── 현지 팁 ── -->
-  <section class="section section-alt">
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
     <div class="container">
       <div class="section-header">
         <span class="section-badge">💡 현지 팁</span>
-        <h2>알아두면 좋은 정보</h2>
+        <h2>도쿄 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
       </div>
-      <div class="budget-grid">
-        <div class="budget-card"><span class="budget-icon">🚃</span><div class="budget-info"><h4>교통</h4><span class="budget-note">스이카/파스모 교통카드 필수. JR·지하철·사철 복잡 → 구글맵 환승 안내 활용</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🌸</span><div class="budget-info"><h4>시즌</h4><span class="budget-note">3월말~4월초 벚꽃, 11월 단풍이 최고 인기. 이 시기 항공·숙박 조기 예약 필수</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🎡</span><div class="budget-info"><h4>당일치기</h4><span class="budget-note">디즈니랜드/시(우라야스), 하코네 온천, 가마쿠라 대불 등 근교 당일 여행 풍부</span></div></div>
-        <div class="budget-card"><span class="budget-icon">💳</span><div class="budget-info"><h4>결제</h4><span class="budget-note">대도시라 카드·간편결제 잘 됨. 단 소규모 식당·신사는 현금 준비</span></div></div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">💳</span><h3>스이카 / 파스모 IC카드</h3><p>공항·역 자판기에서 바로 구매. JR·지하철·사철·버스·편의점 결제까지 한 장으로. 모바일 스이카(아이폰·안드로이드)로 발급하면 카드 없이 폰만으로 태그 가능</p></div>
+        <div class="tip-card"><span class="tip-icon">🚃</span><h3>복잡한 노선은 구글맵 필수</h3><p>JR 야마노테선·지하철·사철이 거미줄처럼 얽힘. 구글맵/야후! 노리카에 앱으로 환승·출구 번호까지 확인. 러시아워엔 갈아타기 앱이 필수</p></div>
+        <div class="tip-card"><span class="tip-icon">🚄</span><h3>공항 → 시내 이동</h3><p>나리타: 나리타 익스프레스(¥3,070, 60분)·게이세이 스카이라이너(¥2,580, 41분). 하네다: 게이큐선·모노레일로 시내 30분. 짐 많으면 리무진 버스가 편함</p></div>
+        <div class="tip-card"><span class="tip-icon">🎢</span><h3>디즈니 앱·사전예매</h3><p>도쿄 디즈니 공식 앱으로 입장권 날짜 지정 사전 구매 필수(현장 매진 잦음). 프리미어 액세스·스탠바이 패스도 앱에서 실시간 예약. 배터리·보조배터리 챙기기</p></div>
+        <div class="tip-card"><span class="tip-icon">🎬</span><h3>지브리·팀랩 사전예약 필수</h3><p>지브리 미술관은 한 달 전 온라인 예약제(당일권 없음), 로손 티켓 판매. 팀랩도 날짜·시간 지정 온라인 예매 필수. 인기 시간대는 조기 매진</p></div>
+        <div class="tip-card"><span class="tip-icon">💊</span><h3>면세 & 약국 쇼핑</h3><p>¥5,000 이상 구매 시 여권 제시로 면세(소비세 10% 환급). 마츠모토 키요시·돈키호테에서 약·화장품·과자. 도쿄는 카드·간편결제 잘 되지만 소규모 가게·신사는 현금 준비</p></div>
+        <div class="tip-card"><span class="tip-icon">🚦</span><h3>러시아워 혼잡 주의</h3><p>평일 07:30~09:00, 18:00~19:30 지하철은 극도로 혼잡. 유모차·큰 캐리어 이동은 이 시간대 피하기. 신주쿠·시부야·도쿄역 환승 통로도 매우 붐빔</p></div>
       </div>
     </div>
   </section>
+
 
   <!-- ── FOOTER ── -->
   <footer class="footer">
     <div class="container">
       <div class="footer-top">
         <div class="footer-brand">
-          <span class="logo">✈ 트립가이드</span>
+          <a href="index.html" class="logo">✈ 트립가이드</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
           <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
         </div>
         <div class="footer-nav">
@@ -300,19 +651,35 @@
 
   <script src="main.js"></script>
   <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
     function initDayTabs() {}
-    function showDay(day, btn) {
-      document.querySelectorAll('#day-tabs .day-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById('day' + day)?.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
     }
   </script>
-  <script>
-    if('serviceWorker' in navigator){
-      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-    }
-  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
   <script src="/analytics.js"></script>
 <script src="/pwa-install.js" defer></script>
   <script>

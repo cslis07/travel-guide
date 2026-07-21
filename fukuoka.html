@@ -3,16 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="후쿠오카 여행 완벽 가이드 — 2박 3일 추천 일정, 예산, 추천 숙소, 현지 팁. 하카타 라멘·야타이·다자이후까지.">
+  <meta name="description" content="후쿠오카 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
   <title>후쿠오카 여행 가이드 | 트립가이드</title>
-  <link rel="canonical" href="https://travel-guide-cslis07.vercel.app/fukuoka">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="후쿠오카 여행 가이드 | 트립가이드">
-  <meta property="og:description" content="2박 3일 추천 일정·예산·숙소·현지 팁. 가장 가까운 일본, 후쿠오카.">
-  <meta property="og:url" content="https://travel-guide-cslis07.vercel.app/fukuoka">
-  <meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+<link rel="canonical" href="https://travel-guide-cslis07.vercel.app/fukuoka">
+<meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -22,8 +19,9 @@
     "@type": "TouristDestination",
     "name": "후쿠오카",
     "url": "https://travel-guide-cslis07.vercel.app/fukuoka",
-    "description": "후쿠오카 여행 가이드 — 2박 3일 일정, 예산, 추천 숙소, 현지 팁",
+    "description": "후쿠오카 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
     "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
     "geo": { "@type": "GeoCoordinates", "latitude": 33.5904, "longitude": 130.4017 }
   }
   </script>
@@ -68,7 +66,9 @@
   <div class="fx-bar" id="fxBar">
     <div class="container fx-inner">
       <span class="fx-label">💱 환율</span>
-      <div class="fx-rates" id="fxRates"><span class="fx-skeleton">로딩 중…</span></div>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
       <span class="fx-updated" id="fxUpdated"></span>
     </div>
   </div>
@@ -78,7 +78,7 @@
     <div class="dest-hero-bg">🍜</div>
     <div class="dest-hero-overlay"></div>
     <div class="dest-hero-content">
-      <span class="dest-hero-badge">🇯🇵 일본 · 규슈 지방</span>
+      <span class="dest-hero-badge">🍜 일본 · 규슈 지방</span>
       <h1>후쿠오카</h1>
       <p>가장 가까운 일본 — 하카타 라멘·야타이·다자이후, 1시간 반이면 도착하는 미식 도시</p>
       <div class="dest-hero-stats">
@@ -97,161 +97,514 @@
     </div>
   </section>
 
-  <!-- ── 일정 ── -->
-  <section class="section">
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
     <div class="container">
-      <div class="section-header">
-        <span class="section-badge">🗓 추천 일정</span>
-        <h2>2박 3일 추천 코스</h2>
-        <p>공항에서 시내까지 지하철 5분 — 짧은 일정에 최적</p>
-      </div>
-
-      <div class="day-tabs" id="day-tabs">
-        <button class="day-tab active" onclick="showDay(1,this)">1일차</button>
-        <button class="day-tab" onclick="showDay(2,this)">2일차</button>
-        <button class="day-tab" onclick="showDay(3,this)">3일차</button>
-      </div>
-
-      <div class="day-content active" id="day1">
-        <div class="day-header">
-          <span class="day-num-badge">DAY 1</span>
-          <div><h3>도착 → 하카타·텐진 시내</h3><p>공항에서 지하철로 시내 직행, 첫날은 번화가 탐방</p></div>
-        </div>
-        <div class="timeline">
-          <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 후쿠오카공항 도착</h4><p>공항 지하철역에서 하카타역 2정거장(5분, ¥260), 텐진 5정거장(11분). 국내선·국제선 터미널은 무료 셔틀 연결</p></div></div>
-          <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>하카타역·텐진 주변 숙소 추천. 짐 맡기고 가볍게 출발</p></div></div>
-          <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🛍 텐진 지하상가 & 쇼핑</h4><p>규슈 최대 번화가. 텐진 지하상가, 파르코·다이마루 백화점, 돈키호테. 화장품·잡화 쇼핑 천국</p></div></div>
-          <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍜 하카타 돈코츠 라멘</h4><p>후쿠오카의 상징. 이치란 본점, 신신, 잇푸도 등 명가. 진한 돼지뼈 육수 라멘 ¥800~1,200</p></div></div>
-          <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🏮 나카스 야타이 거리</h4><p>나카강변 포장마차촌. 야키토리·오뎅·라멘을 노천에서. 후쿠오카 밤의 명물. 1인 ¥2,000~3,000</p></div></div>
-        </div>
-      </div>
-
-      <div class="day-content" id="day2">
-        <div class="day-header">
-          <span class="day-num-badge">DAY 2</span>
-          <div><h3>다자이후 → 오호리 공원</h3><p>근교 역사 명소 + 도심 힐링</p></div>
-        </div>
-        <div class="timeline">
-          <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>⛩ 다자이후 텐만구</h4><p>학문의 신을 모신 신사. 니시테츠 텐진역 → 다자이후역(약 25분, ¥410). 참배길의 우메가에모찌(매화떡) 필수</p></div></div>
-          <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🏛 규슈국립박물관</h4><p>다자이후 텐만구 옆. 규슈·아시아 교류사 전시. 입장료 ¥700</p></div></div>
-          <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🍱 텐진 점심 & 커피</h4><p>시내 복귀 후 모츠나베(곱창전골) 또는 멘타이코 정식. 후쿠오카 명물 명란젓 맛보기</p></div></div>
-          <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🌳 오호리 공원 & 후쿠오카성터</h4><p>도심 속 큰 호수 공원. 산책·보트. 인접한 마이즈루 공원의 후쿠오카성터에서 시내 조망</p></div></div>
-          <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍢 하카타 모츠나베 저녁</h4><p>후쿠오카 대표 요리 곱창전골. 오오야마·라쿠텐치 등 명가. 1인 ¥1,800~2,800</p></div></div>
-        </div>
-      </div>
-
-      <div class="day-content" id="day3">
-        <div class="day-header">
-          <span class="day-num-badge">DAY 3</span>
-          <div><h3>캐널시티 → 귀국</h3><p>마지막 쇼핑 후 공항 이동</p></div>
-        </div>
-        <div class="timeline">
-          <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🛍 캐널시티 하카타</h4><p>대형 복합 쇼핑몰. 운하를 따라 상점·레스토랑·분수쇼. 라멘 스타디움에서 전국 라멘 맛보기</p></div></div>
-          <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🎁 하카타역 기념품</h4><p>하카타역 데이토스·마잉구에서 멘타이코·히요코 과자·규슈 특산품. ¥5,000↑ 면세 가능</p></div></div>
-          <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>하카타역 → 공항 지하철 5분. 국제선은 무료 셔틀 이용. 비행 2시간 전 도착 권장</p></div></div>
-        </div>
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
       </div>
     </div>
   </section>
 
-  <!-- ── 예산 ── -->
-  <section class="section section-alt">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">💰 예산 가이드</span>
-        <h2>2박 3일 예상 경비</h2>
-        <p>1인 기준 · 환율 ¥1 = 9.5원</p>
-      </div>
-      <div class="budget-grid">
-        <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">79,000 ~ 220,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박)</h4><span class="budget-range">50,000 ~ 150,000원</span><span class="budget-note">캡슐 ~ 비즈니스 호텔</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (3일)</h4><span class="budget-range">20,000 ~ 35,000원</span><span class="budget-note">지하철·니시테츠 포함</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">80,000 ~ 140,000원</span><span class="budget-note">1끼 ¥800~2,000</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">15,000 ~ 35,000원</span><span class="budget-note">박물관·다자이후 등</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 150,000원</span><span class="budget-note">약국·기념품</span></div></div>
-      </div>
-      <div class="budget-total">
-        <div>
-          <span class="total-label">2박 3일 1인 총 예상 경비</span>
-          <span class="total-amount">294,000 ~ 730,000원</span>
-        </div>
-        <span class="total-note">절약형(LCC+캡슐) ~ 여유형(FSC+비즈니스 호텔) 기준</span>
-      </div>
-    </div>
-  </section>
 
-  <!-- ── 숙소 ── -->
-  <section class="section">
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>나만의 페이스로 즐기는 미식 혼여행 — 라멘·야타이·근교 신사를 자유롭게</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 하카타·나카스 야타이</h3><p>공항에서 지하철 5분, 첫날은 하카타 라멘과 포장마차의 밤</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 후쿠오카공항 도착</h4><p>공항 지하철역에서 하카타역 2정거장(5분, ¥260), 텐진 5정거장(11분, ¥260). 도착 즉시 시내 직행 — 아시아 최고의 접근성</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>하카타역 도보권 숙소에 짐 맡기기. 혼여행은 캡슐호텔·게스트하우스가 가성비 최고</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🛍 텐진 지하상가 & 쇼핑</h4><p>규슈 최대 번화가. 텐진 지하상가(590m 아케이드)·파르코·다이마루·돈키호테. 화장품·잡화 쇼핑 천국</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍜 하카타 돈코츠 라멘</h4><p>후쿠오카의 상징. 이치란 본점·신신·잇푸도 등 명가. 진한 돼지뼈 육수에 가는 면, 카에다마(면 추가 ¥150)까지. 1인 ¥800~1,200</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🏮 나카스 야타이 거리</h4><p>나카강변 노천 포장마차촌. 야키토리·오뎅·명란구이를 카운터에서. 혼자 앉아 옆 손님과 대화하는 게 야타이의 묘미. 1인 ¥2,000~3,000, 현금 필수</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>다자이후 → 오호리 공원</h3><p>근교 역사 명소와 도심 힐링을 하루에 — 걷기 좋은 코스</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>⛩ 다자이후 텐만구</h4><p>학문의 신 스가와라노 미치자네를 모신 신사. 니시테츠 텐진역→다자이후역(급행 약 25분, ¥410). 참배길에서 갓 구운 우메가에모찌(매화떡 ¥130) 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🏛 규슈국립박물관</h4><p>다자이후 텐만구 옆 에스컬레이터로 연결. 규슈·아시아 교류사 전시. 입장료 ¥700. 건축미도 볼거리</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🍢 텐진 모츠나베 점심</h4><p>시내 복귀 후 후쿠오카 대표 요리 모츠나베(곱창전골). 오오야마·라쿠텐치 등 명가. 간장·된장 국물 선택. 1인 ¥1,800~2,800</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🌳 오호리 공원 & 후쿠오카성터</h4><p>도심 속 큰 호수 공원. 호수 둘레 산책·보트(¥1,100/30분). 인접한 마이즈루 공원의 후쿠오카성터에서 시내 조망 — 벚꽃 명소</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍶 텐진 이자카야 & 명란</h4><p>혼자서 카운터 이자카야. 멘타이코(명란)·미즈타키(닭백숙 전골)·나마비루. 1인 ¥2,500~4,000</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>캐널시티 → 귀국</h3><p>마지막 날 복합몰 쇼핑 후 공항 이동</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🛍 캐널시티 하카타</h4><p>운하가 흐르는 대형 복합몰. 상점·레스토랑·분수쇼(30분 간격). 라멘 스타디움에서 전국 8개 지역 라멘 비교 시식</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🎁 하카타역 기념품 쇼핑</h4><p>하카타역 데이토스·마잉구에서 멘타이코·히요코 과자·규슈 특산품. ¥5,000↑ 면세 가능. 마츠모토 키요시에서 약품 쇼핑</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>하카타역 → 공항 지하철 5분(¥260). 국제선 터미널은 국내선에서 무료 셔틀. 비행 2시간 전 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>2박 3일 · 환율 ¥1 = 9.5원 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">69,000 ~ 220,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박)</h4><span class="budget-range">45,000 ~ 150,000원</span><span class="budget-note">캡슐호텔 ~ 비즈니스 호텔</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (3일)</h4><span class="budget-range">18,000 ~ 30,000원</span><span class="budget-note">지하철·니시테츠 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">80,000 ~ 140,000원</span><span class="budget-note">1끼 ¥800~2,000 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">15,000 ~ 35,000원</span><span class="budget-note">박물관·다자이후 등</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 150,000원</span><span class="budget-note">약국·기념품 쇼핑</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 1인 총 예상 경비</span>
+            <span class="total-amount">277,000 ~ 725,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+캡슐) ~ 여유형(FSC+비즈니스 호텔) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>더 넷 하카타 (캡슐)</h3>
+              <p class="hotel-location">📍 하카타역 도보 5분</p>
+              <p>최신식 캡슐 + 넓은 사우나·공용 라운지. 하카타역 초근접으로 공항·다자이후 이동 편리. 혼여행 가성비 최고</p>
+              <div class="hotel-price">1박 <strong>¥3,000~5,500</strong> (~29,000원~)</div>
+              <div class="hotel-tags"><span>캡슐</span><span>사우나</span><span>Wi-Fi</span><span>코인 세탁</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Fukuoka" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>위드 더 스타일 후쿠오카</h3>
+              <p class="hotel-location">📍 하카타역 도보 7분</p>
+              <p>디자인 부티크 호텔. 1인실·조용한 안뜰·조식 포함. 혼자만의 여유를 즐기려는 여행자에게 인기</p>
+              <div class="hotel-price">1박 <strong>¥6,000~9,000</strong> (~57,000원~)</div>
+              <div class="hotel-tags"><span>부티크</span><span>조식 포함</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Fukuoka" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
+            <div class="hotel-body">
+              <h3>도요코 인 하카타구치</h3>
+              <p class="hotel-location">📍 하카타역 도보 5분</p>
+              <p>1인실 비즈니스 호텔의 정석. 무료 조식·청결한 시설. 혼여행 가성비 최고의 안정적인 선택</p>
+              <div class="hotel-price">1박 <strong>¥7,000~11,000</strong> (~66,000원~)</div>
+              <div class="hotel-tags"><span>1인실</span><span>무료 조식</span><span>Wi-Fi</span><span>편의점 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Fukuoka" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Fukuoka" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Fukuoka" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>같이 먹고 마시고 즐기는 후쿠오카 미식 정복 — 야타이·모츠나베·근교 온천</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 나카스 야타이 먹방 투어</h3><p>후쿠오카 도착 첫날, 라멘부터 야타이까지 미식 순례</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 후쿠오카공항 도착</h4><p>지하철로 하카타역 5분(¥260). 국내선·국제선 무료 셔틀 연결. 짐 맡기고 바로 출발</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🛍 텐진·캐널시티 쇼핑</h4><p>텐진 지하상가·돈키호테에서 화장품·잡화. 캐널시티 하카타 분수쇼 구경. 친구랑 셀카 명소 순례</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍜 하카타 라멘 & 카에다마</h4><p>이치란·신신에서 돈코츠 라멘. 면 굳기 선택(바리카타 추천)·카에다마(면 추가 ¥150). 1인 ¥900~1,300</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🏮 나카스 야타이 순례</h4><p>나카강변 포장마차촌. 야키토리·명란계란말이·라멘을 가게 옮겨가며. 나마비루로 건배. 1인 ¥2,500~4,000, 현금 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">22:00</div><div class="tl-body"><h4>🍺 텐진 심야 이자카야</h4><p>2차는 텐진 이자카야. 명란·모츠나베·하이볼로 마무리. 편의점 야식도 여행의 묘미</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>유후인 or 벳푸 온천 당일치기</h3><p>고속버스 2시간, 규슈 대표 온천 마을로 나들이</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚌 유후인 고속버스 출발</h4><p>하카타 버스터미널→유후인 고속버스(약 2시간, 편도 ¥3,250). 사전 예매 권장. 또는 특급 유후인노모리 열차(¥4,660, 감성 만점)</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🍶 유노쓰보 거리 & 킨린 호수</h4><p>유후인 메인 거리. 수제 디저트·잡화·롤케이크(¥400~) 먹방. 킨린 호수 산책, 유후산 배경 인생샷</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>♨ 당일 온천 입욕</h4><p>당일치기 온천(히가에리)으로 노천탕 즐기기. 입욕료 ¥700~1,000. 지친 다리 힐링. 문신 있으면 사전 확인</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🍮 유후인 카페 & 디저트</h4><p>플로럴 빌리지·B-Speak 롤케이크 등 감성 카페. 친구랑 여유로운 티타임 후 후쿠오카행 버스</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🍢 하카타 복귀 & 모츠나베 저녁</h4><p>후쿠오카 복귀 후 모츠나베 저녁. 곱창전골에 마무리 짬뽕면(치안폰)까지. 1인 ¥2,000~3,000</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>다자이후 or 마리노아시티 → 귀국</h3><p>근교 신사 참배 또는 아웃렛 쇼핑 중 선택</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>⛩ 다자이후 텐만구 (선택A)</h4><p>니시테츠 텐진역→다자이후역(약 25분, ¥410). 학문의 신 신사, 스타벅스 다자이후점(전통 목조 디자인)도 명소. 우메가에모찌 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🛍 마리노아시티 아웃렛 (선택B)</h4><p>규슈 최대급 아웃렛. 텐진에서 버스 약 30분. 대관람차 있는 해변 아웃렛에서 브랜드 쇼핑. 면세 신청 잊지 말기</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍱 하카타역 점심 & 기념품</h4><p>하카타역 마잉구·데이토스에서 마지막 라멘. 멘타이코·히요코·도리몬 과자 기념품 쇼핑</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>하카타역 → 공항 지하철 5분. 저가항공 오후편 이용 시 넉넉히 이동. 비행 2시간 전 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>2박 3일 · 온천 당일치기 포함 · 2인 기준으로 나눈 숙박비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">69,000 ~ 220,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박 · 1인당)</h4><span class="budget-range">55,000 ~ 160,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">♨</span><div class="budget-info"><h4>온천 당일치기</h4><span class="budget-range">45,000 ~ 80,000원</span><span class="budget-note">유후인·벳푸 왕복 버스+입욕</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">100,000 ~ 170,000원</span><span class="budget-note">야타이·이자카야 3일 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통</h4><span class="budget-range">25,000 ~ 45,000원</span><span class="budget-note">시내+근교 이동 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 180,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">344,000 ~ 855,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+2인 쉐어) ~ 여유형(FSC+온천 풀옵션+4성 호텔)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>텐진·나카스 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>리치몬드 호텔 텐진 니시도리</h3>
+              <p class="hotel-location">📍 텐진역 도보 5분</p>
+              <p>깔끔한 비즈니스 호텔. 트윈룸 가성비 최고. 텐진 쇼핑·나카스 야타이 도보권으로 친구 여행 동선 최적</p>
+              <div class="hotel-price">2인 1박 <strong>¥11,000~15,000</strong> (1인당 ~70,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>Wi-Fi</span><span>편의점 2분</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Fukuoka" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>더 라이블리 후쿠오카 하카타</h3>
+              <p class="hotel-location">📍 하카타역 도보 5분</p>
+              <p>트렌디한 라이프스타일 호텔. 루프탑 라운지·바에서 야경 감상. 젊은 감성 인테리어로 친구 여행에 인기</p>
+              <div class="hotel-price">2인 1박 <strong>¥15,000~22,000</strong> (1인당 ~95,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>루프탑바</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Fukuoka" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">뷰 특화</span></div>
+            <div class="hotel-body">
+              <h3>그랜드 하얏트 후쿠오카</h3>
+              <p class="hotel-location">📍 캐널시티 하카타 인접</p>
+              <p>캐널시티 옆 럭셔리 호텔. 넓은 트윈룸·수영장·피트니스. 쇼핑몰 직결로 친구 여행 편의 최고</p>
+              <div class="hotel-price">2인 1박 <strong>¥22,000~35,000</strong> (1인당 ~140,000원~)</div>
+              <div class="hotel-tags"><span>캐널시티 직결</span><span>수영장</span><span>트윈룸</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Fukuoka" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Fukuoka" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Fukuoka" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>아이와 함께하는 후쿠오카 — 수족관·해변공원·전망대 3박 4일</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 캐널시티 하카타</h3><p>공항 5분 거리 복합몰로 첫날 가볍게 — 분수쇼가 아이들 눈길을 사로잡는다</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 후쿠오카공항 도착</h4><p>공항→하카타역 지하철 5분(¥260). 짐 많은 가족은 택시(약 ¥1,500)도 부담 없음. 접근성이 가족 여행에 최적</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🛍 캐널시티 하카타</h4><p>운하 따라 상점·레스토랑. 30분 간격 분수쇼에 아이들 환호. 라멘 스타디움에서 온 가족 라멘 골라 먹기</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🎁 하카타역 & 저녁</h4><p>하카타역 데이토스·이토요카도에서 가족 저녁. 히요코 과자·멘타이코 기념품 미리 둘러보기</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🏨 숙소 체크인 & 휴식</h4><p>하카타역 인근 가족룸 호텔로. 아이 일찍 재워 내일 수족관·해변공원 위한 충전</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>우미노나카미치 → 마린월드 수족관</h3><p>바다 사이 해변공원과 돌고래 쇼로 온 가족 신나는 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>⛴ 우미노나카미치 이동</h4><p>하카타 부두→우미나카 라인 여객선(약 20분, 어른 ¥1,100)으로 바다 건너기. 아이들 배 여행 자체가 이벤트. JR로도 이동 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🌸 우미노나카미치 해변공원</h4><p>거대한 국영 해변공원. 계절 꽃밭·대형 놀이터·동물의 숲·물놀이장. 어른 ¥450 / 중학생 이하 무료. 자전거 대여로 넓은 공원 이동</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🐬 마린월드 우미노나카미치</h4><p>규슈 근해 테마 수족관. 돌고래·바다사자 쇼, 상어 수조. 입장 어른 ¥2,500 / 초·중생 ¥1,200 / 유아 ¥700. 약 2시간</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🗼 후쿠오카타워</h4><p>시내 복귀 길에 234m 해변 전망탑. 어른 ¥800 / 초등생 이하 ¥500. 하카타만 조망. 저녁엔 조명쇼</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🏖 모모치 해변 & 저녁</h4><p>후쿠오카타워 아래 인공 해변 산책. 마리존 근처 패밀리 레스토랑에서 저녁. 노을 지는 바다 배경 가족 사진</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>다자이후 → 오호리 공원</h3><p>근교 신사 참배와 도심 호수 공원으로 여유로운 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>⛩ 다자이후 텐만구</h4><p>학문의 신 신사 — 아이 학업 기원. 니시테츠 텐진역→다자이후역(약 25분, ¥410). 참배길 우메가에모찌(¥130), 소 동상 만지기 등 아이가 좋아하는 코스</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🏛 규슈국립박물관</h4><p>다자이후 옆 대형 박물관. 어린이 체험존 '아짓파'에서 아시아 문화 놀이 체험(무료). 상설전 어른 ¥700 / 대학생 이하 무료</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🌳 오호리 공원</h4><p>시내 복귀 후 큰 호수 공원. 오리배(¥1,100)·놀이터·잔디밭 소풍. 인접 도호 식물원·일본정원도 산책. 아이 뛰어놀기 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🍢 텐진 가족 저녁</h4><p>텐진에서 모츠나베 또는 회전초밥. 아이 입맛엔 우동·계란말이도 무난. 저녁 후 텐진 지하상가 가볍게 산책</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>야후오쿠돔 → 마지막 쇼핑 → 귀국</h3><p>돔구장 구경과 기념품 쇼핑 후 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>⚾ 미즈호 페이페이돔(야후오쿠돔)</h4><p>소프트뱅크 호크스 홈구장. 왕정치 야구 박물관·굿즈샵. 옆 보스 E·조 후쿠오카 대관람차·놀이시설로 아이 마무리 놀이</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🛍 하카타역 마지막 쇼핑</h4><p>하카타역 마잉구·아뮤플라자에서 멘타이코·히요코·캐릭터 상품. 마츠모토 키요시 약품. ¥5,000↑ 면세</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이 동반 가족은 2시간 전 공항 도착 권장. 하카타역→공항 지하철 5분이라 짐 많아도 부담 적음</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>3박 4일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">340,000 ~ 800,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 가족룸)</h4><span class="budget-range">240,000 ~ 550,000원</span><span class="budget-note">4인 가족룸 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🐬</span><div class="budget-info"><h4>수족관·관광 (4인)</h4><span class="budget-range">90,000 ~ 150,000원</span><span class="budget-note">마린월드·해변공원·타워</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">280,000 ~ 460,000원</span><span class="budget-note">4인 1끼 ¥3,500~7,000</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4인)</h4><span class="budget-range">70,000 ~ 130,000원</span><span class="budget-note">여객선·다자이후 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">80,000 ~ 200,000원</span><span class="budget-note">기념품·아이 굿즈</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">1,100,000 ~ 2,290,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+가족룸 공유) ~ 여유형(FSC+4성 호텔+관광 풀옵션)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>가족룸·키즈 어메니티·편의 시설이 잘 갖춰진 곳</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>도미 인 프리미엄 하카타 캐널시티마에</h3>
+              <p class="hotel-location">📍 캐널시티 도보 3분 · 하카타역 도보 10분</p>
+              <p>천연 온천 대욕장 있는 도시형 호텔. 4인 가족룸 보유, 밤엔 무료 야식 라멘 서비스. 아이 동반 만족도 높음</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥16,000~24,000</strong> (~152,000원~)</div>
+              <div class="hotel-tags"><span>가족룸</span><span>온천 대욕장</span><span>무료 야식</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Fukuoka" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>호텔 닛코 후쿠오카</h3>
+              <p class="hotel-location">📍 하카타역 도보 3분</p>
+              <p>하카타역 초근접 대형 호텔. 넓은 패밀리룸·조식 뷔페·어린이 어메니티 완비. 공항·다자이후 이동 허브</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥24,000~38,000</strong> (~228,000원~)</div>
+              <div class="hotel-tags"><span>패밀리룸</span><span>조식 뷔페</span><span>어린이 어메니티</span><span>역 도보 3분</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Fukuoka" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">리조트</span></div>
+            <div class="hotel-body">
+              <h3>힐튼 후쿠오카 시호크</h3>
+              <p class="hotel-location">📍 미즈호 페이페이돔 인접 · 모모치 해변</p>
+              <p>바다 전망 리조트 호텔. 넓은 패밀리룸·수영장·돔구장·타워 인접. 온 가족 볼거리 많은 지역에 위치</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥30,000~50,000</strong> (~285,000원~)</div>
+              <div class="hotel-tags"><span>오션뷰</span><span>수영장</span><span>패밀리룸</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Fukuoka" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Fukuoka" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Fukuoka" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 항공권
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
     <div class="container">
       <div class="section-header">
-        <span class="section-badge">🏨 숙소 추천</span>
-        <h2>어디에 묵을까</h2>
-        <p>하카타역·텐진 주변이 이동·쇼핑에 최적</p>
+        <span class="section-badge">✈ 항공권</span>
+        <h2>인천 ↔ 후쿠오카 항공권</h2>
+        <p>비행시간 약 1시간 20분 · 인천 ICN → 후쿠오카 FUK · 공항→하카타역 지하철 5분 ¥260</p>
       </div>
-      <div class="hotel-grid">
-        <div class="hotel-card">
-          <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
-          <div class="hotel-body">
-            <h3>캡슐·게스트하우스 (하카타)</h3>
-            <p class="hotel-location">📍 하카타역 도보권</p>
-            <p>최신식 캡슐호텔·게스트하우스가 하카타역 주변에 밀집. 공용 사우나·라운지. 혼여행·가성비 최고</p>
-            <div class="hotel-price">1박 <strong>¥3,000~5,500</strong> (~29,000원~)</div>
-            <div class="hotel-tags"><span>캡슐</span><span>Wi-Fi</span><span>역세권</span></div>
-            <a href="https://www.agoda.com/ko-kr/search?textToSearch=후쿠오카 하카타 캡슐" target="_blank" rel="noopener" class="hotel-cta">아고다에서 검색</a>
-          </div>
-        </div>
-        <div class="hotel-card">
-          <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
-          <div class="hotel-body">
-            <h3>텐진 비즈니스 호텔</h3>
-            <p class="hotel-location">📍 텐진역 도보 5분</p>
-            <p>쇼핑·야타이 중심 텐진. 도미·리치몬드·솔라리아 등 깔끔한 비즈니스 호텔 다수. 관광·미식 접근성 최고</p>
-            <div class="hotel-price">1박 <strong>¥7,000~12,000</strong> (~66,000원~)</div>
-            <div class="hotel-tags"><span>1인실</span><span>무료 조식</span><span>번화가</span></div>
-            <a href="https://www.agoda.com/ko-kr/search?textToSearch=후쿠오카 텐진 호텔" target="_blank" rel="noopener" class="hotel-cta">아고다에서 검색</a>
-          </div>
-        </div>
-        <div class="hotel-card">
-          <div class="hotel-badge-row"><span class="hotel-badge fam">가족·편의</span></div>
-          <div class="hotel-body">
-            <h3>하카타역 직결 호텔</h3>
-            <p class="hotel-location">📍 하카타역 인접</p>
-            <p>공항·다자이후·시내 이동의 허브. 대형 호텔·부대시설. 짐 많은 가족·단체에 편리</p>
-            <div class="hotel-price">1박 <strong>¥10,000~18,000</strong> (~95,000원~)</div>
-            <div class="hotel-tags"><span>역직결</span><span>대형</span><span>부대시설</span></div>
-            <a href="https://www.agoda.com/ko-kr/search?textToSearch=후쿠오카 하카타역 호텔" target="_blank" rel="noopener" class="hotel-cta">아고다에서 검색</a>
-          </div>
-        </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">✈ 이스타항공</span></td><td>LCC 직항</td><td>1h 20m</td><td class="price-cell">69,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/FUK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 에어부산</span></td><td>LCC 직항</td><td>1h 20m</td><td class="price-cell">75,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/FUK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 제주항공</span></td><td>LCC 직항</td><td>1h 20m</td><td class="price-cell">79,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/FUK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 진에어</span></td><td>LCC 직항</td><td>1h 20m</td><td class="price-cell">79,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/FUK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 티웨이항공</span></td><td>LCC 직항</td><td>1h 20m</td><td class="price-cell">75,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/FUK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 아시아나항공</span></td><td>FSC 직항</td><td>1h 15m</td><td class="price-cell">160,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/FUK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>1h 15m</td><td class="price-cell">180,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/FUK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
       </div>
+
       <div class="aff-cta">
-        <a href="tours.html?city=후쿠오카" class="cta-btn primary">🎟 후쿠오카 투어·티켓 검색</a>
-        <a href="https://www.booking.com/searchresults.ko.html?ss=후쿠오카" target="_blank" rel="noopener" class="cta-btn secondary">🏨 부킹닷컴 숙소 비교</a>
+        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/FUK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
+        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=FUK&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
+        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DFUK&leg2=from%3DFUK%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
       </div>
     </div>
   </section>
 
-  <!-- ── 현지 팁 ── -->
-  <section class="section section-alt">
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
     <div class="container">
       <div class="section-header">
         <span class="section-badge">💡 현지 팁</span>
-        <h2>알아두면 좋은 정보</h2>
+        <h2>후쿠오카 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
       </div>
-      <div class="budget-grid">
-        <div class="budget-card"><span class="budget-icon">🚃</span><div class="budget-info"><h4>교통</h4><span class="budget-note">지하철 1일권 ¥640. 니시테츠 버스도 시내 촘촘. 다자이후는 니시테츠 전철 이용</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>미식</h4><span class="budget-note">3대 명물: 하카타 라멘·모츠나베·명란젓(멘타이코). 야타이는 현금만 받는 곳 多</span></div></div>
-        <div class="budget-card"><span class="budget-icon">💳</span><div class="budget-info"><h4>결제</h4><span class="budget-note">대형점은 카드·간편결제 OK. 야타이·소규모 식당은 현금 준비 필수</span></div></div>
-        <div class="budget-card"><span class="budget-icon">🧳</span><div class="budget-info"><h4>당일치기</h4><span class="budget-note">시간 여유 있으면 유후인·벳푸 온천 당일치기(고속버스 약 2시간) 추천</span></div></div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">💳</span><h3>스이카 / 니모카 교통카드</h3><p>후쿠오카 지하철·니시테츠 버스·JR·편의점 결제까지 한 장으로. 현지 니모카 또는 한국서 쓰던 스이카·이코카 모두 호환. 공항역에서 바로 구매·충전 가능</p></div>
+        <div class="tip-card"><span class="tip-icon">🚇</span><h3>공항 → 하카타 지하철 5분</h3><p>후쿠오카공항의 최대 강점. 국내선 터미널 지하철역에서 하카타 2정거장(5분, ¥260), 텐진 5정거장(11분). 국제선은 국내선까지 무료 셔틀 이동 후 탑승</p></div>
+        <div class="tip-card"><span class="tip-icon">🏮</span><h3>야타이 이용법</h3><p>나카스·텐진의 노천 포장마차. 보통 18시경 오픈. 좌석 8~10석 소규모라 대기 있을 수 있음. 대부분 현금만, 1인 최소 1~2잔+안주가 매너. 명물은 라멘·야키토리·명란계란말이</p></div>
+        <div class="tip-card"><span class="tip-icon">⛩</span><h3>다자이후는 니시테츠로</h3><p>니시테츠 텐진(후쿠오카)역에서 다자이후행. 급행+환승 약 25분 ¥410. '다자이후 산책 티켓'(왕복+우메가에모찌 교환권)이 알뜰. JR 아님에 주의</p></div>
+        <div class="tip-card"><span class="tip-icon">💊</span><h3>면세 & 약국 쇼핑</h3><p>한 매장 ¥5,000↑ 구매 시 면세(여권 지참). 마츠모토 키요시·돈키호테에서 두통약(EVE)·화장품·명란 과자. 하카타역·텐진에 대형점 밀집</p></div>
+        <div class="tip-card"><span class="tip-icon">♨</span><h3>규슈 근교 온천 당일치기</h3><p>시간 여유 있으면 유후인·벳푸 온천으로. 하카타 버스터미널에서 고속버스 약 2시간(편도 ¥3,250~). 특급 유후인노모리 열차는 감성 만점. 사전 예매 권장</p></div>
+        <div class="tip-card"><span class="tip-icon">🌀</span><h3>태풍·장마 시즌 유의</h3><p>6월 말~7월 장마, 8~9월 태풍철엔 항공 지연·결항 가능. 여행자보험·유연한 일정 권장. 최적기는 3~5월(벚꽃)·10~11월(선선). 규슈는 겨울에도 온화</p></div>
       </div>
     </div>
   </section>
+
 
   <!-- ── FOOTER ── -->
   <footer class="footer">
     <div class="container">
       <div class="footer-top">
         <div class="footer-brand">
-          <span class="logo">✈ 트립가이드</span>
+          <a href="index.html" class="logo">✈ 트립가이드</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
           <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
         </div>
         <div class="footer-nav">
@@ -287,19 +640,35 @@
 
   <script src="main.js"></script>
   <script>
-    function initDayTabs() {}   // main.js 기본 탭 로직 오버라이드
-    function showDay(day, btn) {
-      document.querySelectorAll('#day-tabs .day-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById('day' + day)?.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
     }
   </script>
-  <script>
-    if('serviceWorker' in navigator){
-      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-    }
-  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
   <script src="/analytics.js"></script>
 <script src="/pwa-install.js" defer></script>
   <script>
