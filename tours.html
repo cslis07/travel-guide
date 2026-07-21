@@ -135,9 +135,50 @@ a.tt-flight-card:hover{border-color:var(--primary);box-shadow:var(--shadow-hover
 .tt-fare-price{font-size:15px;font-weight:800;color:var(--primary)}
 .tt-fare-air{font-size:11px;color:var(--gray-400)}
 .tt-note{font-size:11.5px;color:var(--gray-400);text-align:center;margin-top:22px;line-height:1.7}
+
+/* ── 결과 카드 그리드 (투어·티켓 / 숙소) ── */
+.tt-items-head{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-size:13px;color:var(--gray-600);font-weight:600;margin:2px 2px 12px;flex-wrap:wrap}
+.tt-items-head b{color:var(--dark);font-weight:800}
+.tt-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.tt-item{
+  display:flex;gap:0;background:#fff;border:1px solid var(--gray-200);border-radius:16px;
+  overflow:hidden;box-shadow:0 1px 3px rgba(16,24,40,.05);text-decoration:none;color:inherit;
+  transition:transform .14s ease,box-shadow .14s ease,border-color .14s ease;
+}
+a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,.12);border-color:var(--primary-lt,#C7D6FF)}
+.tt-thumb{position:relative;flex:0 0 138px;width:138px;background:var(--gray-100);overflow:hidden}
+.tt-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.tt-thumb-none{display:flex;align-items:center;justify-content:center;font-size:34px;color:var(--gray-300)}
+.tt-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px;padding:13px 15px}
+.tt-badges{display:flex;gap:5px;flex-wrap:wrap}
+.tt-badge{font-size:10.5px;font-weight:700;color:var(--primary);background:var(--primary-lt,#EAF0FF);
+  padding:2px 8px;border-radius:6px;letter-spacing:-.01em}
+.tt-title2{font-size:15px;font-weight:700;line-height:1.4;color:var(--dark);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0}
+.tt-metarow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:auto}
+.tt-rate{font-size:12.5px;font-weight:700;color:#B45309}
+.tt-rate small{color:var(--gray-400);font-weight:500}
+.tt-mloc{font-size:12px;color:var(--gray-500);display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.tt-pricerow{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.tt-price2{font-size:18px;font-weight:800;color:var(--primary)}
+.tt-book{font-size:12.5px;font-weight:700;color:var(--accent-dark);white-space:nowrap}
+
+/* 페이지네이션 */
+.tt-pager{display:flex;align-items:center;justify-content:center;gap:6px;margin:18px 0 4px;flex-wrap:wrap}
+.tt-page-btn{min-width:36px;height:36px;padding:0 10px;border:1px solid var(--gray-200);background:#fff;
+  border-radius:9px;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--gray-600);cursor:pointer;transition:.12s}
+.tt-page-btn:hover:not(:disabled){border-color:var(--primary);color:var(--primary)}
+.tt-page-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.tt-page-btn:disabled{opacity:.4;cursor:not-allowed}
+
 @media(max-width:640px){
   .tours-hero h1{font-size:24px}
   .tt-field input,.tt-field select{font-size:16px} /* iOS 줌 방지 */
+  .tt-thumb{flex-basis:104px;width:104px}
+  .tt-title2{font-size:14px}
+  .tt-price2{font-size:16px}
+  .tt-info{padding:11px 12px}
 }
 </style>
   <!-- PWA -->
@@ -439,12 +480,110 @@ function ttError(m){
   const retry = _lastRun ? `<br><button class="tt-retry" onclick="if(_lastRun)_lastRun()">🔄 다시 시도</button>` : '';
   $('tt-results').innerHTML = `<div class="tt-err">⚠️ ${esc(m)}<br><small>잠시 후 다시 시도하거나 조건을 바꿔보세요.</small>${retry}</div>`;
 }
+/* ── 마이리얼트립 위젯(서버구동 UI 트리) → 구조화 카드 파싱 ──
+   각 ListViewItem 카드에서 이미지·제목·평점·가격·뱃지·예약URL 추출 */
+function parseWidgetCards(widget){
+  const cards = (widget && widget.children) || [];
+  const out = [];
+  for(const c of cards){
+    const it = { img:'', url:'', rating:'', rcount:'', price:'', title:'', badges:[], metas:[] };
+    (function walk(o){
+      if(o == null || typeof o !== 'object') return;
+      if(o.type === 'Image' && (o.url || o.src) && !it.img) it.img = o.url || o.src;
+      if(o.type === 'Badge' && o.label) it.badges.push(o.label);
+      if(o.type === 'Text' && o.value){
+        const v = String(o.value).trim();
+        if(/⭐/.test(v)){
+          const m = v.match(/([\d.]+)\s*\(([\d,]+)\)/);
+          if(m){ it.rating = m[1]; it.rcount = m[2]; }
+          else { const n = v.match(/([\d.]+)/); if(n) it.rating = n[1]; }
+        } else if(/[\d,]+\s*원/.test(v)){
+          if(!it.price) it.price = v;
+        } else {
+          if(!it.title) it.title = v; else it.metas.push(v);
+        }
+      }
+      if(o.onClickAction && !it.url){
+        it.url = o.onClickAction?.payload?.target?.url || o.onClickAction?.url || '';
+      }
+      for(const k in o) walk(o[k]);
+    })(c);
+    if(it.title || it.img) out.push(it);
+  }
+  return out;
+}
+// copy_text에서 전체 개수 추출 ("총 657개 중 20개 표시")
+function extractTotal(txt){
+  const m = String(txt || '').match(/총\s*([\d,]+)\s*개/);
+  return m ? Number(m[1].replace(/,/g,'')) : 0;
+}
+
+// 결과 카드 상태 (페이지네이션)
+let _ttItems = [], _ttPage = 1, _ttTotal = 0;
+const _TT_PAGE_SIZE = 5;
+
+function itemCard(it){
+  const badges = (it.badges || []).slice(0,2).map(b => `<span class="tt-badge">${esc(b)}</span>`).join('');
+  const rate = it.rating
+    ? `<span class="tt-rate">⭐ ${esc(it.rating)}${it.rcount ? ` <small>(${esc(it.rcount)})</small>` : ''}</span>` : '';
+  const meta = (it.metas || []).slice(0,1).map(m => `<span class="tt-mloc">${esc(m)}</span>`).join('');
+  const price = it.price ? `<span class="tt-price2">${esc(it.price)}</span>` : '<span></span>';
+  const thumb = it.img
+    ? `<div class="tt-thumb"><img src="${esc(it.img)}" alt="" loading="lazy"></div>`
+    : `<div class="tt-thumb tt-thumb-none">🎫</div>`;
+  const inner =
+    `${thumb}<div class="tt-info">` +
+      (badges ? `<div class="tt-badges">${badges}</div>` : '') +
+      `<h3 class="tt-title2">${esc(it.title || '상품')}</h3>` +
+      `<div class="tt-metarow">${rate}${meta}</div>` +
+      `<div class="tt-pricerow">${price}${it.url ? '<span class="tt-book">예약 ↗</span>' : ''}</div>` +
+    `</div>`;
+  return it.url
+    ? `<a class="tt-item" href="${esc(affLink(it.url))}" target="_blank" rel="noopener">${inner}</a>`
+    : `<div class="tt-item">${inner}</div>`;
+}
+
+function renderItemsPage(scroll){
+  const grid = $('tt-grid'), pager = $('tt-pager'), head = $('tt-items-head');
+  if(!grid) return;
+  const size = _TT_PAGE_SIZE, total = _ttItems.length;
+  const pages = Math.max(1, Math.ceil(total / size));
+  _ttPage = Math.min(Math.max(1, _ttPage), pages);
+  const start = (_ttPage - 1) * size;
+  grid.innerHTML = _ttItems.slice(start, start + size).map(itemCard).join('');
+  if(head){
+    const totalStr = _ttTotal >= 10000 ? '10,000+' : _ttTotal.toLocaleString();
+    const totalTxt = _ttTotal ? `총 <b>${totalStr}</b>개 중 상위 ${total}개` : `${total}개`;
+    head.innerHTML = `<span>🎫 ${totalTxt}</span><span>${_ttPage} / ${pages} 페이지</span>`;
+  }
+  pager.innerHTML = renderPager(pages);
+  if(scroll){ const box = $('tt-results'); if(box) box.scrollIntoView({ behavior:'smooth', block:'start' }); }
+}
+function renderPager(pages){
+  if(pages <= 1) return '';
+  let btns = `<button class="tt-page-btn" ${_ttPage===1?'disabled':''} onclick="ttGoPage(${_ttPage-1})">‹</button>`;
+  for(let p=1; p<=pages; p++){
+    btns += `<button class="tt-page-btn ${p===_ttPage?'active':''}" onclick="ttGoPage(${p})">${p}</button>`;
+  }
+  btns += `<button class="tt-page-btn" ${_ttPage===pages?'disabled':''} onclick="ttGoPage(${_ttPage+1})">›</button>`;
+  return btns;
+}
+function ttGoPage(p){ _ttPage = p; renderItemsPage(true); }
+
 function ttShow(data, ctaUrl, ctaLabel, partnerQuery, partnerType){
-  const text = data.copyText || data.text;
+  const cards = data.data && data.data.widget ? parseWidgetCards(data.data.widget) : [];
   let inner;
-  if(text) inner = `<div class="tt-card">${renderMd(text)}</div>`;
-  else if(data.data) inner = `<div class="tt-card">${summarize(data.data)}</div>`;
-  else inner = `<div class="tt-err">표시할 결과가 없습니다.</div>`;
+  if(cards.length){
+    _ttItems = cards; _ttPage = 1; _ttTotal = extractTotal(data.copyText);
+    inner = `<div class="tt-items-head" id="tt-items-head"></div>` +
+            `<div class="tt-grid" id="tt-grid"></div>` +
+            `<div class="tt-pager" id="tt-pager"></div>`;
+  } else {
+    const text = data.copyText || data.text;
+    if(text) inner = `<div class="tt-card">${renderMd(text)}</div>`;
+    else if(data.data) inner = `<div class="tt-card">${summarize(data.data)}</div>`;
+    else inner = `<div class="tt-err">표시할 결과가 없습니다.</div>`;
+  }
   if(ctaUrl) inner += `<a class="tt-cta" href="${affLink(ctaUrl)}" target="_blank" rel="noopener">${ctaLabel} ↗</a>`;
   // 타 플랫폼 비교 딥링크 (투어·티켓/숙소일 때만)
   if(partnerQuery && partnerType){
@@ -452,6 +591,7 @@ function ttShow(data, ctaUrl, ctaLabel, partnerQuery, partnerType){
     if(ctas) inner += `<p class="tt-compare-lbl">💰 다른 플랫폼 가격 비교</p>` + ctas;
   }
   $('tt-results').innerHTML = inner;
+  if(cards.length) renderItemsPage(false);
   scrollToResults();
 }
 function summarize(d){
