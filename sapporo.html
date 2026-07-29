@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="삿포로 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다. 눈축제·오타루·게요리·조잔케이 온천까지.">
+  <title>삿포로 여행 가이드 | 트립가이드</title>
+<link rel="canonical" href="https://travel-guide-cslis07.vercel.app/sapporo">
+<meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "삿포로",
+    "url": "https://travel-guide-cslis07.vercel.app/sapporo",
+    "description": "삿포로 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
+    "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
+    "geo": { "@type": "GeoCoordinates", "latitude": 43.0618, "longitude": 141.3545 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트립가이드">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">✈ 트립가이드</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;">🎟 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;">🧳 내 여행</a>
+        <a href="guide.html">📖 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;">✈ 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#0C4A6E 0%,#2E6FA5 45%,#7DD3FC 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">❄</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">❄ 일본 · 홋카이도</span>
+      <h1>삿포로</h1>
+      <p>설국과 대자연의 도시 — 눈축제·오타루·게요리, 여름은 시원하고 겨울은 낭만적인 홋카이도</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 삿포로 신치토세 약 2시간 50분</small></div>
+        <div class="hero-stat"><strong>💴 환율</strong><small>¥1 ≈ 9.5원 (2026 기준)</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>한국과 동일 (KST)</small></div>
+        <div class="hero-stat"><strong>🌸 추천 시기</strong><small>2월 눈축제, 6~8월 여름 라벤더</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
+      </div>
+      <a href="tours.html?city=삿포로" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 삿포로 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
+    <div class="container">
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>나만의 페이스로 걷는 설국 산책 — 오타루·야경·라멘을 자유롭게</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 오도리공원·스스키노</h3><p>신치토세 공항에서 삿포로 도심으로, 저녁은 스스키노 라멘 골목에서</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 신치토세 공항 도착</h4><p>JR 쾌속 에어포트(¥1,150, 37분)로 삿포로역 직행. Welcome Suica·ICOCA 그대로 사용 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>삿포로역·오도리 주변 비즈니스호텔에 짐 맡기기. 혼여행은 캡슐·게스트하우스가 가성비 최고</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🗼 오도리공원 & 삿포로 TV타워</h4><p>도심을 가로지르는 1.5km 공원. TV타워 전망대(¥1,000)에서 야경 조망. 겨울엔 눈축제·화이트일루미네이션 메인 무대</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍜 스스키노 라멘요코초</h4><p>홋카이도 대표 미소라멘 골목. 진한 된장 국물의 삿포로 미소라멘(¥900~1,200). 좁은 노포 카운터가 혼여행에 딱</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body"><h4>🍺 스스키노 야경 산책</h4><p>일본 3대 환락가 스스키노의 네온사인. 편의점 삿포로 클래식 맥주 들고 혼자 야간 산책 — 혼여행 묘미</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>오타루 당일치기</h3><p>운하·오르골당·유리공예 — 낭만의 항구 도시로 하루 나들이</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🚆 오타루 이동</h4><p>JR 쾌속 에어포트/보통 열차로 삿포로역→오타루역 약 32~45분, ¥750. 창밖 이시카리만 해안 풍경이 일품</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🚤 오타루 운하</h4><p>가스등 늘어선 옛 운하. 석조 창고 거리 산책. 겨울엔 눈덮인 운하가 인생샷 명소. 입장 무료</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🎠 오르골당 & 기타이치 글라스</h4><p>사카이마치 거리의 오르골당 본관(증기시계 명물)과 기타이치 글라스 유리공예. 나만의 오르골·유리잔 기념품</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍣 오타루 카이센동 점심</h4><p>산카쿠 시장·스시야도리에서 성게·연어알·게 얹은 해물덮밥(¥1,500~3,000). 홋카이도 신선 해산물의 정수</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🍫 르타오 본점 디저트</h4><p>오타루 명물 르타오(LeTAO) 더블 프로마주 치즈케이크·2층 카페에서 티타임. 삿포로 복귀 후 저녁은 수프카레(¥1,200~)</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>맥주박물관 → 모이와산 → 귀국</h3><p>마지막 날 삿포로 맥주 역사와 야경으로 마무리</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🍺 삿포로 맥주박물관</h4><p>일본 유일 맥주 전문 박물관(입장 무료). 시음(유료 ¥300~)과 개척사 벽돌 건물. 옆 비어가든에서 징기스칸 곁들이기</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🐑 징기스칸 점심</h4><p>홋카이도 명물 양고기 구이 징기스칸. 볼록 냄비에 채소와 함께(¥1,500~2,500). 삿포로 클래식 생맥주와 페어링</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🍫 시로이코이비토 파크 (선택)</h4><p>시간 여유 시 시로이코이비토 초콜릿 공장·테마파크(입장 ¥800). 과자 만들기 체험·유럽풍 정원. 기념품 구매</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>삿포로역 → JR 쾌속 에어포트(¥1,150, 37분). 비행 2.5~3시간 전 공항 도착 권장. 저녁 항공이면 모이와산 야경 후 이동</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>2박 3일 · 환율 ¥1 = 9.5원 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">120,000 ~ 320,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박)</h4><span class="budget-range">60,000 ~ 180,000원</span><span class="budget-note">캡슐·게스트하우스 ~ 비즈니스 호텔</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (3일)</h4><span class="budget-range">30,000 ~ 55,000원</span><span class="budget-note">공항 왕복·오타루 열차 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">100,000 ~ 170,000원</span><span class="budget-note">라멘·게요리·카이센동 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">20,000 ~ 50,000원</span><span class="budget-note">TV타워·시로이코이비토 등</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 150,000원</span><span class="budget-note">르타오·시로이코이비토·기념품</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 1인 총 예상 경비</span>
+            <span class="total-amount">380,000 ~ 925,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+캡슐) ~ 여유형(FSC+비즈니스 호텔) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>진보 프리미어 호텔 삿포로 스스키노</h3>
+              <p class="hotel-location">📍 스스키노역 도보 3분</p>
+              <p>최신식 캡슐+대욕장 완비. 라멘요코초·게요리 골목 도보권. 혼여행자 커뮤니티 활발하고 시설 청결</p>
+              <div class="hotel-price">1박 <strong>¥4,000~6,500</strong> (~38,000원~)</div>
+              <div class="hotel-tags"><span>캡슐</span><span>대욕장</span><span>Wi-Fi</span><span>코인 세탁</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Sapporo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>UNTAPPED HOSTEL 삿포로</h3>
+              <p class="hotel-location">📍 기타18조역 도보 2분</p>
+              <p>레트로 감성 디자인 호스텔. 도미토리·1인실 선택 가능. 공용 라운지·카페에서 여행자 교류</p>
+              <div class="hotel-price">1박 <strong>¥4,500~7,000</strong> (~43,000원~)</div>
+              <div class="hotel-tags"><span>도미토리</span><span>공용라운지</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Sapporo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
+            <div class="hotel-body">
+              <h3>도요코 인 삿포로역 미나미구치</h3>
+              <p class="hotel-location">📍 삿포로역 도보 3분</p>
+              <p>1인실 비즈니스 호텔의 정석. 무료 조식·청결한 시설. 공항 열차·오타루행 접근 최고의 위치</p>
+              <div class="hotel-price">1박 <strong>¥7,500~12,000</strong> (~71,000원~)</div>
+              <div class="hotel-tags"><span>1인실</span><span>무료 조식</span><span>Wi-Fi</span><span>역 도보 3분</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Sapporo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Sapporo" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Sapporo" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>같이 먹고 웃고 즐기는 홋카이도 — 게요리·오타루·야경·온천 풀코스</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 스스키노 게요리 & 야경</h3><p>삿포로 도착 첫날, 스스키노에서 킹크랩 먹방과 모이와산 야경</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 신치토세 공항 도착</h4><p>JR 쾌속 에어포트(¥1,150, 37분)로 삿포로역 직행. 짐 맡기고 바로 출발</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🗼 오도리공원 & TV타워</h4><p>도심 공원 산책 후 TV타워 전망대(¥1,000)에서 단체컷. 겨울엔 화이트 일루미네이션 배경으로 인생샷</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🦀 스스키노 게요리 디너</h4><p>킹크랩·털게·대게 3종 코스 전문점. 친구랑 나눠 먹으면 1인 ¥5,000~8,000. 홋카이도 여행의 하이라이트</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:30</div><div class="tl-body"><h4>🌃 모이와산 로프웨이 야경</h4><p>일본 신 3대 야경. 로프웨이+미니케이블카 왕복 ¥2,100. 삿포로 시내 보석 같은 불빛 파노라마. 커플·친구 필수 코스</p></div></div>
+            <div class="tl-item"><div class="tl-time">22:00</div><div class="tl-body"><h4>🍺 스스키노 2차</h4><p>스스키노 이자카야에서 삿포로 클래식 생맥주·야키토리. 심야엔 시메파페(마무리 파르페) 문화 체험도 별미</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>오타루 당일치기 + 조잔케이 온천</h3><p>낭만 항구 오타루와 삿포로 안뜰 온천으로 힐링</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🚆 오타루 이동</h4><p>JR로 삿포로역→오타루역 약 32~45분, ¥750. 이시카리만 해안 열차 여행 자체가 하이라이트</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🚤 오타루 운하 & 사카이마치</h4><p>가스등 운하에서 단체 사진. 사카이마치 거리 오르골당·기타이치 글라스에서 유리공예·오르골 쇼핑</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍣 오타루 카이센동 점심</h4><p>산카쿠 시장에서 성게·연어알·게 카이센동(¥1,800~3,500). 르타오 본점 치즈케이크로 디저트</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>♨ 조잔케이 온천 이동</h4><p>삿포로 복귀 후 정산케이 직행버스(캇파라이너 예약제, 약 60분). 계곡 사이 온천 마을에서 노천탕 힐링</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>♨ 온천 & 가이세키 저녁</h4><p>료칸 당일 온천(¥1,000~1,500) 또는 1박. 온천 후 홋카이도 식재료 가이세키. 겨울엔 눈 내리는 노천탕이 낭만 절정</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>맥주박물관 or 겨울 스키 → 귀국</h3><p>여름엔 맥주·쇼핑, 겨울엔 니세코 스키 중 선택</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🍺 삿포로 맥주박물관 (선택A)</h4><p>맥주 개척사 벽돌 건물·시음(¥300~). 옆 비어가든 징기스칸 브런치. 삿포로 클래식 3종 세트 시음 추천</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🎿 니세코 스키 (선택B·겨울)</h4><p>세계적 파우더 스노우 니세코. 삿포로에서 스키버스 약 2~3시간. 리프트권 1일 ¥8,000~. 장비 렌털 현지 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍫 시로이코이비토 파크</h4><p>초콜릿 공장·유럽풍 정원 테마파크(¥800). 시로이코이비토 대량 구매 필수. 과자 만들기 체험도 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🛍 삿포로역 마지막 쇼핑</h4><p>스텔라플레이스·다이마루·에스타에서 로이스 생초콜릿·감자과자·기념품. ¥5,500↑ 면세 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>삿포로역 → JR 쾌속 에어포트(¥1,150, 37분). 신치토세 공항 자체가 쇼핑·먹거리 천국이라 여유 있게</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>2박 3일 · 게요리·온천 포함 · 2인 기준으로 나눈 숙박비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">120,000 ~ 320,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박 · 1인당)</h4><span class="budget-range">75,000 ~ 200,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🦀</span><div class="budget-info"><h4>게요리·온천</h4><span class="budget-range">70,000 ~ 130,000원</span><span class="budget-note">킹크랩 코스·조잔케이 온천</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">100,000 ~ 180,000원</span><span class="budget-note">라멘·카이센동·이자카야 3일</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통·액티비티</h4><span class="budget-range">40,000 ~ 120,000원</span><span class="budget-note">오타루·모이와산·니세코 스키 포함 시</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 200,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">455,000 ~ 1,150,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+2인 쉐어) ~ 여유형(FSC+온천 료칸+스키 풀옵션)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>스스키노·삿포로역 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>라 진 호텔 스스키노</h3>
+              <p class="hotel-location">📍 스스키노역 도보 2분</p>
+              <p>세련된 디자인 호텔. 트윈룸 가성비 최고. 게요리·라멘요코초·이자카야 골목이 전부 도보권</p>
+              <div class="hotel-price">2인 1박 <strong>¥11,000~16,000</strong> (1인당 ~70,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>대욕장</span><span>Wi-Fi</span><span>편의점 1분</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Sapporo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>크로스 호텔 삿포로</h3>
+              <p class="hotel-location">📍 삿포로역·오도리 도보 5분</p>
+              <p>트렌디한 인테리어 도심 호텔. 최상층 전망 대욕장에서 야경 감상. 오도리·스스키노 모두 편리한 위치</p>
+              <div class="hotel-price">2인 1박 <strong>¥16,000~24,000</strong> (1인당 ~100,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>전망 대욕장</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Sapporo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">온천 체험</span></div>
+            <div class="hotel-body">
+              <h3>조잔케이 온천 료칸</h3>
+              <p class="hotel-location">📍 조잔케이 온천 (삿포로 시내 버스 60분)</p>
+              <p>계곡 사이 전통 온천 마을. 노천탕·가이세키 저녁으로 특별한 하룻밤. 겨울 설경 노천탕이 압권</p>
+              <div class="hotel-price">2인 1박(2식) <strong>¥28,000~46,000</strong> (1인당 ~176,000원~)</div>
+              <div class="hotel-tags"><span>료칸</span><span>노천탕</span><span>가이세키 조·석식</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Sapporo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Sapporo" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Sapporo" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>아이와 함께하는 홋카이도 — 아사히야마 동물원·오타루·시로이코이비토 3박 4일</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 시로이코이비토 파크</h3><p>초콜릿 공장 테마파크로 아이들 첫날 사로잡기</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 신치토세 공항 도착</h4><p>짐 많은 가족은 JR 쾌속 에어포트(1인 ¥1,150, 37분) 추천. 유모차도 지정석 짐칸 활용 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🍫 시로이코이비토 파크</h4><p>동화 같은 유럽풍 초콜릿 테마파크. 입장 어른 ¥800 / 어린이 무료~할인. 과자 만들기 체험·정원 산책. 약 2시간</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🗼 오도리공원 & TV타워</h4><p>도심 공원에서 아이들 뛰어놀기. TV타워 전망대(어른 ¥1,000/어린이 ¥500) 야경. 겨울엔 눈축제 설상 조각</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍜 삿포로역 저녁 후 체크인</h4><p>삿포로역 스텔라플레이스·에스타 식당가에서 가족 저녁(미소라멘·수프카레). 이후 역 인근 숙소로. 일찍 취침</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>아사히야마 동물원 (근교)</h3><p>펭귄 산책으로 유명한 일본 최북단 인기 동물원 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:00</div><div class="tl-body"><h4>🚌 아사히카와 이동</h4><p>삿포로→아사히야마 동물원 직행버스(왕복 ¥2,000대) 또는 JR+버스 약 2시간. 당일 왕복 투어 상품도 편리</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:30</div><div class="tl-body"><h4>🐧 아사히야마 동물원</h4><p>입장 어른 ¥1,000 / 중학생 이하 무료. 행동전시로 유명 — 유리터널 속 헤엄치는 펭귄·물범. 겨울 펭귄 산책 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍱 동물원 점심 & 관람</h4><p>원내 식당에서 가족 점심. 오후엔 북극곰·레서판다·아무르호랑이 구역. 아이들 먹이주기 시간 체크</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🚌 삿포로 복귀</h4><p>버스로 삿포로 복귀 후 휴식. 저녁은 스스키노에서 게요리 or 회전초밥(아이도 좋아하는 연어·계란 초밥)</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>오타루 당일치기</h3><p>운하·오르골당·유리공예로 온 가족 낭만 나들이</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🚆 오타루 이동</h4><p>JR로 삿포로역→오타루역 약 32~45분, ¥750. 창밖 바다 풍경에 아이들 신남. 유모차 반입 무난</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🚤 오타루 운하 & 오르골당</h4><p>운하 산책 후 오르골당 본관. 증기시계·수백 종 오르골 구경. 아이 이름 새긴 오르골 기념품 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍦 기타이치 글라스 & 소프트아이스크림</h4><p>유리공예 체험(간단한 것은 아이도 가능). 홋카이도 우유 소프트아이스크림(¥400~)은 사계절 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🍣 오타루 점심 & 르타오</h4><p>산카쿠 시장 카이센동 또는 아이 친화 식당. 르타오 본점에서 더블 프로마주 치즈케이크 디저트</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🛍 삿포로 복귀 & 기념품</h4><p>삿포로역 복귀 후 로이스·시로이코이비토 매장에서 아이 간식·기념품. 예산 사전 설정 추천</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>홋카이도 신궁 → 마지막 쇼핑 → 귀국</h3><p>숲속 신궁 산책 후 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>⛩ 홋카이도 신궁 & 마루야마공원</h4><p>숲으로 둘러싸인 홋카이도 총진수. 입장 무료. 인접 마루야마 동물원·원생림 산책. 겨울엔 눈길 참배가 운치</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🛍 삿포로역 마지막 쇼핑</h4><p>스텔라플레이스·다이마루에서 감자과자(자가이모)·로이스 생초콜릿·캐릭터 상품. 아이 인기 굿즈 챙기기</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이 동반 가족은 3시간 전 공항 도착 권장. 신치토세 공항 도라에몽·헬로키티 존에서 마지막 추억까지</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>3박 4일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">520,000 ~ 1,150,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 가족룸)</h4><span class="budget-range">300,000 ~ 700,000원</span><span class="budget-note">4인 가족룸 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·체험 (4인)</h4><span class="budget-range">100,000 ~ 180,000원</span><span class="budget-note">동물원·시로이코이비토·TV타워</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">340,000 ~ 560,000원</span><span class="budget-note">4인 1끼 ¥4,500~9,000</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4인)</h4><span class="budget-range">120,000 ~ 220,000원</span><span class="budget-note">공항·아사히야마·오타루 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">80,000 ~ 220,000원</span><span class="budget-note">과자·기념품·아이 굿즈</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">1,560,000 ~ 3,030,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+가족룸 공유) ~ 여유형(FSC+4성 호텔+온천 료칸)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>가족룸·키즈 어메니티·편의 시설이 잘 갖춰진 곳</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>JR 타워 호텔 닛코 삿포로</h3>
+              <p class="hotel-location">📍 삿포로역 직결</p>
+              <p>역 직결 초근접 도시형 호텔. 4인 가족룸 보유. 공항 열차·오타루·아사히야마 이동 최고로 편리</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥20,000~30,000</strong> (~190,000원~)</div>
+              <div class="hotel-tags"><span>가족룸</span><span>역 직결</span><span>조식 뷔페</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Sapporo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>삿포로 그랜드 호텔</h3>
+              <p class="hotel-location">📍 삿포로역·오도리 도보 5분</p>
+              <p>1934년 개업 노포 럭셔리 호텔. 넓은 패밀리룸·조식 뷔페 완비. 아이 어메니티 충실. 믿을 수 있는 시설</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥28,000~46,000</strong> (~266,000원~)</div>
+              <div class="hotel-tags"><span>패밀리룸</span><span>어린이 어메니티</span><span>조식 뷔페</span><span>도심 위치</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Sapporo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">온천 체험</span></div>
+            <div class="hotel-body">
+              <h3>조잔케이 츠루가 리조트 스파</h3>
+              <p class="hotel-location">📍 조잔케이 온천 (삿포로 시내 버스 60분)</p>
+              <p>대형 온천 리조트. 가족 온천·키즈 시설·홋카이도 뷔페 완비. 계곡 노천탕에서 온 가족 특별한 하룻밤</p>
+              <div class="hotel-price">가족 1박(2식) <strong>¥44,000~72,000</strong> (~418,000원~)</div>
+              <div class="hotel-tags"><span>온천</span><span>키즈 시설</span><span>홋카이도 뷔페</span><span>가족실</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Sapporo" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Sapporo" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Sapporo" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 항공권
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">✈ 항공권</span>
+        <h2>인천 ↔ 삿포로 (신치토세) 항공권</h2>
+        <p>비행시간 약 2시간 50분 · 인천 ICN → 삿포로 신치토세 CTS · 공항→삿포로역 JR 쾌속 에어포트 37분 ¥1,150</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">✈ 제주항공</span></td><td>LCC 직항</td><td>2h 50m</td><td class="price-cell">120,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CTS/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 진에어</span></td><td>LCC 직항</td><td>2h 50m</td><td class="price-cell">125,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CTS/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 티웨이항공</span></td><td>LCC 직항</td><td>2h 50m</td><td class="price-cell">119,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CTS/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 아시아나항공</span></td><td>FSC 직항</td><td>2h 50m</td><td class="price-cell">230,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CTS/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>2h 50m</td><td class="price-cell">250,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CTS/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aff-cta">
+        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/CTS/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
+        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=CTS&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
+        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DCTS&leg2=from%3DCTS%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>삿포로 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">🚆</span><h3>공항 → 시내 이동</h3><p>신치토세 공항에서 JR 쾌속 에어포트로 삿포로역까지 37분 ¥1,150. 15분 간격 운행. 짐 많으면 지정석(u시트 +¥840)이 편함</p></div>
+        <div class="tip-card"><span class="tip-icon">🚇</span><h3>지하철 & 노면전차</h3><p>시내는 지하철 3개 노선+노면전차(시덴)로 이동. 1일 승차권(도니치카킷푸 ¥520·주말)이 알뜰. Welcome Suica·ICOCA 호환</p></div>
+        <div class="tip-card"><span class="tip-icon">🧥</span><h3>겨울 방한 필수</h3><p>1~2월은 영하 10도 안팎에 눈이 쌓임. 두꺼운 패딩·방수 부츠·아이젠·장갑·모자 필수. 실내는 난방 강해 레이어드 추천</p></div>
+        <div class="tip-card"><span class="tip-icon">❄</span><h3>눈축제 숙소 조기예약</h3><p>2월 초 삿포로 눈축제 기간엔 전 세계 관광객이 몰려 숙소가 조기 매진·가격 급등. 3~4개월 전 예약 필수. 오도리·스스키노가 메인</p></div>
+        <div class="tip-card"><span class="tip-icon">🚤</span><h3>오타루 당일치기</h3><p>JR로 삿포로역→오타루역 약 32~45분 ¥750. 운하·오르골당·유리공예·해산물까지 반나절~하루면 충분. 방한 단단히</p></div>
+        <div class="tip-card"><span class="tip-icon">🚗</span><h3>렌터카 (근교 자연)</h3><p>비에이·후라노 라벤더, 노보리베츠 지옥계곡 등 근교 자연은 렌터카가 유리. 겨울 눈길 운전은 스터드리스 타이어·경험자만. 국제면허증 지참</p></div>
+        <div class="tip-card"><span class="tip-icon">♨</span><h3>온천 문화·이용법</h3><p>조잔케이·노보리베츠 온천은 입욕 전 몸을 씻고 탕에 수건 담그지 않기. 문신 있으면 사전 확인. 노천탕 설경이 홋카이도 겨울의 백미</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">✈ 트립가이드</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="tours.html?city=교토">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="tours.html?city=방콕">방콕</a>
+            <a href="tours.html?city=다낭">다낭</a>
+            <a href="tours.html?city=발리">발리</a>
+            <a href="tours.html?city=싱가포르">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="tours.html?city=제주">제주도</a>
+            <a href="tours.html?city=부산">부산</a>
+            <a href="tours.html?city=강릉">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트립가이드 · TripGuide</p>
+        <p style="margin-top:6px"><a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
+    }
+  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+  <script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=43.0618&longitude=141.3545'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
+</body>
+</html>
