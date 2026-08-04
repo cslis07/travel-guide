@@ -1,21 +1,26 @@
 # 트립가이드 (TripGuide) — PROJECT STATUS
 
-> **마지막 업데이트**: 2026-07-07
+> **마지막 업데이트**: 2026-08-04
 > **프로젝트 경로**: `C:\Users\GB\Documents\travel-guide`
 > **GitHub**: `cslis07/travel-guide` (Public) · 기본 브랜치 **`master`** (main 아님)
 > **배포**: https://travel-guide-cslis07.vercel.app · **Vercel** (GitHub push 자동 배포)
-> **규모**: HTML 페이지 11개 · Edge Function 3개(`api/`) · 공용 JS 4개 · 유틸 스크립트 3개(`scripts/`)
+> **규모**: HTML 페이지 21개(**목적지 가이드 13곳** 포함) · Edge Function 3개(`api/`) · 공용 JS 4개 · 유틸 스크립트 3개(`scripts/`) · 프로덕션 스모크 27항목
 
 ---
 
 ## 0. 지금 하던 일 (WIP)
 
-**깨끗한 상태** — `git status` 미커밋 변경 없음. 최종 커밋 `44dfcc5`(갭7 내 여행 허브)까지 푸시·배포·검증 완료.
+**깨끗한 상태** — `git status` 미커밋 변경 없음. 최종 커밋 `b0c7564`(인천공항 도심공항터미널 안내)까지 푸시·배포·검증 완료. 프로덕션 스모크 **27/27 통과**.
 
-이번 세션: `feature-gap-finder` 감사 → **갭 7가지 전부 구현 완료**(§4 참조). 프로덕션 스모크 테스트 **17/17 통과**. 새 페이지 `/mytrip` 추가.
+이번 세션 작업(2026-08-04):
+1. **목적지 가이드 9곳 신규**(`17954a7`) — 교토·방콕·다낭·발리·싱가포르·제주·부산·강릉·파리, 전부 오사카 완전판 구조(1인·친구·가족 3유형). 병렬 서브에이전트 생성.
+2. **후쿠오카·도쿄 완전판 전환**(`76147ea`) — 라이트판(단일 일정) → 오사카식 3유형. **삿포로 추가**(`05c2cf9`). → 목적지 **13곳 전부 동일 구조로 통일**.
+3. **tours 검색 결과 카드 UI 리뉴얼 + 페이지네이션**(`6e1e213`) — `copy_text` 텍스트 덩어리 → MRT 위젯 트리 파싱(`parseWidgetCards`)으로 이미지·평점·가격·뱃지·예약링크 카드, 5개씩 페이지.
+4. **AI 크롤러 수집 차단**(`32c2d24`) — `robots.txt`에 GPTBot·ClaudeBot·Google-Extended 등 20종 `Disallow` + `vercel.json` 전역 `X-Robots-Tag: noai, noimageai`.
+5. **인천공항 도심공항터미널 안내**(`b0c7564`) — 서울역 사전 출국수속 카드 + AREX 직통 요금 최신화(성인 13,000/어린이 9,500).
 
 **다음 채팅이 가장 먼저 해야 할 한 가지**:
-남은 코드 작업 없음(감사 갭 7종 완료). **Google Search Console 소유권 인증**이 유일한 대기 항목 — 사용자가 인증 코드(`content="..."` 또는 `googleXXXX.html`)를 주면 `index.html` 삽입 → 인증 → sitemap 제출. 이어서 새 기능을 원하면 §4 "🟢 아이디어" 또는 목적지 가이드 추가(교토·방콕 등).
+남은 코드 작업 없음. **Google Search Console 소유권 인증**이 유일한 대기 항목 — 사용자가 인증 코드(`content="..."` 또는 `googleXXXX.html`)를 주면 `index.html` 삽입 → 인증 → sitemap 제출(신규 목적지 13곳·`/sapporo`까지 이미 sitemap 반영됨). 새 기능을 원하면 §4 "🟢 아이디어" 참조.
 
 ---
 
@@ -33,12 +38,13 @@
 |--------|------|
 | `/` (index.html) | 환율 바+계산기, 항공/숙소/국내 검색 위젯, TourAPI 국내검색(+주차·카페 필터·상세모달), 목적지 카드 |
 | `/airport` | 인천공항 8탭: 진출입·주차·셔틀철도·출입국장·항공편·시설 + ⭐내 편명(카운트다운·게이트변경알림·ICS저장·자동완성) + 🛫출국준비(6단계 트래커·34항목 체크리스트·SVG 평면도·라운지9·편의9·수하물/면세/금지) + Ctrl+K 통합검색·딥링크(`#tab=`)·다크모드·한/영 |
-| `/tours` | 메타서치 4탭 — 마이리얼트립 라이브(투어/숙소/국내·국제항공) + 클룩·KKday·부킹·아고다 비교 딥링크 + 검색히스토리·항공편정렬·날짜별최저가캘린더 + `?city=` 자동검색 |
+| `/tours` | 메타서치 4탭 — 마이리얼트립 라이브(투어/숙소/국내·국제항공) + 클룩·KKday·부킹·아고다 비교 딥링크 + 검색히스토리·항공편정렬·날짜별최저가캘린더 + `?city=` 자동검색. **투어·티켓/숙소 결과 = 카드 그리드(이미지·평점·가격·뱃지·예약링크) + 5개씩 페이지네이션** |
 | `/guide` | 이용가이드 (8섹션·사이드바 TOC 스크롤스파이·모바일 드로어) |
-| `/osaka` `/fukuoka` `/tokyo` | 목적지 가이드 (일정탭·예산·숙소·현지팁·투어 CTA) |
+| **목적지 가이드 13곳** | `/osaka` `/fukuoka` `/tokyo` `/kyoto` `/sapporo`(일본), `/bangkok` `/danang` `/bali` `/singapore`(동남아), `/jeju` `/busan` `/gangneung`(국내), `/paris`(유럽). **전부 동일 구조**: 여행 유형 3종(1인·친구·가족, `type-select-bar`+`switchType`)별 일정탭·예산·숙소 + 항공권(국내는 KTX/국내선) 표 + 현지팁 7 + Open-Meteo 날씨 위젯 |
+| `/mytrip` | "내 여행" 허브 — localStorage 집계 + base64 URL/QR 내보내기·가져오기 (`robots noindex`) |
 | `/privacy` `/terms` | 법적 페이지 (제휴·수익화 심사용) |
 | `/404.html` | 커스텀 404 |
-| 공통 | PWA 설치(좌하단 버튼, iOS 안내시트), SW 오프라인, OG이미지, JSON-LD |
+| 공통 | PWA 설치(좌하단 버튼, iOS 안내시트), SW 오프라인, OG이미지, JSON-LD, **AI 크롤러 차단**(robots.txt + `X-Robots-Tag`) |
 
 ---
 
@@ -49,10 +55,12 @@
 | 경로 | 역할 |
 |------|------|
 | `index.html` | 메인 페이지 |
-| `airport.html` | 인천공항 대시보드 (단일 파일 175KB, gzip 45KB, CSS/JS 인라인) |
-| `tours.html` 🆕 | 메타서치 (파트너 레지스트리 `PARTNERS`, 제휴설정 `MRT_AFFILIATE`) |
-| `guide.html` 🆕 | 이용가이드 |
-| `fukuoka.html` `tokyo.html` 🆕 | 목적지 가이드 (osaka 템플릿 기반, Open-Meteo 날씨 위젯) |
+| `airport.html` 🆕 | 인천공항 대시보드 (단일 파일, CSS/JS 인라인). 🆕 "공항 가는 길"에 **서울역 도심공항터미널** 카드 |
+| `tours.html` 🆕 | 메타서치 (파트너 레지스트리 `PARTNERS`, 제휴설정 `MRT_AFFILIATE`). 🆕 결과 카드 렌더러 `parseWidgetCards`/`itemCard`/`renderItemsPage`(페이지네이션) |
+| `guide.html` | 이용가이드 |
+| `osaka.html` | 목적지 가이드 **정본 템플릿**(700줄, 3유형 구조) — 나머지 12곳이 이 구조를 복제 |
+| `fukuoka.html` `tokyo.html` 🆕 | 라이트판 → **오사카식 완전판 전환**(3유형) |
+| `kyoto/bangkok/danang/bali/singapore/jeju/busan/gangneung/paris/sapporo.html` 🆕 | 목적지 가이드 신규 10개(osaka 구조 복제). 국내(jeju/busan/gangneung)는 KTX/국내선, hero-stat 국내형 |
 | `mytrip.html` 🆕 | "내 여행" 허브 — localStorage 집계 + base64 URL/QR 내보내기·가져오기 (`robots noindex`) |
 | `privacy.html` `terms.html` 🆕 | 법적 페이지 |
 | `main.js` | 메인 로직 — 환율/계산기, TourAPI(프록시 경유 `_callTourApi`), 상세모달 |
@@ -66,8 +74,10 @@
 | `manifest.webmanifest` | PWA (start_url `/`, shortcuts 인천공항·투어검색) |
 | `icons/` `og-image.png` `favicon.ico` 🆕 | Pillow 생성 아이콘·소셜이미지 |
 | `scripts/make_icons.py` `make_og.py` 🆕 | 아이콘/OG 재생성기 (폰트 비의존 도형 렌더) |
-| `scripts/smoke_test.mjs` 🆕 | 프로덕션 15페이지+2API(총 17) 자동점검 — 17/17 통과 |
-| `sitemap.xml` `robots.txt` 🆕 | SEO |
+| `scripts/smoke_test.mjs` 🆕 | 프로덕션 25페이지+2API(총 27) 자동점검 — 27/27 통과 |
+| `sitemap.xml` 🆕 | SEO (목적지 13곳 전부 등록) |
+| `robots.txt` 🆕 | SEO + **AI 크롤러 20종 차단** |
+| `vercel.json` 🆕 | cleanUrls + 보안헤더 + `X-Robots-Tag: noai, noimageai`(전역) |
 
 ---
 
@@ -96,7 +106,8 @@
 > localStorage 키 전체: `tripguide_saved_places`, `tripguide_prefs`, `icn_fav_flights`, `icn_fav_snapshot`, `icn_checklist`, `icn_checklist_custom`, `icn_depart_step`, `tt_search_history`, `icn-theme`, `icn-lang`. mytrip 내보내기는 이 중 7개를 번들.
 
 ### 🟡 코드 개선 (선택)
-- 목적지 가이드 추가(교토·방콕·다낭 등) — *안 한 이유: 콘텐츠 정확성 검증 부담, 현재 `tours?city=` 검색으로 우회 중이라 급하지 않음*
+- ~~목적지 가이드 추가~~ — **완료**(2026-08-04): 13곳 전부 오사카식 완전판.
+- 각 목적지·tours 페이지 **푸터 지역 링크 통일** — *안 한 이유: 현재 일부 푸터가 `tours.html?city=`로 연결(기능 정상). 신규 가이드 페이지로 통일하면 더 일관되나 12+파일 편집 필요, 우선순위 낮음.* (사용자에게 후속 제안한 상태)
 - Vercel KV 캐싱 — *안 한 이유: 트래픽 5K+ PV/일 도달 전에는 Edge Cache로 충분*
 - airport.html 데이터 외부화 — *안 한 이유: gzip 45KB로 실전송 문제없음 확인, 분리 리스크 > 이득*
 
@@ -120,7 +131,8 @@ py -m py_compile scripts/make_icons.py scripts/make_og.py                       
 git push origin master
 
 # 배포 후 검증 (필수 습관)
-node scripts/smoke_test.mjs         # 14페이지 + 2API — 16개 전부 ✅ 여야 정상
+node scripts/smoke_test.mjs         # 25페이지 + 2API — 27개 전부 ✅ 여야 정상
+                                    # (배포 ~40초 후 실행. CDN 엣지 캐시로 첫 조회가 구버전일 수 있어 ?_cb= 캐시버스터로 재확인)
 
 # 자산 재생성 (Pillow 필요: py -m pip install pillow)
 py scripts/make_icons.py            # PWA 아이콘 4종
@@ -181,7 +193,7 @@ py scripts/make_og.py               # OG 소셜 이미지
 |-----|------|-----------|
 | 한국관광공사 KorService2 | serviceKey(Decoded) | **일 1만 건**(활용신청 시 10만). 응답 item이 단건이면 배열 아님 → 배열화 처리돼 있음 |
 | 인천공항 B551177 | serviceKey | 일 1만 건. **T2 출국장 혼잡도는 데이터 미제공**(운영시간만 표시) |
-| 마이리얼트립 MCP | **불필요** | stateless — initialize/세션 없이 tools/call 직행. 응답이 **위젯 UI JSON 또는 `copy_text` 마크다운**으로 형태 가변. 항공편은 `data.result.items[]`. flightsFareCalendar는 **실시간 아님 고지 의무** |
+| 마이리얼트립 MCP | **불필요** | stateless — initialize/세션 없이 tools/call 직행. 응답이 **위젯 UI JSON 또는 `copy_text` 마크다운**으로 형태 가변. **투어/숙소는 `data.widget.children[]`(ListViewItem 트리) → `parseWidgetCards`가 Image/Text(value)/Badge/onClickAction 워크로 이미지·제목·평점·가격·URL 추출** (검색당 최대 10개, `copy_text`로 폴백). 항공편은 `data.result.items[]`. flightsFareCalendar는 **실시간 아님 고지 의무** |
 | open.er-api.com | 불필요 | 24시간 갱신. 간헐 다운 → 폴백 메시지 |
 | Open-Meteo | 불필요 | proxy의 `_url` 경유(CORS) |
 
@@ -203,7 +215,7 @@ py scripts/make_og.py               # OG 소셜 이미지
 - **클룩·KKday·부킹·아고다 라이브 검색 결과 표시 불가** — 공개 검색 API/MCP 없음. 클룩은 서버측 접근 403(봇차단) 실측. → **제휴 딥링크 핸드오프**로 확정.
 - **아고다 텍스트 검색 딥링크 불안정** — `?textToSearch=`가 cityId 없으면 홈으로 리다이렉트됨(실측). 제휴 cid 추적은 유효하므로 유지하되, 정확 랜딩은 어필리에이트 링크빌더 필요.
 - **KKday 서버측 검증 불가** — 이 환경에서 URLError(차단). 표준 URL 패턴(`/ko/product/productlist?keyword=`) 사용 중, 브라우저 동작은 미확인.
-- **마이리얼트립 위젯 JSON 풀 카드 렌더 보류** — 응답이 자사 위젯 렌더러용 트리라 스키마 변경에 취약. `copy_text` 우선 + 구조화 배열 요약으로 확정.
+- ~~마이리얼트립 위젯 JSON 풀 카드 렌더 보류~~ — **2026-08-04 구현함**(`6e1e213`): `parseWidgetCards`가 위젯 트리를 워크해 이미지·제목·평점·가격·뱃지·예약URL을 카드로 렌더(페이지네이션 5개씩). 단 **위젯 트리는 MRT 자사 렌더러용이라 스키마 변경 시 깨질 수 있음** → 파싱 실패 시 `copy_text` 텍스트로 자동 폴백하도록 방어. 검색당 카드는 **최대 10개**로 고정(perPage 올려도 10 고정, 실측).
 - **진짜 백그라운드 푸시 알림(Web Push) 불가** — Web Push는 푸시 서버(백엔드)+구독 저장(DB)이 필요한데 이 프로젝트는 백엔드·DB 없음(구조적). 게이트 변경 알림은 **탭이 열려 있을 때만**(`setInterval` 폴링) 동작. `sw.js`에 push 핸들러 없음. → 잠긴 폰에도 도달하는 유일한 경로는 **ICS 캘린더 알림**(`downloadFavIcs`). §4 감사 1번에서 문구 정직화 예정.
 - **iOS 자동 설치 프롬프트 불가** — Safari가 `beforeinstallprompt` 미지원. 안내 시트로 대체(구조적 한계).
 - **기기 간 상태 동기화 불가(자동)** — 로그인·DB 없어 localStorage가 기기 로컬 한정. URL/QR 직렬화로 수동 이동만 가능(§4 감사 7번).
@@ -219,7 +231,12 @@ travel-guide/
 ├─ airport.html          # 인천공항 8탭 (인라인 CSS/JS 단일 파일)
 ├─ tours.html            # 메타서치 (제휴 설정: MRT_AFFILIATE, PARTNERS)
 ├─ guide.html            # 이용가이드
-├─ osaka/fukuoka/tokyo.html  # 목적지 가이드
+├─ osaka.html            # 목적지 가이드 정본 템플릿(나머지 12곳이 복제)
+├─ {fukuoka,tokyo,kyoto,sapporo}.html          # 일본 (오사카식 3유형)
+├─ {bangkok,danang,bali,singapore}.html        # 동남아
+├─ {jeju,busan,gangneung}.html                 # 국내 (KTX/국내선)
+├─ paris.html            # 유럽
+├─ mytrip.html           # 내 여행 허브 (localStorage 집계 · noindex)
 ├─ privacy/terms.html    # 법적 페이지
 ├─ 404.html
 ├─ main.js               # 메인 로직 (TourAPI는 _callTourApi 프록시 경유)
