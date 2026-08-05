@@ -11,7 +11,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="style.css">
   <script type="application/ld+json">
   {
@@ -50,13 +50,13 @@
   <!-- ── HEADER ── -->
   <header class="header" id="header">
     <div class="container header-inner">
-      <a href="index.html" class="logo">✈ 트립가이드</a>
+      <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트립가이드</a>
       <nav class="nav" id="nav">
         <a href="index.html#destinations">여행지</a>
-        <a href="tours.html" style="color:#1B4FD8;font-weight:600;">🎟 투어·티켓</a>
-        <a href="mytrip.html" style="color:#F97316;font-weight:600;">🧳 내 여행</a>
-        <a href="guide.html">📖 이용가이드</a>
-        <a href="airport.html" style="color:#3b82f6;font-weight:600;">✈ 인천공항</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;"><i data-icon="ticket" data-size="17"></i> 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;"><i data-icon="briefcase" data-size="17"></i> 내 여행</a>
+        <a href="guide.html"><i data-icon="book-open" data-size="17"></i> 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;"><i data-icon="plane" data-size="17"></i> 인천공항</a>
       </nav>
       <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
     </div>
@@ -563,7 +563,7 @@
     <div class="container">
       <div class="footer-top">
         <div class="footer-brand">
-          <a href="index.html" class="logo">✈ 트립가이드</a>
+          <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트립가이드</a>
           <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
           <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
         </div>
@@ -573,27 +573,27 @@
             <a href="osaka.html">오사카</a>
             <a href="fukuoka.html">후쿠오카</a>
             <a href="tokyo.html">도쿄</a>
-            <a href="tours.html?city=교토">교토</a>
+            <a href="kyoto.html">교토</a>
           </div>
           <div>
             <h4>동남아 투어·티켓</h4>
-            <a href="tours.html?city=방콕">방콕</a>
-            <a href="tours.html?city=다낭">다낭</a>
-            <a href="tours.html?city=발리">발리</a>
-            <a href="tours.html?city=싱가포르">싱가포르</a>
+            <a href="bangkok.html">방콕</a>
+            <a href="danang.html">다낭</a>
+            <a href="bali.html">발리</a>
+            <a href="singapore.html">싱가포르</a>
           </div>
           <div>
             <h4>국내 투어·티켓</h4>
-            <a href="tours.html?city=제주">제주도</a>
-            <a href="tours.html?city=부산">부산</a>
-            <a href="tours.html?city=강릉">강릉</a>
+            <a href="jeju.html">제주도</a>
+            <a href="busan.html">부산</a>
+            <a href="gangneung.html">강릉</a>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
         <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
         <p>© 2026 트립가이드 · TripGuide</p>
-        <p style="margin-top:6px"><a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+        <p style="margin-top:6px"><a href="/guide" style="color:inherit;opacity:.85">이용가이드</a> · <a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
       </div>
     </div>
   </footer>
@@ -655,5 +655,7 @@ if('serviceWorker' in navigator){
     }).catch(function(){});
   })();
   </script>
+<script src="/icons.js" defer></script>
+<script src="/nav.js" defer></script>
 </body>
 </html>
