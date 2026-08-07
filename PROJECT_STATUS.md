@@ -199,6 +199,22 @@ py scripts/make_og.py               # OG 소셜 이미지
 
 ---
 
+### 🔒 보안 조치 이력 (2026-08-05, `e7c510a`)
+
+| 취약점 | 위험 | 조치 | 실측 |
+|--------|------|------|------|
+| **SSRF** — `api/proxy.js`의 `_url`이 임의 URL 프록시 | 공개 오픈프록시 악용·대역폭 도용·내부주소 탐색 | 호스트 허용목록(open-meteo 2곳)+https 강제 | 외부·메타데이터 403, 정상 200 |
+| **경로 탈출** — `path` 무검증 | data.go.kr 내 타 엔드포인트 임의 호출 | 정규식 `^[A-Za-z0-9_]+/[A-Za-z0-9_]+$` | `../../evil` 400, 실사용 15개 전부 통과 |
+| **저장형 XSS** — `main.js`에 `esc()` 부재 | 악성 `#data=` 링크 → localStorage 오염 → 홈에서 코드실행 | `esc`/`safeUrl`/`safeText` 17곳 적용, 인라인 onclick→dataset | 공격 페이로드 12종 전부 차단 |
+| **무검증 import** — `/mytrip` `#data=` | 임의 localStorage 주입 | 허용키·타입·200KB·JSON파싱 검증 | — |
+| **보안헤더 부재** | 클릭재킹·스크립트 유출 경로 | CSP·Permissions-Policy·HSTS | 헤더 7종 응답 확인 |
+
+> ⚠️ CSP의 `script-src`에 `'unsafe-inline'`이 남아 있다. 인라인 스크립트가 전 페이지에 퍼진
+> 무빌드 정적 사이트라 nonce를 쓸 수 없기 때문이다(구조적). 외부 도메인 로드는 차단되므로
+> 유출 경로는 막히지만, 인라인 XSS에 대한 CSP 방어는 기대할 수 없다 → **출력 이스케이프가 1차 방어선**.
+
+---
+
 ## 9. ⛔ 하지 말 것
 
 - **`vercel.json`에 `redirects` 추가 금지** — cleanUrls와 충돌해 **리다이렉트 루프**(ERR_TOO_MANY_REDIRECTS) 재발. 과거 실제 장애.
@@ -209,6 +225,11 @@ py scripts/make_og.py               # OG 소셜 이미지
 - **`analytics.js`의 `GA4_ID=''` 빈 값은 버그 아님** — 미설정 시 GA 미로드가 의도된 동작(에러 핸들러는 항상 동작).
 - **`npx serve`로 검색/API 기능 테스트 금지** — `/api/*` 404는 환경 한계. 테스트는 `vercel dev` 또는 프로덕션 스모크.
 - **히스토리 rewrite(force push) 금지** — Public 포트폴리오 레포, 커밋 이력이 자산.
+- **`api/proxy.js`의 `URL_ALLOWLIST`·`PATH_RE` 완화 금지** — 없애면 즉시 공개 오픈프록시(SSRF)로 되돌아간다.
+  목적지 페이지 추가 시 Open-Meteo만 쓰므로 허용목록 수정 불필요.
+- **`main.js`의 `esc`/`safeUrl`/`safeText` 우회 금지** — 새 렌더 코드에서 외부·localStorage 값을
+  innerHTML에 넣을 때는 반드시 통과시킬 것. localStorage는 `/mytrip` 가져오기로 외부 주입이 가능해 신뢰 불가.
+- **`onclick="fn('${값}')"` 패턴 재도입 금지** — JS 문자열 주입 벡터. `data-*` + `this.dataset` 사용.
 
 ## 10. ❌ 보류 / 구조적 한계 (재시도 방지)
 

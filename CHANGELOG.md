@@ -6,6 +6,40 @@
 
 ---
 
+## 2026-08-05 (2) — 보안 점검 및 수정
+
+### 🚀 배포
+- 프로덕션 배포 (`e7c510a`) — 스모크 27/27 통과, 공격 시도로 차단 실측 완료
+
+### 🔒 취약점 수정
+- **[심각] SSRF — 공개 오픈 프록시로 악용 가능했음**
+  `api/proxy.js`의 `_url` 파라미터가 **임의 URL을 검증 없이 fetch** 했다.
+  누구나 `/api/proxy?_url=<아무 주소>`로 이 Vercel 함수를 익명 프록시처럼 쓸 수 있어
+  대역폭 도용·내부 주소(예: `169.254.169.254` 메타데이터) 탐색·제3자 공격 경유가 가능했다.
+  실제로 필요한 곳은 Open-Meteo 2개 호스트뿐이라 **허용 목록 + https 강제**로 제한.
+  `path` 파라미터도 정규식(`Word/Word`)으로 검증해 경로 탈출을 막았다.
+  실측: `example.com`·AWS 메타데이터 → **403**, `path=../../evil` → **400**, 정상 경로·Open-Meteo → **200**.
+
+- **[심각] 저장형 XSS — 악성 링크 한 번으로 홈에서 코드 실행**
+  `main.js`에 **이스케이프 함수 자체가 없었다.** TourAPI·localStorage 값을
+  `alt="${item.title}"`, `data-cid="${item.contentid}"` 처럼 속성에 직접 삽입했고,
+  특히 `onclick="toggleSavePlace('${item.contentid}',event)"`는 JS 문자열 주입까지 열려 있었다.
+  여기에 `/mytrip`의 `#data=` 가져오기가 결합해 **완전한 공격 체인**이 성립했다 —
+  악성 링크 → 사용자가 '가져오기' 클릭 → localStorage 오염 → 홈 방문 시 실행.
+  `esc()`/`safeUrl()`/`safeText()` 추가 후 **17곳에 적용**, 인라인 `onclick`은
+  `this.dataset.cid` 참조로 바꿔 주입 벡터 자체를 제거했다. (`main.js`)
+
+- **주입 진입점 차단** — `/mytrip` 가져오기가 URL 데이터를 무검증 저장했다.
+  허용 키·문자열 타입·200KB 상한·JSON 파싱 가능 여부를 검증하도록 변경. (`mytrip.html`)
+
+- **보안 헤더 추가**(`vercel.json`) — CSP, Permissions-Policy, HSTS.
+  인라인 스크립트가 많은 정적 사이트라 `script-src`에 `'unsafe-inline'`이 불가피하지만,
+  **외부 도메인 스크립트 로드와 데이터 유출 경로는 차단**된다.
+  코드가 쓰는 외부 리소스(jsdelivr·googletagmanager·open-er-api·구글폰트)를
+  전수 교차검증해 기존 기능이 막히지 않음을 확인했다.
+
+---
+
 ## 2026-08-05
 
 ### 🚀 배포
