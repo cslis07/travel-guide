@@ -2,6 +2,27 @@
    트립가이드 공통 스크립트
    ───────────────────────────────────────── */
 
+// ── 보안: 출력 이스케이프 ────────────────────────────────────
+// 외부 API(TourAPI)와 localStorage 값을 innerHTML에 넣기 전에 반드시 통과시킨다.
+// localStorage는 /mytrip 의 #data= 가져오기로 외부 주입이 가능하므로 신뢰할 수 없다.
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g,
+    c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+// http(s) 링크만 허용 — javascript:/data: 스킴 차단
+function safeUrl(u) {
+  const v = String(u == null ? '' : u).trim();
+  return /^https?:\/\//i.test(v) ? esc(v) : '';
+}
+// 설명문은 TourAPI가 <br> 등을 담아 보내므로 태그를 제거하되 줄바꿈만 살린다
+function safeText(html) {
+  const MARK = '\u0001';                          // 본문에 나올 수 없는 제어문자
+  const plain = String(html == null ? '' : html)
+    .replace(/<br\s*\/?>/gi, MARK)                // 줄바꿈만 자리표시로 보존
+    .replace(/<[^>]*>/g, '');                      // 나머지 태그는 전부 제거
+  return esc(plain).split(MARK).join('<br>');      // 이스케이프 후 <br>만 복원
+}
+
 // ── 헤더 스크롤 효과 ──
 const header = document.getElementById('header');
 if (header) {
@@ -644,16 +665,16 @@ function _renderSavedPlaces() {
     _tourItemCache.set(item.contentid, item);
     const icon  = CTYPE_ICON[item.contenttypeid] || '🗺';
     const thumb = item.firstimage
-      ? `<div class="dom-thumb"><img src="${item.firstimage}" alt="${item.title}" loading="lazy" onerror="domImgError(this)"></div>`
-      : `<div class="dom-thumb dom-thumb--empty"><span class="dom-nimg-icon">${icon}</span><span class="dom-nimg-name">${item.title}</span></div>`;
+      ? `<div class="dom-thumb"><img src="${safeUrl(item.firstimage)}" alt="${esc(item.title)}" loading="lazy" onerror="domImgError(this)"></div>`
+      : `<div class="dom-thumb dom-thumb--empty"><span class="dom-nimg-icon">${icon}</span><span class="dom-nimg-name">${esc(item.title)}</span></div>`;
     return `
-    <div class="dom-card dom-card--link" data-cid="${item.contentid}">
+    <div class="dom-card dom-card--link" data-cid="${esc(item.contentid)}">
       ${thumb}
-      <button class="save-btn active" data-cid="${item.contentid}" onclick="toggleSavePlace('${item.contentid}',event)" title="찜 해제">♥</button>
+      <button class="save-btn active" data-cid="${esc(item.contentid)}" onclick="toggleSavePlace(this.dataset.cid,event)" title="찜 해제">♥</button>
       <div class="dom-body">
         <span class="dom-ctype-tag">${icon} ${CTYPE_MAP[item.contenttypeid]||''}</span>
-        <h3>${item.title}</h3>
-        ${item.addr1 ? `<p class="dom-addr">📍 ${item.addr1}</p>` : ''}
+        <h3>${esc(item.title)}</h3>
+        ${item.addr1 ? `<p class="dom-addr">📍 ${esc(item.addr1)}</p>` : ''}
         <p class="dom-more">상세보기 →</p>
       </div>
     </div>`;
@@ -674,17 +695,17 @@ function renderDomestic(items, append = false) {
   const html = items.map(item => {
     const icon  = CTYPE_ICON[item.contenttypeid] || '🗺';
     const thumb = item.firstimage
-      ? `<div class="dom-thumb"><img src="${item.firstimage}" alt="${item.title}" loading="lazy" onerror="domImgError(this)"></div>`
-      : `<div class="dom-thumb dom-thumb--empty"><span class="dom-nimg-icon">${icon}</span><span class="dom-nimg-name">${item.title}</span></div>`;
+      ? `<div class="dom-thumb"><img src="${safeUrl(item.firstimage)}" alt="${esc(item.title)}" loading="lazy" onerror="domImgError(this)"></div>`
+      : `<div class="dom-thumb dom-thumb--empty"><span class="dom-nimg-icon">${icon}</span><span class="dom-nimg-name">${esc(item.title)}</span></div>`;
     const sv = isSaved(item.contentid);
     return `
-    <div class="dom-card dom-card--link" data-cid="${item.contentid}">
+    <div class="dom-card dom-card--link" data-cid="${esc(item.contentid)}">
       ${thumb}
-      <button class="save-btn${sv?' active':''}" data-cid="${item.contentid}" onclick="toggleSavePlace('${item.contentid}',event)" title="${sv?'찜 해제':'찜하기'}">${sv?'♥':'♡'}</button>
+      <button class="save-btn${sv?' active':''}" data-cid="${esc(item.contentid)}" onclick="toggleSavePlace(this.dataset.cid,event)" title="${sv?'찜 해제':'찜하기'}">${sv?'♥':'♡'}</button>
       <div class="dom-body">
         <span class="dom-ctype-tag">${icon} ${CTYPE_MAP[item.contenttypeid]||''}</span>
-        <h3>${item.title}</h3>
-        ${item.addr1 ? `<p class="dom-addr">📍 ${item.addr1}</p>` : ''}
+        <h3>${esc(item.title)}</h3>
+        ${item.addr1 ? `<p class="dom-addr">📍 ${esc(item.addr1)}</p>` : ''}
         ${item.tel   ? `<p class="dom-tel">📞 ${item.tel}</p>`    : ''}
         <p class="dom-more">상세보기 →</p>
       </div>
@@ -800,24 +821,24 @@ function _renderTourModal({ detail, intro, imgArr, nbArr, cached }) {
 
   let html = `<div class="tmd-inner">`;
 
-  if (heroImg) html += `<div class="tmd-hero"><img src="${heroImg}" alt="${title}"></div>`;
+  if (heroImg) html += `<div class="tmd-hero"><img src="${safeUrl(heroImg)}" alt="${esc(title)}"></div>`;
   html += `<div class="tmd-content">`;
 
   // 제목·주소·연락처 + 찜 버튼
   const _cid   = detail?.contentid || cached?.contentid || '';
   const _svOn  = _cid && isSaved(_cid);
   html += `<div class="tmd-head">
-    <h2 class="tmd-name">${title}</h2>
-    ${addr ? `<p class="tmd-addr">📍 ${addr}</p>` : ''}
-    ${tel  ? `<p class="tmd-tel">📞 ${tel}</p>`   : ''}
-    ${_cid ? `<button class="tmd-save-btn save-btn${_svOn?' active':''}" data-cid="${_cid}" onclick="toggleSavePlace('${_cid}',event)">${_svOn?'♥ 찜 저장됨':'♡ 찜하기'}</button>` : ''}
+    <h2 class="tmd-name">${esc(title)}</h2>
+    ${addr ? `<p class="tmd-addr">📍 ${esc(addr)}</p>` : ''}
+    ${tel  ? `<p class="tmd-tel">📞 ${esc(tel)}</p>`   : ''}
+    ${_cid ? `<button class="tmd-save-btn save-btn${_svOn?' active':''}" data-cid="${esc(_cid)}" onclick="toggleSavePlace(this.dataset.cid,event)">${_svOn?'♥ 찜 저장됨':'♡ 찜하기'}</button>` : ''}
   </div>`;
 
   // 지도 버튼
   if (mx && my) {
     html += `<div class="tmd-map-row">
-      <a href="${kakaoUrl}" target="_blank" rel="noopener" class="tmd-mapbtn tmd-mapbtn--kakao">🗺 카카오맵</a>
-      <a href="${naverUrl}" target="_blank" rel="noopener" class="tmd-mapbtn tmd-mapbtn--naver">🗺 네이버지도</a>
+      <a href="${safeUrl(kakaoUrl)}" target="_blank" rel="noopener" class="tmd-mapbtn tmd-mapbtn--kakao">🗺 카카오맵</a>
+      <a href="${safeUrl(naverUrl)}" target="_blank" rel="noopener" class="tmd-mapbtn tmd-mapbtn--naver">🗺 네이버지도</a>
     </div>`;
   }
 
@@ -825,7 +846,7 @@ function _renderTourModal({ detail, intro, imgArr, nbArr, cached }) {
   html += `<div class="tmd-section">
     <h3 class="tmd-sec-title">📝 개요</h3>
     ${overview
-      ? `<p class="tmd-overview">${overview}</p>`
+      ? `<p class="tmd-overview">${safeText(overview)}</p>`
       : `<p class="tmd-empty">등록된 설명이 없습니다.</p>`}
   </div>`;
 
@@ -844,7 +865,7 @@ function _renderTourModal({ detail, intro, imgArr, nbArr, cached }) {
     <h3 class="tmd-sec-title">🖼 상세 이미지</h3>
     ${imgArr.length
       ? `<div class="tmd-imgstrip">
-          ${imgArr.map(img => `<div class="tmd-imgitem"><img src="${img.originimgurl || img.smallimageurl}" alt="${img.imgname || title}" loading="lazy"></div>`).join('')}
+          ${imgArr.map(img => `<div class="tmd-imgitem"><img src="${safeUrl(img.originimgurl || img.smallimageurl)}" alt="${esc(img.imgname || title)}" loading="lazy"></div>`).join('')}
         </div>`
       : `<p class="tmd-empty">등록된 이미지가 없습니다.</p>`}
   </div>`;
@@ -855,9 +876,9 @@ function _renderTourModal({ detail, intro, imgArr, nbArr, cached }) {
       <h3 class="tmd-sec-title">📍 주변 관광지</h3>
       <div class="tmd-nearby">
         ${nbArr.map(n => `
-          <div class="tmd-nb-card" data-cid="${n.contentid}" data-ctid="${n.contenttypeid}" data-mx="${n.mapx}" data-my="${n.mapy}">
-            ${n.firstimage ? `<img src="${n.firstimage}" alt="${n.title}" loading="lazy">` : `<div class="tmd-nb-empty">🗺</div>`}
-            <p>${n.title}</p>
+          <div class="tmd-nb-card" data-cid="${esc(n.contentid)}" data-ctid="${esc(n.contenttypeid)}" data-mx="${esc(n.mapx)}" data-my="${esc(n.mapy)}">
+            ${n.firstimage ? `<img src="${safeUrl(n.firstimage)}" alt="${esc(n.title)}" loading="lazy">` : `<div class="tmd-nb-empty">🗺</div>`}
+            <p>${esc(n.title)}</p>
             ${n.dist ? `<small>${Math.round(n.dist)}m</small>` : ''}
           </div>`).join('')}
       </div>

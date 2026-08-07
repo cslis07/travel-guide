@@ -19,6 +19,24 @@ const CORS = {
   'Access-Control-Expose-Headers': 'Cache-Control',
 };
 
+// ── 보안: _url 은 아래 호스트로만 프록시한다 ──────────────────────
+// 예전엔 임의 URL을 그대로 fetch 해서, 누구나 이 함수를 공개 오픈 프록시로
+// 쓸 수 있었다(SSRF·대역폭 도용·내부 주소 탐색). 실제로 필요한 곳은 2개뿐.
+const URL_ALLOWLIST = new Set([
+  'api.open-meteo.com',
+  'air-quality-api.open-meteo.com',
+]);
+
+// path 도 화이트리스트로 제한 (경로 탈출·타 엔드포인트 호출 방지)
+const PATH_RE = /^[A-Za-z0-9_]+\/[A-Za-z0-9_]+$/;
+
+function isAllowedUrl(raw) {
+  let u;
+  try { u = new URL(raw); } catch { return false; }
+  if (u.protocol !== 'https:') return false;          // http·file·gopher 등 차단
+  return URL_ALLOWLIST.has(u.hostname);               // 서브도메인 와일드카드 없음
+}
+
 export default async function handler(req) {
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 200, headers: CORS });
@@ -30,10 +48,22 @@ export default async function handler(req) {
 
   let targetUrl;
   if (externalUrl) {
-    // Proxy an arbitrary external URL (Open-Meteo, Air Quality, etc.)
+    // 허용 호스트(Open-Meteo 계열)만 통과
+    if (!isAllowedUrl(externalUrl)) {
+      return new Response(JSON.stringify({ error: 'url not allowed' }), {
+        status: 403,
+        headers: { ...CORS, 'Content-Type': 'application/json' },
+      });
+    }
     targetUrl = externalUrl;
   } else if (path) {
     // Proxy a Korean API endpoint
+    if (!PATH_RE.test(path)) {
+      return new Response(JSON.stringify({ error: 'invalid path' }), {
+        status: 400,
+        headers: { ...CORS, 'Content-Type': 'application/json' },
+      });
+    }
     incoming.searchParams.delete('path');
     incoming.searchParams.set('serviceKey', KEY);
     incoming.searchParams.set('type', 'json');

@@ -238,15 +238,35 @@
     var area = $('mt-import-area');
     area.innerHTML = '<div class="mt-import-note">📥 다른 기기의 여행 데이터가 감지됐어요. 가져오면 <strong>이 기기의 기존 데이터를 덮어씁니다.</strong><div class="mt-btn-row" style="margin-top:10px"><button class="mt-btn mt-btn-primary" onclick="doImport()">가져오기</button><button class="mt-btn mt-btn-ghost" onclick="cancelImport()">취소</button></div></div>';
   }
+  // 가져온 값 검증 — 링크는 누구나 만들 수 있으므로 신뢰하지 않는다.
+  // 허용 키 + 문자열 타입 + 크기 상한 + (JSON 값이면) 파싱 가능 여부까지 확인한다.
+  var MAX_VALUE_BYTES = 200 * 1024;   // 키 하나당 200KB
+  function isSafeValue(k, v){
+    if(typeof v !== 'string') return false;
+    if(v.length > MAX_VALUE_BYTES) return false;
+    // 원래 JSON을 담는 키는 JSON으로 파싱돼야 한다 (임의 문자열 주입 차단)
+    if(k !== 'icn_depart_step'){
+      try{ JSON.parse(v); }catch(e){ return false; }
+    }
+    return true;
+  }
+
   function doImport(){
     var m = location.hash.match(/data=([^&]+)/);
     if(!m) return;
     try{
-      var json = decodeURIComponent(escape(atob(m[1])));
+      var b64 = m[1];
+      if(b64.length > 400000) throw new Error('too large');
+      var json = decodeURIComponent(escape(atob(b64)));
       var data = JSON.parse(json);
+      if(!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('bad shape');
+      var skipped = 0;
       Object.keys(data).forEach(function(k){
-        if(KEYS.indexOf(k) !== -1) localStorage.setItem(k, data[k]);
+        if(KEYS.indexOf(k) === -1) return;              // 허용 키만
+        if(!isSafeValue(k, data[k])){ skipped++; return; }
+        localStorage.setItem(k, data[k]);
       });
+      if(skipped) toast('일부 항목은 형식이 올바르지 않아 건너뛰었어요');
       history.replaceState(null, '', '/mytrip');
       $('mt-import-area').innerHTML = '';
       render();
