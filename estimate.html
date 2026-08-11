@@ -495,16 +495,15 @@ async function fillLive(key, btn){
         departDate:$('f-out').value, returnDate:$('f-back').value,
         passengers:{adults:1, children:0, infants:0}, maxResults:6
       });
-      price = lowestPrice(data);
+      price = flightLowest(data);
     } else {
       data = await callMrt('searchStays', {
         keyword:d.label, checkIn:$('f-out').value, checkOut:$('f-back').value,
         adultCount:Math.max(1, Math.ceil(c.adults / c.rooms)), childCount:0, isDomestic:d.dom
       });
-      price = lowestPrice(data);
-      if (price && c.nights > 0 && price > 400000) price = Math.round(price / c.nights); // 총액 응답 방어
+      price = stayLowest(data);
     }
-    if (!price) throw new Error('가격을 찾지 못했습니다. 날짜를 바꿔 다시 시도해보세요.');
+    if (!price) throw new Error('가격을 찾지 못했습니다. 날짜를 바꾸거나 단가를 직접 입력해 주세요.');
     state.rates[key] = price;
     state.live[key] = { at: new Date().toLocaleString('ko-KR', { dateStyle:'short', timeStyle:'short' }) };
     calc();
@@ -524,25 +523,31 @@ async function callMrt(tool, args){
   return data;
 }
 
-/* MCP 응답 형태가 가변이라(위젯 트리 / copy_text / items) 숫자만 훑어 최저가를 찾는다. */
-function lowestPrice(data){
-  var found = [];
-  (function walk(v){
-    if (v == null) return;
-    if (typeof v === 'number') { if (v >= 10000 && v <= 20000000) found.push(v); return; }
-    if (typeof v === 'string') {
-      var m = v.match(/([0-9][0-9,]{4,})\s*원/g);
-      if (m) m.forEach(function(s){
-        var n = +s.replace(/[^0-9]/g,'');
-        if (n >= 10000 && n <= 20000000) found.push(n);
-      });
-      return;
-    }
-    if (typeof v === 'object') { for (var k in v) walk(v[k]); }
-  })(data);
-  if (!found.length) return 0;
-  found.sort(function(a,b){ return a-b; });
-  return found[0];
+/* 가격 추출은 반드시 구조화된 필드에서 한다.
+   ⚠️ 응답의 숫자를 무차별로 훑어 최솟값을 고르면 안 된다 —
+   실제로 발권수수료(tasfAmount 10,000)를 항공 최저가로 집어내는 버그가 있었다.
+   항공: result.summary.cheapestTotal (없으면 items[].price.total 최솟값)
+   숙소: copy_text의 "N원/박" 표기 (1박 단가가 명시된 유일하게 신뢰 가능한 값) */
+function flightLowest(d){
+  var res = (d.data && d.data.result) || {};
+  if (res.summary && res.summary.cheapestTotal > 0) return res.summary.cheapestTotal;
+  var prices = (res.items || [])
+    .map(function(f){ return (f.price && f.price.total) || 0; })
+    .filter(function(n){ return n > 0; });
+  return prices.length ? Math.min.apply(null, prices) : 0;
+}
+
+function stayLowest(d){
+  /* "원/박" 접미사가 1박 단가임을 스스로 증명하므로, 응답 어디에 있든 안전하게 집을 수 있다.
+     copy_text에는 상위 5건만 담기고 나머지 15건은 위젯 트리에만 있으므로
+     반드시 응답 전체를 훑어야 진짜 최저가가 나온다(copy_text만 보면 77,093 → 실제 69,151). */
+  var all = '';
+  try { all = JSON.stringify(d); } catch (e) { all = String(d && d.copyText || ''); }
+  var m = all.match(/([0-9][0-9,]{3,})\s*원\s*\/\s*박/g);
+  if (!m || !m.length) return 0;
+  var ns = m.map(function(s){ return +s.replace(/[^0-9]/g, ''); })
+            .filter(function(n){ return n > 0; });
+  return ns.length ? Math.min.apply(null, ns) : 0;
 }
 
 /* ── 제휴 CTA ── */
