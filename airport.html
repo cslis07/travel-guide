@@ -866,6 +866,11 @@ tr:hover td{background:var(--a-hover)}
   margin-top:4px;align-self:flex-start;
 }
 .route-link:hover{text-decoration:underline}
+/* 수치에는 출처·확인일을 반드시 남긴다 — 근거 없는 숫자를 만들지 않기 위한 장치 */
+.src-note{
+  font-size:.62rem;color:var(--text2);line-height:1.45;margin-top:6px;
+  padding-top:6px;border-top:1px dashed var(--border);opacity:.85;
+}
 
 /* ── LOUNGE ── */
 .lounge-filter-row{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap}
@@ -1778,12 +1783,14 @@ button,select,input,a{touch-action:manipulation}
           <div class="route-card-title">자가용 + 주차</div>
           <div class="route-card-desc">단기 여행에는 비추, 장기 출장·해외이주 시 유리.</div>
           <ul class="route-card-meta">
-            <li><strong>주차요금</strong> 단기 30분 1,200원 / 1일 28,800원</li>
-            <li><strong>장기주차</strong> 1일 9,000원 (T1·T2 별도)</li>
-            <li><strong>대리주차</strong> 1일 13,000원~ (사설)</li>
+            <li><strong>단기주차</strong> 최초 30분 1,200원 · 추가 15분 600원 · <b>1일 최대 24,000원</b></li>
+            <li><strong>장기주차</strong> 시간당 1,000원 · <b>1일 최대 9,000원</b> (소형·대형 동일)</li>
+            <li><strong>공통</strong> 최초 10분 무료 · 단기주차장은 높이 2.1m 이하 승용차만</li>
+            <li><strong>대리주차</strong> 사설 업체별 상이 (공항 공식 요금 아님)</li>
             <li><strong>고속도로</strong> 영종대교/인천대교 통행료 별도</li>
           </ul>
-          <a class="route-link" href="https://www.airport.kr/ap/ko/svc/parkingFee.do" target="_blank" rel="noopener">주차요금 안내 ↗</a>
+          <a class="route-link" href="https://www.airport.kr/ap_ko/969/subview.do" target="_blank" rel="noopener">공식 주차요금표 ↗</a>
+          <div class="src-note">출처: 인천국제공항공사 공식 주차요금표 · 2026-08-11 확인. 요금은 변동될 수 있으니 방문 전 공식 페이지에서 재확인하세요.</div>
         </div>
       </div>
     </div>

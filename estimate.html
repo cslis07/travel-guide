@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="목적지와 일정만 넣으면 항공·숙소·식비·교통·투어까지 합친 여행 총예산을 한 화면에서 계산합니다. 항공·숙소는 실시간 시세로 채울 수 있습니다.">
+  <title>여행 총예산 견적기 | 다 합쳐서 얼마 드는지 계산 — 트립가이드</title>
+  <link rel="canonical" href="https://travel-guide-cslis07.vercel.app/estimate">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="여행 총예산 견적기 | 다 합쳐서 얼마 들까">
+  <meta property="og:description" content="항공만, 숙소만 말고 — 일정 전체의 총액을 한 번에. 모든 단가는 직접 조정할 수 있습니다.">
+  <meta property="og:url" content="https://travel-guide-cslis07.vercel.app/estimate">
+  <meta property="og:site_name" content="트립가이드">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org","@type":"WebApplication",
+    "name":"여행 총예산 견적기","applicationCategory":"TravelApplication",
+    "operatingSystem":"Web","inLanguage":"ko-KR",
+    "url":"https://travel-guide-cslis07.vercel.app/estimate",
+    "description":"목적지·일정·인원을 넣으면 항공·숙소·식비·현지교통·투어·예비비를 합산해 여행 총예산을 계산합니다.",
+    "offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}
+  }
+  </script>
+
+<style>
+/* ── 견적기 전용 ────────────────────────────────────────────
+   설계: 입력(가정) → 계산 → 결과 를 한 화면에 세로로 둔다.
+   단가를 바꾸면 즉시 총액이 반응해야 "내 여행"이라는 느낌이 난다.
+   ──────────────────────────────────────────────────────── */
+.est-wrap{max-width:860px;margin:0 auto;padding:24px 16px 60px}
+.est-hero{text-align:center;padding:28px 0 20px}
+.est-hero h1{font-size:1.85rem;font-weight:800;letter-spacing:-.03em;color:var(--gray-900);line-height:1.3}
+.est-hero p{margin-top:10px;color:var(--gray-600);font-size:.95rem;line-height:1.6}
+
+/* 가정값 고지 — 이 페이지의 신뢰는 여기서 나온다 */
+.est-notice{
+  display:flex;gap:10px;align-items:flex-start;
+  background:var(--accent-lt);border:1px solid #FCD9BD;border-radius:var(--radius);
+  padding:13px 15px;margin:8px 0 22px;font-size:.8rem;line-height:1.6;color:#7A3E12
+}
+.est-notice b{color:#8A3E00}
+
+.est-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);
+  padding:20px;margin-bottom:16px;box-shadow:var(--shadow-xs)}
+.est-card h2{font-size:1.02rem;font-weight:750;color:var(--gray-900);margin-bottom:4px;display:flex;align-items:center;gap:7px}
+.est-card .sub{font-size:.76rem;color:var(--gray-500);margin-bottom:15px;line-height:1.5}
+
+.est-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.est-field label{display:block;font-size:.74rem;font-weight:650;color:var(--gray-600);margin-bottom:5px}
+.est-field input,.est-field select{
+  width:100%;padding:11px 12px;border:1px solid var(--gray-300);border-radius:var(--radius-sm);
+  font-size:.9rem;font-family:inherit;color:var(--gray-900);background:var(--white);
+  transition:border-color .15s,box-shadow .15s
+}
+.est-field input:focus,.est-field select:focus{
+  outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(27,79,216,.11)
+}
+
+.style-row{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
+.style-btn{flex:1;min-width:96px;padding:11px 8px;border:1.5px solid var(--gray-300);background:var(--white);
+  border-radius:var(--radius-sm);font-size:.82rem;font-weight:650;color:var(--gray-600);
+  cursor:pointer;font-family:inherit;transition:all .15s;line-height:1.35}
+.style-btn small{display:block;font-size:.66rem;font-weight:500;color:var(--gray-400);margin-top:2px}
+.style-btn.on{border-color:var(--primary);background:var(--primary-lt);color:var(--primary)}
+.style-btn.on small{color:var(--primary)}
+
+.est-calc{width:100%;padding:15px;border:none;border-radius:var(--radius-sm);background:var(--primary);
+  color:#fff;font-size:1rem;font-weight:750;cursor:pointer;font-family:inherit;margin-top:6px;
+  transition:background .15s,transform .1s}
+.est-calc:hover{background:var(--primary-dark)}
+.est-calc:active{transform:scale(.99)}
+
+/* 결과 */
+.est-total{background:linear-gradient(135deg,#1B4FD8,#2E6BF0);border-radius:var(--radius-lg);
+  padding:26px 22px;color:#fff;text-align:center;margin-bottom:16px;box-shadow:0 8px 28px rgba(27,79,216,.26)}
+.est-total .cap{font-size:.78rem;opacity:.85;font-weight:600;letter-spacing:.02em}
+.est-total .big{font-size:2.4rem;font-weight:850;letter-spacing:-.035em;margin:6px 0 2px;line-height:1.1}
+.est-total .per{font-size:.83rem;opacity:.9;font-weight:500}
+.est-total .meta{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.22);
+  font-size:.75rem;opacity:.88;line-height:1.5}
+
+/* 항목 행 */
+.line{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;
+  padding:13px 0;border-bottom:1px solid var(--gray-100)}
+.line:last-of-type{border-bottom:none}
+.line-main{min-width:0}
+.line-name{font-size:.9rem;font-weight:700;color:var(--gray-800);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.line-formula{font-size:.71rem;color:var(--gray-500);margin-top:3px;line-height:1.45}
+.line-amt{font-size:1rem;font-weight:800;color:var(--gray-900);white-space:nowrap;text-align:right}
+.line-input{display:flex;align-items:center;gap:6px;margin-top:7px}
+.line-input input{width:112px;padding:7px 9px;border:1px solid var(--gray-300);
+  border-radius:8px;font-size:.8rem;font-family:inherit;text-align:right;color:var(--gray-900)}
+.line-input input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(27,79,216,.1)}
+.line-input span{font-size:.71rem;color:var(--gray-500)}
+.tag{font-size:.63rem;font-weight:700;padding:2px 7px;border-radius:999px;letter-spacing:.01em}
+.tag-live{background:#E6F8F7;color:#067D77}
+.tag-assume{background:var(--gray-100);color:var(--gray-500)}
+.live-btn{padding:6px 11px;border:1px solid var(--primary);background:var(--primary-lt);color:var(--primary);
+  border-radius:999px;font-size:.7rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.live-btn:disabled{opacity:.5;cursor:default}
+
+/* 비중 바 */
+.bar{display:flex;height:11px;border-radius:999px;overflow:hidden;margin:16px 0 10px;background:var(--gray-100)}
+.bar i{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:10px 16px;font-size:.73rem;color:var(--gray-600)}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend b{width:9px;height:9px;border-radius:3px;display:inline-block}
+
+.act-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.act{flex:1;min-width:130px;padding:12px;border:1px solid var(--gray-300);background:var(--white);
+  border-radius:var(--radius-sm);font-size:.83rem;font-weight:700;color:var(--gray-700);
+  cursor:pointer;font-family:inherit;transition:all .15s}
+.act:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-lt)}
+
+.hidden{display:none}
+.est-foot{font-size:.72rem;color:var(--gray-500);line-height:1.65;margin-top:22px;text-align:center}
+.est-foot a{color:var(--gray-500)}
+
+@media(max-width:600px){
+  .est-hero h1{font-size:1.5rem}
+  .est-total .big{font-size:2rem}
+  .line{grid-template-columns:1fr;gap:4px}
+  .line-amt{text-align:left;font-size:1.05rem}
+}
+@media(prefers-color-scheme:dark){
+  .est-card{background:#181C24;border-color:rgba(255,255,255,.09)}
+  .est-card h2,.line-name,.line-amt,.est-hero h1{color:#E8EBF0}
+  .est-field input,.est-field select,.line-input input{background:#11151C;border-color:rgba(255,255,255,.14);color:#E8EBF0}
+  .style-btn{background:#11151C;border-color:rgba(255,255,255,.14);color:#98A2B3}
+  .line{border-bottom-color:rgba(255,255,255,.07)}
+}
+</style>
+</head>
+<body>
+
+<header class="header" id="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트립가이드</a>
+    <nav class="nav" id="nav">
+      <a href="#destinations">여행지</a>
+      <a href="estimate.html" style="color:#1B4FD8;font-weight:700;">💰 예산 견적</a>
+      <a href="tours.html">투어·티켓</a>
+      <a href="prepare.html">출국 준비</a>
+      <a href="airport.html" style="color:#3b82f6;font-weight:600;">인천공항</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+  </div>
+</header>
+
+<div class="est-wrap">
+
+  <div class="est-hero">
+    <h1>다 합쳐서 얼마 드는데?</h1>
+    <p>항공만, 숙소만 따로 보면 총액을 알 수 없습니다.<br>
+       일정 전체를 한 번에 계산하고, 마음에 안 드는 숫자는 직접 고치세요.</p>
+  </div>
+
+  <div class="est-notice">
+    <span style="font-size:1.05rem;line-height:1">📌</span>
+    <div>
+      <b>여기 채워지는 기본 단가는 조사한 값이 아니라 계산을 시작하기 위한 가정값입니다.</b><br>
+      실제 비용은 시기·환율·개인 취향에 따라 크게 달라집니다. 모든 항목은 직접 수정할 수 있고,
+      항공·숙소는 <b>실시간 시세로 채우기</b>를 누르면 실제 조회값으로 바뀝니다.
+    </div>
+  </div>
+
+  <!-- ── 입력 ── -->
+  <div class="est-card">
+    <h2>여행 정보</h2>
+    <div class="sub">목적지와 날짜만 넣으면 나머지는 자동으로 채워집니다.</div>
+
+    <div class="est-grid">
+      <div class="est-field">
+        <label for="f-dest">목적지</label>
+        <select id="f-dest"></select>
+      </div>
+      <div class="est-field">
+        <label for="f-out">가는 날</label>
+        <input type="date" id="f-out">
+      </div>
+      <div class="est-field">
+        <label for="f-back">오는 날</label>
+        <input type="date" id="f-back">
+      </div>
+      <div class="est-field">
+        <label for="f-adult">성인</label>
+        <input type="number" id="f-adult" value="2" min="1" max="20" inputmode="numeric">
+      </div>
+      <div class="est-field">
+        <label for="f-child">아동</label>
+        <input type="number" id="f-child" value="0" min="0" max="20" inputmode="numeric">
+      </div>
+      <div class="est-field">
+        <label for="f-room">객실 수</label>
+        <input type="number" id="f-room" value="1" min="1" max="10" inputmode="numeric">
+      </div>
+    </div>
+
+    <div style="margin-top:16px">
+      <label style="display:block;font-size:.74rem;font-weight:650;color:var(--gray-600);margin-bottom:5px">여행 스타일</label>
+      <div class="style-row" id="styleRow">
+        <button class="style-btn" data-style="budget" type="button">알뜰<small>게스트하우스·현지식</small></button>
+        <button class="style-btn on" data-style="normal" type="button">보통<small>3~4성·적당히</small></button>
+        <button class="style-btn" data-style="premium" type="button">여유<small>호텔·맛집 위주</small></button>
+      </div>
+    </div>
+
+    <button class="est-calc" id="calcBtn" type="button">견적 계산하기</button>
+  </div>
+
+  <!-- ── 결과 ── -->
+  <div id="result" class="hidden">
+
+    <div class="est-total">
+      <div class="cap" id="r-cap">— </div>
+      <div class="big" id="r-total">₩0</div>
+      <div class="per" id="r-per">1인당 ₩0 · 하루 ₩0</div>
+      <div class="meta" id="r-meta"></div>
+    </div>
+
+    <div class="est-card">
+      <h2>항목별 예산</h2>
+      <div class="sub">
+        <span class="tag tag-live">실시간</span> = 마이리얼트립 조회값 ·
+        <span class="tag tag-assume">가정</span> = 조정용 기본값. 숫자를 바꾸면 총액이 바로 반영됩니다.
+      </div>
+      <div id="lines"></div>
+
+      <div class="bar" id="bar"></div>
+      <div class="legend" id="legend"></div>
+
+      <div class="act-row">
+        <button class="act" id="btn-save" type="button">💾 내 여행에 저장</button>
+        <button class="act" id="btn-copy" type="button">🔗 견적 링크 복사</button>
+        <button class="act" id="btn-reset" type="button">↺ 기본값으로</button>
+      </div>
+    </div>
+
+    <div class="est-card">
+      <h2>이 예산으로 예약하기</h2>
+      <div class="sub">가격·재고는 각 플랫폼에서 실시간으로 확인하세요. 결제는 해당 플랫폼에서 직접 진행됩니다.</div>
+      <div id="affBox"></div>
+      <div id="affDisc"></div>
+    </div>
+
+  </div>
+
+  <p class="est-foot">
+    이 견적은 참고용 추정치이며 실제 결제 금액과 다를 수 있습니다.<br>
+    <a href="/privacy">개인정보처리방침</a> · <a href="/terms">이용약관</a> · <a href="/prepare">출국 준비 체크</a>
+  </p>
+</div>
+
+<script src="/affiliates.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   여행 총예산 견적기
+
+   설계 원칙 (중요)
+   1) 기본 단가는 "사실"이 아니라 "가정"이다. 화면에 그렇게 표시하고,
+      전부 사용자가 덮어쓸 수 있게 한다. 지어낸 숫자를 사실처럼 보여주지 않는다.
+   2) 실시간 조회로 채운 값만 '실시간' 배지를 달고 조회 시각을 남긴다.
+   3) 지역×스타일 프리셋만 두고 도시별 세부 단가는 만들지 않는다.
+      (도시별로 그럴듯한 숫자를 지어내는 순간 근거 없는 콘텐츠가 된다)
+   ═══════════════════════════════════════════════════════════ */
+'use strict';
+
+var DESTS = [
+  { key:'osaka',     label:'오사카',   region:'jp',  iata:'KIX', dom:false },
+  { key:'tokyo',     label:'도쿄',     region:'jp',  iata:'NRT', dom:false },
+  { key:'fukuoka',   label:'후쿠오카', region:'jp',  iata:'FUK', dom:false },
+  { key:'kyoto',     label:'교토',     region:'jp',  iata:'KIX', dom:false },
+  { key:'sapporo',   label:'삿포로',   region:'jp',  iata:'CTS', dom:false },
+  { key:'bangkok',   label:'방콕',     region:'sea', iata:'BKK', dom:false },
+  { key:'danang',    label:'다낭',     region:'sea', iata:'DAD', dom:false },
+  { key:'bali',      label:'발리',     region:'sea', iata:'DPS', dom:false },
+  { key:'singapore', label:'싱가포르', region:'sea', iata:'SIN', dom:false },
+  { key:'paris',     label:'파리',     region:'eu',  iata:'CDG', dom:false },
+  { key:'jeju',      label:'제주',     region:'kr',  iata:'CJU', dom:true  },
+  { key:'busan',     label:'부산',     region:'kr',  iata:'PUS', dom:true  },
+  { key:'gangneung', label:'강릉',     region:'kr',  iata:'',    dom:true  }
+];
+
+/* 지역×스타일 기본 단가 (원)
+   flight = 1인 왕복 / stay = 1박 1객실 / food·transit·play = 1인 1일
+   ⚠️ 조사값이 아니다. 계산의 출발점일 뿐이며 사용자가 전부 조정한다. */
+var PRESET = {
+  jp:  { budget:{flight:250000, stay: 70000, food:40000, transit:10000, play:20000},
+         normal:{flight:350000, stay:130000, food:70000, transit:15000, play:40000},
+         premium:{flight:550000, stay:250000, food:120000, transit:25000, play:70000} },
+  sea: { budget:{flight:300000, stay: 50000, food:25000, transit: 8000, play:20000},
+         normal:{flight:450000, stay:100000, food:45000, transit:15000, play:40000},
+         premium:{flight:700000, stay:220000, food:90000, transit:25000, play:80000} },
+  eu:  { budget:{flight: 900000, stay:100000, food: 60000, transit:15000, play:30000},
+         normal:{flight:1300000, stay:180000, food:100000, transit:25000, play:60000},
+         premium:{flight:2200000, stay:350000, food:180000, transit:40000, play:100000} },
+  kr:  { budget:{flight: 80000, stay: 60000, food: 35000, transit:10000, play:15000},
+         normal:{flight:120000, stay:110000, food: 60000, transit:20000, play:30000},
+         premium:{flight:180000, stay:220000, food:100000, transit:35000, play:60000} }
+};
+
+var ITEMS = [
+  { key:'flight',  name:'항공권',      unit:'1인 왕복',  color:'#1B4FD8', live:'flight' },
+  { key:'stay',    name:'숙소',        unit:'1박 1객실', color:'#F97316', live:'stay' },
+  { key:'food',    name:'식비',        unit:'1인 1일',   color:'#039855' },
+  { key:'transit', name:'현지 교통',   unit:'1인 1일',   color:'#7C3AED' },
+  { key:'play',    name:'관광·투어',   unit:'1인 1일',   color:'#0891B2' },
+  { key:'shop',    name:'쇼핑·기타',   unit:'총액',      color:'#DB2777' },
+  { key:'buffer',  name:'예비비',      unit:'소계의 %',  color:'#98A2B3' }
+];
+
+var $ = function (id) { return document.getElementById(id); };
+var won = function (n) { return '₩' + Math.round(n || 0).toLocaleString('ko-KR'); };
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+var state = {
+  style: 'normal',
+  rates: {},          // 항목별 단가
+  live: {},           // 실시간으로 채운 항목 { flight:{at:'...'} }
+  computed: null
+};
+
+/* ── 초기화 ── */
+(function init(){
+  var sel = $('f-dest');
+  sel.innerHTML = DESTS.map(function(d){
+    return '<option value="'+d.key+'">'+esc(d.label)+'</option>';
+  }).join('');
+
+  var t = new Date(); t.setDate(t.getDate() + 30);
+  var b = new Date(t); b.setDate(b.getDate() + 3);
+  $('f-out').value  = t.toISOString().slice(0,10);
+  $('f-back').value = b.toISOString().slice(0,10);
+
+  document.querySelectorAll('.style-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.style-btn').forEach(function(x){ x.classList.remove('on'); });
+      btn.classList.add('on');
+      state.style = btn.dataset.style;
+      state.rates = {}; state.live = {};        // 스타일 바꾸면 프리셋 다시
+      if (state.computed) calc();
+    });
+  });
+
+  $('calcBtn').addEventListener('click', calc);
+  $('btn-reset').addEventListener('click', function(){ state.rates={}; state.live={}; calc(); });
+  $('btn-save').addEventListener('click', saveTrip);
+  $('btn-copy').addEventListener('click', copyLink);
+
+  restoreFromHash();
+})();
+
+function dest(){ return DESTS.filter(function(d){ return d.key === $('f-dest').value; })[0] || DESTS[0]; }
+
+function nightsOf(){
+  var a = new Date($('f-out').value), b = new Date($('f-back').value);
+  if (isNaN(a) || isNaN(b)) return 0;
+  return Math.max(0, Math.round((b - a) / 86400000));
+}
+
+/* 기본 단가를 채운다. 이미 사용자가 고친 값(state.rates)은 건드리지 않는다. */
+function baseRates(){
+  var d = dest();
+  var p = (PRESET[d.region] || PRESET.jp)[state.style];
+  var r = {
+    flight: p.flight, stay: p.stay, food: p.food,
+    transit: p.transit, play: p.play,
+    shop: 0, buffer: 10
+  };
+  for (var k in state.rates) { if (state.rates[k] != null) r[k] = state.rates[k]; }
+  return r;
+}
+
+function calc(){
+  var nights = nightsOf();
+  if (nights <= 0) { alert('오는 날은 가는 날보다 뒤여야 합니다.'); return; }
+
+  var days   = nights + 1;
+  var adults = Math.max(1, +$('f-adult').value || 1);
+  var child  = Math.max(0, +$('f-child').value || 0);
+  var rooms  = Math.max(1, +$('f-room').value || 1);
+  var people = adults + child;
+  var r = baseRates();
+
+  var amt = {
+    flight : r.flight  * people,
+    stay   : r.stay    * nights * rooms,
+    food   : r.food    * days * people,
+    transit: r.transit * days * people,
+    play   : r.play    * days * people,
+    shop   : r.shop
+  };
+  var subtotal = ITEMS.reduce(function(s,i){ return i.key==='buffer' ? s : s + (amt[i.key]||0); }, 0);
+  amt.buffer = Math.round(subtotal * (r.buffer/100));
+  var total = subtotal + amt.buffer;
+
+  state.computed = { nights, days, adults, child, rooms, people, r, amt, total };
+  render();
+}
+
+function render(){
+  var c = state.computed, d = dest();
+  $('result').classList.remove('hidden');
+
+  $('r-cap').textContent = d.label + ' · ' + c.nights + '박 ' + c.days + '일 · 성인 ' + c.adults +
+    (c.child ? '명 아동 ' + c.child : '') + '명';
+  $('r-total').textContent = won(c.total);
+  $('r-per').textContent = '1인당 ' + won(c.total / c.people) + ' · 하루 ' + won(c.total / c.days);
+
+  var liveKeys = Object.keys(state.live);
+  $('r-meta').innerHTML = liveKeys.length
+    ? '항공·숙소 ' + liveKeys.length + '개 항목을 실시간 시세로 반영했습니다 (' +
+      esc(state.live[liveKeys[0]].at) + ' 조회)'
+    : '모든 항목이 조정용 가정값입니다. 항공·숙소는 아래에서 실시간 시세로 채울 수 있습니다.';
+
+  /* 항목 행 */
+  $('lines').innerHTML = ITEMS.map(function(it){
+    var isLive = !!state.live[it.key];
+    var formula = {
+      flight : c.r.flight.toLocaleString('ko-KR') + '원 × ' + c.people + '명',
+      stay   : c.r.stay.toLocaleString('ko-KR') + '원 × ' + c.nights + '박 × ' + c.rooms + '실',
+      food   : c.r.food.toLocaleString('ko-KR') + '원 × ' + c.days + '일 × ' + c.people + '명',
+      transit: c.r.transit.toLocaleString('ko-KR') + '원 × ' + c.days + '일 × ' + c.people + '명',
+      play   : c.r.play.toLocaleString('ko-KR') + '원 × ' + c.days + '일 × ' + c.people + '명',
+      shop   : '직접 입력',
+      buffer : '소계의 ' + c.r.buffer + '%'
+    }[it.key];
+
+    return '' +
+      '<div class="line">' +
+        '<div class="line-main">' +
+          '<div class="line-name">' + esc(it.name) +
+            '<span class="tag ' + (isLive ? 'tag-live">실시간' : 'tag-assume">가정') + '</span>' +
+            (it.live ? '<button class="live-btn" data-live="'+it.key+'" type="button">실시간 시세로 채우기</button>' : '') +
+          '</div>' +
+          '<div class="line-formula">' + esc(formula) + '</div>' +
+          '<div class="line-input">' +
+            '<input type="number" data-rate="' + it.key + '" value="' + c.r[it.key] + '" min="0" inputmode="numeric">' +
+            '<span>' + esc(it.unit) + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="line-amt">' + won(c.amt[it.key]) + '</div>' +
+      '</div>';
+  }).join('');
+
+  /* 단가 수정 → 즉시 재계산 */
+  document.querySelectorAll('[data-rate]').forEach(function(inp){
+    inp.addEventListener('change', function(){
+      var k = inp.dataset.rate;
+      state.rates[k] = Math.max(0, +inp.value || 0);
+      delete state.live[k];               // 손으로 고쳤으면 더는 '실시간'이 아니다
+      calc();
+    });
+  });
+  document.querySelectorAll('[data-live]').forEach(function(btn){
+    btn.addEventListener('click', function(){ fillLive(btn.dataset.live, btn); });
+  });
+
+  /* 비중 바 */
+  $('bar').innerHTML = ITEMS.map(function(it){
+    var pct = c.total ? (c.amt[it.key] / c.total * 100) : 0;
+    return pct > 0 ? '<i style="width:'+pct.toFixed(2)+'%;background:'+it.color+'"></i>' : '';
+  }).join('');
+  $('legend').innerHTML = ITEMS.filter(function(it){ return c.amt[it.key] > 0; }).map(function(it){
+    var pct = c.total ? (c.amt[it.key] / c.total * 100) : 0;
+    return '<span><b style="background:'+it.color+'"></b>'+esc(it.name)+' '+pct.toFixed(0)+'%</span>';
+  }).join('');
+
+  renderAff();
+}
+
+/* ── 실시간 시세 (마이리얼트립 MCP) ──────────────────────────
+   한 곳의 가격이므로 '비교'가 아니라 '참고 시세'다. 그렇게 표기한다. */
+async function fillLive(key, btn){
+  var d = dest(), c = state.computed;
+  var label = btn.textContent;
+  btn.disabled = true; btn.textContent = '조회 중...';
+  try{
+    var data, price = 0;
+    if (key === 'flight') {
+      if (!d.iata) throw new Error('이 목적지는 항공 조회를 지원하지 않습니다(육로 이동).');
+      data = await callMrt(d.dom ? 'searchDomesticFlights' : 'searchInternationalFlights', {
+        tripType:'ROUND_TRIP', origin:'ICN', destination:d.iata,
+        departDate:$('f-out').value, returnDate:$('f-back').value,
+        passengers:{adults:1, children:0, infants:0}, maxResults:6
+      });
+      price = lowestPrice(data);
+    } else {
+      data = await callMrt('searchStays', {
+        keyword:d.label, checkIn:$('f-out').value, checkOut:$('f-back').value,
+        adultCount:Math.max(1, Math.ceil(c.adults / c.rooms)), childCount:0, isDomestic:d.dom
+      });
+      price = lowestPrice(data);
+      if (price && c.nights > 0 && price > 400000) price = Math.round(price / c.nights); // 총액 응답 방어
+    }
+    if (!price) throw new Error('가격을 찾지 못했습니다. 날짜를 바꿔 다시 시도해보세요.');
+    state.rates[key] = price;
+    state.live[key] = { at: new Date().toLocaleString('ko-KR', { dateStyle:'short', timeStyle:'short' }) };
+    calc();
+  }catch(e){
+    alert(e.message || '조회에 실패했습니다.');
+    btn.disabled = false; btn.textContent = label;
+  }
+}
+
+async function callMrt(tool, args){
+  var res = await fetch('/api/mrt', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ tool:tool, arguments:args })
+  });
+  var data = await res.json();
+  if (!data.ok) throw new Error(data.error || '조회 실패');
+  return data;
+}
+
+/* MCP 응답 형태가 가변이라(위젯 트리 / copy_text / items) 숫자만 훑어 최저가를 찾는다. */
+function lowestPrice(data){
+  var found = [];
+  (function walk(v){
+    if (v == null) return;
+    if (typeof v === 'number') { if (v >= 10000 && v <= 20000000) found.push(v); return; }
+    if (typeof v === 'string') {
+      var m = v.match(/([0-9][0-9,]{4,})\s*원/g);
+      if (m) m.forEach(function(s){
+        var n = +s.replace(/[^0-9]/g,'');
+        if (n >= 10000 && n <= 20000000) found.push(n);
+      });
+      return;
+    }
+    if (typeof v === 'object') { for (var k in v) walk(v[k]); }
+  })(data);
+  if (!found.length) return 0;
+  found.sort(function(a,b){ return a-b; });
+  return found[0];
+}
+
+/* ── 제휴 CTA ── */
+function renderAff(){
+  if (!window.AFF) return;
+  var d = dest();
+  $('affBox').innerHTML =
+    '<div style="margin-bottom:12px"><div style="font-size:.78rem;font-weight:700;color:var(--gray-600);margin-bottom:6px">✈️ 항공</div>' +
+      AFF.ctas('flight', d.label) + '</div>' +
+    '<div style="margin-bottom:12px"><div style="font-size:.78rem;font-weight:700;color:var(--gray-600);margin-bottom:6px">🏨 숙소</div>' +
+      AFF.ctas('stay', d.label) + '</div>' +
+    '<div><div style="font-size:.78rem;font-weight:700;color:var(--gray-600);margin-bottom:6px">🎟 투어·티켓</div>' +
+      AFF.ctas('tna', d.label) + '</div>';
+  $('affDisc').innerHTML = AFF.disclosureHtml();
+}
+
+/* ── 저장 / 공유 ── */
+function saveTrip(){
+  var c = state.computed; if (!c) return;
+  try{
+    var list = JSON.parse(localStorage.getItem('tripguide_estimates') || '[]');
+    list.unshift({
+      dest: dest().key, destLabel: dest().label,
+      out: $('f-out').value, back: $('f-back').value,
+      nights: c.nights, people: c.people, total: c.total,
+      style: state.style, savedAt: Date.now()
+    });
+    localStorage.setItem('tripguide_estimates', JSON.stringify(list.slice(0, 20)));
+    alert('저장했습니다. "내 여행"에서 확인할 수 있습니다.');
+  }catch(e){ alert('저장에 실패했습니다. 브라우저 저장 공간을 확인해주세요.'); }
+}
+
+function copyLink(){
+  var c = state.computed; if (!c) return;
+  var p = new URLSearchParams({
+    d: dest().key, o: $('f-out').value, b: $('f-back').value,
+    a: c.adults, c: c.child, r: c.rooms, s: state.style
+  });
+  var url = location.origin + location.pathname + '#' + p.toString();
+  (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject())
+    .then(function(){ alert('견적 링크를 복사했습니다.'); })
+    .catch(function(){ prompt('아래 링크를 복사하세요', url); });
+}
+
+function restoreFromHash(){
+  if (!location.hash || location.hash.length < 3) return;
+  var p = new URLSearchParams(location.hash.slice(1));
+  if (p.get('d')) $('f-dest').value = p.get('d');
+  if (p.get('o')) $('f-out').value  = p.get('o');
+  if (p.get('b')) $('f-back').value = p.get('b');
+  if (p.get('a')) $('f-adult').value = p.get('a');
+  if (p.get('c')) $('f-child').value = p.get('c');
+  if (p.get('r')) $('f-room').value  = p.get('r');
+  var s = p.get('s');
+  if (s) {
+    state.style = s;
+    document.querySelectorAll('.style-btn').forEach(function(b){
+      b.classList.toggle('on', b.dataset.style === s);
+    });
+  }
+  calc();
+}
+</script>
+
+<script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+<script src="/icons.js" defer></script>
+<script src="/nav.js" defer></script>
+</body>
+</html>

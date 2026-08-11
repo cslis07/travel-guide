@@ -9,6 +9,9 @@ const checks = [
   // [경로, 기대 상태, 응답에 포함되어야 할 문자열(선택)]
   ['/', 200, '트립가이드'],
   ['/airport', 200, 'ICN'],
+  ['/estimate', 200, '총예산'],
+  ['/prepare', 200, '출국 준비'],
+  ['/affiliates.js', 200, 'AFF'],
   ['/tours', 200, 'tt-tabs'],
   ['/mytrip', 200, '내 여행'],
   ['/guide', 200, 'sidebar'],

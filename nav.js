@@ -14,15 +14,18 @@
 (function () {
   'use strict';
 
+  /* 하단 탭은 5개를 넘기지 않는다(HIG 권장).
+     '예산 견적'·'출국 준비'가 핵심 진입점이 되면서 '여행지'·'내 여행'은
+     헤더 내비와 푸터로 내렸다. 목적지 페이지에서는 활성 탭이 없다(의도됨). */
   var TABS = [
-    { href: '/',        icon: 'home',      label: '홈' },
-    { href: '/#destinations', icon: 'map-pin', label: '여행지', key: 'dest' },
-    { href: '/tours',   icon: 'ticket',    label: '투어·티켓' },
-    { href: '/mytrip',  icon: 'briefcase', label: '내 여행' },
-    { href: '/airport', icon: 'plane',     label: '공항' }
+    { href: '/',         icon: 'home',      label: '홈' },
+    { href: '/estimate', icon: 'coins',       label: '예산 견적' },
+    { href: '/prepare',  icon: 'check-circle', label: '출국 준비' },
+    { href: '/tours',    icon: 'ticket',    label: '투어·티켓' },
+    { href: '/airport',  icon: 'plane',     label: '공항' }
   ];
 
-  // 목적지 가이드 13곳 — '여행지' 탭으로 활성 표시
+  // 목적지 가이드 13곳 — 활성 표시용 목록(현재 전용 탭 없음)
   var DEST_PAGES = ['osaka', 'fukuoka', 'tokyo', 'kyoto', 'sapporo', 'bangkok',
     'danang', 'bali', 'singapore', 'jeju', 'busan', 'gangneung', 'paris'];
 
