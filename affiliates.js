@@ -24,6 +24,17 @@
      signup: 제휴 신청 경로(가입 시 조건·수수료율 직접 확인 필요).
      types: 이 파트너가 커버하는 카테고리.
      ───────────────────────────────────────────────────────── */
+  /* ⚠️ 트립닷컴 숙소는 `keyword=`가 통하지 않는다.
+     `hotels/list?keyword=제주`는 200을 주지만 본문이 "검색 결과가 없음"이다(실측).
+     반드시 도시 ID가 필요하다 — `city=737` 은 제주 호텔 123건이 정상 표출된다.
+     ID는 트립닷컴 제휴 링크 생성기('호텔 페이지')에서 도시를 고르면 URL에 찍혀 나온다.
+     같은 ID가 투어(`things-to-do/list?searchkey=`)에도 그대로 쓰인다.
+     ⛔ 모르는 도시는 추측하지 말고 링크를 생략한다 — 엉뚱한 도시 호텔을 보여주느니 없는 게 낫다. */
+  var TRIPCOM_CITY = {
+    '제주': 737
+    // 오사카·도쿄·후쿠오카·교토·삿포로·방콕·다낭·발리·싱가포르·파리·부산·강릉 미확보
+  };
+
   /* 날짜 포맷 헬퍼 — 항공 딥링크가 요구하는 형태가 제각각이다 */
   function ymd(s) { return String(s || '').slice(0, 10); }          // 2026-09-10
   function yymmdd(s) { return ymd(s).replace(/-/g, '').slice(2); }  // 260910
@@ -87,7 +98,12 @@
       subKey: 'trip_sub1',
       urls: {
         tna:  { base: 'https://kr.trip.com/things-to-do/list', qkey: 'keyword' },
-        stay: { base: 'https://kr.trip.com/hotels/list',       qkey: 'keyword' },
+        stay: { build: function (c) {
+          var id = TRIPCOM_CITY[c && c.city];
+          if (!id) return null;          // ID를 모르면 링크를 만들지 않는다
+          return 'https://kr.trip.com/hotels/list?city=' + id +
+            '&optionId=' + id + '&optionType=City&optionName=' + encodeURIComponent(c.city);
+        } },
         flight: { build: function (c) {
           var rt = !!ymd(c.back);   // 오는 날이 없으면 편도로 넘겨야 한다
           return 'https://kr.trip.com/flights/showfarefirst?dcity=' +
@@ -174,8 +190,12 @@
     var spec = (p.urls && type && p.urls[type]) || { base: p.base, qkey: p.qkey };
     var raw;
     if (typeof spec.build === 'function') {
-      if (!ctx || !ctx.dest) return null;      // 항공 컨텍스트가 없으면 링크를 만들지 않는다
-      raw = spec.build(ctx);
+      /* 검색어를 도시명으로도 쓸 수 있게 보정한다(숙소는 city, 항공은 dest가 필요).
+         정보가 모자라면 build 쪽에서 null을 돌려주고, 그러면 링크를 만들지 않는다. */
+      var c = { city: (ctx && ctx.city) || query || '', sub: ctx && ctx.sub };
+      if (ctx) { for (var ck in ctx) { if (c[ck] === undefined) c[ck] = ctx[ck]; } }
+      raw = spec.build(c);
+      if (!raw) return null;
     } else {
       raw = spec.base;
     }
