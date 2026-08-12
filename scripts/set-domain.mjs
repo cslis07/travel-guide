@@ -27,6 +27,7 @@ const SKIP_FILES = new Set(['site.config.json']);
 
 const arg = process.argv[2];
 const dry = process.argv.includes('--dry');
+const force = process.argv.includes('--force');
 
 if (!arg || arg.startsWith('--')) {
   console.error('사용법: node scripts/set-domain.mjs <새도메인> [--dry]');
@@ -49,6 +50,34 @@ if (prev === next) {
   process.exit(0);
 }
 
+/* ── 전환 전 확인 ────────────────────────────────────────────
+   아직 서비스되지 않는 도메인으로 바꾸면 canonical·og:url·sitemap 이
+   **전부 죽은 주소를 가리킨다.** 검색엔진 입장에서는 아무것도 안 한 것보다 나쁘다.
+   그래서 실제 응답을 확인하고, 우리 사이트가 맞는지까지 본 뒤에만 진행한다.
+   (DNS 전파 중이라 확실히 아는데 급할 때만 --force) */
+async function preflight(domain) {
+  const url = `https://${domain}/`;
+  let res;
+  try {
+    const ac = new AbortController();
+    const timer = setTimeout(() => ac.abort(), 15000);
+    res = await fetch(url, { redirect: 'follow', signal: ac.signal });
+    clearTimeout(timer);
+  } catch (e) {
+    return { ok: false, why: `응답이 없습니다 (${e.cause?.code || e.name}). ` +
+      `도메인 구입·DNS 레코드 등록·전파 중 하나가 아직 안 끝났습니다.` };
+  }
+  if (!res.ok) return { ok: false, why: `HTTP ${res.status} 를 반환합니다.` };
+
+  const body = await res.text();
+  const mine = /트립가이드|TripGuide|tripguide/i.test(body);
+  if (!mine) return { ok: false, why:
+    `응답은 오는데 우리 사이트가 아닙니다(주차 페이지·기본 페이지일 수 있음). ` +
+    `Vercel Domains 연결이 끝났는지 확인하세요.` };
+
+  return { ok: true };
+}
+
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {
     if (SKIP_DIRS.has(name)) continue;
@@ -58,6 +87,26 @@ function walk(dir, out = []) {
     else if (EXTS.has(extname(name)) && !SKIP_FILES.has(name)) out.push(p);
   }
   return out;
+}
+
+if (!dry && !force) {
+  process.stdout.write(`https://${next} 확인 중... `);
+  const pre = await preflight(next);
+  if (!pre.ok) {
+    console.log('❌');
+    console.error('');
+    console.error(`전환을 중단합니다 — ${pre.why}`);
+    console.error('');
+    console.error('순서:');
+    console.error('  1) Vercel → Settings → Domains 에 도메인 추가');
+    console.error('  2) Vercel이 알려주는 A(루트)·CNAME(www) 레코드를 등록기관 DNS에 입력');
+    console.error(`  3) https://${next} 가 우리 사이트를 띄우는지 브라우저로 확인`);
+    console.error('  4) 이 명령 재실행');
+    console.error('');
+    console.error('미리보기만 하려면 --dry, 전파 중인 걸 확실히 안다면 --force');
+    process.exit(1);
+  }
+  console.log('✅');
 }
 
 const files = walk(ROOT);
