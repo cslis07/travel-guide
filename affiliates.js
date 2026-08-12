@@ -81,6 +81,10 @@
       key: 'tripcom', label: '트립닷컴', color: '#2577E3', bg: '#E9F2FF',
       types: ['tna', 'stay', 'flight'],
       signup: 'https://kr.trip.com/partners/',
+      /* 2026-08-11 승인. 딥링크 생성기가 원본 URL을 보존하고 파라미터만 덧붙이는 방식이라
+         고정값 3개를 여기 두면 동적으로 만드는 모든 링크가 자동으로 추적된다.
+         제휴 ID는 어차피 아웃바운드 URL에 노출되는 값이라 비밀이 아니다(공개 리포 무관). */
+      subKey: 'trip_sub1',
       urls: {
         tna:  { base: 'https://kr.trip.com/things-to-do/list', qkey: 'keyword' },
         stay: { base: 'https://kr.trip.com/hotels/list',       qkey: 'keyword' },
@@ -94,7 +98,7 @@
             '&triptype=' + (rt ? 'rt' : 'ow');
         } }
       },
-      aff: {} /* {allianceid, sid} */
+      aff: { Allianceid: '9989477', SID: '328159469', trip_sub3: 'D19193218' }
     },
     {
       key: 'skyscanner', label: '스카이스캐너', color: '#0770E3', bg: '#E7F1FE',
@@ -154,6 +158,18 @@
   /* 파트너 검색 URL 생성.
      타입별 전용 경로(urls[type])가 있으면 그것을 쓰고, 없으면 공용 base를 쓴다.
      항공처럼 검색어가 아니라 출발지·도착지·날짜가 필요한 경우는 build(ctx)로 만든다. */
+  /* 클릭이 어느 페이지에서 났는지 식별하는 값.
+     페이지마다 따로 지정하게 하면 언젠가 빠뜨리므로 경로에서 자동으로 만든다.
+     예: /estimate + stay → "estimate-stay", /tours + flight → "tours-flight" */
+  function subId(type) {
+    var page = 'home';
+    try {
+      var last = String(location.pathname).replace(/\/+$/, '').replace(/\.html$/, '').split('/').pop();
+      if (last) page = last;
+    } catch (e) { /* location 접근 불가 환경 */ }
+    return type ? page + '-' + type : page;
+  }
+
   function url(p, query, type, ctx) {
     var spec = (p.urls && type && p.urls[type]) || { base: p.base, qkey: p.qkey };
     var raw;
@@ -169,6 +185,10 @@
     if (!spec.build && spec.qkey && query) u.searchParams.set(spec.qkey, query);
     var aff = p.aff || {};
     for (var k in aff) { if (aff[k]) u.searchParams.set(k, aff[k]); }
+    /* 추적 파라미터가 실제로 설정된 파트너에만 sub id를 붙인다 */
+    if (p.subKey && Object.keys(aff).length) {
+      u.searchParams.set(p.subKey, (ctx && ctx.sub) || subId(type));
+    }
     return u.toString();
   }
 
