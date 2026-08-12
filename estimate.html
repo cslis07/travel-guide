@@ -139,6 +139,12 @@
 .fare-cell .fd{font-size:.72rem;color:var(--gray-500);font-weight:600}
 .fare-cell .fp{font-size:.88rem;color:var(--gray-900);font-weight:800}
 
+.aff-block{margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--gray-100)}
+.aff-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.aff-head{font-size:.85rem;font-weight:750;color:var(--gray-800);margin-bottom:8px;
+  display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.aff-head span{font-size:.72rem;font-weight:500;color:var(--gray-500)}
+
 .hidden{display:none}
 .est-foot{font-size:.72rem;color:var(--gray-500);line-height:1.65;margin-top:22px;text-align:center}
 .est-foot a{color:var(--gray-500)}
@@ -610,16 +616,32 @@ function stayLowest(d){
 }
 
 /* ── 제휴 CTA ── */
+/* 예약 CTA는 수수료율 순으로 배치한다.
+   숙소 5% > 렌터카 5% > 공항픽업 5% > 투어 4% > 항공 0.5%.
+   항공은 유효금액에서 세금이 빠져 실수령이 거의 없으므로 맨 아래에 둔다
+   (지우지는 않는다 — 사용자가 실제로 필요로 하는 링크이고 유입 가치가 있다). */
+var AFF_BLOCKS = [
+  { type:'stay',     icon:'🏨', label:'숙소',      note:'견적에서 비중이 큰 항목입니다' },
+  { type:'car',      icon:'🚗', label:'렌터카',    note:'제주·오키나와처럼 대중교통이 불편한 곳' },
+  { type:'transfer', icon:'🚐', label:'공항픽업',  note:'짐 많거나 늦은 도착이면 유용합니다' },
+  { type:'tna',      icon:'🎟', label:'투어·티켓', note:'인기 티켓은 현장 구매가 안 되는 곳도 있습니다' },
+  { type:'flight',   icon:'✈️', label:'항공',      note:'' }
+];
+
 function renderAff(){
   if (!window.AFF) return;
-  var d = dest();
-  $('affBox').innerHTML =
-    '<div style="margin-bottom:12px"><div style="font-size:.78rem;font-weight:700;color:var(--gray-600);margin-bottom:6px">✈️ 항공</div>' +
-      AFF.ctas('flight', d.label) + '</div>' +
-    '<div style="margin-bottom:12px"><div style="font-size:.78rem;font-weight:700;color:var(--gray-600);margin-bottom:6px">🏨 숙소</div>' +
-      AFF.ctas('stay', d.label) + '</div>' +
-    '<div><div style="font-size:.78rem;font-weight:700;color:var(--gray-600);margin-bottom:6px">🎟 투어·티켓</div>' +
-      AFF.ctas('tna', d.label) + '</div>';
+  var d = dest(), c = state.computed;
+  var ctx = c ? { city:d.label, origin:'ICN', dest:d.iata,
+                  out:$('f-out').value, back:$('f-back').value } : { city:d.label };
+
+  $('affBox').innerHTML = AFF_BLOCKS.map(function(b){
+    var ctas = AFF.ctas(b.type, d.label, { ctx: ctx });
+    if (!ctas) return '';
+    return '<div class="aff-block">' +
+      '<div class="aff-head">' + b.icon + ' ' + esc(b.label) +
+        (b.note ? '<span>' + esc(b.note) + '</span>' : '') + '</div>' +
+      ctas + '</div>';
+  }).join('');
   $('affDisc').innerHTML = AFF.disclosureHtml();
 }
 

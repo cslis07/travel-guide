@@ -90,7 +90,7 @@
     },
     {
       key: 'tripcom', label: '트립닷컴', color: '#2577E3', bg: '#E9F2FF',
-      types: ['tna', 'stay', 'flight'],
+      types: ['tna', 'stay', 'flight', 'car', 'transfer'],
       signup: 'https://kr.trip.com/partners/',
       /* 2026-08-11 승인. 딥링크 생성기가 원본 URL을 보존하고 파라미터만 덧붙이는 방식이라
          고정값 3개를 여기 두면 동적으로 만드는 모든 링크가 자동으로 추적된다.
@@ -104,6 +104,10 @@
           return 'https://kr.trip.com/hotels/list?city=' + id +
             '&optionId=' + id + '&optionType=City&optionName=' + encodeURIComponent(c.city);
         } },
+        /* 렌터카·공항픽업은 둘 다 5% — 항공(0.5%)의 10배다.
+           도시 파라미터 없이도 목적지 선택 UI가 있는 랜딩으로 보낸다. */
+        car:      { base: 'https://kr.trip.com/carhire/' },
+        transfer: { base: 'https://kr.trip.com/airport-transfers/' },
         flight: { build: function (c) {
           var rt = !!ymd(c.back);   // 오는 날이 없으면 편도로 넘겨야 한다
           return 'https://kr.trip.com/flights/showfarefirst?dcity=' +
@@ -153,11 +157,22 @@
        · fx        : 환전은 은행·인가 업자 영역. 제휴 링크 대상 아님.
      이 두 카테고리는 CTA를 만들지 않고 공식 사이트 안내만 노출한다.
      ───────────────────────────────────────────────────────── */
+  /* 💰 트립닷컴 수수료율 (2026-08-11 커미션 플랜 기준)
+     이 숫자가 화면 배치 순서를 결정한다. 클릭 한 번의 값어치가 10배까지 차이난다.
+       숙소 5%(200건↑ 6%, 1000건↑ 7%) · 렌터카 5% · 공항픽업 5% · 호텔바우처 5% · 크루즈 5%
+       액티비티(기타) 4% · 항공+호텔 2~2.5% · 기차 2% · 명소&공연 1.5%
+       국제선 항공 0.5%(300건↑ 0.8%)
+     ⚠️ 항공은 유효금액에서 **세금이 빠진다**. 실측: 오사카 왕복 226,900원의 내역이
+        base 69,000 / tax 143,900 / tasf 10,000 → 수수료 기준액은 7만원대다.
+        즉 항공은 수수료가 사실상 없다고 보고 "유입 도구"로만 쓴다.
+     ⚠️ 어린이 항공권·할인코드·바우처·트립코인·보험 등 교차판매는 계산에서 제외된다. */
   var CATEGORIES = {
-    tna:       { label: '투어·티켓',   monetizable: true },
-    stay:      { label: '숙소',        monetizable: true },
-    flight:    { label: '항공',        monetizable: true },
-    car:       { label: '렌터카',      monetizable: true },
+    stay:      { label: '숙소',        monetizable: true, rate: 5,   rank: 1 },
+    car:       { label: '렌터카',      monetizable: true, rate: 5,   rank: 2 },
+    transfer:  { label: '공항픽업',    monetizable: true, rate: 5,   rank: 3 },
+    tna:       { label: '투어·티켓',   monetizable: true, rate: 4,   rank: 4 },
+    pkg:       { label: '항공+숙소',   monetizable: true, rate: 2,   rank: 5 },
+    flight:    { label: '항공',        monetizable: true, rate: 0.5, rank: 6 },
     esim:      { label: 'eSIM·데이터', monetizable: true },
     insurance: { label: '여행자보험',  monetizable: false,
                  why: '보험업법상 모집 규제 대상이라 제휴 수수료 구조를 붙이지 않습니다.' },
