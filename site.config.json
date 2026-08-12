@@ -1,0 +1,4 @@
+{
+  "domain": "travel-guide-cslis07.vercel.app",
+  "note": "현재 사이트의 정식 도메인. 바꿀 때는 직접 수정하지 말고 `node scripts/set-domain.mjs <새도메인>` 을 쓸 것 — canonical·og:url·JSON-LD·sitemap·robots 106곳이 함께 갱신되고 이 값도 자동으로 따라온다."
+}
