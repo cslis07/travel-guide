@@ -84,7 +84,11 @@
 .est-total{background:linear-gradient(135deg,#1B4FD8,#2E6BF0);border-radius:var(--radius-lg);
   padding:26px 22px;color:#fff;text-align:center;margin-bottom:16px;box-shadow:0 8px 28px rgba(27,79,216,.26)}
 .est-total .cap{font-size:.78rem;opacity:.85;font-weight:600;letter-spacing:.02em}
-.est-total .big{font-size:2.4rem;font-weight:850;letter-spacing:-.035em;margin:6px 0 2px;line-height:1.1}
+.est-total .big{font-size:2.15rem;font-weight:850;letter-spacing:-.035em;margin:6px 0 3px;line-height:1.15}
+.est-total .big small{font-size:1.1rem;font-weight:700;opacity:.9;margin-left:2px}
+.spread{display:inline-block;margin-left:5px;padding:1px 6px;border-radius:999px;
+  background:var(--gray-100);color:var(--gray-500);font-size:.66rem;font-weight:700}
+.spread.fixed{background:#E6F8F7;color:#067D77}
 .est-total .per{font-size:.83rem;opacity:.9;font-weight:500}
 .est-total .meta{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.22);
   font-size:.75rem;opacity:.88;line-height:1.5}
@@ -122,6 +126,19 @@
   cursor:pointer;font-family:inherit;transition:all .15s}
 .act:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-lt)}
 
+/* 날짜별 최저가 */
+.fare-load,.fare-note{font-size:.73rem;color:var(--gray-500);line-height:1.55;margin-top:10px}
+.fare-best{background:var(--accent-lt);border:1px solid #FCD9BD;border-radius:var(--radius-sm);
+  padding:12px 14px;margin-top:16px;font-size:.83rem;line-height:1.55;color:#7A3E12}
+.fare-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px;margin-top:10px}
+.fare-cell{display:flex;flex-direction:column;gap:3px;padding:10px 8px;cursor:pointer;
+  border:1px solid var(--gray-300);border-radius:var(--radius-sm);background:var(--white);
+  font-family:inherit;text-align:left;transition:all .14s}
+.fare-cell:hover{border-color:var(--primary);background:var(--primary-lt)}
+.fare-cell.on{border-color:var(--accent);background:var(--accent-lt)}
+.fare-cell .fd{font-size:.72rem;color:var(--gray-500);font-weight:600}
+.fare-cell .fp{font-size:.88rem;color:var(--gray-900);font-weight:800}
+
 .hidden{display:none}
 .est-foot{font-size:.72rem;color:var(--gray-500);line-height:1.65;margin-top:22px;text-align:center}
 .est-foot a{color:var(--gray-500)}
@@ -138,6 +155,9 @@
   .est-field input,.est-field select,.line-input input{background:#11151C;border-color:rgba(255,255,255,.14);color:#E8EBF0}
   .style-btn{background:#11151C;border-color:rgba(255,255,255,.14);color:#98A2B3}
   .line{border-bottom-color:rgba(255,255,255,.07)}
+  .fare-cell{background:#11151C;border-color:rgba(255,255,255,.14)}
+  .fare-cell .fp{color:#E8EBF0}
+  .spread{background:rgba(255,255,255,.07);color:#98A2B3}
 }
 </style>
 </head>
@@ -169,8 +189,8 @@
     <span style="font-size:1.05rem;line-height:1">📌</span>
     <div>
       <b>여기 채워지는 기본 단가는 조사한 값이 아니라 계산을 시작하기 위한 가정값입니다.</b><br>
-      실제 비용은 시기·환율·개인 취향에 따라 크게 달라집니다. 모든 항목은 직접 수정할 수 있고,
-      항공·숙소는 <b>실시간 시세로 채우기</b>를 누르면 실제 조회값으로 바뀝니다.
+      그래서 결과를 하나의 숫자가 아니라 <b>범위</b>로 보여줍니다. 모든 항목은 직접 수정할 수 있고,
+      항공·숙소를 <b>실시간 시세로 채우기</b>로 조회하면 그 항목의 폭이 사라져 범위가 좁아집니다.
     </div>
   </div>
 
@@ -239,7 +259,10 @@
       <div class="bar" id="bar"></div>
       <div class="legend" id="legend"></div>
 
+      <div id="fareBox"></div>
+
       <div class="act-row">
+        <button class="act" id="btn-cheaper" type="button">📅 더 싼 날짜 찾기</button>
         <button class="act" id="btn-save" type="button">💾 내 여행에 저장</button>
         <button class="act" id="btn-copy" type="button">🔗 견적 링크 복사</button>
         <button class="act" id="btn-reset" type="button">↺ 기본값으로</button>
@@ -309,6 +332,11 @@ var PRESET = {
          premium:{flight:180000, stay:220000, food:100000, transit:35000, play:60000} }
 };
 
+/* 항목별 불확실성 폭(±). 이 가정이 실제와 얼마나 벌어질 수 있는지에 대한 진술이다.
+   관광은 하느냐 마느냐로 갈려 가장 크고, 쇼핑은 사용자가 직접 넣은 값이라 0이다.
+   실시간으로 채운 항목은 계산 시점에 0으로 덮인다. */
+var SPREAD = { flight:0.25, stay:0.30, food:0.40, transit:0.30, play:0.50, shop:0 };
+
 var ITEMS = [
   { key:'flight',  name:'항공권',      unit:'1인 왕복',  color:'#1B4FD8', live:'flight' },
   { key:'stay',    name:'숙소',        unit:'1박 1객실', color:'#F97316', live:'stay' },
@@ -321,6 +349,8 @@ var ITEMS = [
 
 var $ = function (id) { return document.getElementById(id); };
 var won = function (n) { return '₩' + Math.round(n || 0).toLocaleString('ko-KR'); };
+/* 범위 표시는 만원 단위로 반올림한다 — 범위인데 1원까지 적으면 다시 정밀해 보인다 */
+var manwon = function (n) { return Math.round((n || 0) / 10000).toLocaleString('ko-KR'); };
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
   return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 
@@ -354,7 +384,8 @@ var state = {
   });
 
   $('calcBtn').addEventListener('click', calc);
-  $('btn-reset').addEventListener('click', function(){ state.rates={}; state.live={}; calc(); });
+  $('btn-reset').addEventListener('click', function(){ state.rates={}; state.live={}; $('fareBox').innerHTML=''; calc(); });
+  $('btn-cheaper').addEventListener('click', findCheaperDates);
   $('btn-save').addEventListener('click', saveTrip);
   $('btn-copy').addEventListener('click', copyLink);
 
@@ -405,7 +436,28 @@ function calc(){
   amt.buffer = Math.round(subtotal * (r.buffer/100));
   var total = subtotal + amt.buffer;
 
-  state.computed = { nights, days, adults, child, rooms, people, r, amt, total };
+  /* ── 범위 ──────────────────────────────────────────────
+     단일 숫자는 실제보다 정확해 보인다. 항목마다 불확실성 폭을 두고 총액을 범위로 낸다.
+     폭은 "이 가정이 얼마나 흔들릴 수 있는가"에 대한 진술이지 조사값이 아니다.
+     실시간으로 채운 항목은 폭 0 — 조회할수록 범위가 눈에 띄게 좁아진다. */
+  var spreadOf = {}, sumSq = 0;
+  ITEMS.forEach(function(i){
+    if (i.key === 'buffer') return;
+    var sp = state.live[i.key] ? 0 : (SPREAD[i.key] || 0);
+    spreadOf[i.key] = sp;
+    var dev = (amt[i.key] || 0) * sp;
+    sumSq += dev * dev;          // 오차는 제곱합으로 합친다
+  });
+  spreadOf.buffer = 0;
+  /* 항목별 오차를 그냥 더하면 "식비도 최대, 숙소도 최대, 관광도 최대"가 동시에
+     일어나는 경우가 되어 범위가 비현실적으로 넓어진다(실측 ±34%).
+     스타일 선택(알뜰/보통/여유)이 이미 여행자 성향에 따른 동조를 흡수하므로
+     남은 변동은 대체로 독립적이라 보고 제곱합으로 합친다(±17% 수준). */
+  var dev = Math.sqrt(sumSq) * (1 + r.buffer/100);
+  var lo = Math.max(0, Math.round(total - dev));
+  var hi = Math.round(total + dev);
+
+  state.computed = { nights, days, adults, child, rooms, people, r, amt, total, lo, hi, spreadOf };
   render();
 }
 
@@ -415,14 +467,17 @@ function render(){
 
   $('r-cap').textContent = d.label + ' · ' + c.nights + '박 ' + c.days + '일 · 성인 ' + c.adults +
     (c.child ? '명 아동 ' + c.child : '') + '명';
-  $('r-total').textContent = won(c.total);
-  $('r-per').textContent = '1인당 ' + won(c.total / c.people) + ' · 하루 ' + won(c.total / c.days);
+  $('r-total').innerHTML = manwon(c.lo) + ' ~ ' + manwon(c.hi) + '<small>만원</small>';
+  $('r-per').textContent = '중앙 ' + won(c.total) + ' · 1인당 ' + won(c.total / c.people) +
+    ' · 하루 ' + won(c.total / c.days);
 
   var liveKeys = Object.keys(state.live);
-  $('r-meta').innerHTML = liveKeys.length
+  /* 폭은 절대액으로 보여준다 — %는 총액이 함께 줄어 "좁아졌다"가 눈에 안 띈다 */
+  $('r-meta').innerHTML = (liveKeys.length
     ? '항공·숙소 ' + liveKeys.length + '개 항목을 실시간 시세로 반영했습니다 (' +
       esc(state.live[liveKeys[0]].at) + ' 조회)'
-    : '모든 항목이 조정용 가정값입니다. 항공·숙소는 아래에서 실시간 시세로 채울 수 있습니다.';
+    : '모든 항목이 조정용 가정값입니다. 실시간 시세로 채울수록 범위가 좁아집니다.') +
+    '<br>현재 범위 폭 ±' + manwon((c.hi - c.lo) / 2) + '만원';
 
   /* 항목 행 */
   $('lines').innerHTML = ITEMS.map(function(it){
@@ -444,7 +499,11 @@ function render(){
             '<span class="tag ' + (isLive ? 'tag-live">실시간' : 'tag-assume">가정') + '</span>' +
             (it.live ? '<button class="live-btn" data-live="'+it.key+'" type="button">실시간 시세로 채우기</button>' : '') +
           '</div>' +
-          '<div class="line-formula">' + esc(formula) + '</div>' +
+          '<div class="line-formula">' + esc(formula) +
+            (c.spreadOf[it.key] > 0
+              ? ' <span class="spread">±' + Math.round(c.spreadOf[it.key] * 100) + '%</span>'
+              : (isLive ? ' <span class="spread fixed">조회값 고정</span>' : '')) +
+          '</div>' +
           '<div class="line-input">' +
             '<input type="number" data-rate="' + it.key + '" value="' + c.r[it.key] + '" min="0" inputmode="numeric">' +
             '<span>' + esc(it.unit) + '</span>' +
@@ -562,6 +621,78 @@ function renderAff(){
     '<div><div style="font-size:.78rem;font-weight:700;color:var(--gray-600);margin-bottom:6px">🎟 투어·티켓</div>' +
       AFF.ctas('tna', d.label) + '</div>';
   $('affDisc').innerHTML = AFF.disclosureHtml();
+}
+
+/* ── 더 싼 날짜 찾기 (flightsFareCalendar) ─────────────────
+   ⚠️ 이 API의 가격은 실시간이 아니고, 실시간 조회값과 절대액이 다르다
+      (실측: 같은 9/10 노선이 캘린더 195,200 vs 실시간 226,900).
+   그래서 절대 금액으로 쓰지 않고 **같은 데이터셋 안에서의 상대 차이**만 쓴다.
+   "내가 고른 날 대비 얼마나 싼가"는 이 방식이라야 말이 된다. */
+async function findCheaperDates(){
+  var d = dest(), c = state.computed;
+  var btn = $('btn-cheaper');
+  if (!d.iata) { alert('이 목적지는 항공 날짜 비교를 지원하지 않습니다(육로 이동).'); return; }
+  btn.disabled = true; btn.textContent = '조회 중...';
+  $('fareBox').innerHTML = '<div class="fare-load">날짜별 최저가를 찾는 중...</div>';
+  try{
+    var data = await callMrt('flightsFareCalendar', {
+      from:'ICN', to:d.iata, departureDate:$('f-out').value,
+      period:c.nights + 1, international:!d.dom
+    });
+    var res = (data.data && data.data.result) || {};
+    var items = (res.items || []).slice().sort(function(a,b){ return a.totalPrice - b.totalPrice; });
+    if (!items.length) throw new Error('날짜별 데이터가 없습니다.');
+
+    var mineDate = $('f-out').value;
+    var mine = items.filter(function(i){ return i.departureDate === mineDate; })[0];
+    var best = items[0];
+
+    var head;
+    if (mine && best.totalPrice < mine.totalPrice) {
+      var save = mine.totalPrice - best.totalPrice;
+      var pct  = Math.round(save / mine.totalPrice * 100);
+      head = '<div class="fare-best">📅 <b>' + esc(best.departureDate) + ' 출발</b>이면 ' +
+             '지금 고른 날짜(' + esc(mineDate) + ')보다 <b>1인당 약 ' +
+             save.toLocaleString('ko-KR') + '원(' + pct + '%) 저렴</b>합니다.</div>';
+    } else if (mine) {
+      head = '<div class="fare-best">📅 지금 고른 ' + esc(mineDate) +
+             ' 이 조회 구간에서 가장 싼 축입니다.</div>';
+    } else {
+      head = '<div class="fare-best">📅 주변 날짜 중 최저는 <b>' + esc(best.departureDate) +
+             ' 출발</b>입니다.</div>';
+    }
+
+    /* 내가 고른 날짜는 최저가 8개 밖이어도 항상 넣는다 — 비교 기준이 화면에서 사라지면 안 된다 */
+    var show = items.slice(0, 8);
+    if (mine && show.indexOf(mine) === -1) show = [mine].concat(show.slice(0, 7));
+
+    $('fareBox').innerHTML = head +
+      '<div class="fare-grid">' + show.map(function(it){
+        var on = (it.departureDate === mineDate);
+        return '<button class="fare-cell' + (on ? ' on' : '') + '" type="button"' +
+          ' data-dep="' + esc(it.departureDate) + '" data-ret="' + esc(it.returnDate) + '">' +
+          '<span class="fd">' + esc(it.departureDate.slice(5)) + ' → ' + esc(it.returnDate.slice(5)) + '</span>' +
+          '<span class="fp">' + Number(it.totalPrice).toLocaleString('ko-KR') + '원</span>' +
+          '</button>';
+      }).join('') + '</div>' +
+      '<p class="fare-note">날짜를 누르면 일정이 바뀌고 견적이 다시 계산됩니다. ' +
+      '이 가격은 <u>실시간이 아니며</u> 날짜 간 비교용입니다 — 절대 금액은 위 “실시간 시세로 채우기”로 확인하세요.</p>';
+
+    document.querySelectorAll('.fare-cell').forEach(function(cell){
+      cell.addEventListener('click', function(){
+        $('f-out').value  = cell.dataset.dep;
+        $('f-back').value = cell.dataset.ret;
+        state.live = {};                 // 날짜가 바뀌면 이전 실시간 조회값은 무효
+        state.rates = {};
+        calc();
+        $('fareBox').innerHTML = '';
+      });
+    });
+  }catch(e){
+    $('fareBox').innerHTML = '<div class="fare-note">' + esc(e.message || '조회 실패') + '</div>';
+  }finally{
+    btn.disabled = false; btn.textContent = '📅 더 싼 날짜 찾기';
+  }
 }
 
 /* ── 저장 / 공유 ── */
