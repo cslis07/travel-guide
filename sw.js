@@ -1,4 +1,4 @@
-// 트립가이드 Service Worker — PWA 설치 + 오프라인 캐싱
+// 트래블코스트 Service Worker — PWA 설치 + 오프라인 캐싱
 //
 // 전략
 //  - HTML / API : 네트워크 우선 (항상 최신). 실패 시 캐시 → 최후에 오프라인 폴백

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>인천공항 실시간 | 혼잡도·주차·항공편·출국 준비 | 트립가이드</title>
+<title>인천공항 실시간 | 혼잡도·주차·항공편·출국 준비 | 트래블코스트</title>
 <meta name="description" content="인천공항 실시간 출국장 혼잡도, 주차장 현황, 항공편, 셔틀·철도, 라운지, 출국 준비 체크리스트를 한 화면에서.">
 <link rel="canonical" href="https://travel-guide-cslis07.vercel.app/airport">
 <meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
@@ -11,7 +11,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="인천공항 실시간 | 트립가이드">
+<meta property="og:title" content="인천공항 실시간 | 트래블코스트">
 <meta property="og:description" content="출국장 혼잡도·주차·항공편·라운지·출국 준비를 실시간으로.">
 <meta property="og:url" content="https://travel-guide-cslis07.vercel.app/airport">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,7 @@
 {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "인천공항 실시간 - 트립가이드",
+  "name": "인천공항 실시간 - 트래블코스트",
   "url": "https://travel-guide-cslis07.vercel.app/airport",
   "applicationCategory": "TravelApplication",
   "operatingSystem": "Web",
@@ -36,7 +36,7 @@
 <meta name="theme-color" content="#00c8f0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="트립가이드">
+<meta name="apple-mobile-web-app-title" content="트래블코스트">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <!-- Chart.js는 차트가 실제로 보일 때만 지연 로드 (모바일·저사양 절약) -->
 <script>
@@ -1954,7 +1954,7 @@ button,select,input,a{touch-action:manipulation}
 <footer style="text-align:center;padding:16px;border-top:1px solid var(--border);font-size:.66rem;color:var(--muted);line-height:1.9">
   <div>데이터: 인천국제공항공사·한국관광공사 공공데이터 · Open-Meteo</div>
   <div><a href="/" style="color:var(--muted)">메인</a> · <a href="/privacy" style="color:var(--muted)">개인정보처리방침</a> · <a href="/terms" style="color:var(--muted)">이용약관</a></div>
-  <div>© 2026 트립가이드 · 정보는 실시간 변동될 수 있으며 참고용입니다</div>
+  <div>© 2026 트래블코스트 · 정보는 실시간 변동될 수 있으며 참고용입니다</div>
 </footer>
 
 <script>
@@ -2967,7 +2967,7 @@ function _toast(msg){
 }
 async function sharePage(){
   const url = window.location.href;
-  const title = '인천공항 실시간 정보 - 트립가이드';
+  const title = '인천공항 실시간 정보 - 트래블코스트';
   if(navigator.share){
     try { await navigator.share({ title, url }); return; }
     catch(e) { /* user cancelled, fall through to clipboard */ }
@@ -3218,7 +3218,7 @@ async function downloadFavIcs(flightId, dir){
   const ics = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//트립가이드//인천공항//KR',
+    'PRODID:-//트래블코스트//인천공항//KR',
     'BEGIN:VEVENT',
     `UID:icn-${flightId}-${dir}@travel-guide`,
     `DTSTAMP:${_icsDate(new Date())}`,

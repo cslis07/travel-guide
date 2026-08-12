@@ -61,7 +61,7 @@ export default async function handler(req) {
   });
   params.set('serviceKey', key);
   params.set('MobileOS',  'ETC');
-  params.set('MobileApp', 'TripGuide');
+  params.set('MobileApp', 'TravelCost');
   params.set('_type',     'json');
 
   const target = `${BASE}/${path}?${params.toString()}`;

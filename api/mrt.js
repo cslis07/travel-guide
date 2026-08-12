@@ -52,7 +52,7 @@ export default async function handler(req) {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json, text/event-stream',
-        'User-Agent': 'TripGuide/1.0',
+        'User-Agent': 'TravelCost/1.0',
       },
       body: JSON.stringify(rpc),
     });

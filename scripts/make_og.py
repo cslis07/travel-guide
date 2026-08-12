@@ -89,18 +89,18 @@ def main():
     f_sub = find_font(38*SS)
     f_chip = find_font(28*SS)
 
-    d.text((140*SS, 70*SS), "트립가이드", font=f_logo, fill=WHITE)
+    d.text((140*SS, 70*SS), "트래블코스트", font=f_logo, fill=WHITE)
 
-    # 메인 타이틀 (2줄)
-    d.text((90*SS, 210*SS), "여행 + 인천공항 실시간", font=f_title, fill=WHITE)
-    d.text((90*SS, 305*SS), "투어·숙소 메타서치", font=f_title, fill=(255, 220, 190))
+    # 메인 타이틀 (2줄) — 제품 축이 '가이드·메타서치'에서 '견적·출국준비'로 바뀌었다
+    d.text((90*SS, 210*SS), "다 합쳐서", font=f_title, fill=WHITE)
+    d.text((90*SS, 305*SS), "얼마 드는데?", font=f_title, fill=(255, 220, 190))
 
     # 서브
-    d.text((92*SS, 420*SS), "항공권·호텔·투어 비교 · 공항 혼잡도·항공편 실시간",
+    d.text((92*SS, 420*SS), "항공·숙소·식비·투어까지 한 번에 · 언제 뭘 준비할지까지",
            font=f_sub, fill=(220, 230, 255))
 
     # 하단 칩 (불투명 흰 알약 + 파란 글자로 대비 확보)
-    chips = ["투어·티켓", "숙소", "인천공항 실시간", "환율 계산"]
+    chips = ["예산 견적", "출국 준비", "인천공항 실시간", "가격 비교"]
     x = 92*SS
     y = 498*SS
     for c in chips:

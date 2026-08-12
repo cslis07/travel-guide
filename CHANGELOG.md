@@ -1,4 +1,4 @@
-# 변경 이력 — 트립가이드
+# 변경 이력 — 트래블코스트
 
 배포 URL: https://travel-guide-cslis07.vercel.app · GitHub `cslis07/travel-guide` (`master` push → Vercel 자동 배포)
 

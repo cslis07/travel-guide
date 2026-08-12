@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>투어·티켓·숙소 검색 | 트립가이드</title>
+<title>투어·티켓·숙소 검색 | 트래블코스트</title>
 <link rel="canonical" href="https://travel-guide-cslis07.vercel.app/tours">
 <meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
-<meta name="description" content="마이리얼트립 실시간 투어·티켓·숙소·항공권 검색 — 트립가이드">
-<meta property="og:title" content="트립가이드 — 투어·티켓·숙소 검색">
+<meta name="description" content="마이리얼트립 실시간 투어·티켓·숙소·항공권 검색 — 트래블코스트">
+<meta property="og:title" content="트래블코스트 — 투어·티켓·숙소 검색">
 <meta property="og:description" content="마이리얼트립 실시간 여행 상품 검색">
 <meta property="og:url" content="https://travel-guide-cslis07.vercel.app/tours.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -189,7 +189,7 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
   <meta name="theme-color" content="#1B4FD8">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="트립가이드">
+  <meta name="apple-mobile-web-app-title" content="트래블코스트">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head>
 <body>
@@ -197,7 +197,7 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
 <!-- 헤더 -->
 <header class="header" id="header">
   <div class="container header-inner">
-    <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트립가이드</a>
+    <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
     <nav class="nav" id="nav">
       <a href="index.html#destinations">여행지</a>
       <a href="tours.html" style="color:#1B4FD8;font-weight:600;"><i data-icon="ticket" data-size="17"></i> 투어·티켓</a>
@@ -328,14 +328,14 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
    모든 예약 링크에 자동으로 추적 파라미터가 붙습니다.
    미설정(빈 문자열) 시 일반 링크로 동작합니다.
    ═══════════════════════════════════════════ */
-const MRT_AFFILIATE = { param: 'utm_source', value: 'tripguide' }; // TODO: 마이리얼트립 파트너스 발급값으로 교체
+const MRT_AFFILIATE = { param: 'utm_source', value: 'travelcost' }; // TODO: 마이리얼트립 파트너스 발급값으로 교체
 
 function affLink(baseUrl){
   if(!MRT_AFFILIATE.value) return baseUrl;
   const u = new URL(baseUrl);
   u.searchParams.set(MRT_AFFILIATE.param, MRT_AFFILIATE.value);
   u.searchParams.set('utm_medium', 'referral');
-  u.searchParams.set('utm_campaign', 'tripguide');
+  u.searchParams.set('utm_campaign', 'travelcost');
   return u.toString();
 }
 

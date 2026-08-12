@@ -1,4 +1,4 @@
-# 트립가이드 (TripGuide) — PROJECT STATUS
+# 트래블코스트 (TravelCost) — PROJECT STATUS
 
 > **마지막 업데이트**: 2026-08-11
 > **프로젝트 경로**: `C:\Users\GB\Documents\travel-guide`
