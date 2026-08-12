@@ -132,11 +132,11 @@ const KEY = process.env.ICN_API_KEY || '9ae133...';
 
 ```bash
 # Edge 캐싱 헤더 확인
-curl -I "https://travel-guide-cslis07.vercel.app/api/tour?path=areaBasedList2&areaCode=39&numOfRows=1"
+curl -I "https://travelcost.co.kr/api/tour?path=areaBasedList2&areaCode=39&numOfRows=1"
 
 # 응답 본문 확인
-curl "https://travel-guide-cslis07.vercel.app/api/tour?path=areaBasedList2&areaCode=39&numOfRows=1" | jq
+curl "https://travelcost.co.kr/api/tour?path=areaBasedList2&areaCode=39&numOfRows=1" | jq
 
 # 같은 URL 두 번째 호출이 Edge Cache에서 오는지 (X-Vercel-Cache: HIT)
-curl -I "https://travel-guide-cslis07.vercel.app/api/tour?path=areaBasedList2&areaCode=39&numOfRows=1"
+curl -I "https://travelcost.co.kr/api/tour?path=areaBasedList2&areaCode=39&numOfRows=1"
 ```

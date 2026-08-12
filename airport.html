@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>인천공항 실시간 | 혼잡도·주차·항공편·출국 준비 | 트래블코스트</title>
 <meta name="description" content="인천공항 실시간 출국장 혼잡도, 주차장 현황, 항공편, 셔틀·철도, 라운지, 출국 준비 체크리스트를 한 화면에서.">
-<link rel="canonical" href="https://travel-guide-cslis07.vercel.app/airport">
-<meta property="og:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+<link rel="canonical" href="https://travelcost.co.kr/airport">
+<meta property="og:image" content="https://travelcost.co.kr/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://travel-guide-cslis07.vercel.app/og-image.png">
+<meta name="twitter:image" content="https://travelcost.co.kr/og-image.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="인천공항 실시간 | 트래블코스트">
 <meta property="og:description" content="출국장 혼잡도·주차·항공편·라운지·출국 준비를 실시간으로.">
-<meta property="og:url" content="https://travel-guide-cslis07.vercel.app/airport">
+<meta property="og:url" content="https://travelcost.co.kr/airport">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script type="application/ld+json">
@@ -21,7 +21,7 @@
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "인천공항 실시간 - 트래블코스트",
-  "url": "https://travel-guide-cslis07.vercel.app/airport",
+  "url": "https://travelcost.co.kr/airport",
   "applicationCategory": "TravelApplication",
   "operatingSystem": "Web",
   "inLanguage": "ko-KR",
@@ -3204,7 +3204,7 @@ async function downloadFavIcs(flightId, dir){
     live.estimatedDateTime ? `변경: ${fmtTime(live.estimatedDateTime)}` : '',
     gate ? `${isDep?'게이트':'수하물벨트'}: ${gate}` : '',
     term ? `터미널: ${term}` : '',
-    `https://travel-guide-cslis07.vercel.app/airport`,
+    `https://travelcost.co.kr/airport`,
   ].filter(Boolean).join('\\n');
   // 알람: 출발편은 2개(공항 출발 시각 + 게이트 이동 권장=출발 1시간 전), 도착편은 1개
   const alarms = isDep

@@ -3,11 +3,11 @@
 //   node scripts/smoke_test.mjs
 //   node scripts/smoke_test.mjs https://내-배포-url
 
-const BASE = process.argv[2] || 'https://travel-guide-cslis07.vercel.app';
+const BASE = process.argv[2] || 'https://travelcost.co.kr';
 
 const checks = [
   // [경로, 기대 상태, 응답에 포함되어야 할 문자열(선택)]
-  ['/', 200, '트립가이드'],
+  ['/', 200, '트래블코스트'],
   ['/airport', 200, 'ICN'],
   ['/estimate', 200, '총예산'],
   ['/prepare', 200, '출국 준비'],
@@ -46,8 +46,16 @@ const apiChecks = [
 let pass = 0, fail = 0;
 const fails = [];
 
+/* ⚠️ 캐시버스터 필수.
+   브랜드를 바꾼 배포 직후 이걸 안 붙였다가 **엣지 캐시된 구버전**을 읽고
+   옛 브랜드 마커가 그대로 있어 30/30 거짓 통과가 났다.
+   배포 검증 도구가 구버전을 보면 검증 자체가 무의미하다. */
 async function get(path) {
-  const res = await fetch(BASE + path, { headers: { 'User-Agent': 'smoke-test' } });
+  const sep = path.includes('?') ? '&' : '?';
+  const url = BASE + path + sep + '_cb=' + Date.now();
+  const res = await fetch(url, {
+    headers: { 'User-Agent': 'smoke-test', 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+  });
   const text = await res.text();
   return { status: res.status, text };
 }

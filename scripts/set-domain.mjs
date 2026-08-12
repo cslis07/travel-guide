@@ -58,22 +58,28 @@ if (prev === next) {
 async function preflight(domain) {
   const url = `https://${domain}/`;
   let res;
+  const ac = new AbortController();
+  const timer = setTimeout(() => ac.abort(), 15000);
   try {
-    const ac = new AbortController();
-    const timer = setTimeout(() => ac.abort(), 15000);
     res = await fetch(url, { redirect: 'follow', signal: ac.signal });
-    clearTimeout(timer);
   } catch (e) {
     return { ok: false, why: `응답이 없습니다 (${e.cause?.code || e.name}). ` +
       `도메인 구입·DNS 레코드 등록·전파 중 하나가 아직 안 끝났습니다.` };
+  } finally {
+    clearTimeout(timer);   // 실패 경로에서 타이머가 남으면 프로세스가 깨끗이 안 죽는다
   }
   if (!res.ok) return { ok: false, why: `HTTP ${res.status} 를 반환합니다.` };
 
+  /* ⚠️ 마커에 브랜드명을 쓰지 말 것.
+     처음엔 "트립가이드"로 판별했는데 브랜드를 바꾸는 순간 이 검사가 통째로 오작동했다
+     (실제로 travelcost.co.kr 이 정상인데 "우리 사이트가 아니다"로 막았다).
+     리브랜딩·문구 변경에 흔들리지 않는 구조적 표식으로 판별한다. */
   const body = await res.text();
-  const mine = /트립가이드|TripGuide|tripguide/i.test(body);
-  if (!mine) return { ok: false, why:
-    `응답은 오는데 우리 사이트가 아닙니다(주차 페이지·기본 페이지일 수 있음). ` +
-    `Vercel Domains 연결이 끝났는지 확인하세요.` };
+  const marks = ['/nav.js', 'manifest.webmanifest', '/affiliates.js', '/icons.js'];
+  const hit = marks.filter(m => body.includes(m)).length;
+  if (hit < 2) return { ok: false, why:
+    `응답은 오는데 우리 사이트로 보이지 않습니다(구조 표식 ${hit}/${marks.length}). ` +
+    `주차 페이지이거나 Vercel Domains 연결이 덜 끝났을 수 있습니다.` };
 
   return { ok: true };
 }

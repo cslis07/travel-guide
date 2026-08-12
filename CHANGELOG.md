@@ -1,6 +1,6 @@
 # 변경 이력 — 트래블코스트
 
-배포 URL: https://travel-guide-cslis07.vercel.app · GitHub `cslis07/travel-guide` (`master` push → Vercel 자동 배포)
+배포 URL: https://travelcost.co.kr · GitHub `cslis07/travel-guide` (`master` push → Vercel 자동 배포)
 
 > 2026-08-05 신규 작성. 이전 항목은 git log에서 소급 복원했으며, 사용자가 체감한 변화 위주로 옮겼다.
 

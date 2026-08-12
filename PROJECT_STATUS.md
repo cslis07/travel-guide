@@ -3,7 +3,7 @@
 > **마지막 업데이트**: 2026-08-11
 > **프로젝트 경로**: `C:\Users\GB\Documents\travel-guide`
 > **GitHub**: `cslis07/travel-guide` (Public) · 기본 브랜치 **`master`** (main 아님)
-> **배포**: https://travel-guide-cslis07.vercel.app · **Vercel** (GitHub push 자동 배포)
+> **배포**: https://travelcost.co.kr · **Vercel** (GitHub push 자동 배포)
 > **규모**: HTML 페이지 23개(**목적지 가이드 13곳** 포함) · Edge Function 3개(`api/`) · 공용 JS 5개 · 유틸 스크립트 3개(`scripts/`) · 프로덕션 스모크 30항목
 
 ---

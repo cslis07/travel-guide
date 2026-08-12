@@ -65,4 +65,4 @@ Disallow: /
 User-agent: Timpibot
 Disallow: /
 
-Sitemap: https://travel-guide-cslis07.vercel.app/sitemap.xml
+Sitemap: https://travelcost.co.kr/sitemap.xml

@@ -15,10 +15,10 @@
 🔗 **라이브 데모**
 | 페이지 | URL |
 |--------|-----|
-| 메인 | https://travel-guide-cslis07.vercel.app |
-| 인천공항 실시간 | https://travel-guide-cslis07.vercel.app/airport |
-| 투어·숙소·항공 메타서치 | https://travel-guide-cslis07.vercel.app/tours |
-| 이용가이드 | https://travel-guide-cslis07.vercel.app/guide |
+| 메인 | https://travelcost.co.kr |
+| 인천공항 실시간 | https://travelcost.co.kr/airport |
+| 투어·숙소·항공 메타서치 | https://travelcost.co.kr/tours |
+| 이용가이드 | https://travelcost.co.kr/guide |
 
 ---
 
