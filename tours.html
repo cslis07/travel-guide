@@ -312,12 +312,15 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
   </div>
 
   <p class="tt-note">
-    마이리얼트립 실시간 데이터 + 클룩·KKday·부킹닷컴·아고다 비교 링크를 제공합니다.<br>
+    마이리얼트립 실시간 데이터 + 트립닷컴·클룩·KKday·와그(투어) · 부킹닷컴·아고다(숙소) ·
+    스카이스캐너(항공) 비교 링크를 제공합니다.<br>
+    마이리얼트립 외에는 공개 가격 API가 없어 <b>검색 결과가 아니라 각 플랫폼의 검색 페이지로 연결</b>됩니다.<br>
     가격·재고·예약 가능 여부는 실시간 변동될 수 있으며, 예약·결제는 각 플랫폼에서 직접 진행하세요.<br>
     <a href="/privacy" style="color:var(--gray-400)">개인정보처리방침</a> · <a href="/terms" style="color:var(--gray-400)">이용약관</a>
   </p>
 </div>
 
+<script src="/affiliates.js"></script>
 <script>
 /* ═══════════════════════════════════════════
    제휴(어필리에이트) 설정
@@ -343,34 +346,11 @@ function affLink(baseUrl){
    aff 값을 채우면 추적 파라미터가 자동으로 붙는다(미설정 시 일반 링크).
    types: 'tna'(투어·티켓) / 'stay'(숙소)
    ═══════════════════════════════════════════ */
-const PARTNERS = [
-  { key:'klook',   label:'클룩',      color:'#e8384f', bg:'#FFF0F3',
-    base:'https://www.klook.com/ko/search/', qkey:'query', types:['tna','stay'],
-    aff:{} /* {aid, aff_adid} */ },
-  { key:'kkday',   label:'KKday',     color:'#ff5b00', bg:'#FFF1E8',
-    base:'https://www.kkday.com/ko/product/productlist', qkey:'keyword', types:['tna'],
-    aff:{} /* {cid} */ },
-  { key:'booking', label:'부킹닷컴',   color:'#003580', bg:'#EAF0FF',
-    base:'https://www.booking.com/searchresults.ko.html', qkey:'ss', types:['stay'],
-    aff:{} /* {aid} */ },
-  { key:'agoda',   label:'아고다',     color:'#c1272d', bg:'#FDECEA',
-    base:'https://www.agoda.com/ko-kr/search', qkey:'textToSearch', types:['stay'],
-    aff:{} /* {cid} */ },
-];
-
-function partnerUrl(p, query){
-  const u = new URL(p.base);
-  u.searchParams.set(p.qkey, query);
-  for(const [k,v] of Object.entries(p.aff || {})){ if(v) u.searchParams.set(k, v); }
-  return u.toString();
-}
-
-// 탭 종류(type)에 맞는 파트너 비교 CTA HTML
-function partnerCtas(query, type){
-  const safeQ = esc(query);
-  return PARTNERS.filter(p => p.types.includes(type)).map(p =>
-    `<a class="tt-cta" style="background:${p.bg};color:${p.color}" href="${esc(partnerUrl(p, query))}" target="_blank" rel="noopener">🔎 ${esc(p.label)}에서 "${safeQ}" 비교 ↗</a>`
-  ).join('');
+/* 파트너 목록은 affiliates.js(AFF) 한 곳에서만 관리한다.
+   예전엔 이 파일이 자체 목록을 들고 있어 트립닷컴·와그가 여기만 빠져 있었다. */
+function partnerCtas(query, type, ctx){
+  if (!window.AFF) return '';
+  return AFF.ctas(type, query, { ctx: ctx });
 }
 
 const $ = id => document.getElementById(id);
@@ -708,7 +688,7 @@ async function ttRunDom(){
   _lastRun=ttRunDom; ttLockBtns(true); ttLoading('국내 항공권 검색 중...');
   try{
     const data = await callMrt('searchDomesticFlights', { origin:from, destination:to, departDate:$('dom-date').value, tripType:'ONE_WAY', maxResults:8 });
-    ttShowFlights(data);
+    ttShowFlights(data, { origin:from, dest:to, out:$('dom-date').value, back:'' });
     saveHist({ tab:'dom', label:`🛫 ${from}→${to}`, fields:{'dom-from':from,'dom-to':to,'dom-date':$('dom-date').value} });
   }catch(e){ ttError(e.message); }
   finally{ ttLockBtns(false); }
@@ -725,18 +705,25 @@ async function ttRunIntl(){
       departDate:dep, returnDate:ret,
       passengers:{adults:1,children:0,infants:0}, maxResults:6
     });
-    ttShowFlights(data);
+    ttShowFlights(data, { origin:from, dest:to, out:dep, back:ret });
     saveHist({ tab:'intl', label:`🌏 ${from}→${to}`, fields:{'intl-from':from,'intl-to':to,'intl-date':dep,'intl-return':ret} });
   }catch(e){ ttError(e.message); }
   finally{ ttLockBtns(false); }
 }
 
 // 항공편 전용 표시 (카드 + 정렬 + 예약 링크)
-function ttShowFlights(data){
+function ttShowFlights(data, ctx){
   _lastFlights = data;
-  $('tt-results').innerHTML = renderFlights(data);
+  if (ctx) _lastFlightCtx = ctx;
+  let html = renderFlights(data);
+  /* 항공 탭에는 비교 링크가 아예 없었다 — 마이리얼트립 결과만 보였던 원인.
+     항공은 검색어가 아니라 출발지·도착지·날짜가 있어야 링크가 만들어진다. */
+  const ctas = partnerCtas(null, 'flight', _lastFlightCtx);
+  if (ctas) html += `<p class="tt-compare-lbl">💰 다른 플랫폼에서 같은 노선 비교</p>` + ctas;
+  $('tt-results').innerHTML = html;
   scrollToResults();
 }
+let _lastFlightCtx = null;
 
 // 날짜별 최저가 캘린더
 async function ttRunFareCalendar(){

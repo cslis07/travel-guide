@@ -24,11 +24,21 @@
      signup: 제휴 신청 경로(가입 시 조건·수수료율 직접 확인 필요).
      types: 이 파트너가 커버하는 카테고리.
      ───────────────────────────────────────────────────────── */
+  /* 날짜 포맷 헬퍼 — 항공 딥링크가 요구하는 형태가 제각각이다 */
+  function ymd(s) { return String(s || '').slice(0, 10); }          // 2026-09-10
+  function yymmdd(s) { return ymd(s).replace(/-/g, '').slice(2); }  // 260910
+
+  /* ⚠️ 여기 URL은 전부 실제 응답으로 확인한 것만 넣는다(2026-08-11 확인).
+     추정으로 넣으면 조용히 404가 나간다 — 실제로 트립닷컴을 `searchresult/?keyword=`로
+     넣었다가 404였고, 올바른 경로는 `things-to-do/list` / `hotels/list` 였다.
+     403이 뜨는 곳(클룩·KKday)은 데이터센터 IP 차단이지 잘못된 주소가 아니다. */
   var PARTNERS = [
     {
       key: 'myrealtrip', label: '마이리얼트립', color: '#0BB8B4', bg: '#E6F8F7',
       base: 'https://www.myrealtrip.com/search', qkey: 'q',
-      types: ['tna', 'stay', 'flight'],
+      /* 항공은 제외 — 항공편 카드마다 이미 마이리얼트립 예약 링크가 붙고,
+         비교 목록에 넣으면 검색어 없는 빈 링크가 나간다 */
+      types: ['tna', 'stay'],
       signup: 'https://www.myrealtrip.com/partners',
       aff: {} /* 예: {utm_source:'...'} — 발급값으로 교체 */
     },
@@ -47,6 +57,13 @@
       aff: {} /* {cid} */
     },
     {
+      key: 'waug', label: '와그', color: '#7B4DFF', bg: '#F0ECFF',
+      base: 'https://www.waug.com/search/', qkey: 'q',
+      types: ['tna'],
+      signup: 'https://www.waug.com/',
+      aff: {}
+    },
+    {
       key: 'booking', label: '부킹닷컴', color: '#003580', bg: '#EAF0FF',
       base: 'https://www.booking.com/searchresults.ko.html', qkey: 'ss',
       types: ['stay', 'car'],
@@ -62,10 +79,36 @@
     },
     {
       key: 'tripcom', label: '트립닷컴', color: '#2577E3', bg: '#E9F2FF',
-      base: 'https://kr.trip.com/searchresult/', qkey: 'keyword',
-      types: ['stay', 'flight', 'car'],
+      types: ['tna', 'stay', 'flight'],
       signup: 'https://kr.trip.com/partners/',
+      urls: {
+        tna:  { base: 'https://kr.trip.com/things-to-do/list', qkey: 'keyword' },
+        stay: { base: 'https://kr.trip.com/hotels/list',       qkey: 'keyword' },
+        flight: { build: function (c) {
+          var rt = !!ymd(c.back);   // 오는 날이 없으면 편도로 넘겨야 한다
+          return 'https://kr.trip.com/flights/showfarefirst?dcity=' +
+            encodeURIComponent(String(c.origin || 'ICN').toLowerCase()) +
+            '&acity=' + encodeURIComponent(String(c.dest || '').toLowerCase()) +
+            '&ddate=' + ymd(c.out) +
+            (rt ? '&rdate=' + ymd(c.back) : '') +
+            '&triptype=' + (rt ? 'rt' : 'ow');
+        } }
+      },
       aff: {} /* {allianceid, sid} */
+    },
+    {
+      key: 'skyscanner', label: '스카이스캐너', color: '#0770E3', bg: '#E7F1FE',
+      types: ['flight'],
+      signup: 'https://www.partners.skyscanner.net/',
+      urls: {
+        flight: { build: function (c) {
+          return 'https://www.skyscanner.co.kr/transport/flights/' +
+            String(c.origin || 'icn').toLowerCase() + '/' +
+            String(c.dest || '').toLowerCase() + '/' +
+            yymmdd(c.out) + '/' + (c.back ? yymmdd(c.back) + '/' : '');
+        } }
+      },
+      aff: {}
     },
     {
       key: 'airalo', label: 'Airalo', color: '#F4364C', bg: '#FFEFF1',
@@ -108,11 +151,22 @@
     });
   }
 
-  /* 파트너 검색 URL 생성. query가 없거나 qkey가 null이면 기본 URL만 반환한다. */
-  function url(p, query) {
+  /* 파트너 검색 URL 생성.
+     타입별 전용 경로(urls[type])가 있으면 그것을 쓰고, 없으면 공용 base를 쓴다.
+     항공처럼 검색어가 아니라 출발지·도착지·날짜가 필요한 경우는 build(ctx)로 만든다. */
+  function url(p, query, type, ctx) {
+    var spec = (p.urls && type && p.urls[type]) || { base: p.base, qkey: p.qkey };
+    var raw;
+    if (typeof spec.build === 'function') {
+      if (!ctx || !ctx.dest) return null;      // 항공 컨텍스트가 없으면 링크를 만들지 않는다
+      raw = spec.build(ctx);
+    } else {
+      raw = spec.base;
+    }
+    if (!raw) return null;
     var u;
-    try { u = new URL(p.base); } catch (e) { return p.base; }
-    if (p.qkey && query) u.searchParams.set(p.qkey, query);
+    try { u = new URL(raw); } catch (e) { return raw; }
+    if (!spec.build && spec.qkey && query) u.searchParams.set(spec.qkey, query);
     var aff = p.aff || {};
     for (var k in aff) { if (aff[k]) u.searchParams.set(k, aff[k]); }
     return u.toString();
@@ -137,11 +191,13 @@
     var list = byType(type);
     if (!list.length) return '';
     return list.map(function (p) {
+      var href = url(p, query, type, o.ctx);
+      if (!href) return '';                    // 만들 수 없는 링크는 내보내지 않는다
       var label = o.verb
         ? esc(p.label) + '에서 ' + esc(o.verb)
         : (query ? esc(p.label) + '에서 "' + esc(query) + '" 보기' : esc(p.label) + ' 바로가기');
       return '<a class="aff-cta" style="background:' + p.bg + ';color:' + p.color + '"' +
-        ' href="' + esc(url(p, query)) + '" target="_blank" rel="nofollow sponsored noopener"' +
+        ' href="' + esc(href) + '" target="_blank" rel="nofollow sponsored noopener"' +
         ' data-aff="' + esc(p.key) + '">' + label + ' ↗</a>';
     }).join('');
   }
