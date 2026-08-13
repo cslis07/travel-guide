@@ -31,8 +31,17 @@
      같은 ID가 투어(`things-to-do/list?searchkey=`)에도 그대로 쓰인다.
      ⛔ 모르는 도시는 추측하지 말고 링크를 생략한다 — 엉뚱한 도시 호텔을 보여주느니 없는 게 낫다. */
   var TRIPCOM_CITY = {
-    '제주': 737
-    // 오사카·도쿄·후쿠오카·교토·삿포로·방콕·다낭·발리·싱가포르·파리·부산·강릉 미확보
+    '제주': 737,
+    '오사카': 219,
+    '도쿄': 228,
+    '후쿠오카': 248,
+    '방콕': 359,
+    '다낭': 1356,
+    '부산': 253
+    // 교토·삿포로·발리·싱가포르·파리·강릉 미확보
+    // 확보법: 링크생성기 '호텔 페이지'에서 도시 선택 → URL의 city= 숫자.
+    //         같은 숫자가 투어(things-to-do/list?searchkey=)에도 그대로 쓰인다.
+    //         2026-08-11 각 city ID는 hotels/list 페이지 <title>로 도시명 검증 완료.
   };
 
   /* 날짜 포맷 헬퍼 — 항공 딥링크가 요구하는 형태가 제각각이다 */
@@ -97,7 +106,14 @@
          제휴 ID는 어차피 아웃바운드 URL에 노출되는 값이라 비밀이 아니다(공개 리포 무관). */
       subKey: 'trip_sub1',
       urls: {
-        tna:  { base: 'https://kr.trip.com/things-to-do/list', qkey: 'keyword' },
+        tna:  { build: function (c) {
+          /* 도시 ID가 있으면 searchkey= (그 도시 투어만 정확히), 없으면 keyword= 폴백.
+             둘 다 실동작 확인됨(오사카 searchkey=219 / keyword=오사카). */
+          var id = TRIPCOM_CITY[c && c.city];
+          return id
+            ? 'https://kr.trip.com/things-to-do/list?searchkey=' + id + '&searchtype=1'
+            : 'https://kr.trip.com/things-to-do/list?keyword=' + encodeURIComponent((c && c.city) || '');
+        } },
         stay: { build: function (c) {
           var id = TRIPCOM_CITY[c && c.city];
           if (!id) return null;          // ID를 모르면 링크를 만들지 않는다
