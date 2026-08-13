@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://travelcost.co.kr/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
-  <url><loc>https://travelcost.co.kr/airport</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
   <url><loc>https://travelcost.co.kr/estimate</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://travelcost.co.kr/prepare</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://travelcost.co.kr/tours</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://travelcost.co.kr/mytrip</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://travelcost.co.kr/airport</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://travelcost.co.kr/tours</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://travelcost.co.kr/guide</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://travelcost.co.kr/osaka</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://travelcost.co.kr/fukuoka</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://travelcost.co.kr/tokyo</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://travelcost.co.kr/kyoto</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://travelcost.co.kr/sapporo</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://travelcost.co.kr/bangkok</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://travelcost.co.kr/danang</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://travelcost.co.kr/bali</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://travelcost.co.kr/singapore</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://travelcost.co.kr/jeju</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://travelcost.co.kr/busan</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://travelcost.co.kr/gangneung</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://travelcost.co.kr/paris</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- 목적지 가이드 13곳(osaka·tokyo…)은 색인 대상에서 제외(noindex,follow).
+       출처 없는 AI 생성 콘텐츠라 검색·애드센스 심사 리스크가 있어 sitemap에서 뺐다.
+       페이지·제휴 링크는 살아 있고, 사람이 검증해 살릴 때 다시 넣는다. -->
+  <!-- mytrip은 원래 noindex라 sitemap 미포함(변동 없음) -->
 </urlset>
