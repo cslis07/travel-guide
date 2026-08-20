@@ -33,6 +33,7 @@ const CACHE_TTL = {
   detailCommon2:    3600,   // 1시간 — 정적 정보
   detailIntro2:     1800,   // 30분 — 주차 정보 등
   detailImage2:     3600,   // 1시간 — 이미지 목록
+  areaCode2:       86400,   // 24시간 — 지역/시군구 코드표(행정구역은 거의 안 바뀜)
 };
 
 export default async function handler(req) {
