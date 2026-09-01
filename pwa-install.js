@@ -1,3 +1,12 @@
+// ── 서비스워커 등록 (설치·오프라인의 전제) ──
+// 이 파일이 로드되는 모든 페이지가 SW를 등록하도록 여기 둔다.
+// (아래 설치버튼 IIFE는 standalone/dismiss 시 조기 return 하므로 SW 등록을 그 앞에 두면 안 된다)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
+
 // PWA 설치 버튼 — 모든 페이지 공용
 //
 // - Chrome/Edge/삼성인터넷: beforeinstallprompt 이벤트 → 좌하단 "앱 설치" 버튼 표시 → 원클릭 설치

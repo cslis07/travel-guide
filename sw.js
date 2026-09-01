@@ -4,14 +4,22 @@
 //  - HTML / API : 네트워크 우선 (항상 최신). 실패 시 캐시 → 최후에 오프라인 폴백
 //  - 정적 자산  : 캐시 우선 + 백그라운드 갱신 (stale-while-revalidate)
 
-const CACHE = 'tripguide-v3';
+const CACHE = 'travelcost-v4';
 
 // 설치 시 미리 담아둘 최소 셸 (오프라인 폴백용)
 const SHELL = [
   '/',
   '/index.html',
+  '/estimate.html',
+  '/prepare.html',
   '/style.css',
   '/main.js',
+  '/icons.js',
+  '/nav.js',
+  '/bizfooter.js',
+  '/affiliates.js',
+  '/analytics.js',
+  '/pwa-install.js',
   '/manifest.webmanifest',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
