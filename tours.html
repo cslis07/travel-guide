@@ -323,20 +323,15 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
 <script src="/affiliates.js"></script>
 <script>
 /* ═══════════════════════════════════════════
-   제휴(어필리에이트) 설정
-   마이리얼트립 파트너스 가입 후 발급받은 값을 넣으면
-   모든 예약 링크에 자동으로 추적 파라미터가 붙습니다.
-   미설정(빈 문자열) 시 일반 링크로 동작합니다.
+   제휴 추적은 affiliates.js(AFF) 한 곳에서만 관리한다.
+   마이리얼트립 라이브 검색이 돌려준 상품 URL에 파트너 추적값을 붙이는 것도
+   AFF.track('myrealtrip', url) 로 통일 — 발급값은 affiliates.js PARTNERS 의
+   myrealtrip.aff 에만 넣으면 CTA·라이브링크에 동시에 반영된다.
+   (과거의 utm_source='travelcost' 는 실제 제휴 추적이 아니라 단순 UTM 태그여서
+    수수료가 붙지 않는 가짜값이었다 → 제거했다.)
    ═══════════════════════════════════════════ */
-const MRT_AFFILIATE = { param: 'utm_source', value: 'travelcost' }; // TODO: 마이리얼트립 파트너스 발급값으로 교체
-
 function affLink(baseUrl){
-  if(!MRT_AFFILIATE.value) return baseUrl;
-  const u = new URL(baseUrl);
-  u.searchParams.set(MRT_AFFILIATE.param, MRT_AFFILIATE.value);
-  u.searchParams.set('utm_medium', 'referral');
-  u.searchParams.set('utm_campaign', 'travelcost');
-  return u.toString();
+  return (window.AFF && AFF.track) ? AFF.track('myrealtrip', baseUrl) : baseUrl;
 }
 
 /* ═══════════════════════════════════════════
@@ -519,7 +514,7 @@ function itemCard(it){
       `<div class="tt-pricerow">${price}${it.url ? '<span class="tt-book">예약 ↗</span>' : ''}</div>` +
     `</div>`;
   return it.url
-    ? `<a class="tt-item" href="${esc(affLink(it.url))}" target="_blank" rel="noopener">${inner}</a>`
+    ? `<a class="tt-item" href="${esc(affLink(it.url))}" target="_blank" rel="nofollow sponsored noopener">${inner}</a>`
     : `<div class="tt-item">${inner}</div>`;
 }
 
@@ -564,7 +559,7 @@ function ttShow(data, ctaUrl, ctaLabel, partnerQuery, partnerType){
     else if(data.data) inner = `<div class="tt-card">${summarize(data.data)}</div>`;
     else inner = `<div class="tt-err">표시할 결과가 없습니다.</div>`;
   }
-  if(ctaUrl) inner += `<a class="tt-cta" href="${affLink(ctaUrl)}" target="_blank" rel="noopener">${ctaLabel} ↗</a>`;
+  if(ctaUrl) inner += `<a class="tt-cta" href="${affLink(ctaUrl)}" target="_blank" rel="nofollow sponsored noopener">${ctaLabel} ↗</a>`;
   // 타 플랫폼 비교 딥링크 (투어·티켓/숙소일 때만)
   if(partnerQuery && partnerType){
     const ctas = partnerCtas(partnerQuery, partnerType);

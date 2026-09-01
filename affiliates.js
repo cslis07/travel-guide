@@ -279,6 +279,23 @@
     }).join('');
   }
 
+  /* 이미 존재하는 URL(예: 마이리얼트립 라이브 검색이 돌려준 상품 URL)에
+     해당 파트너의 추적값을 덧붙인다. 발급값(aff)이 없으면 URL을 그대로 돌려준다.
+     → 추적을 파트너별 한 곳(PARTNERS[].aff)에서만 관리하기 위한 단일 진입점.
+     ⚠️ 파트너가 "링크 생성기 전용"(임의 파라미터 부착 불가) 방식이면 이 함수로는
+        추적이 안 될 수 있다. 실제 생성 링크의 파라미터를 확인해 aff 에 넣어야 한다. */
+  function track(key, rawUrl) {
+    if (!rawUrl) return rawUrl;
+    var p = null;
+    for (var i = 0; i < PARTNERS.length; i++) { if (PARTNERS[i].key === key) { p = PARTNERS[i]; break; } }
+    if (!p || !p.aff || !Object.keys(p.aff).length) return rawUrl;   // 발급값 없으면 그대로
+    var u;
+    try { u = new URL(rawUrl); } catch (e) { return rawUrl; }
+    for (var k in p.aff) { if (p.aff[k]) u.searchParams.set(k, p.aff[k]); }
+    if (p.subKey) u.searchParams.set(p.subKey, subId(null));
+    return u.toString();
+  }
+
   /* 공정위 표시 지침 대응 고지 문구.
      발급값이 하나도 없으면(=수수료 미발생) 문구를 바꿔 정직하게 표시한다. */
   function disclosure() {
@@ -325,6 +342,7 @@
     url: url,
     byType: byType,
     ctas: ctas,
+    track: track,
     hasPaidLinks: hasPaidLinks,
     disclosure: disclosure,
     disclosureHtml: disclosureHtml
