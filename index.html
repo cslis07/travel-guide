@@ -749,6 +749,18 @@
     </div>
   </section>
 
+  <!-- ── 여행 필수템 (수익화) ── -->
+  <section class="section section-alt" id="essentials">
+    <div class="container">
+      <div class="section-header">
+        <h2>여행 갈 때 꼭 챙기는 필수템</h2>
+        <p>공항에서 폰 방전, 도착하니 데이터 먹통 — 미리 챙기면 안 겪습니다</p>
+      </div>
+      <div id="homeGoods"></div>
+      <p id="homeGoodsDisc" style="font-size:.72rem;color:var(--gray-400);text-align:center;margin-top:12px"></p>
+    </div>
+  </section>
+
   <!-- ── HOW IT WORKS ── -->
   <section class="section section-alt" id="how">
     <div class="container">
@@ -882,6 +894,17 @@
   </div>
 
   <script src="main.js"></script>
+  <script src="/affiliates.js"></script>
+<script>
+// 홈 "여행 필수템" 블록 — 최대 트래픽 페이지에 수익화 노출
+(function(){
+  if(!window.AFF || !AFF.goodsHtml) return;
+  var box = document.getElementById('homeGoods');
+  if(box) box.innerHTML = AFF.goodsHtml();
+  var disc = document.getElementById('homeGoodsDisc');
+  if(disc && AFF.disclosure) disc.textContent = AFF.disclosure();
+})();
+</script>
 <script>
 // PWA — Service Worker 등록
 if('serviceWorker' in navigator){
