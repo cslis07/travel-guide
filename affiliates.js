@@ -279,6 +279,43 @@
     }).join('');
   }
 
+  /* ── 여행 준비물(실물 상품) — 토스쇼핑 쉐어링크 ───────────────
+     쉐어링크는 추적이 링크 자체에 박힌 리다이렉트 단축링크(toss.im/_m/…)라
+     파라미터 부착이 아니라 고정 링크를 그대로 임베드한다.
+     상품별 링크라 검색형이 아닌 큐레이션 목록으로 노출한다.
+     노출 위치: /prepare (출국 준비) — 여행 맥락과 100% 일치.
+     ⚠️ 상품이 단종/품절되면 링크가 죽으므로 주기적으로 점검할 것. */
+  var TRAVEL_GOODS = {
+    provider: '토스쇼핑',
+    coupon: '토스쇼핑 첫 구매 시 이 링크로 3,000원 추가 할인',
+    items: [
+      { ico: '🔌', name: '팬택 30W C타입 초고속 충전기 + 60W 케이블', url: 'https://toss.im/_m/B0HHYJcs' },
+      { ico: '🔌', name: '아이엠듀 20W PD 고속충전기 (2개입)',        url: 'https://toss.im/_m/1AxwKeut' },
+      { ico: '🎧', name: '아크로 인팟 무선 스테레오 이어폰',          url: 'https://toss.im/_m/jr4QSOHj' },
+      { ico: '🤳', name: '아크로 스마트폰 360° 셀카봉',               url: 'https://toss.im/_m/5zEvxndd' },
+      { ico: '🎗️', name: '루카 폰 목걸이 넥스트랩 (분실방지)',        url: 'https://toss.im/_m/15nLqudC' },
+      { ico: '🎗️', name: '루카 폰 손목 스트랩',                       url: 'https://toss.im/_m/h5JZP9td' },
+      { ico: '📱', name: '아이엠듀 맥세이프 스마트톡',                url: 'https://toss.im/_m/tsNEnIWA' },
+      { ico: '📱', name: '루카 맥세이프 그립 스마트톡',              url: 'https://toss.im/_m/5BS5efts' }
+    ]
+  };
+
+  function goodsHtml() {
+    var g = TRAVEL_GOODS;
+    if (!g.items.length) return '';
+    var cards = g.items.map(function (it) {
+      return '<a class="aff-goods-card" href="' + esc(it.url) + '"' +
+        ' target="_blank" rel="nofollow sponsored noopener">' +
+        '<span class="agc-ico">' + it.ico + '</span>' +
+        '<span class="agc-name">' + esc(it.name) + '</span>' +
+        '<span class="agc-go">토스쇼핑에서 보기 →</span></a>';
+    }).join('');
+    return '<div class="aff-goods">' +
+      '<div class="aff-goods-head"><span class="agh-title">🧳 여행 준비물</span>' +
+      '<span class="agh-coupon">🎁 ' + esc(g.coupon) + '</span></div>' +
+      '<div class="aff-goods-grid">' + cards + '</div></div>';
+  }
+
   /* 이미 존재하는 URL(예: 마이리얼트립 라이브 검색이 돌려준 상품 URL)에
      해당 파트너의 추적값을 덧붙인다. 발급값(aff)이 없으면 URL을 그대로 돌려준다.
      → 추적을 파트너별 한 곳(PARTNERS[].aff)에서만 관리하기 위한 단일 진입점.
@@ -315,6 +352,17 @@
     '  font-size:.82rem;font-weight:700;text-decoration:none;margin:4px 6px 4px 0;',
     '  transition:transform .12s ease,box-shadow .12s ease}',
     '.aff-cta:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(16,24,40,.13)}',
+    '.aff-goods{margin:8px 0 4px}',
+    '.aff-goods-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:12px}',
+    '.agh-title{font-size:1.05rem;font-weight:800;color:#101828;letter-spacing:-.02em}',
+    '.agh-coupon{font-size:.72rem;font-weight:700;color:#EA6600;background:#FFF3E9;padding:5px 10px;border-radius:999px}',
+    '.aff-goods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}',
+    '.aff-goods-card{display:flex;flex-direction:column;gap:7px;padding:14px;border:1px solid #E4E7EC;border-radius:14px;background:#fff;text-decoration:none;transition:transform .12s ease,box-shadow .12s ease,border-color .12s}',
+    '.aff-goods-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(16,24,40,.1);border-color:#C7D6FF}',
+    '.agc-ico{font-size:26px;line-height:1}',
+    '.agc-name{font-size:.82rem;font-weight:600;color:#344054;line-height:1.4;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
+    '.agc-go{font-size:.75rem;font-weight:700;color:#2577E3;margin-top:auto}',
+    '@media(prefers-color-scheme:dark){.aff-goods-card{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.1)}.agh-title{color:#F2F4F7}.agc-name{color:#CDD5DF}}',
     '.aff-disclosure{font-size:.7rem;line-height:1.55;color:#667085;margin-top:14px;',
     '  padding:10px 12px;background:#F9FAFB;border:1px solid #E4E7EC;border-radius:10px}',
     '@media(prefers-color-scheme:dark){',
@@ -343,6 +391,7 @@
     byType: byType,
     ctas: ctas,
     track: track,
+    goodsHtml: goodsHtml,
     hasPaidLinks: hasPaidLinks,
     disclosure: disclosure,
     disclosureHtml: disclosureHtml
