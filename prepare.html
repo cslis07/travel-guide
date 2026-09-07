@@ -353,6 +353,8 @@ function render(){
             '<div class="todo-desc">' + esc(t.desc) + '</div>' +
             (links || cta ? '<div class="todo-links">' + links + cta + '</div>' : '') +
             info +
+            /* 이 항목에 맞는 추천 준비물(토스쇼핑) — 예: 충전 항목 아래 충전기 */
+            ((window.AFF && AFF.goodsFor) ? AFF.goodsFor(t.id) : '') +
           '</div>' +
         '</div>';
     }).join('');
@@ -366,9 +368,7 @@ function render(){
           (isNow ? '<span class="stage-badge">지금 할 것</span>' : '') +
         '</div>' +
         '<div class="stage-body">' + body + '</div>' +
-      '</section>' +
-      /* 짐 싸기(D-3) 단계 바로 뒤에 여행 준비물(토스쇼핑) 노출 — 구매 맥락과 일치 + 중간 배치라 잘 보임 */
-      (st.id === 'd3' && window.AFF && AFF.goodsHtml ? AFF.goodsHtml() : '');
+      '</section>';
   }).join('');
 
   document.querySelectorAll('[data-todo]').forEach(function(cb){
