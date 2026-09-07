@@ -147,6 +147,8 @@
     <div class="pr-prog-bar"><i id="progBar" style="width:0%"></i></div>
   </div>
 
+  <div id="goodsTop" style="margin:18px 0"></div>
+
   <div id="stages"></div>
 
   <p class="pr-foot">
@@ -406,7 +408,11 @@ function render(){
 
   render();
 
-  /* 여행 준비물 블록은 render() 안에서 D-3(짐 싸기) 단계 뒤에 노출된다 */
+  /* 상단 전체 여행 준비물 블록(항목별 인라인과 중복 노출) */
+  if (window.AFF && AFF.goodsHtml) {
+    var gt = document.getElementById('goodsTop');
+    if (gt) gt.innerHTML = AFF.goodsHtml();
+  }
 
   /* 제휴 고지 — 링크가 있는 페이지엔 반드시 노출 */
   if (window.AFF) {

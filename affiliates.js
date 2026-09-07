@@ -319,6 +319,23 @@
       rows + '</div>';
   }
 
+  /* 전체 여행 준비물을 한 카드로(상단 노출용). 항목별 goodsFor 와 중복 노출 가능. */
+  function goodsHtml() {
+    var g = TRAVEL_GOODS;
+    if (!g.items.length) return '';
+    var cards = g.items.map(function (it) {
+      return '<a class="aff-goods-card" href="' + esc(it.url) + '"' +
+        ' target="_blank" rel="nofollow sponsored noopener">' +
+        '<span class="agc-ico">' + it.ico + '</span>' +
+        '<span class="agc-name">' + esc(it.name) + '</span>' +
+        '<span class="agc-go">토스쇼핑에서 보기 →</span></a>';
+    }).join('');
+    return '<div class="aff-goods">' +
+      '<div class="aff-goods-head"><span class="agh-title">🧳 여행 준비물 미리 담기</span>' +
+      '<span class="agh-coupon">🎁 ' + esc(g.coupon) + '</span></div>' +
+      '<div class="aff-goods-grid">' + cards + '</div></div>';
+  }
+
   /* 이미 존재하는 URL(예: 마이리얼트립 라이브 검색이 돌려준 상품 URL)에
      해당 파트너의 추적값을 덧붙인다. 발급값(aff)이 없으면 URL을 그대로 돌려준다.
      → 추적을 파트너별 한 곳(PARTNERS[].aff)에서만 관리하기 위한 단일 진입점.
@@ -355,6 +372,17 @@
     '  font-size:.82rem;font-weight:700;text-decoration:none;margin:4px 6px 4px 0;',
     '  transition:transform .12s ease,box-shadow .12s ease}',
     '.aff-cta:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(16,24,40,.13)}',
+    '.aff-goods{margin:0 0 8px;padding:14px;border:1px solid #FCE4CC;background:#FFF8F1;border-radius:14px}',
+    '.aff-goods-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:12px}',
+    '.agh-title{font-size:1rem;font-weight:800;color:#101828;letter-spacing:-.02em}',
+    '.agh-coupon{font-size:.72rem;font-weight:700;color:#EA6600;background:#FFEDD9;padding:5px 10px;border-radius:999px}',
+    '.aff-goods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}',
+    '.aff-goods-card{display:flex;flex-direction:column;gap:7px;padding:13px;border:1px solid #F0E0CC;border-radius:12px;background:#fff;text-decoration:none;transition:transform .12s ease,box-shadow .12s ease,border-color .12s}',
+    '.aff-goods-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(16,24,40,.1);border-color:#F5C99A}',
+    '.agc-ico{font-size:24px;line-height:1}',
+    '.agc-name{font-size:.8rem;font-weight:600;color:#344054;line-height:1.4;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
+    '.agc-go{font-size:.74rem;font-weight:800;color:#2577E3;margin-top:auto}',
+    '@media(prefers-color-scheme:dark){.aff-goods{background:rgba(234,102,0,.08);border-color:rgba(234,102,0,.25)}.agh-title{color:#F2F4F7}.aff-goods-card{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.1)}.agc-name{color:#CDD5DF}}',
     '.tg-inline{margin-top:10px;padding:10px 12px;background:#FFF8F1;border:1px solid #FCE4CC;border-radius:10px}',
     '.tg-inline-lbl{font-size:.72rem;font-weight:800;color:#B45309;margin-bottom:7px}',
     '.tg-inline-lbl span{font-weight:600;color:#C2792B}',
@@ -394,6 +422,7 @@
     ctas: ctas,
     track: track,
     goodsFor: goodsFor,
+    goodsHtml: goodsHtml,
     hasPaidLinks: hasPaidLinks,
     disclosure: disclosure,
     disclosureHtml: disclosureHtml
