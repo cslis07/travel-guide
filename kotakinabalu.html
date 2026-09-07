@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="코타키나발루 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
+  <title>코타키나발루 여행 가이드 | 트래블코스트</title>
+  <meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://travelcost.co.kr/kotakinabalu">
+<meta property="og:image" content="https://travelcost.co.kr/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travelcost.co.kr/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "코타키나발루",
+    "url": "https://travelcost.co.kr/kotakinabalu",
+    "description": "코타키나발루 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
+    "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
+    "geo": { "@type": "GeoCoordinates", "latitude": 5.980, "longitude": 116.073 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트래블코스트">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;"><i data-icon="ticket" data-size="17"></i> 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;"><i data-icon="briefcase" data-size="17"></i> 내 여행</a>
+        <a href="guide.html"><i data-icon="book-open" data-size="17"></i> 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;"><i data-icon="plane" data-size="17"></i> 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#C2410C 0%,#F97316 45%,#FDBA74 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">🌅</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">🌅 말레이시아 · 사바</span>
+      <h1>코타키나발루</h1>
+      <p>세계 3대 석양의 휴양지 — 아일랜드 호핑·반딧불·키나발루, 청정 자연의 보르네오</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 코타키나발루 약 5시간 30분</small></div>
+        <div class="hero-stat"><strong>💴 환율</strong><small>RM1(링깃) ≈ 310원 (2026 기준)</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 1시간 느림 (KST-1)</small></div>
+        <div class="hero-stat"><strong>🌤 추천 시기</strong><small>3~9월 건기</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
+      </div>
+      <a href="tours.html?city=코타키나발루" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 코타키나발루 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
+    <div class="container">
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>나만의 페이스로 즐기는 휴양 — 석양·바다·야시장을 자유롭게</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('solo',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 탄중아루 석양</h3><p>공항 도착 후 짐 풀고, 세계 3대 석양으로 첫날을 열기</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>✈ 코타키나발루 공항(BKI) 도착</h4><p>공항→시내 그랩(Grab) RM25~35(약 15분). 택시는 정액 쿠폰제 RM30~40. 도착비자 불필요(무비자 90일)</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🏨 시내 숙소 체크인</h4><p>워터프런트·가야스트리트 도보권 숙소에 짐 맡기기. 혼여행은 시내 부티크 호텔이 이동·식사에 편리</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🌅 탄중아루 비치 석양</h4><p>시내에서 그랩 15분. 세계 3대 석양 명소. 해변 바에서 코코넛(RM5)·타이거 맥주 한 잔과 노을 감상</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🦐 워터프런트 해산물 저녁</h4><p>필리피노 마켓 옆 씨푸드 거리. 대게·타이거새우 그램 단위 주문. 1인 RM50~90로 신선한 BBQ 즐기기</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body"><h4>🍺 워터프런트 야경 산책</h4><p>선셋 후 워터프런트 펍 거리. 편의점 맥주 들고 바닷바람 맞으며 혼자 야간 산책 — 휴양지 묘미</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>아일랜드 호핑</h3><p>툰쿠 압둘라만 해양공원의 사피섬·마무틱섬 스노클링</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>⛴ 제셀턴 포인트 집결</h4><p>시내 선착장에서 보트 티켓 구매(2섬 왕복 RM90~120 + 선착장세 RM7.2 + 해양공원 입장 RM10). 스노클 장비 렌털 RM15</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🐠 사피섬 스노클링</h4><p>보트 15분. 얕은 산호초에 열대어가 가득. 물안경만 껴도 니모·자리돔 관찰. 그늘막 대여 RM20</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍱 섬 도시락 점심</h4><p>사피섬 매점에서 나시고랭·미고랭(RM12~18)·볶음면. 코코넛·수박 사서 야자수 아래 낮잠</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🏝 마무틱섬 이동</h4><p>보트로 섬 간 이동 5분. 사피보다 한적하고 물이 맑음. 해변에서 태닝·수영. 액티비티는 시셀본·플라잉피시 선택</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>⛵ 시내 복귀 & 휴식</h4><p>제셀턴 포인트 귀환. 숙소에서 샤워·낮잠. 저녁은 시내 락사·나시르막 로컬 식당(RM8~15)으로 가볍게</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>시티모스크 → 클리아스강 반딧불</h3><p>수상 사원과 강 크루즈로 채우는 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🕌 코타키나발루 시티모스크</h4><p>인공 호수에 비친 '수상 사원'. 입장 무료(로브 대여 RM5). 오전 햇살에 반영 사진이 가장 예쁨. 노출 복장 금지</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🛍 가야스트리트 & 시내</h4><p>일요일이면 가야스트리트 선데이마켓(오전만) 필수. 평일이면 수리아 사바·센터포인트 몰에서 기념품·간식 쇼핑</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🚐 클리아스강 투어 픽업</h4><p>대부분 오후 픽업 포함(RM180~220). 시내→클리아스 약 2시간 이동. 차창 밖 팜농장·시골 풍경도 여행의 일부</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🐒 리버크루즈 & 긴코원숭이</h4><p>보르네오 고유종 코주부(긴코)원숭이 관찰. 강가 나무 위 무리가 인상적. 석양과 함께 강 위 노을 감상</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>✨ 반딧불 & 저녁</h4><p>해 진 뒤 맹그로브 나무를 뒤덮은 반딧불이 '크리스마스 트리'처럼 반짝. 뷔페 저녁 포함. 밤늦게 시내 귀환</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>여유 산책 → 귀국</h3><p>마지막 날 카페·쇼핑으로 마무리하고 공항으로</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>☕ 시내 카페 & UMS 산책(선택)</h4><p>여유가 있으면 UMS(사바대학교) 캠퍼스와 핑크 모스크 조망. 시내 카페에서 화이트커피·나시르막 아침</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🛍 마지막 쇼핑</h4><p>수리아 사바 몰·시내 마트에서 코피(화이트커피)·열대과일칩·소금 등 기념품. 망고·두리안 사탕 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>시내→BKI 그랩 RM25~35(15분). 국제선은 2.5~3시간 전 도착 권장. 야간 항공이면 오후 시간 더 여유롭게</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>3박 4일 · 환율 RM1 = 310원 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">249,000 ~ 550,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박)</h4><span class="budget-range">120,000 ~ 450,000원</span><span class="budget-note">시내 호텔 ~ 시프론트 리조트</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚕</span><div class="budget-info"><h4>교통 (4일)</h4><span class="budget-range">30,000 ~ 70,000원</span><span class="budget-note">그랩·공항 이동 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">⛴</span><div class="budget-info"><h4>투어·액티비티</h4><span class="budget-range">80,000 ~ 200,000원</span><span class="budget-note">아일랜드 호핑·리버크루즈</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">100,000 ~ 190,000원</span><span class="budget-note">1끼 RM10~50 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">40,000 ~ 120,000원</span><span class="budget-note">커피·기념품·간식</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 1인 총 예상 경비</span>
+            <span class="total-amount">619,000 ~ 1,580,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+시내 호텔) ~ 여유형(FSC+시프론트 리조트) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>시티텔 익스프레스 코타키나발루</h3>
+              <p class="hotel-location">📍 워터프런트 도보 5분 · 가야스트리트 인근</p>
+              <p>시내 중심 가성비 비즈니스 호텔. 깔끔한 싱글룸, 해산물 거리·선착장 접근 좋아 혼여행 동선 최적</p>
+              <div class="hotel-price">1박 <strong>RM130~200</strong> (~40,000원~)</div>
+              <div class="hotel-tags"><span>싱글룸</span><span>Wi-Fi</span><span>시내 중심</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kota+Kinabalu" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>더 제셀턴 호텔</h3>
+              <p class="hotel-location">📍 가야스트리트 초입</p>
+              <p>1954년 개관 클래식 부티크 호텔. 선데이마켓 바로 앞. 혼여행자에게 인기 있는 감성 숙소</p>
+              <div class="hotel-price">1박 <strong>RM220~360</strong> (~68,000원~)</div>
+              <div class="hotel-tags"><span>부티크</span><span>조식</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kota+Kinabalu" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
+            <div class="hotel-body">
+              <h3>그랜디스 호텔 (수리아 사바)</h3>
+              <p class="hotel-location">📍 수리아 사바 쇼핑몰 직결 · 선착장 도보 5분</p>
+              <p>몰 직결로 쇼핑·식사·환전 원스톱. 상층 객실은 시내·바다 조망. 아일랜드 호핑 출발에 최적 위치</p>
+              <div class="hotel-price">1박 <strong>RM280~420</strong> (~87,000원~)</div>
+              <div class="hotel-tags"><span>몰 직결</span><span>조식 뷔페</span><span>Wi-Fi</span><span>바다 전망</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kota+Kinabalu" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Kota+Kinabalu" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Kota+Kinabalu" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>같이 놀고 찍고 즐기는 코타키나발루 — 호핑·반딧불·문화촌 풀코스</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('friends',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 탄중아루 석양 & 해산물</h3><p>도착 첫날, 세계 3대 석양과 씨푸드 BBQ로 분위기 잡기</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>✈ 코타키나발루 공항 도착</h4><p>그랩(Grab) 대형차 호출하면 인원·짐 편함. 공항→시내 RM25~40. 짐 맡기고 바로 출발</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🌅 탄중아루 비치 선셋</h4><p>해변 잔디밭에 자리 잡고 노을 대기. 노점 사테(1꼬치 RM1~1.5)·코코넛과 함께. 인생 석양 단체샷 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🦀 워터프런트 해산물 만찬</h4><p>대게·타이거새우·조개 그램 단위 골라 BBQ. 4인이면 1인 RM70~120로 푸짐. 타이거 생맥주와 함께</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body"><h4>🍻 워터프런트 펍 거리</h4><p>라이브 밴드가 있는 시푸드·펍 거리에서 2차. 친구들과 여행 첫날 건배. 숙소까지 도보·그랩 5분</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>아일랜드 호핑 3섬</h3><p>사피·마무틱·마누칸 3섬 스노클링과 해양 액티비티</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>⛴ 제셀턴 포인트 출발</h4><p>3섬 패키지 RM120~170(선착장세·해양공원비 별도). 방수팩·아쿠아슈즈·자외선차단제 챙기기. 리프세이프 선크림 권장</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🐠 사피섬 스노클링</h4><p>산호초·열대어 밀집 지역. 시셀본·플라잉피시·패러세일링 등 액티비티 선택(각 RM60~120). 물속 열대어와 인증샷</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍱 섬 BBQ 점심</h4><p>패키지 뷔페 또는 매점 나시고랭·볶음면(RM12~18). 코코넛·수박 사서 야자수 그늘 휴식</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🏝 마누칸섬</h4><p>3섬 중 시설이 가장 좋음. 넓은 백사장·산책로. 해변에서 태닝·수영. 마무틱까지 도는 코스면 물맑은 마무틱 추가</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>💆 시내 복귀 & 마사지</h4><p>제셀턴 포인트 귀환 후 샤워. 시내 스파에서 발·전신 마사지(1시간 RM60~90)로 피로 풀기. 저녁은 락사·해남치킨라이스</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>클리아스강 반딧불 or 키나발루산</h3><p>강 크루즈 or 국립공원 트레킹 중 선택</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🕌 시티모스크 오전(공통)</h4><p>수상 사원에서 반영 사진. 무료(로브 RM5). 오후 투어 전 오전에 짧게 소화. 노출 복장 금지·정숙</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🏔 키나발루산 데이트립 (선택A)</h4><p>동남아 최고봉(4,095m) 국립공원. 시내에서 2시간. 입장 RM50 + 포링 온천·데사팜(젖소목장) 투어 RM200~. 정상 등반은 1박2일 별도</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🚐 클리아스강 투어 픽업 (선택B)</h4><p>반딧불·긴코원숭이 크루즈(RM180~220, 픽업·저녁 포함). 시내→클리아스 약 2시간. 오후 출발</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🐒 리버크루즈 & 코주부원숭이</h4><p>보르네오 고유종 긴코원숭이 무리 관찰. 강 위에서 맞는 노을이 절경. 뷔페 저녁 포함</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>✨ 반딧불 군무</h4><p>맹그로브를 뒤덮은 반딧불이 '살아있는 크리스마스 트리'. 사진 잘 안 찍히니 눈에 담기. 밤늦게 시내 귀환</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>마리마리 문화촌 → 쇼핑 → 귀국</h3><p>보르네오 원주민 문화 체험 후 마지막 쇼핑</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🏘 마리마리 문화촌 (선택)</h4><p>사바 5개 부족 전통 가옥·불피우기·문신·전통춤 공연 체험(RM160, 왕복 교통·간식 포함). 오전 타임 소화하면 오후 여유</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍜 시내 로컬 점심</h4><p>가야스트리트 육골차(바쿠테)·해남치킨라이스·락사(RM10~20). 마지막 로컬 미식으로 마무리</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🛍 수리아 사바 쇼핑</h4><p>화이트커피·초콜릿·열대과일칩·립밤 기념품. 환전 남으면 몰에서 소진. 필리피노 마켓 진주·수공예품도 흥정</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>시내→BKI 그랩 15분. 야간 항공이면 저녁 식사 후 출발 여유. 국제선 2.5~3시간 전 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>3박 4일 · 액티비티 포함 · 2인 기준으로 나눈 숙박비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">249,000 ~ 550,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 1인당)</h4><span class="budget-range">100,000 ~ 350,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">⛴</span><div class="budget-info"><h4>투어·액티비티</h4><span class="budget-range">120,000 ~ 250,000원</span><span class="budget-note">호핑·리버크루즈·문화촌</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">120,000 ~ 220,000원</span><span class="budget-note">해산물·이자카야 4일 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚕</span><div class="budget-info"><h4>교통</h4><span class="budget-range">35,000 ~ 80,000원</span><span class="budget-note">그랩·투어 픽업 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 150,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">674,000 ~ 1,600,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+2인 쉐어) ~ 여유형(FSC+리조트+액티비티 풀옵션)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>워터프런트·선착장 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>호텔 식스티3 (Hotel Sixty3)</h3>
+              <p class="hotel-location">📍 가야스트리트 도보 3분 · 워터프런트 도보 7분</p>
+              <p>세련된 디자인 시티 호텔. 트윈룸 가성비 최고. 시내 중심이라 해산물 거리·선착장·몰 모두 도보권</p>
+              <div class="hotel-price">2인 1박 <strong>RM180~280</strong> (1인당 ~28,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>Wi-Fi</span><span>시내 중심</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kota+Kinabalu" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>르 메르디앙 코타키나발루</h3>
+              <p class="hotel-location">📍 워터프런트 · 수리아 사바 인접</p>
+              <p>바다 전망 워터프런트 호텔. 인피니티 풀·루프탑에서 석양 감상. 몰·선착장 도보권으로 접근성 최고</p>
+              <div class="hotel-price">2인 1박 <strong>RM400~600</strong> (1인당 ~62,000원~)</div>
+              <div class="hotel-tags"><span>바다 전망</span><span>수영장</span><span>조식 뷔페</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kota+Kinabalu" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">리조트</span></div>
+            <div class="hotel-body">
+              <h3>수테라 하버 리조트 (더 퍼시픽)</h3>
+              <p class="hotel-location">📍 시내 인접 마리나 리조트</p>
+              <p>골프·마리나·수영장을 갖춘 대형 리조트. 시내와 가까워 관광·휴양 병행. 전용 선착장에서 호핑 출발 가능</p>
+              <div class="hotel-price">2인 1박 <strong>RM500~800</strong> (1인당 ~78,000원~)</div>
+              <div class="hotel-tags"><span>마리나</span><span>수영장</span><span>전용 선착장</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kota+Kinabalu" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Kota+Kinabalu" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Kota+Kinabalu" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>아이와 함께하는 코타키나발루 — 아일랜드 호핑·리버크루즈 3박 4일</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 리조트 & 탄중아루 석양</h3><p>리조트 체크인 후 세계 3대 석양으로 첫날 마무리</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 코타키나발루 공항 도착</h4><p>짐 많은 가족은 그랩 대형(XL) 또는 리조트 픽업 셔틀 추천. 공항→시내 15분·탄중아루 리조트 10분</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🏨 리조트 체크인 & 수영장</h4><p>짐 풀고 리조트 수영장·키즈풀에서 물놀이. 이동 피로 푼 아이들 컨디션 회복. 워터슬라이드 있는 리조트 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🌅 탄중아루/리조트 해변 석양</h4><p>샹그릴라 탄중아루라면 리조트 앞 해변이 바로 석양 명소. 유모차 이동 편함. 온 가족 노을 사진</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍽 리조트 또는 시내 저녁</h4><p>피곤하면 리조트 레스토랑, 여유 있으면 워터프런트 해산물. 아이 메뉴는 볶음밥·치킨라이스가 무난</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>아일랜드 호핑 — 마누칸섬</h3><p>시설 좋은 마누칸섬에서 온 가족 스노클링·물놀이</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>⛴ 제셀턴 포인트 출발</h4><p>가족은 이동 적은 1~2섬 코스 추천. 마누칸 왕복 RM60~90(선착장세·해양공원비 별도). 아이 구명조끼 무료 대여</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:45</div><div class="tl-body"><h4>🏝 마누칸섬 도착</h4><p>3섬 중 시설 최고 — 화장실·매점·그늘막 완비. 얕은 물가에서 아이와 물놀이. 그늘막·비치베드 대여 RM20~30</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🐠 얕은 물 스노클링</h4><p>해변 바로 앞 산호초에 열대어. 아이도 구명조끼 입고 얼굴만 담그면 니모 관찰. 아쿠아슈즈 필수(산호 조심)</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍱 섬 점심 & 낮잠</h4><p>매점 나시고랭·볶음면·프라이드치킨(RM12~20). 코코넛·수박. 야자수 그늘에서 가족 휴식</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🛥 리조트 복귀 & 휴식</h4><p>보트로 시내 귀환 후 리조트로. 아이 샤워·낮잠. 저녁은 리조트에서 여유 있게. 내일 리버크루즈 대비 일찍 취침</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>클리아스강 리버크루즈</h3><p>긴코원숭이·반딧불로 아이가 좋아하는 자연 체험</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🏊 오전 리조트 자유시간</h4><p>오후 픽업 전 오전은 리조트 키즈클럽·수영장에서 여유롭게. 아이 체력 안배가 가족 여행 핵심</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🚐 클리아스강 투어 픽업</h4><p>반딧불·원숭이 크루즈(어른 RM180~220 / 어린이 RM120~). 픽업·저녁 포함. 시내→클리아스 약 2시간, 차에서 낮잠</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🐒 코주부원숭이 관찰</h4><p>강가 나무 위 긴코원숭이 무리. 아이들이 실물 보고 신기해함. 가이드가 동물·맹그로브 설명. 구명조끼 착용</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍛 강가 뷔페 저녁</h4><p>말레이 뷔페(볶음밥·볶음면·과일). 아이 입맛 무난. 저녁 노을 감상하며 식사</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>✨ 반딧불 군무 & 귀환</h4><p>맹그로브를 뒤덮은 반딧불. 아이들 "별이 나무에 앉았다"며 좋아함. 늦은 밤 리조트 귀환, 차에서 취침</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>시티모스크 → 쇼핑 → 귀국</h3><p>수상 사원 사진 후 쇼핑하고 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🕌 시티모스크 & 사진</h4><p>수상 사원 반영 사진. 무료(로브 대여 RM5). 아이 포함 정숙·노출 복장 금지. 짧게 20~30분이면 충분</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🛍 수리아 사바 몰 쇼핑</h4><p>몰에서 화이트커피·초콜릿·열대과일칩 기념품. 아이 간식·물놀이용품도 정리. 푸드코트 점심으로 편하게</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이 동반은 3시간 전 공항 도착 권장. 그랩 대형 또는 리조트 셔틀 이용. 유모차·짐 여유 있게 준비</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>3박 4일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">1,000,000 ~ 2,200,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 리조트)</h4><span class="budget-range">450,000 ~ 1,200,000원</span><span class="budget-note">리조트 패밀리룸 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">⛴</span><div class="budget-info"><h4>투어·액티비티 (4인)</h4><span class="budget-range">300,000 ~ 600,000원</span><span class="budget-note">호핑·리버크루즈 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">320,000 ~ 560,000원</span><span class="budget-note">4인 1끼 RM60~150</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚕</span><div class="budget-info"><h4>교통 (4인)</h4><span class="budget-range">100,000 ~ 200,000원</span><span class="budget-note">그랩·투어 픽업·셔틀</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">80,000 ~ 200,000원</span><span class="budget-note">기념품·물놀이 용품</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">2,250,000 ~ 4,960,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+시내 호텔) ~ 여유형(FSC+5성 리조트+액티비티 풀옵션)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>키즈풀·가족룸·해변 접근이 좋은 리조트</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>넥서스 리조트 & 스파 카람부나이</h3>
+              <p class="hotel-location">📍 카람부나이 해변 (시내 차량 40분)</p>
+              <p>넓은 부지의 올인클루시브형 비치 리조트. 라군 풀·키즈 프로그램·해변 액티비티. 조용히 쉬려는 가족에 최적</p>
+              <div class="hotel-price">패밀리룸 1박 <strong>RM500~800</strong> (~155,000원~)</div>
+              <div class="hotel-tags"><span>패밀리룸</span><span>라군 수영장</span><span>키즈 프로그램</span><span>해변</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kota+Kinabalu" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>샹그릴라 탄중아루 리조트 & 스파</h3>
+              <p class="hotel-location">📍 탄중아루 비치 · 공항 10분</p>
+              <p>세계 3대 석양을 리조트 앞 해변에서 바로. 키즈클럽·수영장·해양 액티비티 완비. 가족 여행의 정석</p>
+              <div class="hotel-price">패밀리룸 1박 <strong>RM800~1,400</strong> (~248,000원~)</div>
+              <div class="hotel-tags"><span>비치프론트</span><span>키즈클럽</span><span>수영장</span><span>석양 명소</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kota+Kinabalu" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">자연 체험</span></div>
+            <div class="hotel-body">
+              <h3>샹그릴라 라사리아 리조트</h3>
+              <p class="hotel-location">📍 투아란 판타이달릿 해변 (시내 40분)</p>
+              <p>긴 백사장과 자연보호구역을 낀 대형 리조트. 승마·자연 트레일 등 아이 체험 프로그램 풍부. 온 가족 힐링</p>
+              <div class="hotel-price">패밀리룸 1박 <strong>RM900~1,600</strong> (~279,000원~)</div>
+              <div class="hotel-tags"><span>넓은 해변</span><span>자연 체험</span><span>키즈클럽</span><span>수영장</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Kota+Kinabalu" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Kota+Kinabalu" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Kota+Kinabalu" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 항공권
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">✈ 항공권</span>
+        <h2>인천 ↔ 코타키나발루 항공권</h2>
+        <p>비행시간 약 5시간 30분 · 인천 ICN → 코타키나발루 BKI</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">✈ 이스타항공</span></td><td>LCC 직항</td><td>5h 30m</td><td class="price-cell">249,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKI/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 제주항공</span></td><td>LCC 직항</td><td>5h 30m</td><td class="price-cell">259,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKI/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 진에어</span></td><td>LCC 직항</td><td>5h 30m</td><td class="price-cell">269,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKI/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 에어부산</span></td><td>LCC 직항</td><td>5h 30m</td><td class="price-cell">259,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKI/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 말레이시아항공</span></td><td>FSC 경유</td><td>10h~ (KUL 경유)</td><td class="price-cell">420,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKI/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>5h 20m</td><td class="price-cell">500,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKI/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aff-cta">
+        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKI/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
+        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=BKI&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
+        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DBKI&leg2=from%3DBKI%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>코타키나발루 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">🛂</span><h3>무비자 90일 · 여권 잔여기간</h3><p>말레이시아는 관광 무비자 90일. 단 여권 유효기간이 입국일 기준 6개월 이상 남아야 입국 가능. 출국 전 반드시 확인</p></div>
+        <div class="tip-card"><span class="tip-icon">💵</span><h3>링깃 환전</h3><p>공항보다 시내 환전소(수리아 사바·센터포인트)가 환율 유리. 소액은 원화·달러 지참 후 시내 환전. RM100 이하 지폐로 준비하면 편함</p></div>
+        <div class="tip-card"><span class="tip-icon">🚕</span><h3>그랩(Grab) 필수 앱</h3><p>택시보다 저렴·투명한 배차앱. 공항→시내 RM25~35. 한국 번호로 가입·카드 등록 후 출국 전 설치. 심야엔 요금 할증</p></div>
+        <div class="tip-card"><span class="tip-icon">🤿</span><h3>아일랜드 호핑 준비물</h3><p>스노클 세트·아쿠아슈즈·방수팩·리프세이프 선크림·구명조끼(무료 대여). 선착장세·해양공원 입장료는 현장 현금 결제인 경우가 많음</p></div>
+        <div class="tip-card"><span class="tip-icon">🌧</span><h3>우기(10~2월) 유의</h3><p>건기는 3~9월. 우기엔 스콜·파도로 호핑·크루즈가 취소될 수 있음. 야외 액티비티는 오전에 배치, 여행자보험·예비일 확보 권장</p></div>
+        <div class="tip-card"><span class="tip-icon">🧴</span><h3>자외선·모기 대비</h3><p>적도 부근이라 자외선 강함 — 선크림·모자·래시가드 필수. 리버크루즈·저녁엔 모기기피제 필참. 뎅기 예방 위해 긴옷도 챙기기</p></div>
+        <div class="tip-card"><span class="tip-icon">🔌</span><h3>콘센트 (BF·영국식 3핀)</h3><p>말레이시아는 영국식 BF 타입(사각 3핀), 220~240V. 한국 기기 그대로 쓰려면 멀티 어댑터 필수. 리조트 프런트 대여도 가능</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="kyoto.html">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="bangkok.html">방콕</a>
+            <a href="danang.html">다낭</a>
+            <a href="bali.html">발리</a>
+            <a href="singapore.html">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="jeju.html">제주도</a>
+            <a href="busan.html">부산</a>
+            <a href="gangneung.html">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트래블코스트 · TravelCost</p>
+        <p style="margin-top:6px"><a href="/guide" style="color:inherit;opacity:.85">이용가이드</a> · <a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
+    }
+  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+  <script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=5.980&longitude=116.073'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FKuala_Lumpur';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
+<script src="/icons.js" defer></script>
+<script src="/nav.js" defer></script>
+<script src="/bizfooter.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="장가계(장자제) 여행 완벽 가이드 — 케이블카·엘리베이터로 편하게 오르는 어르신 효도여행 특화. 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
+  <title>장가계 여행 가이드 | 트래블코스트</title>
+  <meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://travelcost.co.kr/zhangjiajie">
+<meta property="og:image" content="https://travelcost.co.kr/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travelcost.co.kr/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "장가계",
+    "url": "https://travelcost.co.kr/zhangjiajie",
+    "description": "장가계(장자제) 여행 완벽 가이드 — 케이블카·엘리베이터로 편하게 오르는 어르신 효도여행 특화. 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
+    "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
+    "geo": { "@type": "GeoCoordinates", "latitude": 29.117, "longitude": 110.479 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트래블코스트">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;"><i data-icon="ticket" data-size="17"></i> 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;"><i data-icon="briefcase" data-size="17"></i> 내 여행</a>
+        <a href="guide.html"><i data-icon="book-open" data-size="17"></i> 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;"><i data-icon="plane" data-size="17"></i> 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#166534 0%,#15803D 45%,#4ADE80 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">⛰</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">⛰ 중국 · 후난성</span>
+      <h1>장가계</h1>
+      <p>천문산·원가계의 절경 — 케이블카와 엘리베이터로 편하게 오르는 어르신 효도여행 1번지</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 장가계 직항 약 3시간 30분 (계절편·창사 경유)</small></div>
+        <div class="hero-stat"><strong>💴 환율</strong><small>¥1(위안) ≈ 190원 (2026 기준)</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 1시간 느림 (KST-1)</small></div>
+        <div class="hero-stat"><strong>🌤 추천 시기</strong><small>4~6월·9~10월 (여름 우기·겨울 결빙 주의)</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
+      </div>
+      <a href="tours.html?city=장가계" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 장가계 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
+    <div class="container">
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>나만의 페이스로 오르는 절경 산행 — 케이블카·엘리베이터로 무리 없이</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 천문산</h3><p>세계 최장 케이블카로 오르는 하늘문의 산</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 장가계 하화공항 도착</h4><p>공항에서 천문산 케이블카 승강장까지 택시 10분(¥30~). 시내 숙소에 짐 맡기고 출발</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>🚡 천문산 케이블카</h4><p>세계 최장 7.5km·편도 약 28분. 통합권 ¥263(~50,000원)에 케이블카·셔틀 포함. 앉아서 절경 감상</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🌉 귀곡잔도 & 유리잔도</h4><p>절벽에 붙은 하늘길. 유리잔도는 신발커버 착용(현장 대여). 고소공포증이면 일반 잔도로 우회 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🕳 천문동 (하늘문)</h4><p>산을 관통하는 거대한 동굴. 999계단 대신 실내 에스컬레이터로 편하게 오르내림</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍲 시내 후난 요리 저녁</h4><p>매운맛이 강하니 '不辣(부라, 안 맵게)' 요청. 삼하과·토가족 훈제요리 첫 만남. 1끼 ¥40~80</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>무릉원 — 원가계·천자산</h3><p>영화 아바타의 무대, 백룡 엘리베이터로 정상까지</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:00</div><div class="tl-body"><h4>🎫 무릉원 국가삼림공원 입장</h4><p>4일 통합권 ¥228(~43,000원). 공원 내 무료 셔틀버스로 명소 간 이동. 세계자연유산</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🛗 백룡 엘리베이터</h4><p>세계 최고 높이 야외 엘리베이터(326m), 편도 ¥72(~14,000원). 1분 남짓에 원가계 정상으로</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:40</div><div class="tl-body"><h4>🏞 원가계 아바타 하늘기둥</h4><p>영화 아바타 '할렐루야 산'의 모델. 건곤주·미혼대·천하제일교 전망대 순회. 평탄한 산책로</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍜 산상 식당 점심</h4><p>정상 휴게소에서 볶음밥·컵라면 등 간단히. 물·간식은 미리 챙기면 편함</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🚠 천자산 케이블카</h4><p>천자산 구역으로 이동(¥72). 하룡공원·어필봉의 기암 절경. 케이블카로 하산해 무릎 부담 없음</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🌊 금편계곡 산책</h4><p>계곡 따라 완만한 평지 길(약 5.7km, 원하는 만큼만). 맑은 물소리와 기암 감상하며 마무리</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>보봉호 → 귀국</h3><p>산정 호수 유람선으로 마지막 절경 감상</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🚤 보봉호 유람선</h4><p>산 정상 위 호수 30분 유람(¥138~26,000원). 토가족 아가씨의 산가(민요) 공연. 사진 명소</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🛍 시내 기념품 쇼핑</h4><p>토가족 수공예·장가계 녹차·야생 버섯·수정. 시내 시장 구경하며 선물 준비</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍲 마지막 후난 점심</h4><p>쌀국수(미펀)·훈제 삼겹살(라러우). 담백한 메뉴로 가볍게 마무리. 1끼 ¥30~60</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>하화공항까지 택시 20~30분. 국제선은 출발 3시간 전 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>2박 3일 · 환율 ¥1(위안) = 190원 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">250,000 ~ 600,000원</span><span class="budget-note">창사 경유 ~ 직항 계절편</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박)</h4><span class="budget-range">40,000 ~ 120,000원</span><span class="budget-note">게스트하우스 ~ 4성 호텔</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚡</span><div class="budget-info"><h4>입장·케이블카</h4><span class="budget-range">130,000 ~ 180,000원</span><span class="budget-note">천문산·무릉원 통합권·엘리베이터</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">60,000 ~ 120,000원</span><span class="budget-note">1끼 ¥30~90 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚤</span><div class="budget-info"><h4>관광·유람선</h4><span class="budget-range">40,000 ~ 80,000원</span><span class="budget-note">보봉호·황룡동굴 등</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">30,000 ~ 100,000원</span><span class="budget-note">녹차·수공예·마사지</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 1인 총 예상 경비</span>
+            <span class="total-amount">550,000 ~ 1,200,000원</span>
+          </div>
+          <span class="total-note">절약형(창사 경유+게스트하우스) ~ 여유형(직항+4성 호텔) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>장가계 무릉원 게스트하우스</h3>
+              <p class="hotel-location">📍 무릉원(우링위안) 표문 도보 5분</p>
+              <p>국가삼림공원 입구 근처 청결 게스트하우스. 1인실·도미토리. 새벽 공원 입장에 최적</p>
+              <div class="hotel-price">1박 <strong>¥120~250</strong> (~23,000원~)</div>
+              <div class="hotel-tags"><span>1인실</span><span>공원 도보</span><span>Wi-Fi</span><span>짐 보관</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Zhangjiajie+Wulingyuan" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>장가계 시내 비즈니스 호텔</h3>
+              <p class="hotel-location">📍 장가계 시내 중심</p>
+              <p>식당·시장·마사지가 밀집한 시내 중심. 공항 접근 편리. 자유여행자에게 무난한 선택</p>
+              <div class="hotel-price">1박 <strong>¥200~400</strong> (~38,000원~)</div>
+              <div class="hotel-tags"><span>시내 중심</span><span>공항 20분</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Zhangjiajie+City" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
+            <div class="hotel-body">
+              <h3>힐튼 가든 인 장자제</h3>
+              <p class="hotel-location">📍 장가계 시내</p>
+              <p>국제 브랜드 호텔의 안정감. 청결한 시설·조식 뷔페·엘리베이터. 혼자여도 편안한 하룻밤</p>
+              <div class="hotel-price">1박 <strong>¥400~650</strong> (~76,000원~)</div>
+              <div class="hotel-tags"><span>국제 브랜드</span><span>조식 뷔페</span><span>엘리베이터</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Hilton+Garden+Inn+Zhangjiajie" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Zhangjiajie" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Zhangjiajie" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>유리잔도·유리다리로 담력 대결 — 장가계 스릴 & 인생샷 완전 정복</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 천문산 스릴 체험</h3><p>세계 최장 케이블카와 아찔한 유리잔도로 시작</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 장가계 하화공항 도착</h4><p>택시로 천문산 승강장 이동(¥30~). 짐 맡기고 바로 케이블카로 출발</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>🚡 천문산 케이블카 인증샷</h4><p>세계 최장 7.5km 케이블카로 오르며 창밖 절경 촬영. 통합권 ¥263(~50,000원)</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🌉 유리잔도 담력 대결</h4><p>투명 유리길 위 아찔한 사진. 신발커버 대여. 친구끼리 서로 놀리며 인생샷 건지기</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🕳 천문동 999계단</h4><p>도전파는 계단 등반, 아니면 에스컬레이터. 하늘문(천문동) 배경 단체컷 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🍻 시내 야시장 & 후난 훠궈</h4><p>매콤한 후난 훠궈·꼬치. 현지 맥주(¥5~10)로 첫날 마무리. 야시장에서 간식 순례</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>무릉원 원가계·천자산 풀코스</h3><p>아바타 하늘기둥과 기암 절경 온종일 정복</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:00</div><div class="tl-body"><h4>🎫 무릉원 통합권 입장</h4><p>4일 통합권 ¥228(~43,000원). 무료 셔틀로 이동. 세계자연유산 온종일 탐방</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🛗 백룡 엘리베이터로 원가계</h4><p>326m 야외 엘리베이터(¥72)로 1분 만에 정상. 아바타 하늘기둥·천하제일교·미혼대</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🥢 산상 점심</h4><p>정상 휴게소에서 볶음밥·면 요리. 절경 보며 든든하게 충전</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🚠 양가계·천자산 케이블카</h4><p>양가계·천자산 구역으로 이동(¥72). 어필봉·하룡공원 기암 절벽에서 사진</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🚋 십리화랑 모노레일</h4><p>기암 협곡 사이를 달리는 미니 열차(¥38). 걷지 않고 십리화랑 절경을 편하게</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>대협곡 유리다리 or 황룡동굴 → 귀국</h3><p>세계 최고 유리다리 스릴 또는 지하 동굴 탐험 중 선택</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🌉 장가계 대협곡 유리다리 (선택A)</h4><p>세계 최고·최장급 유리다리(높이 약 300m·길이 430m, ¥138). 번지·집라인 옵션도. 스릴 만점</p></div></div>
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🕳 황룡동굴 (선택B)</h4><p>아시아 최대급 종유동굴. 지하 강 보트 투어(¥100). 비 와도 관광 가능한 실내 코스</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍜 점심 & 시내 이동</h4><p>매운 후난 볶음면·미펀으로 든든히. 시내로 복귀</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🛍 시내 쇼핑 & 카페</h4><p>대용동 벽화거리·시장에서 기념품. 카페에서 여행 마무리 수다</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>하화공항까지 택시 20~30분. 국제선 3시간 전 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>2박 3일 · 유리다리·모노레일 포함 · 2인 기준으로 나눈 숙박비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">250,000 ~ 600,000원</span><span class="budget-note">창사 경유 ~ 직항 계절편</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박 · 1인당)</h4><span class="budget-range">40,000 ~ 100,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚡</span><div class="budget-info"><h4>입장·케이블카</h4><span class="budget-range">140,000 ~ 200,000원</span><span class="budget-note">유리다리·모노레일 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">70,000 ~ 130,000원</span><span class="budget-note">훠궈·야시장 3일 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎢</span><div class="budget-info"><h4>관광·체험</h4><span class="budget-range">50,000 ~ 100,000원</span><span class="budget-note">황룡동굴·집라인 등</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">40,000 ~ 120,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">590,000 ~ 1,250,000원</span>
+          </div>
+          <span class="total-note">절약형(창사 경유+2인 쉐어) ~ 여유형(직항+5성 호텔+체험 풀옵션)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>무릉원·시내 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>우링위안 트윈 호텔</h3>
+              <p class="hotel-location">📍 무릉원 공원 입구 도보 5분</p>
+              <p>깔끔한 2인 트윈룸. 공원 셔틀 접근 최고. 새벽 무릉원 입장·유리다리 이동 모두 편리</p>
+              <div class="hotel-price">2인 1박 <strong>¥300~500</strong> (1인당 ~29,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>공원 도보</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Wulingyuan+Zhangjiajie" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>크라운 플라자 우링위안 장자제</h3>
+              <p class="hotel-location">📍 무릉원 국가삼림공원 최근접</p>
+              <p>5성급 대형 호텔. 공원 입구 초근접·조식 뷔페·수영장. 하루 산행 후 편히 쉬기 좋음</p>
+              <div class="hotel-price">2인 1박 <strong>¥600~1,000</strong> (1인당 ~57,000원~)</div>
+              <div class="hotel-tags"><span>5성</span><span>공원 최근접</span><span>수영장</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Crowne+Plaza+Zhangjiajie+Wulingyuan" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">절경 특화</span></div>
+            <div class="hotel-body">
+              <h3>원가계 산상 게스트하우스</h3>
+              <p class="hotel-location">📍 원가계 정상 부근</p>
+              <p>산 정상에서 하룻밤. 이른 새벽 운해·일출 절경을 인파 없이 독차지. 친구 여행의 하이라이트</p>
+              <div class="hotel-price">2인 1박 <strong>¥400~700</strong> (1인당 ~38,000원~)</div>
+              <div class="hotel-tags"><span>정상 숙박</span><span>일출·운해</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Yuanjiajie+Zhangjiajie" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Zhangjiajie" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Zhangjiajie" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행 (부모님 모시고 효도여행)
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>3박 4일 효도여행 일정</h2>
+          <p>부모님 모시고 편안하게 — 케이블카·엘리베이터·셔틀로 무리 없는 완만 코스</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 천문산 (케이블카로 편하게)</h3><p>걷지 않고 케이블카로 오르는 하늘문의 산</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>✈ 장가계 하화공항 도착</h4><p>전용 차량·가이드 포함 패키지가 편함. 짐은 차량으로. 부모님은 공항 휠체어 서비스 사전 요청 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🚡 천문산 케이블카</h4><p>걷지 않고 케이블카로 정상까지. 세계 최장 노선의 절경을 앉아서 감상. 무릎·체력 부담 없음</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🕳 천문동 에스컬레이터</h4><p>999계단은 오르지 않고 실내 에스컬레이터 이용. 무리 없이 하늘문 관람. 중간중간 휴식</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🌉 유리잔도 우회로</h4><p>고소공포·무릎 걱정되면 일반 잔도로 우회. 안전 난간 구간만 짧게 걸으며 절경 감상</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍚 한식 가능 식당 저녁</h4><p>시내엔 한국인 단체 대응 식당·한식당이 있음. 맵지 않은 백숙·볶음밥으로 부모님 입맛 배려</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>무릉원 — 엘리베이터·셔틀로 무리 없이</h3><p>아바타 하늘기둥을 걷지 않고 만나기</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🎫 무릉원 통합권 입장</h4><p>공원 무료 셔틀로 이동해 도보 최소화. 세계자연유산을 편안하게 탐방</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🛗 백룡 엘리베이터</h4><p>가파른 등산 대신 1분 만에 정상으로. 어르신도 편안. 유리 엘리베이터로 오르며 절경 감상</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:40</div><div class="tl-body"><h4>🏞 원가계 평탄 산책</h4><p>아바타 하늘기둥·천하제일교. 전망대 사이는 포장된 평지, 벤치·화장실이 자주 있음. 지팡이 지참 권장</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🥢 산상 식당 점심</h4><p>따뜻한 국물·쌀밥으로 든든히. 부모님 약 복용 시간 챙기기. 충분히 쉬어가기</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🚠 천자산 하강 케이블카</h4><p>내려올 때도 케이블카로. 무릎 부담 없이 하산. 어필봉 기암을 창밖으로 감상</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>☕ 호텔 조기 복귀 & 휴식</h4><p>첫날부터 무리하지 않고 일찍 복귀. 온수 샤워·족욕으로 피로 풀기. 부모님 컨디션 우선</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>금편계곡·보봉호 (완만 산책 + 유람선)</h3><p>앉아서 즐기는 호수 유람과 평지 계곡길</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🌊 금편계곡 완만 산책</h4><p>평지 계곡길. 힘들면 초입 30분만. 맑은 물·기암을 천천히 감상. 그늘이 많아 여름에도 시원</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🚤 보봉호 유람선</h4><p>앉아서 즐기는 산정 호수 유람(¥138). 토가족 민요 공연. 어르신 만족도 가장 높은 코스</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍲 맵지 않은 점심</h4><p>미리 섭외한 식당에서 죽·백반 등 소화 편한 메뉴. 부모님 입맛 맞춰 여유롭게</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🎭 토가족 민속 공연 관람</h4><p>천문호선 등 대형 실경 쇼는 앉아서 관람. 무리한 이동 없이 문화 체험. 좌석 예약 권장</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>💆 저녁 & 발 마사지</h4><p>시내 발 마사지(¥60~100)로 부모님 피로 회복. 여행의 별미이자 효도 포인트</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>황룡동굴 or 시내 → 귀국</h3><p>평탄한 실내 관광 또는 시내 여유 산책 후 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🕳 황룡동굴 (선택A)</h4><p>평탄한 관람로 + 지하 강 보트로 편안. 비 와도 실내 관광. 계단 적은 코스로 안내 요청</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🛍 시내 여유 관광 (선택B)</h4><p>대용동 벽화거리·시장을 천천히 산책. 녹차·수공예 기념품. 무리 없는 마지막 날</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍜 마지막 점심</h4><p>담백한 쌀국수(미펀). 부모님 입맛에 맞춰 편안하게 마무리</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>3시간 전 도착. 휠체어 서비스·짐 도움 사전 요청. 여유 있게 출국 수속</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>효도여행 예상 경비</h2>
+          <p>3박 4일 · 자녀 2 + 부모 2인 (성인 4인) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">1,000,000 ~ 2,400,000원</span><span class="budget-note">창사 경유 ~ 직항 계절편</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 트윈 2룸)</h4><span class="budget-range">240,000 ~ 720,000원</span><span class="budget-note">엘리베이터·조식 호텔 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚡</span><div class="budget-info"><h4>입장·케이블카 (4인)</h4><span class="budget-range">560,000 ~ 760,000원</span><span class="budget-note">천문산·무릉원·엘리베이터</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">360,000 ~ 640,000원</span><span class="budget-note">한식 가능 식당 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚤</span><div class="budget-info"><h4>관광·공연 (4인)</h4><span class="budget-range">200,000 ~ 360,000원</span><span class="budget-note">보봉호·황룡동굴·실경 쇼</span></div></div>
+          <div class="budget-card"><span class="budget-icon">💆</span><div class="budget-info"><h4>마사지·쇼핑</h4><span class="budget-range">100,000 ~ 300,000원</span><span class="budget-note">발 마사지·녹차·기념품</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 효도여행 4인 총 예상 경비</span>
+            <span class="total-amount">2,460,000 ~ 5,180,000원</span>
+          </div>
+          <span class="total-note">전용 차량·가이드 포함 패키지(1인 약 90만원~)를 이용하면 예약·이동이 훨씬 편안</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>효도여행 추천 숙소</h2>
+          <p>엘리베이터·배리어프리·조식이 갖춰진, 어르신 편의 우선 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">편의형</span></div>
+            <div class="hotel-body">
+              <h3>우링위안 입구 패밀리 호텔</h3>
+              <p class="hotel-location">📍 무릉원(우링위안) 표문 도보 3분</p>
+              <p>공원 셔틀 접근 최고·엘리베이터 완비. 트윈 2룸으로 부부·부모님 각방. 이동 동선이 짧아 어르신 편함</p>
+              <div class="hotel-price">트윈 2룸 1박 <strong>¥600~1,000</strong> (~114,000원~)</div>
+              <div class="hotel-tags"><span>공원 도보 3분</span><span>엘리베이터</span><span>조식</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Wulingyuan+Zhangjiajie" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>크라운 플라자 우링위안 장자제</h3>
+              <p class="hotel-location">📍 무릉원 국가삼림공원 최근접</p>
+              <p>5성급 대형 호텔. 엘리베이터·배리어프리 동선·조식 뷔페·수영장. 어르신 편의를 두루 갖춘 대표 선택</p>
+              <div class="hotel-price">트윈 2룸 1박 <strong>¥1,200~2,000</strong> (~228,000원~)</div>
+              <div class="hotel-tags"><span>5성</span><span>배리어프리</span><span>공원 최근접</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Crowne+Plaza+Zhangjiajie+Wulingyuan" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">프리미엄</span></div>
+            <div class="hotel-body">
+              <h3>풀만 장자제</h3>
+              <p class="hotel-location">📍 장가계 시내</p>
+              <p>럭셔리 브랜드 호텔. 온수 수영장·마사지·넓은 객실. 산행 후 부모님이 온전히 회복하기 좋은 시설</p>
+              <div class="hotel-price">트윈 2룸 1박 <strong>¥1,600~2,600</strong> (~304,000원~)</div>
+              <div class="hotel-tags"><span>럭셔리</span><span>온수 수영장</span><span>마사지</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Pullman+Zhangjiajie" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Zhangjiajie" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Zhangjiajie" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 항공권
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">✈ 항공권</span>
+        <h2>인천 ↔ 장가계 항공권</h2>
+        <p>직항 계절편 약 3시간 30분 (인천 ICN → 장가계 荷花공항 DYG) · 또는 창사(CSX) 경유</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">✈ 티웨이항공</span></td><td>직항 (계절편)</td><td>3h 30m</td><td class="price-cell">250,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/DYG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 제주항공</span></td><td>직항 (전세기·계절편)</td><td>3h 30m</td><td class="price-cell">280,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/DYG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 중국동방항공</span></td><td>창사(CSX) 경유</td><td>6~9h</td><td class="price-cell">230,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CSX/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 중국남방항공</span></td><td>창사(CSX) 경유</td><td>6~9h</td><td class="price-cell">240,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CSX/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>창사(CSX) 경유</td><td>6~9h</td><td class="price-cell">350,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CSX/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aff-cta">
+        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/DYG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 직항 검색</a>
+        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=DYG&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
+        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DDYG&leg2=from%3DDYG%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>장가계 여행 꿀팁</h2>
+        <p>처음 가는 분, 부모님 모시는 분이라면 꼭 알아야 할 핵심 정보</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">🛂</span><h3>중국 비자 준비</h3><p>단체 패키지는 여행사 단체관광 비자를 활용. 개별 자유여행은 중국 관광비자(비자센터) 필요. 창사 경유 시 조건부 무비자 경유(TWOV) 가능 여부는 최신 규정을 사전 확인</p></div>
+        <div class="tip-card"><span class="tip-icon">💳</span><h3>위안화·알리페이/위챗페이</h3><p>현지 카드 결제가 제한적이라 알리페이·위챗페이가 사실상 필수. 여권 연동 해외카드 등록 가능. 소액 현금(위안)도 병행 준비</p></div>
+        <div class="tip-card"><span class="tip-icon">🚡</span><h3>케이블카 성수기 대기</h3><p>천문산·백룡 엘리베이터·원가계 케이블카는 연휴·주말이면 1~2시간 대기. 오전 일찍 오르고, 여행사·현지 앱으로 시간대 사전 예약 추천</p></div>
+        <div class="tip-card"><span class="tip-icon">🧥</span><h3>고지대 날씨·방한</h3><p>산 정상은 시내보다 5~10도 낮고 안개·비가 잦음. 여름에도 겉옷, 봄·가을엔 방한복 필수. 미끄럼 방지 등산화·우비 챙기기</p></div>
+        <div class="tip-card"><span class="tip-icon">🧳</span><h3>패키지 vs 자유여행</h3><p>이동·입장·언어 장벽이 커 패키지 투어가 일반적. 어르신 동반이면 전용 차량·가이드 포함 패키지가 훨씬 편안. 자유여행은 입장권 사전 예약·동선 숙지 필수</p></div>
+        <div class="tip-card"><span class="tip-icon">🥿</span><h3>유리잔도 신발커버</h3><p>천문산 유리잔도·대협곡 유리다리는 신발커버 착용 의무(현장 대여). 고소공포증이면 일반 잔도로 우회 가능. 카메라·휴대폰은 목걸이로 고정</p></div>
+        <div class="tip-card"><span class="tip-icon">🔌</span><h3>시차·전압(220V)</h3><p>한국보다 1시간 느림(KST-1). 전압은 220V지만 콘센트 모양이 달라 멀티 어댑터 준비. 지도·메신저는 로밍/현지 유심으로 대비(일부 앱 접속 제한)</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="kyoto.html">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="bangkok.html">방콕</a>
+            <a href="danang.html">다낭</a>
+            <a href="bali.html">발리</a>
+            <a href="singapore.html">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="jeju.html">제주도</a>
+            <a href="busan.html">부산</a>
+            <a href="gangneung.html">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트래블코스트 · TravelCost</p>
+        <p style="margin-top:6px"><a href="/guide" style="color:inherit;opacity:.85">이용가이드</a> · <a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
+    }
+  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+  <script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=29.117&longitude=110.479'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FShanghai';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
+<script src="/icons.js" defer></script>
+<script src="/nav.js" defer></script>
+<script src="/bizfooter.js" defer></script>
+</body>
+</html>

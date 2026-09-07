@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="나트랑 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
+  <title>나트랑 여행 가이드 | 트래블코스트</title>
+  <meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://travelcost.co.kr/nhatrang">
+<meta property="og:image" content="https://travelcost.co.kr/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travelcost.co.kr/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "나트랑",
+    "url": "https://travelcost.co.kr/nhatrang",
+    "description": "나트랑 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
+    "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
+    "geo": { "@type": "GeoCoordinates", "latitude": 12.238, "longitude": 109.196 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트래블코스트">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;"><i data-icon="ticket" data-size="17"></i> 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;"><i data-icon="briefcase" data-size="17"></i> 내 여행</a>
+        <a href="guide.html"><i data-icon="book-open" data-size="17"></i> 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;"><i data-icon="plane" data-size="17"></i> 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#0369A1 0%,#0EA5E9 45%,#7DD3FC 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">🏝</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">🏝 베트남 · 나트랑</span>
+      <h1>나트랑</h1>
+      <p>에메랄드빛 해변 휴양 — 빈원더스·머드스파·섬투어, 가성비 최고 베트남 리조트</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 깜라인 약 5시간 직항</small></div>
+        <div class="hero-stat"><strong>💴 환율</strong><small>₫1,000(동) ≈ 55원 (2026 기준)</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 2시간 느림 (KST-2)</small></div>
+        <div class="hero-stat"><strong>🌤 추천 시기</strong><small>2~8월 건기</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
+      </div>
+      <a href="tours.html?city=나트랑" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 나트랑 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
+    <div class="container">
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>나만의 페이스로 즐기는 혼여행 코스 — 해변·빈원더스·섬투어 자유롭게</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('solo',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 나트랑 비치 & 야시장</h3><p>공항에서 시내로, 첫날은 6km 야자수 해변과 야시장으로 몸풀기</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 깜라인 국제공항 도착</h4><p>나트랑 시내까지 약 35km, 차로 40~50분. 그랩·택시 약 ₫350,000~450,000(2~2.5만원), 공항 셔틀버스는 ₫60,000. 유심·달러 환전 미리 준비</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>쩐푸(나트랑비치) 해변가 호텔 또는 시내 게스트하우스에 짐 맡기기. 혼여행은 시내 3성 호텔·호스텔이 가성비 최고</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🏖 나트랑 비치(쩐푸 해변) 산책</h4><p>6km 야자수 백사장 무료 개방. 해변 카페 코코넛 커피 ₫40,000(2,200원)로 노을 감상. 완만한 파도로 산책·수영 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍜 분짜카 & 넴느엉 저녁</h4><p>나트랑 명물 분짜카(생선어묵 쌀국수) ₫40,000, 닌호아식 넴느엉(구운 돼지고기 쌈) ₫60,000. 혼밥하기 편한 로컬 식당 많음</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:30</div><div class="tl-body"><h4>🌃 나트랑 야시장</h4><p>해변가 야시장에서 열대과일·기념품·베트남 맥주(₫20,000). 라이스페이퍼·말린 과일 구경하며 야식 순례</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>빈원더스 온종일</h3><p>해상 케이블카 타고 혼째 섬 놀이공원·워터파크로</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚡 빈원더스 케이블카</h4><p>혼째(Hon Tre) 섬으로 세계 최장급 해상 케이블카(약 3.3km). 통합권 약 ₫880,000(4.8만원)에 놀이공원·워터파크·아쿠아리움 포함. 개장 직후가 한적</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🎢 놀이공원 & 알파인코스터</h4><p>롤러코스터·대관람차·알파인코스터 등 실내외 어트랙션 무제한. 혼자여도 즐기기 좋은 구성</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍽 섬 내 점심</h4><p>파크 내 뷔페·푸드코트 ₫200,000~300,000. 바다 전망 자리에서 여유롭게</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🌊 워터파크 & 아쿠아리움</h4><p>워터슬라이드·파도풀에서 물놀이, 씨월드 아쿠아리움 관람. 수영복·여벌 옷 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>💆 케이블카 하산 & 마사지</h4><p>시내 복귀 후 하루 피로를 발 마사지 60분 ₫250,000(1.4만원)으로. 혼여행 힐링 코스</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>혼문 섬 스노클링 & 머드 스파</h3><p>에메랄드빛 바다 스노클링 후 미네랄 머드 온천으로 마무리</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:00</div><div class="tl-body"><h4>🚤 4섬 보트투어 출발</h4><p>혼문·혼몬·혼땀 등을 도는 아일랜드 호핑 투어 약 ₫500,000~700,000(픽업·점심 포함). 혼여행자도 그룹으로 참여 편함</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🤿 혼문(Hon Mun) 스노클링</h4><p>해양보호구역의 산호초·열대어. 장비 대여 포함. 나트랑 최고의 투명한 바다에서 스노클링</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍤 보트 위 해산물 점심</h4><p>투어 포함 선상 뷔페. 신선한 해산물·열대과일. 배 위 라이브·수영 타임도 재미</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>♨ 탑바(Thap Ba) 머드 스파</h4><p>나트랑 대표 온천 머드스파. 개인탕 코스 ₫250,000~. 미네랄 머드에 몸 담그고 온천풀·자쿠지까지. 수영복 지참</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍳 시내 복귀 & 반쎄오 저녁</h4><p>바삭한 반쎄오(베트남 부침개) ₫50,000, 스프링롤·베트남 커피로 하루 마무리</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>포나가르 탑 → 롱선사 → 쇼핑 → 귀국</h3><p>마지막 날 참파 유적과 대불을 보고 기념품 쇼핑</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🗼 포나가르 참 탑</h4><p>참파 왕국의 힌두 유적. 입장료 ₫30,000. 언덕 위에서 나트랑 강·시내 조망. 오전이 덜 덥고 한적</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:30</div><div class="tl-body"><h4>🛕 롱선사 & 대불</h4><p>하얀 좌불 대불(높이 약 24m)로 유명한 사원. 무료 개방. 계단 오르면 시내 전망. 나트랑 대성당도 도보권</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>⛪ 나트랑 대성당(스톤처치)</h4><p>돌로 지은 고딕 양식 성당. 입장 무료(미사 시간 외). 언덕 위 유럽풍 사진 명소</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🛍 빈컴·롯데마트 쇼핑</h4><p>콩카페 원두·G7 커피·말린 과일·라이스페이퍼 등 기념품. 캐리어 채우기 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>깜라인 공항까지 그랩 40~50분. 국제선 3시간 전 도착 권장. 야간 항공편이 많아 시내 마사지 후 이동도 여유</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>3박 4일 · 환율 ₫1,000 = 55원 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">150,000 ~ 480,000원</span><span class="budget-note">LCC 특가 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박)</h4><span class="budget-range">60,000 ~ 240,000원</span><span class="budget-note">시내 3성 ~ 해변 리조트</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚕</span><div class="budget-info"><h4>교통 (그랩·택시)</h4><span class="budget-range">50,000 ~ 90,000원</span><span class="budget-note">공항 왕복·섬투어 이동 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">60,000 ~ 130,000원</span><span class="budget-note">1끼 ₫40,000~150,000 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">90,000 ~ 140,000원</span><span class="budget-note">빈원더스·섬투어·머드스파</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·마사지</h4><span class="budget-range">40,000 ~ 120,000원</span><span class="budget-note">커피·마사지·기념품</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 1인 총 예상 경비</span>
+            <span class="total-amount">450,000 ~ 1,200,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+시내 3성) ~ 여유형(FSC+해변 리조트) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>Mojzo Inn Nha Trang</h3>
+              <p class="hotel-location">📍 시내 중심 · 나트랑비치 도보 7분</p>
+              <p>감각적인 부티크 호스텔. 도미토리·1인실 선택 가능. 정성스러운 조식과 친절한 스태프로 혼여행자 평이 좋음</p>
+              <div class="hotel-price">1박 <strong>₫300,000~600,000</strong> (~17,000원~)</div>
+              <div class="hotel-tags"><span>도미토리</span><span>조식</span><span>Wi-Fi</span><span>시내 중심</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Mojzo%20Inn%20Nha%20Trang" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>Liberty Central Nha Trang Hotel</h3>
+              <p class="hotel-location">📍 쩐푸 해변 도보 3분</p>
+              <p>가성비 4성 호텔. 루프탑 인피니티풀에서 해변 조망. 혼여행에도 부담 없는 가격에 위치·시설 균형이 좋음</p>
+              <div class="hotel-price">1박 <strong>₫1,000,000~1,600,000</strong> (~55,000원~)</div>
+              <div class="hotel-tags"><span>루프탑풀</span><span>오션뷰</span><span>Wi-Fi</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Liberty%20Central%20Nha%20Trang%20Hotel" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">감성형</span></div>
+            <div class="hotel-body">
+              <h3>Potique Hotel Nha Trang</h3>
+              <p class="hotel-location">📍 시내 중심 · 해변 도보 5분</p>
+              <p>세련된 부티크 5성 호텔. 스카이풀·루프탑 바·스파 완비. 혼자만의 호캉스 힐링에 최적</p>
+              <div class="hotel-price">1박 <strong>₫1,400,000~2,200,000</strong> (~77,000원~)</div>
+              <div class="hotel-tags"><span>스카이풀</span><span>루프탑 바</span><span>스파</span><span>조식</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Potique%20Hotel%20Nha%20Trang" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Nha%20Trang" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Nha%20Trang" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>같이 먹고 놀고 즐기는 나트랑 완전 정복 — 빈원더스·섬투어·야시장 풀코스</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('friends',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 나트랑 비치 & 야시장</h3><p>나트랑 첫날, 해변과 야시장에서 밤늦게까지 놀기</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 깜라인 국제공항 도착</h4><p>그랩 대형차(4~7인승)로 시내 이동 약 ₫450,000(2.5만원), 나눠 내면 부담 적음. 짐 맡기고 바로 출발</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🏖 나트랑 비치 물놀이</h4><p>친구들과 해변에서 수영·비치발리볼. 선베드·파라솔 대여 ₫50,000. 제트스키·패러세일링 등 액티비티도 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🦐 해산물 저녁</h4><p>나트랑 로컬 해산물 식당에서 랍스터·조개·새우 구이. 1인 ₫250,000~400,000으로 푸짐하게. 넴느엉도 곁들이기</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:30</div><div class="tl-body"><h4>🌃 나트랑 야시장 & 스카이 바</h4><p>해변가 야시장에서 기념품·야식·베트남 맥주(₫20,000). 이어서 해변 루프탑 스카이 바에서 칵테일 한잔</p></div></div>
+            <div class="tl-item"><div class="tl-time">22:00</div><div class="tl-body"><h4>🍺 클럽·라이브 바 (선택)</h4><p>쩐푸 해변가 클럽·라운지에서 친구끼리 밤 문화 즐기기. 세일러 클럽 등 유명. 소지품·귀가 안전 유의</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>빈원더스 온종일</h3><p>케이블카·놀이공원·워터파크 풀코스</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚡 빈원더스 케이블카</h4><p>세계 최장급 해상 케이블카(약 3.3km)로 혼째 섬 입장. 통합권 약 ₫880,000(4.8만원). 케이블카 자체가 포토존</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🎢 놀이기구 스릴 만끽</h4><p>롤러코스터·자이언트 드롭·알파인코스터. 친구끼리 스릴 어트랙션 무제한. 대관람차에서 섬 전경도</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍽 섬 내 점심</h4><p>파크 내 뷔페·푸드코트 ₫250,000. 바다 전망 자리에서 든든하게 충전</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🌊 워터파크 물놀이</h4><p>파도풀·워터슬라이드에서 신나게. 수영복·방수팩 챙기기. 아쿠아리움 씨월드도 함께</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍻 시내 복귀 & 루프탑 바</h4><p>하산 후 해변 루프탑 바에서 나트랑 야경 + 칵테일(₫120,000). 하루 총평 나누기</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>혼문 섬 호핑 파티 투어</h3><p>스노클링·선상 파티·머드 스파로 하루 종일 물놀이</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:00</div><div class="tl-body"><h4>🚤 4섬 보트투어 출발</h4><p>혼문·혼몬·혼땀 등을 도는 아일랜드 호핑 투어 약 ₫500,000~700,000. 친구끼리 그룹으로 신남. 픽업·점심 포함</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🤿 혼문 스노클링</h4><p>해양보호구역 산호초·열대어. 장비 대여 포함. 투명한 에메랄드 바다에서 인생샷</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍤 선상 해산물 파티</h4><p>보트 위 뷔페 + 라이브·수상 바(플로팅 바)에서 물 위 건배. 나트랑 보트투어의 시그니처</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>♨ 아이리조트(I-Resort) 머드 스파</h4><p>정원식 온천 머드스파. 단체탕 코스 ₫300,000~. 미네랄 머드·온천풀·워터슬라이드까지. 여행 피로 싹</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍲 시내 복귀 & 분짜카 저녁</h4><p>나트랑 명물 분짜카·반쎄오·스프링롤. 이후 야시장에서 2차 야식</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>대성당·시내 → 쇼핑 → 귀국</h3><p>마지막 날은 시내 명소와 쇼핑으로 여유롭게</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>⛪ 나트랑 대성당 & 롱선사</h4><p>돌 성당(스톤처치)에서 유럽풍 사진, 이어 롱선사 대불(높이 약 24m). 둘 다 무료. 시내 도보·그랩 이동</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>☕ 콩카페 & 브런치</h4><p>베트남 명물 콩카페 코코넛 커피(₫45,000). 반미·분짜로 마지막 브런치</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🛍 빈컴·롯데마트 쇼핑</h4><p>G7 커피·콩카페 원두·말린 망고·라이스페이퍼 등 기념품 대량 구매. 면세·환급 확인</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>깜라인 공항까지 그랩 40~50분. 국제선 3시간 전 도착. 야간편 이용 시 저녁까지 시내 여유</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>3박 4일 · 빈원더스·섬투어 포함 · 2인 기준으로 나눈 숙박비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">150,000 ~ 480,000원</span><span class="budget-note">LCC 특가 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 1인당)</h4><span class="budget-range">70,000 ~ 210,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚡</span><div class="budget-info"><h4>빈원더스·섬투어</h4><span class="budget-range">90,000 ~ 130,000원</span><span class="budget-note">통합권·보트투어 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">90,000 ~ 170,000원</span><span class="budget-note">해산물·맛집 4일 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚕</span><div class="budget-info"><h4>교통 (그랩)</h4><span class="budget-range">40,000 ~ 80,000원</span><span class="budget-note">공항 왕복·시내 이동 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·마사지·유흥</h4><span class="budget-range">60,000 ~ 180,000원</span><span class="budget-note">스파·야시장·기념품</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">500,000 ~ 1,250,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+2인 쉐어) ~ 여유형(FSC+비치 리조트+투어 풀옵션)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>쩐푸 해변·시내 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>Havana Nha Trang Hotel</h3>
+              <p class="hotel-location">📍 쩐푸 해변 바로 앞</p>
+              <p>해변가 대형 호텔. 스카이라이트 루프탑 풀·비치클럽으로 유명. 트윈·트리플룸 넉넉해 친구 여행에 인기</p>
+              <div class="hotel-price">2인 1박 <strong>₫1,300,000~2,000,000</strong> (1인당 ~36,000원~)</div>
+              <div class="hotel-tags"><span>루프탑풀</span><span>오션뷰</span><span>Wi-Fi</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Havana%20Nha%20Trang%20Hotel" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>Sheraton Nha Trang Hotel &amp; Spa</h3>
+              <p class="hotel-location">📍 쩐푸 해변 정면 5성</p>
+              <p>해변가 대표 5성 호텔. 인피니티풀·스카이바·스파 완비. 트윈룸 뷰 좋고 위치 최고라 친구 호캉스에 딱</p>
+              <div class="hotel-price">2인 1박 <strong>₫2,200,000~3,200,000</strong> (1인당 ~61,000원~)</div>
+              <div class="hotel-tags"><span>인피니티풀</span><span>스카이바</span><span>스파</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Sheraton%20Nha%20Trang%20Hotel%20Spa" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">리조트</span></div>
+            <div class="hotel-body">
+              <h3>Mia Resort Nha Trang</h3>
+              <p class="hotel-location">📍 남쪽 프라이빗 비치</p>
+              <p>절벽 위 프라이빗 비치 럭셔리 리조트. 풀빌라·오션뷰룸. 친구끼리 특별한 호캉스를 원할 때</p>
+              <div class="hotel-price">2인 1박 <strong>₫5,000,000~8,000,000</strong> (1인당 ~140,000원~)</div>
+              <div class="hotel-tags"><span>풀빌라</span><span>프라이빗 비치</span><span>스파</span><span>조식</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Mia%20Resort%20Nha%20Trang" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Nha%20Trang" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Nha%20Trang" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>아이와 함께하는 나트랑 — 리조트 수영장·빈원더스·워터파크 3박 4일</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 리조트 수영장 & 나트랑 비치</h3><p>리조트에 짐 풀고 첫날은 수영장·해변에서 여유롭게</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 깜라인 국제공항 도착</h4><p>공항에서 나트랑 리조트까지 약 35km, 차로 40~50분. 짐 많은 가족은 그랩 7인승(₫500,000) 또는 리조트 픽업 추천</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🏨 리조트 체크인 & 수영장</h4><p>해변 리조트에서 아이들과 키즈풀·워터슬라이드. 도착 첫날은 무리하지 않고 리조트 안에서</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🏖 나트랑 비치 모래놀이</h4><p>완만한 백사장으로 아이 물놀이·모래성 쌓기 안전. 선베드 대여 ₫50,000. 노을 감상</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍲 로컬 식당 가족 저녁</h4><p>쌀국수(퍼)·분짜카·볶음밥 등 아이도 잘 먹는 메뉴. 4인 ₫400,000~600,000. 향신료 빼달라 요청 가능</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>빈원더스 — 아이가 좋아하는 하루</h3><p>해상 케이블카·놀이공원·워터파크·아쿠아리움 가족 공략</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚡 빈원더스 케이블카</h4><p>바다 위를 건너는 케이블카는 아이들이 가장 좋아하는 코스. 통합권 성인 약 ₫880,000 / 어린이(1~1.4m) 약 ₫650,000. 개장 직후가 한적</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🎠 키즈 존 & 놀이공원</h4><p>회전목마·범퍼카 등 유아 어트랙션부터 대관람차까지. 키 제한 확인 후 온 가족 함께</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍽 섬 내 점심</h4><p>파크 뷔페·푸드코트(어른 ₫250,000 / 아동 할인). 유아식·에어컨 있는 실내 자리 활용</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🌊 워터파크 & 아쿠아리움</h4><p>키즈 전용 얕은 풀·워터슬라이드에서 물놀이, 씨월드 아쿠아리움에서 상어·가오리 구경. 수영복·여벌 옷·아쿠아슈즈 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🌆 리조트 복귀 & 휴식</h4><p>하산 후 리조트로. 아이 피곤하면 일찍 저녁·취침해 컨디션 조절. 룸서비스 활용도 좋음</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>머드 스파 & 시내 명소</h3><p>온 가족 미네랄 머드 온천 후 포나가르 탑·대불 구경</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>♨ 아이리조트(I-Resort) 가족 머드 스파</h4><p>정원식 온천 머드스파. 가족탕 코스 ₫300,000~. 따뜻한 미네랄 머드·온천풀·키즈 워터슬라이드까지 아이도 즐김</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🗼 포나가르 참 탑</h4><p>참파 왕국 힌두 유적. 입장료 ₫30,000. 언덕에서 강·시내 조망. 아이와 짧게 둘러보기 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍜 점심 & 리조트 낮잠</h4><p>분짜카·반쎄오로 점심. 한낮 더위엔 리조트 복귀 후 수영장·낮잠으로 아이 컨디션 조절</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🛕 롱선사 & 대불</h4><p>하얀 좌불 대불(높이 약 24m). 무료 개방. 계단이 있으니 어린 아이는 아기띠 권장. 나트랑 대성당도 도보권</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🌃 야시장 & 가족 저녁</h4><p>해변가 야시장에서 열대과일·간식 구경. 아이 좋아하는 스프링롤·볶음밥으로 저녁</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>대성당 → 쇼핑 → 귀국</h3><p>가볍게 명소 하나 보고 쇼핑 후 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>⛪ 나트랑 대성당(스톤처치)</h4><p>돌로 지은 고딕 양식 성당. 입장 무료(미사 시간 외). 언덕 위 유럽풍 가족 사진 명소. 30분이면 관람</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:30</div><div class="tl-body"><h4>🛍 빈컴·롯데마트 가족 쇼핑</h4><p>G7 커피·말린 과일·라이스페이퍼·아이 간식. 4인 캐리어 채우기 좋음. 냉방·유아차로 아이도 편함</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍽 마지막 점심 & 커피</h4><p>콩카페 코코넛 커피와 반미·쌀국수로 마지막 나트랑 밥. 짐 정리 후 여유롭게</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이 동반 가족은 3시간 전 공항 도착 권장. 그랩 7인승 이용 시 짐·유모차 여유롭게</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>3박 4일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">600,000 ~ 1,700,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 리조트)</h4><span class="budget-range">300,000 ~ 900,000원</span><span class="budget-note">4인 패밀리룸/커넥팅룸</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚡</span><div class="budget-info"><h4>빈원더스 (4인)</h4><span class="budget-range">250,000 ~ 330,000원</span><span class="budget-note">통합권 어른·어린이 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>머드스파·관광 (4인)</h4><span class="budget-range">120,000 ~ 200,000원</span><span class="budget-note">머드스파·포나가르·대불</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">250,000 ~ 450,000원</span><span class="budget-note">4인 1끼 ₫400,000~800,000</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚕</span><div class="budget-info"><h4>교통·쇼핑 (4인)</h4><span class="budget-range">120,000 ~ 250,000원</span><span class="budget-note">공항 왕복·그랩·기념품</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">1,640,000 ~ 3,830,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+4성 호텔) ~ 여유형(FSC+비치 리조트+빈원더스 풀옵션)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>키즈풀·패밀리룸·해변 접근성이 좋은 리조트</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>Muong Thanh Luxury Nha Trang</h3>
+              <p class="hotel-location">📍 쩐푸 해변가</p>
+              <p>해변 바로 앞 대형 호텔. 대형 수영장·패밀리룸·조식 뷔페 완비. 시내·해변 접근이 좋아 아이 동반 이동 편리</p>
+              <div class="hotel-price">패밀리룸 1박 <strong>₫1,400,000~2,200,000</strong> (~77,000원~)</div>
+              <div class="hotel-tags"><span>대형풀</span><span>패밀리룸</span><span>조식 뷔페</span><span>해변가</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Muong%20Thanh%20Luxury%20Nha%20Trang" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>Vinpearl Resort Nha Trang</h3>
+              <p class="hotel-location">📍 혼째 섬 · 무료 셔틀·케이블카</p>
+              <p>빈원더스와 연계된 5성 리조트. 워터파크·키즈클럽·프라이빗 비치로 섬 전체가 놀이터. 투숙객 빈원더스 편의 특전</p>
+              <div class="hotel-price">패밀리룸 1박 <strong>₫3,000,000~5,000,000</strong> (~165,000원~)</div>
+              <div class="hotel-tags"><span>워터파크</span><span>키즈클럽</span><span>프라이빗 비치</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Vinpearl%20Resort%20Nha%20Trang" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">키즈 특화</span></div>
+            <div class="hotel-body">
+              <h3>Amiana Resort Nha Trang</h3>
+              <p class="hotel-location">📍 북쪽 프라이빗 비치</p>
+              <p>천연 해수 풀·키즈클럽·머드 스파를 갖춘 리조트. 넓은 정원과 커넥팅룸으로 대가족도 OK. 조용한 힐링 휴양에 최적</p>
+              <div class="hotel-price">패밀리룸 1박 <strong>₫3,500,000~5,500,000</strong> (~192,000원~)</div>
+              <div class="hotel-tags"><span>천연 해수풀</span><span>키즈클럽</span><span>머드 스파</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Amiana%20Resort%20Nha%20Trang" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Nha%20Trang" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Nha%20Trang" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 항공권
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">✈ 항공권</span>
+        <h2>인천 ↔ 나트랑(깜라인) 항공권</h2>
+        <p>비행시간 약 5시간 · 인천 ICN → 깜라인 CXR · 공항→나트랑 시내 약 35km 40~50분</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">✈ 비엣젯항공</span></td><td>LCC 직항</td><td>5h 10m</td><td class="price-cell">139,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CXR/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 제주항공</span></td><td>LCC 직항</td><td>5h 10m</td><td class="price-cell">169,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CXR/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 티웨이항공</span></td><td>LCC 직항</td><td>5h 15m</td><td class="price-cell">169,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CXR/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 진에어</span></td><td>LCC 직항</td><td>5h 10m</td><td class="price-cell">179,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CXR/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 베트남항공</span></td><td>FSC 직항</td><td>5h 00m</td><td class="price-cell">330,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CXR/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>5h 00m</td><td class="price-cell">460,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/CXR/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aff-cta">
+        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/CXR/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
+        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=CXR&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
+        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DCXR&leg2=from%3DCXR%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>나트랑 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">🛂</span><h3>무비자 45일</h3><p>한국인은 45일 무비자 입국. 여권 유효기간 6개월 이상 확인. 여권만으로 간편 입국, E-VISA 불필요. 왕복 항공권·숙소 예약 정보는 준비</p></div>
+        <div class="tip-card"><span class="tip-icon">💵</span><h3>환전은 달러 → 동</h3><p>한국에서 미국 달러(USD)로 환전 후 현지에서 베트남 동(VND)으로 재환전이 가장 유리. 공항보다 시내 금은방 환율이 좋음. 소액 현금 필수</p></div>
+        <div class="tip-card"><span class="tip-icon">🚗</span><h3>그랩(Grab) 앱 필수</h3><p>택시 바가지 걱정 없는 차량·바이크 호출 앱. 출발 전 다운로드·카드 등록. 요금 미리 확정돼 안심. 그랩푸드로 배달도 가능</p></div>
+        <div class="tip-card"><span class="tip-icon">🚡</span><h3>빈원더스는 케이블카로</h3><p>혼째 섬까지 세계 최장급 해상 케이블카로 입장. 통합권은 온라인 사전 예매가 저렴하고 개장 직후가 한적. 워터파크용 수영복·여벌 옷 지참</p></div>
+        <div class="tip-card"><span class="tip-icon">♨</span><h3>머드 스파 코스</h3><p>탑바·아이리조트·100에그 등에서 미네랄 머드+온천풀 체험. 개인탕/단체탕 선택 가능. 수영복·갈아입을 옷·방수팩 챙기기. 머드 후 온천풀로 마무리</p></div>
+        <div class="tip-card"><span class="tip-icon">🌧</span><h3>우기(9~12월) 주의</h3><p>9~12월 우기엔 비·파도가 많아 섬투어·보트투어 결항이 잦음. 건기(2~8월)가 최적. 우기 여행이라면 실내 위주 일정과 여행자보험을 챙기기</p></div>
+        <div class="tip-card"><span class="tip-icon">🔌</span><h3>콘센트·전압 220V</h3><p>전압 220V로 한국과 같음. 콘센트는 A형(11자)·C형(둥근) 겸용이 많아 한국 플러그가 대체로 그대로 들어감. 멀티어댑터 하나면 더 안심</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="kyoto.html">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="bangkok.html">방콕</a>
+            <a href="danang.html">다낭</a>
+            <a href="bali.html">발리</a>
+            <a href="singapore.html">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="jeju.html">제주도</a>
+            <a href="busan.html">부산</a>
+            <a href="gangneung.html">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트래블코스트 · TravelCost</p>
+        <p style="margin-top:6px"><a href="/guide" style="color:inherit;opacity:.85">이용가이드</a> · <a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
+    }
+  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+  <script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=12.238&longitude=109.196'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FHo_Chi_Minh';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
+<script src="/icons.js" defer></script>
+<script src="/nav.js" defer></script>
+<script src="/bizfooter.js" defer></script>
+</body>
+</html>

@@ -577,6 +577,7 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
 .cat-tag.sea    { background: rgba(5,150,105,0.1); color: #059669; }
 .cat-tag.domestic { background: rgba(37,99,235,0.1); color: #2563EB; }
 .cat-tag.europe { background: rgba(124,58,237,0.1); color: #7C3AED; }
+.cat-tag.china  { background: rgba(220,38,38,0.1); color: #DC2626; }
 
 .dest-duration {
   font-size: 0.75rem;

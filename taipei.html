@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="타이베이 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
+  <title>타이베이 여행 가이드 | 트래블코스트</title>
+  <meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://travelcost.co.kr/taipei">
+<meta property="og:image" content="https://travelcost.co.kr/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travelcost.co.kr/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "타이베이",
+    "url": "https://travelcost.co.kr/taipei",
+    "description": "타이베이 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
+    "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
+    "geo": { "@type": "GeoCoordinates", "latitude": 25.033, "longitude": 121.565 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트래블코스트">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;"><i data-icon="ticket" data-size="17"></i> 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;"><i data-icon="briefcase" data-size="17"></i> 내 여행</a>
+        <a href="guide.html"><i data-icon="book-open" data-size="17"></i> 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;"><i data-icon="plane" data-size="17"></i> 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#B91C1C 0%,#EF4444 45%,#FCA5A5 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">🏮</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">🏮 대만 · 타이베이</span>
+      <h1>타이베이</h1>
+      <p>가까운 미식·야시장 천국 — 지우펀·스펀·101, 2박3일로 알찬 대만 감성</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 타오위안 약 2시간 40분</small></div>
+        <div class="hero-stat"><strong>💴 환율</strong><small>NT$1(대만달러) ≈ 43원 (2026 기준)</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 1시간 느림 (KST-1)</small></div>
+        <div class="hero-stat"><strong>🌤 추천 시기</strong><small>10~4월 (여름 무덥고 태풍)</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
+      </div>
+      <a href="tours.html?city=타이베이" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 타이베이 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
+    <div class="container">
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>나만의 페이스로 즐기는 미식 혼여행 — 야시장·근교·전망대 자유롭게</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 시먼딩 & 룽산사</h3><p>공항 도착 후 시내로 이동, 저녁은 타이베이 젊음의 거리에서</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 타오위안 공항 도착</h4><p>공항 MRT(NT$150, 약 40분)로 타이베이역 직행, 또는 국광 리무진 버스(NT$140, 60분). 이지카드부터 구매</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>시먼딩·타이베이역 도보권 숙소에 짐 맡기기. 혼여행은 시먼딩 호스텔·게스트하우스가 가성비 최고</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🛕 룽산사(용산사)</h4><p>1738년 창건된 타이베이 최고(最古) 사원. 입장 무료. 소원 비는 향불과 붉은 등이 이국적. 인근 화시제 야시장 연계</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🛍 시먼딩 거리</h4><p>'타이베이의 명동'. 스트리트 패션·굿즈·화장품 쇼핑. 아이멍(阿宗) 곱창국수(NT$70)·버블티 필수 맛보기</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🍢 닝샤 야시장 먹방</h4><p>현지인 애정 야시장. 굴전(NT$70)·지파이(닭튀김 NT$70)·후추빵. 혼자 하나씩 사서 걸으며 야식 산책</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>지우펀 + 스펀 근교</h3><p>홍등 골목과 천등 날리기 — 타이베이 근교 감성 원데이</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🚌 지우펀 이동</h4><p>루이팡역까지 기차(NT$76, 약 50분) → 버스/택시로 지우펀. 혼자면 근교 원데이 투어(약 NT$1,000~1,500)가 편리</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:30</div><div class="tl-body"><h4>🏮 지우펀 홍등 골목</h4><p>센과 치히로 감성의 계단길. 아메이 찻집에서 우롱차·다과(NT$300~). 지산제 골목에서 땅콩 아이스롤(NT$50)</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🚂 스펀 천등 날리기</h4><p>기찻길 위 마을. 소원 적은 천등 띄우기(1개 NT$150~200). 스펀 폭포도 도보권. 열차 지날 때 인증샷 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🪨 예류 지질공원 (선택)</h4><p>여왕머리 바위로 유명한 기암 해안. 입장 NT$120. 일정 여유 있으면 근교투어에 함께 묶어 방문</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🍜 시내 복귀 & 우육면 저녁</h4><p>타이베이 복귀 후 진한 우육면(NT$150~250). 린둥팡·라오산둥 같은 노포가 혼밥하기 좋음</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>타이베이101 → 귀국</h3><p>마지막 날 랜드마크 전망대와 마지막 미식·쇼핑</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🥟 딘타이펑 아침 겸 브런치</h4><p>101 인근 딘타이펑 본점급 매장에서 샤오롱바오(1롱 NT$220~). 오픈런하면 대기 짧음. 혼자도 1인분 주문 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🏙 타이베이101 전망대</h4><p>89층 전망대(NT$600). 초고속 엘리베이터·풍댐퍼 관람. 지하 푸드코트·쇼핑몰도 구경. 맑은 날 시내 조망</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍰 마지막 망고빙수 & 펑리수 쇼핑</h4><p>스무시하우스 망고빙수(NT$220~). 서니힐즈·자이자이 펑리수(파인애플케이크)로 기념품 쇼핑. ¥면세는 없음</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>타이베이역 → 공항 MRT(NT$150, 40분). 비행 2.5~3시간 전 공항 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>2박 3일 · 환율 NT$1 = 43원 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">149,000 ~ 400,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박)</h4><span class="budget-range">60,000 ~ 220,000원</span><span class="budget-note">호스텔 ~ 비즈니스 호텔</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (3일)</h4><span class="budget-range">20,000 ~ 45,000원</span><span class="budget-note">공항 MRT·이지카드·근교 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">70,000 ~ 130,000원</span><span class="budget-note">1끼 NT$100~350 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">20,000 ~ 50,000원</span><span class="budget-note">101 전망대·근교투어 등</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">40,000 ~ 120,000원</span><span class="budget-note">펑리수·버블티·기념품</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 1인 총 예상 경비</span>
+            <span class="total-amount">359,000 ~ 965,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+호스텔) ~ 여유형(FSC+비즈니스 호텔) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>미앤더 타이베이 호스텔</h3>
+              <p class="hotel-location">📍 타이베이역·시먼딩 도보권</p>
+              <p>디자인 호스텔. 깔끔한 도미토리·1인실. 공용 라운지에서 여행자 교류. 공항 MRT·시먼딩 접근 최고</p>
+              <div class="hotel-price">1박 <strong>NT$700~1,300</strong> (~30,000원~)</div>
+              <div class="hotel-tags"><span>도미토리</span><span>공용라운지</span><span>Wi-Fi</span><span>코인 세탁</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Taipei" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>체크인 타이베이 시먼딩</h3>
+              <p class="hotel-location">📍 시먼역 도보 3분</p>
+              <p>시먼딩 한복판 부티크 호텔. 1인 싱글룸 알찬 구성. 야시장·쇼핑거리 바로 앞이라 혼여행 동선 최적</p>
+              <div class="hotel-price">1박 <strong>NT$1,800~2,800</strong> (~77,000원~)</div>
+              <div class="hotel-tags"><span>싱글룸</span><span>시먼딩 중심</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Taipei" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
+            <div class="hotel-body">
+              <h3>시티인 호텔 타이베이역</h3>
+              <p class="hotel-location">📍 타이베이역 도보 3분</p>
+              <p>비즈니스 호텔의 정석. 청결한 시설·조식 제공. 공항 MRT·기차 접근 최고로 근교 당일치기에 편리</p>
+              <div class="hotel-price">1박 <strong>NT$2,500~3,800</strong> (~108,000원~)</div>
+              <div class="hotel-tags"><span>1인실</span><span>조식</span><span>Wi-Fi</span><span>편의점 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Taipei" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Taipei" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Taipei" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>같이 먹고 찍고 즐기는 타이베이 감성 여행 — 지우펀·야시장·101 필수</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 시먼딩 & 스린 야시장</h3><p>타이베이 도착 첫날, 쇼핑거리와 최대 야시장 먹방 투어</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 타오위안 공항 도착</h4><p>공항 MRT(NT$150, 40분)로 타이베이역 이동. 짐 맡기고 바로 출발. 이지카드 인당 1장씩 구매</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🛍 시먼딩 쇼핑 & 인생샷</h4><p>스트리트 패션·굿즈·아이스크림. 아이멍 곱창국수(NT$70)·버블티로 워밍업. 네온 거리 배경 단체 사진</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍧 스린 야시장 먹방</h4><p>타이베이 최대 야시장. 지파이(초대형 닭튀김 NT$85)·굴전·후추빵·지단빙. 친구랑 나눠 먹으면 종류 다 정복</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:30</div><div class="tl-body"><h4>🎯 야시장 게임 & 간식</h4><p>스린 지하 먹자골목·새우 낚시·사격 게임. 대만식 소시지·펑리수 아이스롤로 야식 마무리</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:30</div><div class="tl-body"><h4>🍺 시내 복귀 & 한잔</h4><p>숙소 근처 편의점 대만 맥주(타이완비어)·간식으로 첫날 총평. 다음날 근교투어 위해 일찍 취침</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>예류 + 지우펀 + 스펀 원데이</h3><p>타이베이 근교 3대 명소를 하루에 — 근교투어 풀코스</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:00</div><div class="tl-body"><h4>🚐 근교 원데이 투어 출발</h4><p>예류+지우펀+스펀 묶은 반나절/종일 투어(1인 NT$1,000~1,700)가 가장 효율적. 시내 픽업으로 이동 편함</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🪨 예류 지질공원</h4><p>여왕머리 바위 등 기암 해안(입장 NT$120). 바다 배경 인생샷. 여왕머리 앞은 줄이 길어 오전 방문이 유리</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🏮 지우펀 홍등 골목 & 점심</h4><p>계단길 홍등·찻집. 아메이 찻집(NT$300~)에서 야경 감상. 지산제 먹거리·타로볼 디저트로 점심</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🚂 스펀 천등 날리기</h4><p>기찻길 위에서 소원 천등(1개 NT$150~200) 띄우고 영상 촬영. 스펀 폭포까지 도보 산책도 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🍜 시내 복귀 & 훠궈 저녁</h4><p>타이베이 복귀 후 마라훠궈·우육면으로 든든하게. 친구끼리 훠궈 뷔페(1인 NT$400~600)도 인기</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>타이베이101 + 마오콩 or 쇼핑</h3><p>랜드마크 전망대와 곤돌라, 마지막 쇼핑 중 선택</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🥟 딘타이펑 브런치</h4><p>샤오롱바오(1롱 NT$220~)·새우완탕. 오픈런하면 대기 짧음. 여럿이면 다양한 메뉴 나눠 먹기 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🏙 타이베이101 전망대</h4><p>89층 전망대(NT$600). 초고속 엘리베이터·풍댐퍼. 신이 상권 백화점·쇼핑몰에서 함께 쇼핑</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🚠 마오콩 곤돌라 (선택A)</h4><p>동물원역→마오콩 곤돌라(NT$120). 크리스탈 캐빈은 바닥 투명. 산 위 찻집에서 우롱차 한 잔</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🍰 망고빙수 & 펑리수 쇼핑 (선택B)</h4><p>스무시하우스 망고빙수(NT$220~). 서니힐즈 펑리수·누가크래커로 선물 쇼핑. 시먼딩 마지막 쇼핑도 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>타이베이역 공항 MRT(NT$150, 40분) 또는 리무진. 야간 항공이면 저녁 야시장 한 바퀴 더 돌기 가능</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>2박 3일 · 근교투어 포함 · 2인 기준으로 나눈 숙박비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">149,000 ~ 400,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박 · 1인당)</h4><span class="budget-range">55,000 ~ 160,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚐</span><div class="budget-info"><h4>근교투어·체험</h4><span class="budget-range">45,000 ~ 90,000원</span><span class="budget-note">예류·지우펀·스펀 원데이</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">90,000 ~ 160,000원</span><span class="budget-note">야시장·훠궈 3일 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통</h4><span class="budget-range">25,000 ~ 45,000원</span><span class="budget-note">MRT·공항 이동 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 180,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">414,000 ~ 1,035,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+2인 쉐어) ~ 여유형(FSC+4성 호텔+투어 풀옵션)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>시먼딩·타이베이역 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>릴랙스 호텔 타이베이역</h3>
+              <p class="hotel-location">📍 타이베이역 도보 5분</p>
+              <p>깔끔한 디자인 비즈니스 호텔. 트윈룸 가성비 최고. 공항 MRT·기차 접근성 좋아 근교·시내 모두 편리</p>
+              <div class="hotel-price">2인 1박 <strong>NT$2,200~3,300</strong> (1인당 ~47,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>Wi-Fi</span><span>편의점 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Taipei" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>저스트 슬립 시먼딩</h3>
+              <p class="hotel-location">📍 시먼역 도보 3분</p>
+              <p>트렌디한 대만 인기 호텔 체인. 시먼딩 접근 최고, 야시장·쇼핑거리 도보권. 친구끼리 트윈/트리플 인기</p>
+              <div class="hotel-price">2인 1박 <strong>NT$3,500~5,000</strong> (1인당 ~75,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>시먼딩 중심</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Taipei" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">역 앞 특화</span></div>
+            <div class="hotel-body">
+              <h3>시저 파크 호텔 타이베이</h3>
+              <p class="hotel-location">📍 타이베이역 도보 1분</p>
+              <p>타이베이역 바로 앞 5성 호텔. 넓은 객실·조식 뷔페. 공항 이동·근교 당일치기 동선 압도적으로 편리</p>
+              <div class="hotel-price">2인 1박 <strong>NT$5,000~7,500</strong> (1인당 ~108,000원~)</div>
+              <div class="hotel-tags"><span>역 앞 1분</span><span>조식 뷔페</span><span>트윈룸</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Taipei" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Taipei" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Taipei" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>아이와 함께하는 타이베이 — 근교·야시장·동물원 3박 4일</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 국립고궁박물원</h3><p>세계 4대 박물관으로 아이들 첫인사 — 옥배추·동파육이 기다린다</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 타오위안 공항 도착</h4><p>짐 많은 가족은 국광 리무진 버스(1인 NT$140) 추천. 공항 MRT도 유모차 이동 편리. 이지카드 구매</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🏛 국립고궁박물원</h4><p>중화 문화 보물 70만 점. 입장 어른 NT$350 / 어린이 무료. 옥배추·동파육 조각이 하이라이트. 약 2시간</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍜 스린 야시장 저녁</h4><p>박물관 인근 스린 야시장에서 가족 저녁. 지파이·굴전·과일주스. 아이가 좋아하는 대만식 소시지·펑리수</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🏨 숙소 체크인 & 휴식</h4><p>타이베이역·중샤오푸싱 가족룸으로. 아이 일찍 재워 내일 근교 나들이 위한 충전</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>예류 + 지우펀 + 스펀 근교</h3><p>기암 해안·홍등 골목·천등 날리기 — 아이도 신나는 근교 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚐 근교 원데이 투어</h4><p>아이 동반은 전세/그룹 투어(4인 차량 대절 NT$4,000~6,000)가 편함. 시내 픽업으로 이동 부담 최소화</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🪨 예류 지질공원</h4><p>여왕머리 등 기암 해안(입장 NT$120, 어린이 할인). 넓은 산책로에서 아이와 바위 구경. 모자·물 챙기기</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🏮 지우펀 홍등 골목 & 점심</h4><p>계단길이 많아 유모차보다 아기띠 유리. 타로볼·땅콩 아이스롤 등 아이 간식 풍부. 홍등 배경 가족 사진</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🚂 스펀 천등 날리기</h4><p>가족 소원 적어 천등 띄우기(1개 NT$200). 기찻길 위 인증샷은 아이들 최애 추억. 열차 지날 때 안전 주의</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍲 시내 복귀 & 저녁</h4><p>타이베이 복귀 후 우육면·훠궈로 가족 저녁. 아이는 담백한 계란볶음밥·완탕면이 무난. 일찍 귀숙</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>동물원 + 마오콩 곤돌라</h3><p>판다 보고 곤돌라 타고 — 아이가 평생 기억할 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🐼 타이베이 시립동물원</h4><p>아시아 최대급 동물원. 입장 어른 NT$60 / 어린이 NT$30. 판다·코끼리·펭귄. 아이와 반나절 넉넉히</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍱 동물원 인근 점심</h4><p>동물원역 주변 식당·푸드코트. 볶음밥·완탕면 등 아이 입맛 무난한 메뉴. 곤돌라 대기 전 든든히</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🚠 마오콩 곤돌라</h4><p>동물원역→마오콩(NT$120, 어린이 할인). 바닥 투명 크리스탈 캐빈은 아이들이 환호. 산 위 전망·찻집</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🏙 타이베이101 (선택)</h4><p>여유 있으면 101 전망대(어른 NT$600 / 어린이 할인). 지하 푸드코트에서 딘타이펑·간식. 아이 체력 봐가며</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍧 라오허제 야시장 저녁</h4><p>후추빵(NT$60)·굴전·약선탕. 아담해서 가족이 돌기 좋음. 아이 간식·게임 코너도 있음</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>단수이 → 마지막 쇼핑 → 귀국</h3><p>강변 노을 산책 후 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>⛴ 단수이 강변 & 라오제</h4><p>MRT 단수이역(종점) 하차. 강변 산책로·홍마오청. 아게이(어묵순대)·대형 아이스크림 등 아이 간식 풍부</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🥟 딘타이펑 점심</h4><p>시내 복귀 후 샤오롱바오(1롱 NT$220~)로 마지막 대만 미식. 아이도 좋아하는 새우 완탕·볶음밥 곁들이기</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🛍 마지막 쇼핑</h4><p>서니힐즈·자이자이 펑리수, 누가크래커, 대만 라면·차 쇼핑. 아이 캐릭터 굿즈는 시먼딩·백화점에서</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이 동반 가족은 3시간 전 공항 도착 권장. 국광 리무진 버스가 짐 많을 때 가장 편함</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>3박 4일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">600,000 ~ 1,400,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 가족룸)</h4><span class="budget-range">300,000 ~ 700,000원</span><span class="budget-note">4인 가족룸 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚐</span><div class="budget-info"><h4>근교·관광 (4인)</h4><span class="budget-range">120,000 ~ 220,000원</span><span class="budget-note">근교투어·동물원·곤돌라·101</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">280,000 ~ 480,000원</span><span class="budget-note">4인 1끼 NT$500~1,200</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4인)</h4><span class="budget-range">80,000 ~ 150,000원</span><span class="budget-note">MRT·공항 이동 포함</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">80,000 ~ 200,000원</span><span class="budget-note">펑리수·기념품·아이 굿즈</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">1,460,000 ~ 3,150,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+가족룸 공유) ~ 여유형(FSC+4성 호텔+전세 투어)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>가족룸·키즈 어메니티·편의 시설이 잘 갖춰진 곳</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>그린 월드 호텔 중샤오</h3>
+              <p class="hotel-location">📍 중샤오푸싱역 도보 5분</p>
+              <p>대만 인기 도시형 호텔 체인. 4인 가족룸 보유. MRT 접근성 좋아 동물원·101·근교 모두 이동 편리</p>
+              <div class="hotel-price">가족룸 1박 <strong>NT$3,500~5,000</strong> (~150,000원~)</div>
+              <div class="hotel-tags"><span>가족룸</span><span>조식</span><span>Wi-Fi</span><span>역 도보 5분</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Taipei" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>시저 파크 호텔 타이베이</h3>
+              <p class="hotel-location">📍 타이베이역 도보 1분</p>
+              <p>역 앞 5성 호텔. 넓은 패밀리룸·조식 뷔페 완비. 공항 이동·근교 당일치기 동선 최고로 아이 동반 편리</p>
+              <div class="hotel-price">가족룸 1박 <strong>NT$5,500~8,000</strong> (~237,000원~)</div>
+              <div class="hotel-tags"><span>패밀리룸</span><span>조식 뷔페</span><span>역 앞 1분</span><span>어린이 어메니티</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Taipei" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">럭셔리</span></div>
+            <div class="hotel-body">
+              <h3>리젠트 타이베이</h3>
+              <p class="hotel-location">📍 중산역 도보 5분</p>
+              <p>타이베이 대표 럭셔리 호텔. 넓은 패밀리 스위트·수영장·키즈 서비스 완비. 백화점 인접으로 가족 쇼핑 편리</p>
+              <div class="hotel-price">가족룸 1박 <strong>NT$8,000~13,000</strong> (~344,000원~)</div>
+              <div class="hotel-tags"><span>패밀리 스위트</span><span>수영장</span><span>키즈 서비스</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Taipei" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Taipei" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Taipei" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 항공권
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">✈ 항공권</span>
+        <h2>인천 ↔ 타이베이 (타오위안) 항공권</h2>
+        <p>비행시간 약 2시간 30~40분 · 인천 ICN → 타오위안 TPE · 공항→시내 MRT 40분 NT$150</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">✈ 티웨이항공</span></td><td>LCC 직항</td><td>2h 35m</td><td class="price-cell">149,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/TPE/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 제주항공</span></td><td>LCC 직항</td><td>2h 35m</td><td class="price-cell">155,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/TPE/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 진에어</span></td><td>LCC 직항</td><td>2h 35m</td><td class="price-cell">159,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/TPE/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 에어부산</span></td><td>LCC 직항</td><td>2h 40m</td><td class="price-cell">150,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/TPE/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 중화항공</span></td><td>FSC 직항</td><td>2h 30m</td><td class="price-cell">320,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/TPE/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>2h 30m</td><td class="price-cell">350,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/TPE/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aff-cta">
+        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/TPE/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
+        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=TPE&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
+        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DTPE&leg2=from%3DTPE%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>타이베이 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">🛂</span><h3>무비자 90일 입국</h3><p>대만은 한국인 무비자 최대 90일 체류. 여권 잔여기간 6개월 이상 권장. 온라인 입국신고서(입경등기표)를 미리 작성하면 입국이 빠름</p></div>
+        <div class="tip-card"><span class="tip-icon">💳</span><h3>이지카드(悠遊卡) 필수</h3><p>공항·편의점에서 구매(카드값 NT$100). MRT·버스·편의점·일부 상점 결제까지 한 장으로. 잔액 충전은 편의점·역에서 간편</p></div>
+        <div class="tip-card"><span class="tip-icon">🚐</span><h3>지우펀·예류 근교투어</h3><p>예류+지우펀+스펀은 대중교통 환승이 번거로움. 원데이 투어(1인 NT$1,000~1,700)나 4인 차량 대절이 시간·체력 절약</p></div>
+        <div class="tip-card"><span class="tip-icon">🍢</span><h3>야시장 먹킷리스트</h3><p>지파이(닭튀김)·굴전·후추빵·버블티·망고빙수·아이스롤은 필수. 스린(최대)·라오허제(아담)·닝샤(현지형) 성격이 다르니 취향대로</p></div>
+        <div class="tip-card"><span class="tip-icon">🌧</span><h3>우기·태풍 주의</h3><p>5~9월은 무덥고 소나기·태풍 잦음. 접이식 우산·통기성 옷 필수. 10~4월이 여행 최적기. 여름엔 실내 냉방이 강하니 겉옷 챙기기</p></div>
+        <div class="tip-card"><span class="tip-icon">💵</span><h3>현금 & 모바일페이</h3><p>야시장·소상점은 현금(NT$) 위주. 라인페이·이지카드로 결제 가능한 곳도 많음. 시내 편의점·ATM에서 환전·인출 편리</p></div>
+        <div class="tip-card"><span class="tip-icon">🔌</span><h3>콘센트 110V·돼지코</h3><p>대만 전압은 110V, 플러그는 미국식 11자(A타입). 한국 기기는 멀티 어댑터(돼지코) 필요. 대부분 기기는 프리볼트라 변압기까지는 불필요</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="kyoto.html">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="bangkok.html">방콕</a>
+            <a href="danang.html">다낭</a>
+            <a href="bali.html">발리</a>
+            <a href="singapore.html">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="jeju.html">제주도</a>
+            <a href="busan.html">부산</a>
+            <a href="gangneung.html">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트래블코스트 · TravelCost</p>
+        <p style="margin-top:6px"><a href="/guide" style="color:inherit;opacity:.85">이용가이드</a> · <a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
+    }
+  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+  <script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=25.033&longitude=121.565'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FTaipei';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
+<script src="/icons.js" defer></script>
+<script src="/nav.js" defer></script>
+<script src="/bizfooter.js" defer></script>
+</body>
+</html>

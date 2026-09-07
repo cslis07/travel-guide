@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="오키나와 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다. 추라우미 수족관·에메랄드 해변·렌터카 드라이브.">
+  <title>오키나와 여행 가이드 | 트래블코스트</title>
+  <meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://travelcost.co.kr/okinawa">
+<meta property="og:image" content="https://travelcost.co.kr/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travelcost.co.kr/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "오키나와",
+    "url": "https://travelcost.co.kr/okinawa",
+    "description": "오키나와 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
+    "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
+    "geo": { "@type": "GeoCoordinates", "latitude": 26.212, "longitude": 127.679 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트래블코스트">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;"><i data-icon="ticket" data-size="17"></i> 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;"><i data-icon="briefcase" data-size="17"></i> 내 여행</a>
+        <a href="guide.html"><i data-icon="book-open" data-size="17"></i> 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;"><i data-icon="plane" data-size="17"></i> 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#0E7490 0%,#06B6D4 45%,#A5F3FC 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">🌺</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">🌺 일본 · 오키나와</span>
+      <h1>오키나와</h1>
+      <p>일본 속 하와이 — 추라우미 수족관·에메랄드 해변·렌터카 드라이브, 가족 휴양 1순위</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 나하 약 2시간 20분</small></div>
+        <div class="hero-stat"><strong>💴 환율</strong><small>¥1 ≈ 9.5원 (2026 기준)</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>한국과 동일 (KST)</small></div>
+        <div class="hero-stat"><strong>🌤 추천 시기</strong><small>4~6월·10월 (여름 성수·태풍 주의)</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
+      </div>
+      <a href="tours.html?city=오키나와" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 오키나와 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
+    <div class="container">
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>나만의 페이스로 즐기는 섬 드라이브 — 국제거리·북부 해변·수족관 자유롭게</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 나하 국제거리 & 슈리성</h3><p>나하 공항 도착 후 시내로, 저녁은 오키나와의 중심 코쿠사이도리에서</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 나하 공항 도착</h4><p>유이레일(모노레일) 나하공항역에서 켄초마에·마키시역으로 이동(¥270, 15분). 시내는 렌터카 없이도 이동 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>국제거리 도보권 비즈니스 호텔·게스트하우스에 짐 맡기기. 혼여행은 온천 대욕장 있는 도미인 계열이 가성비 최고</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🏯 슈리성 (세계유산)</h4><p>류큐 왕국의 궁성. 2019년 화재 후 정전 복원 공사 진행 중(정원·성벽 관람 가능, 공원 무료·유료 구역 ¥400). 복원 현장 자체가 볼거리</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🛍 국제거리(코쿠사이도리)</h4><p>약 1.6km 번화가. 블루씰 아이스크림·자색고구마 타르트·시사(사자상) 기념품. 마키시 공설시장에서 신선한 해산물 골라 2층 식당에서 조리</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🍺 오키나와 소바 & 오리온 맥주</h4><p>돼지 삼겹(소키)을 얹은 오키나와 소바(¥800~1,000)에 지역 맥주 오리온. 혼자여도 편한 이자카야·소바집이 많음</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>렌터카 북부 드라이브 — 추라우미 수족관</h3><p>렌터카 픽업 후 고속도로로 북부까지. 고래상어·에메랄드 해변 정복</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚗 렌터카 픽업</h4><p>나하공항 인근 렌터카 사무소에서 경차 수령(1일 ¥5,000~8,000+보험). 국제운전면허증·여권·한국 면허증 필수. 오키나와는 대중교통이 약해 렌터카가 사실상 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🐋 추라우미 수족관</h4><p>고래상어·만타가오리가 헤엄치는 '쿠로시오의 바다' 대수조가 하이라이트. 입장료 ¥2,180. 오션 엑스포 공원 내 위치, 약 2시간 관람</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🏖 세소코 비치</h4><p>모토부반도 세소코섬의 투명한 에메랄드빛 바다. 다리로 차량 진입 가능. 스노클링·해수욕(주차 ¥1,000). 점심은 근처 아구돼지 식당</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🌉 코우리 대교 & 코우리섬</h4><p>바다 위 2km 무료 대교를 건너는 인생 드라이브 코스. 하트록·전망 카페에서 자색고구마 디저트. 오키나와 최고의 포토 스팟</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🚗 나하 복귀</h4><p>고속도로 이용 시 약 1시간 40분(통행료 ¥1,000 안팎). 야간 운전 익숙지 않으면 무리하지 말고 중부 온나손에서 1박 하는 것도 방법</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>중부 만좌모 → 아메리칸 빌리지 → 귀국</h3><p>마지막 날 절경 절벽과 미국풍 거리에서 여유롭게 마무리</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🐘 만좌모 (코끼리코 절벽)</h4><p>코끼리 코를 닮은 기암 절벽과 탁 트인 동중국해 전망. 산책로 정비 잘 됨(환경협력세 ¥100). 오전 빛에 바다색이 가장 예쁨</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🎡 아메리칸 빌리지 (차탄)</h4><p>대관람차·컬러풀한 벽화·미국풍 쇼핑몰. 타코라이스(¥800~1,200)·수제버거로 점심. 선셋 비치도 도보권</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🚗 렌터카 반납</h4><p>주유는 반납 전 셀프 주유소에서 만땅(満タン). 나하공항 인근 사무소 반납 후 셔틀로 공항 이동</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>나하공항 국제선은 국내선과 터미널이 다름. 비행 2.5~3시간 전 도착 권장. 마지막 블루씰 아이스크림으로 마무리</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>2박 3일 · 환율 ¥1 = 9.5원 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">120,000 ~ 320,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박)</h4><span class="budget-range">90,000 ~ 240,000원</span><span class="budget-note">비즈니스 호텔 ~ 리조트</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚗</span><div class="budget-info"><h4>렌터카 (2일)</h4><span class="budget-range">60,000 ~ 110,000원</span><span class="budget-note">경차+보험·주유·통행료</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">90,000 ~ 150,000원</span><span class="budget-note">1끼 ¥900~2,000 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">25,000 ~ 50,000원</span><span class="budget-note">추라우미 수족관 등</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">40,000 ~ 120,000원</span><span class="budget-note">시사 기념품·자색고구마 과자</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 1인 총 예상 경비</span>
+            <span class="total-amount">425,000 ~ 990,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+비즈니스 호텔) ~ 여유형(FSC+리조트) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>나하 시내 — 유이레일·국제거리 접근성 좋은 곳</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>더 키친 호스텔 아오 나하</h3>
+              <p class="hotel-location">📍 마키시역 도보 6분 · 국제거리 도보권</p>
+              <p>세련된 디자인 호스텔. 도미토리·1인실 선택 가능. 공용 주방·라운지에서 여행자 교류. 국제거리 밤 산책에 최적</p>
+              <div class="hotel-price">1박 <strong>¥3,000~5,500</strong> (~28,000원~)</div>
+              <div class="hotel-tags"><span>도미토리</span><span>공용주방</span><span>Wi-Fi</span><span>코인 세탁</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Naha%20Okinawa" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>도미인 프리미엄 나하 겐초마에</h3>
+              <p class="hotel-location">📍 겐초마에역 도보 3분</p>
+              <p>천연 온천 대욕장 있는 비즈니스 호텔. 혼여행 인기 1순위. 밤엔 무료 야식 라멘 서비스. 청결·가성비 모두 우수</p>
+              <div class="hotel-price">1박 <strong>¥7,000~11,000</strong> (~66,000원~)</div>
+              <div class="hotel-tags"><span>온천 대욕장</span><span>무료 야식</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Naha%20Okinawa" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
+            <div class="hotel-body">
+              <h3>다이와 로이넷 호텔 나하 고쿠사이도리</h3>
+              <p class="hotel-location">📍 국제거리 한복판</p>
+              <p>국제거리 중심에 위치한 깔끔한 비즈니스 호텔. 편의점·식당·기념품점이 문 앞. 렌터카 없이 시내 즐기기 최고</p>
+              <div class="hotel-price">1박 <strong>¥8,000~13,000</strong> (~76,000원~)</div>
+              <div class="hotel-tags"><span>1인실</span><span>국제거리 중심</span><span>Wi-Fi</span><span>편의점 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Naha%20Okinawa" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Naha%20Okinawa" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Okinawa" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>같이 달리고 놀고 찍는 오키나와 완전 정복 — 렌터카 드라이브·스노클링 필수</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('friends',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 나하 국제거리 밤</h3><p>오키나와 도착 첫날, 코쿠사이도리 중심으로 먹방·기념품 투어</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 나하 공항 도착 & 렌터카 픽업</h4><p>공항 인근 렌터카 사무소에서 차량 수령(친구끼리 나누면 1인 부담 절반). 국제운전면허증 필수. 유이레일도 있지만 여행 내내 렌터카가 편함</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🏨 숙소 체크인 & 나미노우에 비치</h4><p>나하 시내 숙소 체크인 후 시내에서 가장 가까운 나미노우에 해변 산책. 도심 속 바다에서 첫 인증샷</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🛍 국제거리 & 마키시 공설시장</h4><p>블루씰 아이스크림·시사 기념품·오리온 굿즈. 마키시 시장에서 신선한 생선 골라 2층에서 회·튀김으로 조리(조리비 별도)</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🍻 이자카야 & 아구돼지</h4><p>오키나와 특산 아구돼지 샤브샤브·고야참프루에 오리온 생맥주. 1인 ¥2,500~4,000으로 실컷 즐기기. 운전자는 음주 절대 금지</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:30</div><div class="tl-body"><h4>🍧 젠자이 & 야식</h4><p>2차는 오키나와식 빙수 젠자이(팥+얼음)나 자색고구마 디저트. 편의점 오리온 캔맥주도 남국 여행의 묘미</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>북부 드라이브 — 추라우미 & 코우리섬</h3><p>고속도로로 북상, 오키나와 대표 명소를 하루에 정복</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚗 북부로 출발</h4><p>나하 → 모토부반도 고속도로 약 1시간 40분. 창밖 바다 풍경이 곧 여행. 휴게소 쿄다 IC에서 커피·간식</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:30</div><div class="tl-body"><h4>🐋 추라우미 수족관</h4><p>고래상어·만타가오리 대수조 앞에서 단체 사진 필수. 입장료 ¥2,180. 돌고래 쇼(무료)·거북이관도 함께. 약 2시간</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🏖 세소코 비치 점심 & 물놀이</h4><p>모토부 세소코섬 에메랄드 바다에서 스노클링. 근처 식당에서 아구돼지 소바 점심. 파라솔·장비 대여 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🌉 코우리 대교 & 하트록</h4><p>바다 위 2km 무료 대교 드라이브(오키나와 최고 인생 사진). 코우리섬 하트록·전망 카페. 자색고구마 소프트콘 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍜 나하 복귀 & 저녁</h4><p>고속도로로 시내 복귀 후 야에세 소바·스테이크로 저녁. 오키나와는 미군 영향으로 두툼한 스테이크(¥1,500~) 문화가 발달</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>중부 절경 & 아메리칸 빌리지</h3><p>만좌모 절벽·비오스의 언덕·미국풍 거리로 감성 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🐘 만좌모 (코끼리코 절벽)</h4><p>코끼리 코를 닮은 기암과 동중국해 절경. 환경협력세 ¥100. 온나손 리조트 지대라 근처 해변 카페도 예쁨</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🌿 비오스의 언덕</h4><p>아열대 정글 호수를 배 타고 도는 자연 테마파크. 입장+유람선 ¥1,800. 물소 수레·카누 체험. 사진 감성 최고</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🤿 청의 동굴(블루 그로토) 스노클링</h4><p>온나손 마에다곶의 명물. 투어 예약 시 장비·가이드 포함 ¥3,000~5,000. 햇빛에 파랗게 빛나는 동굴 속 물빛이 압권</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🎡 아메리칸 빌리지 (차탄)</h4><p>대관람차·벽화·미국풍 쇼핑몰. 타코라이스·수제버거 저녁. 선셋 비치에서 노을 감상 후 나하 복귀</p></div></div>
+            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🍺 마지막 밤 이자카야</h4><p>국제거리 뒷골목 이자카야에서 3일 여행 총평. 아와모리(오키나와 소주) 한 잔으로 마무리(운전자 제외)</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>나하 쇼핑 → 귀국</h3><p>마지막 날 시내에서 기념품·면세 쇼핑 후 렌터카 반납</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🛍 국제거리·돈키호테 쇼핑</h4><p>자색고구마 타르트·친스코(오키나와 과자)·시사 기념품·오리온 굿즈. 돈키호테에서 약품·화장품. ¥5,500↑ 면세 가능</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🍜 마지막 오키나와 소바</h4><p>소키소바 또는 타코라이스로 마지막 점심. 블루씰 아이스크림으로 후식까지 오키나와를 눈·입에 담기</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🚗 렌터카 반납</h4><p>반납 전 셀프 주유소에서 만땅. 나하공항 인근 사무소 반납 후 셔틀로 공항 이동</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>야간 항공이면 공항 국제선 라운지·기념품점 이용. 비행 2.5~3시간 전 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>3박 4일 · 렌터카·액티비티 포함 · 2인 기준으로 나눈 숙박·렌터카비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">120,000 ~ 320,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 1인당)</h4><span class="budget-range">105,000 ~ 300,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚗</span><div class="budget-info"><h4>렌터카 (3일 · 1인당)</h4><span class="budget-range">45,000 ~ 90,000원</span><span class="budget-note">2인 분담·보험·주유·통행료</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">140,000 ~ 240,000원</span><span class="budget-note">이자카야·맛집 4일 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🤿</span><div class="budget-info"><h4>관광·액티비티</h4><span class="budget-range">60,000 ~ 130,000원</span><span class="budget-note">수족관·스노클링·비오스</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 180,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">520,000 ~ 1,260,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+2인 쉐어) ~ 여유형(FSC+리조트+액티비티 풀옵션)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>온나손 리조트 라인 — 해변·드라이브 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>리잔 시파크 호텔 탄차베이</h3>
+              <p class="hotel-location">📍 온나손 · 나하공항 차량 60분</p>
+              <p>넓은 전용 해변을 낀 대형 리조트인데 가격은 합리적. 트윈룸·오션뷰 선택 가능. 온나손 드라이브 거점으로 최고</p>
+              <div class="hotel-price">2인 1박 <strong>¥14,000~22,000</strong> (1인당 ~89,000원~)</div>
+              <div class="hotel-tags"><span>전용 해변</span><span>트윈룸</span><span>Wi-Fi</span><span>수영장</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Onna%20Okinawa" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>르네상스 오키나와 리조트</h3>
+              <p class="hotel-location">📍 온나손 · 마에다곶(청의 동굴) 인근</p>
+              <p>돌고래와 교감하는 프로그램으로 유명한 리조트. 해양 액티비티·수영장 풍부. 청의 동굴 스노클링과 연계하기 좋음</p>
+              <div class="hotel-price">2인 1박 <strong>¥22,000~35,000</strong> (1인당 ~140,000원~)</div>
+              <div class="hotel-tags"><span>돌고래 프로그램</span><span>전용 해변</span><span>수영장</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Onna%20Okinawa" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">럭셔리</span></div>
+            <div class="hotel-body">
+              <h3>ANA 인터컨티넨탈 만자 비치 리조트</h3>
+              <p class="hotel-location">📍 온나손 · 만좌모 도보권</p>
+              <p>만좌모 절벽 옆 반도에 자리한 오키나와 대표 럭셔리 리조트. 자연 비치·마린 스포츠·인피니티풀. 친구끼리 호캉스로 완벽</p>
+              <div class="hotel-price">2인 1박 <strong>¥32,000~55,000</strong> (1인당 ~204,000원~)</div>
+              <div class="hotel-tags"><span>프라이빗 비치</span><span>마린 스포츠</span><span>인피니티풀</span><span>스파</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Onna%20Okinawa" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Onna%20Okinawa" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Okinawa" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>아이와 함께하는 오키나와 — 추라우미 수족관·에메랄드 비치·렌터카 3박 4일</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 나하 & 나미노우에 비치</h3><p>렌터카 픽업 후 시내 적응, 도심 속 해변에서 아이 첫 물놀이</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 나하 공항 도착 & 렌터카 픽업</h4><p>가족은 짐·유모차 실을 미니밴·SUV 추천(1일 ¥8,000~13,000). 카시트는 예약 시 사전 신청(유아 의무). 국제운전면허증 필수</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🏖 나미노우에 비치</h4><p>나하 시내에서 가장 가까운 해변. 안전 요원·화장실·샤워장 완비. 아이와 첫 오키나와 바다 인사. 무리하지 말고 가볍게</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🛍 국제거리 & 블루씰</h4><p>시사(사자상) 기념품·자색고구마 과자 구경. 오키나와 명물 블루씰 아이스크림(자색고구마·소금맛)은 아이들 최애</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍽 오키나와 소바 저녁 후 체크인</h4><p>순한 국물의 오키나와 소바는 아이도 잘 먹음. 저녁 후 온나손 리조트로 이동해 체크인, 내일 수족관을 위해 일찍 취침</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>추라우미 수족관 — 아이가 평생 기억할 하루</h3><p>고래상어 대수조·돌고래 쇼로 북부 온종일</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚗 모토부반도로 이동</h4><p>온나손 리조트에서 추라우미까지 약 50분~1시간. 나하에서 출발하면 1시간 40분. 아침 일찍 가야 한적하게 관람</p></div></div>
+            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🐋 추라우미 수족관</h4><p>고래상어·만타가오리가 헤엄치는 '쿠로시오의 바다' 대수조가 압권. 입장 어른 ¥2,180 / 고등생 ¥1,440 / 초·중생 ¥710 / 6세 미만 무료. 만지는 체험 풀도 인기</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🐬 돌고래 쇼 & 오션 엑스포 공원</h4><p>수족관 옆 오키짱 극장 돌고래 쇼는 무료. 바다거북관·매너티관도 함께. 넓은 공원이라 아이가 뛰어놀기 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>🏖 세소코 비치 물놀이</h4><p>수족관 근처 세소코섬의 얕고 투명한 바다. 아이 물놀이에 안전. 다리로 차량 진입, 화장실·샤워 완비(주차 ¥1,000)</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🍮 리조트 복귀 & 저녁</h4><p>리조트 뷔페 또는 근처 아구돼지·타코라이스 식당. 아이 재우고 부모는 발코니에서 별·파도 소리. 수족관 굿즈 정리도</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>비오스의 언덕 & 리조트 해변</h3><p>정글 유람선·물소 수레와 리조트 물놀이로 여유로운 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🌿 비오스의 언덕</h4><p>아열대 정글 호수를 배로 도는 자연 테마파크. 입장+유람선 어른 ¥1,800 / 어린이 ¥900. 물소 수레·카누·염소 먹이주기 등 아이 체험 풍부</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🐘 만좌모 (코끼리코 절벽) 드라이브</h4><p>코끼리 코를 닮은 절벽과 바다 절경. 산책로 정비 잘 돼 유모차도 무난(환경협력세 ¥100). 가족 인생샷 포인트</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🏊 리조트 수영장 & 전용 해변</h4><p>오후는 리조트에서 느긋하게. 어린이 풀·키즈 프로그램 이용. 아이 페이스에 맞춰 무리 없는 일정이 가족 여행의 핵심</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🎡 아메리칸 빌리지 (선택)</h4><p>기력 남으면 차탄 아메리칸 빌리지로. 대관람차·타코라이스·수제버거. 선셋 비치 노을 감상 후 복귀</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>오키나와 월드 → 마지막 쇼핑 → 귀국</h3><p>종유동굴 탐험 후 나하에서 기념품 쇼핑, 귀국</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🕳 오키나와 월드 & 옥천동굴</h4><p>남부 테마파크. 국내 최대급 종유동굴 교쿠센도(약 850m 공개)와 류큐 전통 에이사 공연. 입장 어른 ¥2,000 / 어린이 ¥1,000. 아이 탐험심 자극</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🛍 나하 마지막 쇼핑</h4><p>국제거리·돈키호테에서 친스코·자색고구마 과자·시사 굿즈. 캐릭터 상품·아이 간식. ¥5,500↑ 면세 신청 잊지 말기</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🚗 렌터카 반납</h4><p>반납 전 만땅 주유. 아이 동반이라 여유 있게 이동. 나하공항 인근 사무소 반납 후 셔틀로 공항 이동</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이 동반 가족은 3시간 전 공항 도착 권장. 국제선 터미널 위치 미리 확인. 마지막 블루씰 아이스크림으로 마무리</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>3박 4일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">480,000 ~ 1,200,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 리조트)</h4><span class="budget-range">350,000 ~ 900,000원</span><span class="budget-note">4인 가족룸·리조트 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚗</span><div class="budget-info"><h4>렌터카 (3일)</h4><span class="budget-range">150,000 ~ 260,000원</span><span class="budget-note">미니밴+보험·주유·통행료</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🐋</span><div class="budget-info"><h4>수족관·관광 (4인)</h4><span class="budget-range">90,000 ~ 160,000원</span><span class="budget-note">추라우미·비오스·오키나와월드</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">320,000 ~ 520,000원</span><span class="budget-note">4인 1끼 ¥4,000~8,000</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">90,000 ~ 220,000원</span><span class="budget-note">기념품·아이 굿즈</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">1,480,000 ~ 3,260,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+가성비 리조트) ~ 여유형(FSC+럭셔리 리조트+체험 풀옵션)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>가족룸·키즈 시설·해변 접근성이 좋은 리조트 (수족관 근처 포함)</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>오키나와 카리유시 비치 리조트 오션스파</h3>
+              <p class="hotel-location">📍 온나손 · 나고 방면</p>
+              <p>워터파크·키즈 풀·전용 해변을 갖춘 가족 특화 리조트. 아이 물놀이 종일 가능. 뷔페·패밀리룸 완비로 가성비 우수</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥22,000~35,000</strong> (~209,000원~)</div>
+              <div class="hotel-tags"><span>워터파크</span><span>키즈 풀</span><span>패밀리룸</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Onna%20Okinawa" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">수족관 근처</span></div>
+            <div class="hotel-body">
+              <h3>호텔 오리온 모토부 리조트 & 스파</h3>
+              <p class="hotel-location">📍 모토부 · 추라우미 수족관 도보권</p>
+              <p>추라우미 수족관 바로 옆 리조트. 수족관을 아침·저녁 여유롭게 즐기기 최적. 전용 해변·키즈 어메니티·천연 온천 스파 완비</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥28,000~45,000</strong> (~266,000원~)</div>
+              <div class="hotel-tags"><span>수족관 도보권</span><span>전용 해변</span><span>온천 스파</span><span>어린이 어메니티</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Motobu%20Okinawa" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">럭셔리</span></div>
+            <div class="hotel-body">
+              <h3>할레쿨라니 오키나와</h3>
+              <p class="hotel-location">📍 온나손 · 온나 해변</p>
+              <p>하와이 명문 브랜드의 오키나와 리조트. 5개 수영장·프라이빗 비치·키즈 프로그램. 가족 특별한 호캉스에 손색없는 시설</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥45,000~80,000</strong> (~428,000원~)</div>
+              <div class="hotel-tags"><span>프라이빗 비치</span><span>수영장 5개</span><span>키즈 프로그램</span><span>스파</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Onna%20Okinawa" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Okinawa" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Okinawa" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 항공권
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">✈ 항공권</span>
+        <h2>인천 ↔ 오키나와 (나하) 항공권</h2>
+        <p>비행시간 약 2시간 20분 · 인천 ICN → 나하 OKA</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">✈ 진에어</span></td><td>LCC 직항</td><td>2h 20m</td><td class="price-cell">129,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/OKA/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 제주항공</span></td><td>LCC 직항</td><td>2h 20m</td><td class="price-cell">129,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/OKA/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 티웨이항공</span></td><td>LCC 직항</td><td>2h 20m</td><td class="price-cell">125,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/OKA/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 에어서울</span></td><td>LCC 직항</td><td>2h 25m</td><td class="price-cell">135,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/OKA/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 아시아나항공</span></td><td>FSC 직항</td><td>2h 15m</td><td class="price-cell">250,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/OKA/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>2h 15m</td><td class="price-cell">280,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/OKA/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aff-cta">
+        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/OKA/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
+        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=OKA&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
+        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DOKA&leg2=from%3DOKA%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>오키나와 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">🛂</span><h3>무비자 입국</h3><p>한국인은 관광 목적 90일 무비자. 여권 유효기간·왕복 항공권만 확인하면 됨. 입국 전 Visit Japan Web으로 세관·검역 QR을 미리 등록하면 빠름</p></div>
+        <div class="tip-card"><span class="tip-icon">🚗</span><h3>렌터카 예약 & 국제운전면허</h3><p>대중교통이 약해 렌터카가 사실상 필수. 출국 전 경찰서·운전면허시험장에서 국제운전면허증 발급(수수료 8,500원). 렌트 시 국제면허·한국 면허·여권 3종 지참. 성수기엔 미리 예약</p></div>
+        <div class="tip-card"><span class="tip-icon">💳</span><h3>스이카·현금 준비</h3><p>나하 유이레일·편의점은 스이카/ICOCA 등 IC카드 OK. 단 시골 식당·비치 주차장·소규모 상점은 현금만 받는 곳이 많음. 엔화 현금을 넉넉히</p></div>
+        <div class="tip-card"><span class="tip-icon">🌀</span><h3>태풍 시즌 주의 (7~9월)</h3><p>여름 성수기지만 태풍 길목이라 결항·해변 통제 위험. 7~9월 여행이면 여행자 보험·유연한 일정 필수. 4~6월·10월이 날씨·가격 모두 안정적</p></div>
+        <div class="tip-card"><span class="tip-icon">🧴</span><h3>비치·자외선 대비</h3><p>아열대 자외선이 매우 강함. 선크림·래시가드·모자 필수. 산호 보호를 위해 일부 해변은 산호 친화(리프세이프) 선크림만 허용. 물놀이용 신발도 챙기기</p></div>
+        <div class="tip-card"><span class="tip-icon">🗺</span><h3>북부 이동거리 감안</h3><p>나하 → 추라우미 수족관은 편도 약 2시간(고속도로). 하루에 북부 왕복은 피곤하니 중부·북부 리조트 1박을 섞으면 훨씬 여유롭게 즐길 수 있음</p></div>
+        <div class="tip-card"><span class="tip-icon">🔌</span><h3>전압·콘센트 (A타입/100V)</h3><p>일본은 110V가 아닌 100V, 콘센트는 한국과 다른 A타입(11자 납작핀). 멀티어댑터 필요. 대부분 한국 기기(듀얼 프리볼트)는 어댑터만 있으면 사용 가능</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="kyoto.html">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="bangkok.html">방콕</a>
+            <a href="danang.html">다낭</a>
+            <a href="bali.html">발리</a>
+            <a href="singapore.html">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="jeju.html">제주도</a>
+            <a href="busan.html">부산</a>
+            <a href="gangneung.html">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트래블코스트 · TravelCost</p>
+        <p style="margin-top:6px"><a href="/guide" style="color:inherit;opacity:.85">이용가이드</a> · <a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
+    }
+  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+  <script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=26.212&longitude=127.679'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FTokyo';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
+<script src="/icons.js" defer></script>
+<script src="/nav.js" defer></script>
+<script src="/bizfooter.js" defer></script>
+</body>
+</html>

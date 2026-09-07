@@ -327,7 +327,7 @@
   var DEST_CLIMATE = {
     '발리':'beach','다낭':'beach','나트랑':'beach','세부':'beach','코타키나발루':'beach',
     '오키나와':'beach','방콕':'beach','싱가포르':'beach','계림':'temperate',
-    '삿포로':'cold','파리':'cold','백두산':'cold','장가계':'cold',
+    '삿포로':'cold','파리':'cold','백두산':'cold','장가계':'cold','홍콩':'temperate','타이베이':'beach','상하이':'temperate',
     '제주':'beach','부산':'beach','강릉':'beach'
   };
   var LONGHAUL = { '파리':1,'발리':1,'코타키나발루':1,'세부':1,'나트랑':1,'싱가포르':1 };

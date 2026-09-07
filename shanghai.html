@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="상하이 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
+  <title>상하이 여행 가이드 | 트래블코스트</title>
+  <meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://travelcost.co.kr/shanghai">
+<meta property="og:image" content="https://travelcost.co.kr/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://travelcost.co.kr/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TouristDestination",
+    "name": "상하이",
+    "url": "https://travelcost.co.kr/shanghai",
+    "description": "상하이 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
+    "inLanguage": "ko-KR",
+    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
+    "geo": { "@type": "GeoCoordinates", "latitude": 31.230, "longitude": 121.474 }
+  }
+  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="트래블코스트">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <style>
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}
+  .dw-temp{font-size:18px;font-weight:800}
+  .dw-desc{font-weight:600}
+  .dw-detail{font-size:12px;opacity:.85}
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
+      <nav class="nav" id="nav">
+        <a href="index.html#destinations">여행지</a>
+        <a href="tours.html" style="color:#1B4FD8;font-weight:600;"><i data-icon="ticket" data-size="17"></i> 투어·티켓</a>
+        <a href="mytrip.html" style="color:#F97316;font-weight:600;"><i data-icon="briefcase" data-size="17"></i> 내 여행</a>
+        <a href="guide.html"><i data-icon="book-open" data-size="17"></i> 이용가이드</a>
+        <a href="airport.html" style="color:#3b82f6;font-weight:600;"><i data-icon="plane" data-size="17"></i> 인천공항</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
+    </div>
+  </header>
+
+  <!-- ── 환율 바 ── -->
+  <div class="fx-bar" id="fxBar">
+    <div class="container fx-inner">
+      <span class="fx-label">💱 환율</span>
+      <div class="fx-rates" id="fxRates">
+        <span class="fx-skeleton">로딩 중…</span>
+      </div>
+      <span class="fx-updated" id="fxUpdated"></span>
+    </div>
+  </div>
+
+  <!-- ── HERO ── -->
+  <section class="dest-hero" style="background:linear-gradient(135deg,#7C2D12 0%,#DC2626 45%,#FB923C 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+    <div class="dest-hero-bg">🌆</div>
+    <div class="dest-hero-overlay"></div>
+    <div class="dest-hero-content">
+      <span class="dest-hero-badge">🌆 중국 · 상하이</span>
+      <h1>상하이</h1>
+      <p>동서양이 만나는 대도시 — 와이탄·예원·디즈니, 평지 도시라 어르신·가족 모두 편한 중국 첫 여행</p>
+      <div class="dest-hero-stats">
+        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 상하이 푸둥 약 2시간</small></div>
+        <div class="hero-stat"><strong>💴 환율</strong><small>¥1(위안) ≈ 190원 (2026 기준)</small></div>
+        <div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 1시간 느림 (KST-1)</small></div>
+        <div class="hero-stat"><strong>🌤 추천 시기</strong><small>3~5월, 9~11월</small></div>
+      </div>
+      <div class="dest-weather" id="destWeather" hidden>
+        <span class="dw-icon" id="dwIcon">⛅</span>
+        <span class="dw-temp" id="dwTemp">--°</span>
+        <span class="dw-desc" id="dwDesc">현재 날씨</span>
+        <span class="dw-detail" id="dwDetail"></span>
+      </div>
+      <a href="tours.html?city=상하이" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 상하이 투어·티켓 실시간 검색 →</a>
+    </div>
+  </section>
+
+  <!-- ── 여행 유형 탭 ── -->
+  <section class="type-select-bar">
+    <div class="container">
+      <p class="type-label">여행 유형을 선택하세요</p>
+      <div class="type-tabs">
+        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
+        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
+        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       1인 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content active" id="type-solo">
+
+    <!-- 일정 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👤 1인 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>나만의 페이스로 걷는 대도시 산책 — 야경·정원·골목·역사를 자유롭게</p>
+        </div>
+
+        <div class="day-tabs" id="solo-tabs">
+          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="solo-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 와이탄 야경</h3><p>푸둥 공항 도착 후 시내로, 저녁은 상하이 야경의 심장 와이탄에서</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 상하이 푸둥 공항 도착</h4><p>마글레브(자기부상열차 ¥50, 8분) + 지하철 환승, 또는 지하철 2호선 직행(¥8). 택시는 시내까지 약 ¥150</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>와이탄·인민광장 도보권 숙소에 짐 맡기기. 혼여행은 유스호스텔·비즈니스 호텔이 가성비 최고</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🛍 난징동루 보행가</h4><p>중국 제일의 상업 거리. 보행자 천국 + 관광 트램(¥5). 백화점·기념품·간식 구경하며 와이탄까지 도보 이동</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🌃 와이탄 황푸강 야경</h4><p>강 서쪽 만국건축박람군 vs 동쪽 푸둥 마천루. 상하이 최고의 야경, 입장 무료. 강변 산책로가 평탄해 걷기 편함</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body"><h4>🍶 신천지(신톈디) 밤거리</h4><p>석고문 옛 골목을 개조한 카페·바 거리. 편의점 맥주 들고 혼자 야간 산책 — 혼여행 묘미</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>예원 + 전망대 + 티엔즈팡</h3><p>전통 정원과 초고층 전망대, 예술 골목을 하루에 — 상하이 대표 명소 정복</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🏯 예원 & 위위안 정원</h4><p>명대 강남 정원의 정수. 입장료 ¥40. 연못·기암·회랑이 어우러진 옛 정원. 성황묘 상권과 바로 연결</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🥟 성황묘 먹거리 & 난샹만두</h4><p>성황묘 먹자골목. 샤오롱바오 원조 난샹만터우 본점(대기 길다). 1인 ¥50~80으로 딤섬 순례</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🌆 상하이타워 118층 전망대</h4><p>세계 2위 높이(632m). 초고속 엘리베이터로 순식간에. 입장료 ¥180. 동방명주(¥160~)와 택일 추천</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🎨 티엔즈팡(톈쯔팡)</h4><p>좁은 석고문 골목의 예술구. 공방·편집숍·카페가 미로처럼 이어짐. 혼자 천천히 둘러보기 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍲 홍샤오러우 저녁</h4><p>상하이식 삼겹살 간장조림. 달큰하고 진한 상하이 대표 가정식. 로컬 식당 1인 ¥60~100</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="solo-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>임정 유적 → 신천지 → 귀국</h3><p>마지막 날 대한민국 임시정부 유적을 참관하고 세련된 거리에서 마무리</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🇰🇷 대한민국 임시정부 청사</h4><p>마당루(马当路), 신천지 인근. 입장료 ¥20. 3층 목조 건물에 집무실·태극기 복원. 한국인 필수 코스</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>☕ 신천지·타이캉루 브런치</h4><p>임정 청사 도보권. 세련된 카페 거리에서 마지막 여유. 커피·딤섬 브런치 ¥60~120</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🛍 마지막 쇼핑</h4><p>난징시루·징안쓰 일대 or 시내 면세점. 중국차·과자·기념품. 모바일페이(알리페이/위챗) 준비하면 편함</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>지하철 2호선 또는 마글레브로 푸둥 공항. 비행 2.5~3시간 전 공항 도착 권장</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 예산 -->
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>1인 여행 예상 경비</h2>
+          <p>2박 3일 · 환율 ¥1(위안) = 190원 기준</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">120,000 ~ 380,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박)</h4><span class="budget-range">55,000 ~ 190,000원</span><span class="budget-note">유스호스텔 ~ 비즈니스 호텔</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (3일)</h4><span class="budget-range">15,000 ~ 35,000원</span><span class="budget-note">마글레브·지하철·공항 이동</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">60,000 ~ 130,000원</span><span class="budget-note">1끼 ¥30~100 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">40,000 ~ 90,000원</span><span class="budget-note">전망대·예원·임정 등</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">40,000 ~ 130,000원</span><span class="budget-note">차·과자·기념품</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 1인 총 예상 경비</span>
+            <span class="total-amount">330,000 ~ 955,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+호스텔) ~ 여유형(FSC+비즈니스 호텔) 기준</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 숙소 -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>1인 여행자를 위한 숙소</h2>
+          <p>혼자 머물기 좋은 위치·가격·분위기</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
+            <div class="hotel-body">
+              <h3>밍타운 난징로드 유스호스텔</h3>
+              <p class="hotel-location">📍 난징동루·와이탄 도보권</p>
+              <p>상하이 대표 배낭여행자 숙소. 깔끔한 도미토리·1인실, 공용 라운지에서 여행자 교류. 지하철 접근 최고</p>
+              <div class="hotel-price">1박 <strong>¥130~250</strong> (~25,000원~)</div>
+              <div class="hotel-tags"><span>도미토리</span><span>공용라운지</span><span>Wi-Fi</span><span>코인 세탁</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Mingtown+Nanjing+Road+Shanghai" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>진장인(Jinjiang Inn) 상하이 와이탄점</h3>
+              <p class="hotel-location">📍 와이탄 도보 8분</p>
+              <p>중국 전역 체인 비즈니스 호텔. 1인실 가성비 최고, 시설 균일하고 청결. 와이탄 야경 산책에 최적</p>
+              <div class="hotel-price">1박 <strong>¥300~480</strong> (~57,000원~)</div>
+              <div class="hotel-tags"><span>1인실</span><span>Wi-Fi</span><span>편의점 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Jinjiang+Inn+Shanghai+Bund" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
+            <div class="hotel-body">
+              <h3>홀리데이 인 익스프레스 상하이 난징동루</h3>
+              <p class="hotel-location">📍 난징동루 도보 3분</p>
+              <p>글로벌 브랜드의 안정적인 비즈니스 호텔. 무료 조식·깨끗한 시설. 혼여행 가성비 무난한 선택</p>
+              <div class="hotel-price">1박 <strong>¥420~680</strong> (~80,000원~)</div>
+              <div class="hotel-tags"><span>1인실</span><span>무료 조식</span><span>Wi-Fi</span><span>지하철 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Holiday+Inn+Express+Shanghai+Nanjing+Road" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Shanghai" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Shanghai" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-solo -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       친구 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-friends">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👫 친구 여행</span>
+          <h2>2박 3일 추천 일정</h2>
+          <p>같이 먹고 찍고 즐기는 상하이 완전 정복 — 야경 크루즈·수향마을 필수</p>
+        </div>
+
+        <div class="day-tabs" id="friends-tabs">
+          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
+        </div>
+
+        <div class="day-content active" id="friends-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 와이탄 야경 & 신천지</h3><p>상하이 도착 첫날, 야경 크루즈와 루프탑 바로 화려하게 시작</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 상하이 푸둥 공항 도착</h4><p>마글레브 체험(¥50, 최고 431km/h) 후 지하철 환승. 짐 맡기고 바로 출발</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🛍 난징동루 & 인민광장</h4><p>보행가 쇼핑, 관광 트램(¥5) 인증. 백화점·간식 골목 구경하며 와이탄 방향으로 걷기</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🌃 와이탄 야경 인증샷</h4><p>황푸강 건너 푸둥 스카이라인. 해 질 무렵 조명 켜지면 최고. 단체컷 필수 포토존</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🚢 황푸강 야경 유람선</h4><p>야경 크루즈(¥120~150, 약 40분). 배 위에서 양안 마천루 파노라마. 저녁은 승선 전후로</p></div></div>
+            <div class="tl-item"><div class="tl-time">21:30</div><div class="tl-body"><h4>🍸 신천지 루프탑 바</h4><p>석고문 개조 바 거리에서 칵테일 한 잔. 젊은 상하이의 밤 분위기로 첫날 마무리. 1인 ¥60~120</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>예원 + 전망대 + 티엔즈팡</h3><p>전통과 초현대를 오가는 상하이 핵심 코스 + 먹방</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🏯 예원 & 성황묘</h4><p>명대 강남 정원(¥40) + 성황묘 상권 구경. 옛 골목과 기념품 상가가 함께</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🥟 난샹만두 브런치</h4><p>샤오롱바오 원조. 게살 샤오롱바오도 별미. 친구랑 여러 종류 나눠 먹기 1인 ¥60~100</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🌆 상하이타워 118층 전망대</h4><p>세계 2위 높이(632m). 초고속 엘리베이터. ¥180. 통유리로 상하이 전경 조망 — 인생샷 명소</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🎨 티엔즈팡 골목 탐방</h4><p>좁은 석고문 골목의 공방·편집숍·카페. 감성 사진 & 기념품 쇼핑. 미로 골목 탐험 재미</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍢 훠궈 or 상하이 요리 먹방</h4><p>우장루 등 식당가에서 훠궈(마라탕 전골) 또는 상하이 요리. 친구랑 나눠 먹기 1인 ¥80~150</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="friends-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>주자자오 수향마을 or 디즈니 → 귀국</h3><p>물의 마을 나들이 또는 디즈니 하루 중 선택</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚤 주자자오 수향마을 (선택A)</h4><p>지하철 17호선으로 약 1시간. 강남 수향 감성 물의 마을. 방생교·유람선(¥50~)에서 뱃놀이</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🎢 상하이 디즈니랜드 (선택B)</h4><p>지하철 11호선 디즈니역. 1일권 ¥475~719(요일별). 트론 코스터·성 퍼레이드 풀코스</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍚 현지 점심</h4><p>수향마을 쫑쯔·홍샤오러우 or 디즈니 파크 내 식사. 선택지에 맞춰 자유롭게</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🛍 시내 복귀 쇼핑</h4><p>난징시루·징안 일대에서 차·화장품·기념품. 면세 신청·모바일페이 확인</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>지하철 또는 마글레브로 푸둥 공항. 막차 시간 반드시 사전 확인</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>친구 여행 예상 경비 (1인)</h2>
+          <p>2박 3일 · 유람선·전망대 포함 · 2인 기준으로 나눈 숙박비</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">120,000 ~ 380,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박 · 1인당)</h4><span class="budget-range">65,000 ~ 200,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚢</span><div class="budget-info"><h4>관광·체험</h4><span class="budget-range">60,000 ~ 120,000원</span><span class="budget-note">전망대·야경 크루즈·바</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">80,000 ~ 160,000원</span><span class="budget-note">훠궈·이자카야식 3일 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통</h4><span class="budget-range">20,000 ~ 45,000원</span><span class="budget-note">주자자오 당일치기 포함 시</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 180,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">2박 3일 친구 여행 1인 총 예상 경비</span>
+            <span class="total-amount">395,000 ~ 1,085,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+2인 쉐어) ~ 여유형(FSC+야경 뷰 호텔+디즈니)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>친구 여행 추천 숙소</h2>
+          <p>와이탄·난징루 접근성 좋은 2인 이상 숙소</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>한팅 호텔(Hanting) 상하이 난징동루점</h3>
+              <p class="hotel-location">📍 난징동루 도보 3분</p>
+              <p>중국 대표 체인 비즈니스 호텔. 트윈룸 가성비 최고. 지하철 접근성 좋아 와이탄·예원 모두 편리</p>
+              <div class="hotel-price">2인 1박 <strong>¥380~600</strong> (1인당 ~36,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>Wi-Fi</span><span>편의점 2분</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Hanting+Hotel+Shanghai+Nanjing+East+Road" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>지 호텔(Ji Hotel) 상하이 와이탄점</h3>
+              <p class="hotel-location">📍 와이탄 도보 8분</p>
+              <p>세련된 인테리어의 중급 디자인 호텔. 와이탄 야경 접근 최고. 청결하고 조용한 트윈룸</p>
+              <div class="hotel-price">2인 1박 <strong>¥520~820</strong> (1인당 ~49,000원~)</div>
+              <div class="hotel-tags"><span>트윈룸</span><span>조식</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Ji+Hotel+Shanghai+Bund" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">야경 특화</span></div>
+            <div class="hotel-body">
+              <h3>호텔 인디고 상하이 온 더 번드</h3>
+              <p class="hotel-location">📍 남외탄 황푸강변</p>
+              <p>강변 부티크 호텔. 강 뷰 객실과 루프탑 바(Char)에서 와이탄 야경 감상. 친구 여행의 하이라이트</p>
+              <div class="hotel-price">2인 1박 <strong>¥1,100~1,800</strong> (1인당 ~105,000원~)</div>
+              <div class="hotel-tags"><span>강 뷰</span><span>루프탑 바</span><span>Wi-Fi</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Hotel+Indigo+Shanghai+on+the+Bund" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Shanghai" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Shanghai" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-friends -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       가족 여행
+       ══════════════════════════════════════════════════════ -->
+  <div class="type-content" id="type-family">
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
+          <h2>3박 4일 추천 일정</h2>
+          <p>아이·어르신과 함께하는 상하이 — 디즈니·전망대·임정 유적·수향마을 3박 4일. 평지 도시라 이동 편함</p>
+        </div>
+
+        <div class="day-tabs" id="family-tabs">
+          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
+          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
+          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
+          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
+        </div>
+
+        <div class="day-content active" id="family-day1">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 1</span>
+            <div><h3>도착 → 와이탄 & 난징동루</h3><p>평탄한 보행가와 강변 산책로로 아이·어르신 부담 없는 첫날</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 상하이 푸둥 공항 도착</h4><p>짐 많은 가족은 택시(약 ¥150)가 편함. 마글레브(¥50)+지하철도 가능. 유모차는 지하철 엘리베이터 활용</p></div></div>
+            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🛍 난징동루 보행가</h4><p>차 없는 평지 보행가라 아이·어르신 걷기 편함. 관광 트램(¥5) 타보기. 간식·기념품 구경</p></div></div>
+            <div class="tl-item"><div class="tl-time">17:30</div><div class="tl-body"><h4>🌃 와이탄 & 황푸강 야경</h4><p>강변 산책로가 넓고 평탄해 온 가족 산책에 최적. 푸둥 스카이라인 배경 가족 야경 사진</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍽 로컬 저녁 후 체크인</h4><p>강남 요리 가족 저녁(홍샤오러우·볶음밥 등 아이 입맛에도 무난). 이후 숙소로, 내일 디즈니 위해 일찍 취침</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day2">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 2</span>
+            <div><h3>상하이 디즈니랜드 온종일</h3><p>세계 최대 디즈니 성 — 아이가 평생 기억할 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">08:00</div><div class="tl-body"><h4>🎢 디즈니 오픈런</h4><p>지하철 11호선 디즈니역. 개장 전 도착. 1일권 어른 ¥475~719 / 아동·경로 할인. 공식 앱으로 대기시간 확인</p></div></div>
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🏰 인챈티드 스토리북 캐슬</h4><p>세계 최대 디즈니 성. 아이 첫 인사·기념 사진 명소. 성 내부 투어와 미니 어트랙션도 있음</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🚀 트론 라이트사이클 파워런</h4><p>상하이 디즈니 시그니처 코스터(키 122cm↑). 어린 아이는 옆의 판타지랜드에서 부모 교대 탑승</p></div></div>
+            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍔 파크 내 점심 & 퍼레이드</h4><p>디즈니 캐릭터 퍼레이드 관람. 식사는 패스트푸드·중식당 선택. 4인 ¥300~500</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🎠 판타지랜드·투모로우랜드</h4><p>어린 아이 맞춤 어트랙션. 곰돌이 푸·회전목마·아기 코끼리. 지치면 여기서 느긋하게</p></div></div>
+            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🎆 야간 불꽃쇼 & 귀숙</h4><p>성 앞 야간 조명·불꽃쇼 관람 후 숙소로. 어르신·아이 무리하지 않게 일찍 마무리</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day3">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 3</span>
+            <div><h3>예원 + 동방명주 + 임정 유적</h3><p>전통 정원·전망대와 대한민국 임시정부 유적으로 뜻깊은 하루</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🏯 예원 & 성황묘</h4><p>명대 정원(어른 ¥40, 아동 할인). 성황묘 먹자골목에서 샤오롱바오·주전부리. 아이도 즐기는 구경거리</p></div></div>
+            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🌆 동방명주 전망대</h4><p>468m 방송탑(¥160~). 유리 바닥 전망대·아래층 상하이 역사관. 아이들 좋아하는 랜드마크</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🐋 상하이 해양수족관 (선택)</h4><p>동방명주 바로 옆. 어른 ¥160 / 어린이 ¥110. 세계 최장급 해저터널. 아이 최애 코스</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🇰🇷 대한민국 임시정부 청사</h4><p>마당루, 신천지 인근(¥20). 어르신·아이에게 뜻깊은 역사 교육의 장. 태극기·집무실 복원 관람</p></div></div>
+            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍲 홍샤오러우 가족 저녁</h4><p>상하이식 삼겹살 간장조림. 달큰해서 아이도 좋아하는 맛. 볶음면·완탕도 곁들이기</p></div></div>
+          </div>
+        </div>
+
+        <div class="day-content" id="family-day4">
+          <div class="day-header">
+            <span class="day-num-badge">DAY 4</span>
+            <div><h3>주자자오 수향마을 → 귀국</h3><p>평온한 물의 마을 산책으로 마지막 날 여유롭게</p></div>
+          </div>
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🚤 주자자오 수향마을</h4><p>지하철 17호선. 평탄한 강변 골목과 옛 다리. 유람선(¥50~) 뱃놀이. 어르신 산책·아이 구경 모두 좋음</p></div></div>
+            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍚 수향마을 점심</h4><p>강변 식당에서 쫑쯔·현지식. 아이 간식(찐빵·꼬치)도 다양. 마을 구경하며 천천히</p></div></div>
+            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🛍 시내 복귀 & 기념품</h4><p>난징시루·면세점에서 중국차·과자·캐릭터 상품. 아이 굿즈·어르신 선물 챙기기</p></div></div>
+            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이·어르신 동반 가족은 3시간 전 공항 도착 권장. 짐 많을 때는 택시가 가장 편함</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">💰 예산 가이드</span>
+          <h2>가족 여행 예상 경비</h2>
+          <p>3박 4일 · 어른 2 + 초등생 2인 (4인 가족) 총비용 · 디즈니 포함</p>
+        </div>
+        <div class="budget-grid">
+          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">480,000 ~ 1,200,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 가족룸)</h4><span class="budget-range">240,000 ~ 600,000원</span><span class="budget-note">4인 가족룸 기준</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎢</span><div class="budget-info"><h4>디즈니 (4인)</h4><span class="budget-range">350,000 ~ 550,000원</span><span class="budget-note">1일권 ¥475~719 · 요일별</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료 (4인)</h4><span class="budget-range">100,000 ~ 200,000원</span><span class="budget-note">전망대·수족관·예원·임정</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">250,000 ~ 450,000원</span><span class="budget-note">4인 1끼 ¥150~350</span></div></div>
+          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4인)</h4><span class="budget-range">60,000 ~ 130,000원</span><span class="budget-note">공항 이동·주자자오 포함</span></div></div>
+        </div>
+        <div class="budget-total">
+          <div>
+            <span class="total-label">3박 4일 가족 여행 4인 총 예상 경비</span>
+            <span class="total-amount">1,480,000 ~ 3,130,000원</span>
+          </div>
+          <span class="total-note">절약형(LCC+가족룸 공유) ~ 여유형(FSC+디즈니 공식 호텔+프리미어 액세스)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-badge">🏨 숙소 추천</span>
+          <h2>가족 여행 추천 숙소</h2>
+          <p>가족룸·키즈 어메니티·편의 시설이 잘 갖춰진 곳</p>
+        </div>
+        <div class="hotel-grid">
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
+            <div class="hotel-body">
+              <h3>홀리데이 인 익스프레스 상하이 푸둥</h3>
+              <p class="hotel-location">📍 지하철 접근 · 루자쭈이 근처</p>
+              <p>글로벌 브랜드 도시형 호텔. 4인 가족룸·무료 조식. 지하철 좋아 디즈니·와이탄 이동 편리</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥550~850</strong> (~105,000원~)</div>
+              <div class="hotel-tags"><span>가족룸</span><span>무료 조식</span><span>Wi-Fi</span><span>지하철 인접</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Holiday+Inn+Express+Shanghai+Pudong" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
+            <div class="hotel-body">
+              <h3>상하이 메리어트 호텔 시티 센터</h3>
+              <p class="hotel-location">📍 인민광장 도보 5분</p>
+              <p>도심 중심 5성 호텔. 넓은 패밀리룸·수영장·조식 뷔페 완비. 어린이 어메니티 충실, 믿을 수 있는 브랜드</p>
+              <div class="hotel-price">가족룸 1박 <strong>¥1,000~1,700</strong> (~190,000원~)</div>
+              <div class="hotel-tags"><span>패밀리룸</span><span>수영장</span><span>어린이 어메니티</span><span>조식 뷔페</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Shanghai+Marriott+Hotel+City+Centre" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+          <div class="hotel-card">
+            <div class="hotel-badge-row"><span class="hotel-badge fam">디즈니 공식</span></div>
+            <div class="hotel-body">
+              <h3>토이 스토리 호텔 (상하이 디즈니 리조트)</h3>
+              <p class="hotel-location">📍 디즈니 무료 셔틀</p>
+              <p>디즈니 공식 가성비 호텔. 토이 스토리 테마 객실·캐릭터 조식. 얼리 입장 특전으로 인기 어트랙션 먼저!</p>
+              <div class="hotel-price">가족 1박 <strong>¥1,100~1,900</strong> (~209,000원~)</div>
+              <div class="hotel-tags"><span>디즈니 얼리입장</span><span>테마 객실</span><span>무료 셔틀</span><span>키즈 존</span></div>
+              <a href="https://www.agoda.com/ko-kr/search?searchText=Toy+Story+Hotel+Shanghai+Disney+Resort" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
+            </div>
+          </div>
+        </div>
+        <div class="aff-cta">
+          <a href="https://www.agoda.com/ko-kr/search?searchText=Shanghai" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
+          <a href="https://www.booking.com/searchresults.ko.html?ss=Shanghai" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
+        </div>
+      </div>
+    </section>
+  </div><!-- /type-family -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 항공권
+       ══════════════════════════════════════════════════════ -->
+  <section class="section section-alt" id="flights">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">✈ 항공권</span>
+        <h2>인천 ↔ 상하이 (푸둥) 항공권</h2>
+        <p>비행시간 약 2시간 · 인천 ICN → 상하이 푸둥 PVG</p>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <table>
+          <thead>
+            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="airline-badge">✈ 춘추항공</span></td><td>LCC 직항</td><td>2h 00m</td><td class="price-cell">120,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/PVG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 제주항공</span></td><td>LCC 직항</td><td>1h 55m</td><td class="price-cell">130,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/PVG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 티웨이항공</span></td><td>LCC 직항</td><td>1h 55m</td><td class="price-cell">130,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/PVG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 중국동방항공</span></td><td>FSC 직항</td><td>2h 00m</td><td class="price-cell">160,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/PVG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 아시아나항공</span></td><td>FSC 직항</td><td>1h 55m</td><td class="price-cell">220,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/PVG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>1h 55m</td><td class="price-cell">240,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/PVG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="aff-cta">
+        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/PVG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
+        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=PVG&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
+        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DPVG&leg2=from%3DPVG%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       공통: 현지 팁
+       ══════════════════════════════════════════════════════ -->
+  <section class="section" id="tips">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">💡 현지 팁</span>
+        <h2>상하이 여행 꿀팁</h2>
+        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card"><span class="tip-icon">🛂</span><h3>중국 비자·무비자</h3><p>한국 여권은 2024년 말부터 관광 30일 이내 무비자 입국 시행 중(정책 변동 가능). 제3국 경유 시 240시간 환승 무비자(TWOV)·단체 관광 무비자도 활용 가능. 출발 전 최신 비자 정책 반드시 확인</p></div>
+        <div class="tip-card"><span class="tip-icon">💴</span><h3>위안화 & 모바일페이</h3><p>현금보다 알리페이·위챗페이가 필수. 외국 신용카드(비자/마스터) 등록 가능해졌으니 사전 세팅. 소액 위안화 현금도 일부 준비. ¥1(위안)≈190원</p></div>
+        <div class="tip-card"><span class="tip-icon">🚇</span><h3>지하철·교통카드</h3><p>세계 최대급 노선망으로 어디든 지하철로 이동. 공공교통카드 또는 메트로 앱 QR 이용. 1회 ¥3~7로 저렴. 평지 도시라 에스컬레이터·엘리베이터 잘 돼 어르신도 편함</p></div>
+        <div class="tip-card"><span class="tip-icon">🌐</span><h3>만리방화벽(VPN 필요)</h3><p>구글·유튜브·인스타·카카오톡·라인 접속 차단. 출발 전 VPN 앱 설치 필수. 단, 한국 통신사 데이터 로밍을 쓰면 방화벽이 우회되어 구글·카톡이 대체로 정상 작동</p></div>
+        <div class="tip-card"><span class="tip-icon">🇰🇷</span><h3>임정 유적 참관</h3><p>대한민국 임시정부 청사(마당루, ¥20)와 루쉰공원 내 윤봉길 의사 매헌(기념관). 입장료 저렴. 어르신·아이와 함께 뜻깊은 역사 코스로 추천</p></div>
+        <div class="tip-card"><span class="tip-icon">🎢</span><h3>디즈니 앱·예매</h3><p>상하이 디즈니 공식 앱 설치 후 입장권 사전 예매·날짜 지정 필수. 프리미어 액세스(유료 우선탑승)·실시간 대기시간 확인. 인기 어트랙션은 개장 직후 공략</p></div>
+        <div class="tip-card"><span class="tip-icon">🔌</span><h3>전압 220V</h3><p>한국과 같은 220V(50Hz). 콘센트는 멀티형이 많아 한국 플러그가 대부분 그대로 들어가지만, 만약을 위해 멀티어댑터 하나 챙기면 안심</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
+          <p>초보 여행자를 위한 여행 가이드 + 예약 연결 서비스</p>
+          <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
+        </div>
+        <div class="footer-nav">
+          <div>
+            <h4>일본 투어·티켓</h4>
+            <a href="osaka.html">오사카</a>
+            <a href="fukuoka.html">후쿠오카</a>
+            <a href="tokyo.html">도쿄</a>
+            <a href="kyoto.html">교토</a>
+          </div>
+          <div>
+            <h4>동남아 투어·티켓</h4>
+            <a href="bangkok.html">방콕</a>
+            <a href="danang.html">다낭</a>
+            <a href="bali.html">발리</a>
+            <a href="singapore.html">싱가포르</a>
+          </div>
+          <div>
+            <h4>국내 투어·티켓</h4>
+            <a href="jeju.html">제주도</a>
+            <a href="busan.html">부산</a>
+            <a href="gangneung.html">강릉</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>가격·일정은 변동될 수 있으므로 예약 전 최신 정보를 확인하세요.</p>
+        <p>© 2026 트래블코스트 · TravelCost</p>
+        <p style="margin-top:6px"><a href="/guide" style="color:inherit;opacity:.85">이용가이드</a> · <a href="/privacy" style="color:inherit;opacity:.85">개인정보처리방침</a> · <a href="/terms" style="color:inherit;opacity:.85">이용약관</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
+    function initDayTabs() {}
+
+    // 여행 유형 탭 전환
+    function switchType(type, btn) {
+      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('type-' + type).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
+    function showDay(type, day, btn) {
+      const tabsEl = document.getElementById(type + '-tabs');
+      const container = tabsEl.parentElement;
+      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(type + '-day' + day);
+      if (target) target.classList.add('active');
+    }
+  </script>
+<script>
+// PWA — Service Worker 등록
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+  <script src="/analytics.js"></script>
+<script src="/pwa-install.js" defer></script>
+  <script>
+  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
+  (function(){
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
+      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
+      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
+      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=31.230&longitude=121.474'
+      +'&current=temperature_2m,weather_code,relative_humidity_2m'
+      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FShanghai';
+    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+      if(!w||!w.current) return;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
+      var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];
+      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
+      g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
+      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
+      g('destWeather').hidden=false;
+    }).catch(function(){});
+  })();
+  </script>
+<script src="/icons.js" defer></script>
+<script src="/nav.js" defer></script>
+<script src="/bizfooter.js" defer></script>
+</body>
+</html>
