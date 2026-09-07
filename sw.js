@@ -4,7 +4,7 @@
 //  - HTML / API : 네트워크 우선 (항상 최신). 실패 시 캐시 → 최후에 오프라인 폴백
 //  - 정적 자산  : 캐시 우선 + 백그라운드 갱신 (stale-while-revalidate)
 
-const CACHE = 'travelcost-v4';
+const CACHE = 'travelcost-v5';
 
 // 설치 시 미리 담아둘 최소 셸 (오프라인 폴백용)
 const SHELL = [
