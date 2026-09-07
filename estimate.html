@@ -279,6 +279,7 @@
       <h2>이 예산으로 예약하기</h2>
       <div class="sub">가격·재고는 각 플랫폼에서 실시간으로 확인하세요. 결제는 해당 플랫폼에서 직접 진행됩니다.</div>
       <div id="affBox"></div>
+      <div id="goodsBox" style="margin-top:14px"></div>
       <div id="affDisc"></div>
     </div>
 
@@ -642,6 +643,9 @@ function renderAff(){
         (b.note ? '<span>' + esc(b.note) + '</span>' : '') + '</div>' +
       ctas + '</div>';
   }).join('');
+  /* 여행 준비물(#3) — 견적 목적지 맞춤으로 노출. 예산 확인 직후가 구매 검토 순간 */
+  var gd = $('goodsBox');
+  if (gd && AFF.goodsForTrip) gd.innerHTML = AFF.goodsForTrip(ctx);
   $('affDisc').innerHTML = AFF.disclosureHtml();
 }
 

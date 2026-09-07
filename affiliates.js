@@ -291,14 +291,14 @@
     /* for = 이 상품을 노출할 /prepare 체크리스트 항목 id (맥락 일치 배치).
        charge = D-1 "기기 충전 + 보조배터리", pack = D-3 "짐 싸기" */
     items: [
-      { ico: '🔌', name: '팬택 30W C타입 초고속 충전기 + 60W 케이블', url: 'https://toss.im/_m/B0HHYJcs', for: 'charge' },
-      { ico: '🔌', name: '아이엠듀 20W PD 고속충전기 (2개입)',        url: 'https://toss.im/_m/1AxwKeut', for: 'charge' },
-      { ico: '🎧', name: '아크로 인팟 무선 스테레오 이어폰',          url: 'https://toss.im/_m/jr4QSOHj', for: 'pack' },
-      { ico: '🤳', name: '아크로 스마트폰 360° 셀카봉',               url: 'https://toss.im/_m/5zEvxndd', for: 'pack' },
-      { ico: '🎗️', name: '루카 폰 목걸이 넥스트랩 (분실방지)',        url: 'https://toss.im/_m/15nLqudC', for: 'pack' },
-      { ico: '🎗️', name: '루카 폰 손목 스트랩',                       url: 'https://toss.im/_m/h5JZP9td', for: 'pack' },
-      { ico: '📱', name: '아이엠듀 맥세이프 스마트톡',                url: 'https://toss.im/_m/tsNEnIWA', for: 'pack' },
-      { ico: '📱', name: '루카 맥세이프 그립 스마트톡',              url: 'https://toss.im/_m/5BS5efts', for: 'pack' }
+      { ico: '🔌', name: '팬택 30W C타입 초고속 충전기 + 60W 케이블', url: 'https://toss.im/_m/B0HHYJcs', for: 'charge', tags: ['universal'] },
+      { ico: '🔌', name: '아이엠듀 20W PD 고속충전기 (2개입)',        url: 'https://toss.im/_m/1AxwKeut', for: 'charge', tags: ['universal'] },
+      { ico: '🎧', name: '아크로 인팟 무선 스테레오 이어폰',          url: 'https://toss.im/_m/jr4QSOHj', for: 'pack', tags: ['universal'] },
+      { ico: '🤳', name: '아크로 스마트폰 360° 셀카봉',               url: 'https://toss.im/_m/5zEvxndd', for: 'pack', tags: ['universal'] },
+      { ico: '🎗️', name: '루카 폰 목걸이 넥스트랩 (분실방지)',        url: 'https://toss.im/_m/15nLqudC', for: 'pack', tags: ['universal'] },
+      { ico: '🎗️', name: '루카 폰 손목 스트랩',                       url: 'https://toss.im/_m/h5JZP9td', for: 'pack', tags: ['universal'] },
+      { ico: '📱', name: '아이엠듀 맥세이프 스마트톡',                url: 'https://toss.im/_m/tsNEnIWA', for: 'pack', tags: ['universal'] },
+      { ico: '📱', name: '루카 맥세이프 그립 스마트톡',              url: 'https://toss.im/_m/5BS5efts', for: 'pack', tags: ['universal'] }
     ]
   };
 
@@ -319,11 +319,24 @@
       rows + '</div>';
   }
 
-  /* 전체 여행 준비물을 한 카드로(상단 노출용). 항목별 goodsFor 와 중복 노출 가능. */
-  function goodsHtml() {
-    var g = TRAVEL_GOODS;
-    if (!g.items.length) return '';
-    var cards = g.items.map(function (it) {
+  /* ── 목적지 기후 인지(#1) ──────────────────────────────
+     목적지 라벨 → 기후 태그. 여름 휴양/겨울/장거리에 맞는 준비물을 태우기 위함.
+     현재 상품(8개)은 전부 'universal'(충전·폰) 이라 어느 목적지에도 노출된다.
+     여름(beach)·겨울(cold)·장거리(longhaul) 전용 상품을 추가하면 tags 에 해당 값을
+     넣는 것만으로 맞는 목적지에서만 노출된다(예: 래시가드 tags:['beach']). */
+  var DEST_CLIMATE = {
+    '발리':'beach','다낭':'beach','나트랑':'beach','세부':'beach','코타키나발루':'beach',
+    '오키나와':'beach','방콕':'beach','싱가포르':'beach','계림':'temperate',
+    '삿포로':'cold','파리':'cold','백두산':'cold','장가계':'cold',
+    '제주':'beach','부산':'beach','강릉':'beach'
+  };
+  var LONGHAUL = { '파리':1,'발리':1,'코타키나발루':1,'세부':1,'나트랑':1,'싱가포르':1 };
+  function climateOf(label){ return DEST_CLIMATE[label] || 'temperate'; }
+
+  /* 카드 그리드 공용 렌더 */
+  function renderGoodsCards(list, title) {
+    if (!list.length) return '';
+    var cards = list.map(function (it) {
       return '<a class="aff-goods-card" href="' + esc(it.url) + '"' +
         ' target="_blank" rel="nofollow sponsored noopener">' +
         '<span class="agc-ico">' + it.ico + '</span>' +
@@ -331,9 +344,31 @@
         '<span class="agc-go">토스쇼핑에서 보기 →</span></a>';
     }).join('');
     return '<div class="aff-goods">' +
-      '<div class="aff-goods-head"><span class="agh-title">🧳 여행 준비물 미리 담기</span>' +
-      '<span class="agh-coupon">🎁 ' + esc(g.coupon) + '</span></div>' +
+      '<div class="aff-goods-head"><span class="agh-title">🧳 ' + esc(title) + '</span>' +
+      '<span class="agh-coupon">🎁 ' + esc(TRAVEL_GOODS.coupon) + '</span></div>' +
       '<div class="aff-goods-grid">' + cards + '</div></div>';
+  }
+
+  /* 전체 여행 준비물(상단 노출용). 항목별 goodsFor 와 중복 노출 가능. */
+  function goodsHtml() {
+    return renderGoodsCards(TRAVEL_GOODS.items, '여행 준비물 미리 담기');
+  }
+
+  /* 목적지 맞춤(#1): 그 여행의 기후에 맞는 상품 + 전천후 상품.
+     ctx.city(한글 도시명)로 기후 판별. 현재는 전천후만 있어 전체가 노출되지만,
+     계절 상품을 추가하면 자동으로 목적지에 맞게 필터된다. */
+  function goodsForTrip(ctx) {
+    var label = (ctx && ctx.city) || '';
+    var clim = climateOf(label);
+    var want = { universal:1 }; want[clim] = 1;
+    if (LONGHAUL[label]) want.longhaul = 1;
+    var list = TRAVEL_GOODS.items.filter(function (it) {
+      var tags = it.tags || ['universal'];
+      for (var i=0;i<tags.length;i++){ if (want[tags[i]]) return true; }
+      return false;
+    });
+    var title = label ? label + ' 여행 준비물' : '여행 준비물 미리 담기';
+    return renderGoodsCards(list, title);
   }
 
   /* 이미 존재하는 URL(예: 마이리얼트립 라이브 검색이 돌려준 상품 URL)에
@@ -423,6 +458,7 @@
     track: track,
     goodsFor: goodsFor,
     goodsHtml: goodsHtml,
+    goodsForTrip: goodsForTrip,
     hasPaidLinks: hasPaidLinks,
     disclosure: disclosure,
     disclosureHtml: disclosureHtml
