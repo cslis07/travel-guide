@@ -149,8 +149,6 @@
 
   <div id="stages"></div>
 
-  <div id="goodsBox" style="margin-top:26px"></div>
-
   <p class="pr-foot">
     체크 상태는 이 브라우저에만 저장되며 서버로 전송되지 않습니다.<br>
     비자·입국 요건은 국가와 시점에 따라 달라지므로 반드시 공식 기관에서 최종 확인하세요.<br>
@@ -368,7 +366,9 @@ function render(){
           (isNow ? '<span class="stage-badge">지금 할 것</span>' : '') +
         '</div>' +
         '<div class="stage-body">' + body + '</div>' +
-      '</section>';
+      '</section>' +
+      /* 짐 싸기(D-3) 단계 바로 뒤에 여행 준비물(토스쇼핑) 노출 — 구매 맥락과 일치 + 중간 배치라 잘 보임 */
+      (st.id === 'd3' && window.AFF && AFF.goodsHtml ? AFF.goodsHtml() : '');
   }).join('');
 
   document.querySelectorAll('[data-todo]').forEach(function(cb){
@@ -406,11 +406,7 @@ function render(){
 
   render();
 
-  /* 여행 준비물(토스쇼핑 쉐어링크) 블록 */
-  if (window.AFF && AFF.goodsHtml) {
-    var gb = document.getElementById('goodsBox');
-    if (gb) gb.innerHTML = AFF.goodsHtml();
-  }
+  /* 여행 준비물 블록은 render() 안에서 D-3(짐 싸기) 단계 뒤에 노출된다 */
 
   /* 제휴 고지 — 링크가 있는 페이지엔 반드시 노출 */
   if (window.AFF) {
