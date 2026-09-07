@@ -711,7 +711,9 @@ if('serviceWorker' in navigator){
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 }
 </script>
-  <script src="/analytics.js"></script>
+    <script src="/affiliates.js"></script>
+  <script src="/destaff.js" defer></script>
+<script src="/analytics.js"></script>
 <script src="/pwa-install.js" defer></script>
   <script>
   // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)

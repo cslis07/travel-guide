@@ -218,7 +218,7 @@ function searchFlightDeep() {
 
   const urls = {
     skyscanner: `https://www.skyscanner.co.kr/transport/flights/ICN/${to}/${sky(dep)}/${sky(ret)}/?adults=${pax}&cabinclass=economy`,
-    tripcom:    `https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=${to}&ddate=${dep}&rdate=${ret}&adult=${pax}&cabin=Y`,
+    tripcom:    _tcTrack(`https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=${to}&ddate=${dep}&rdate=${ret}&adult=${pax}&cabin=Y`),
     expedia:    `https://www.expedia.co.kr/Flights-Search?trip=roundtrip` +
                 `&leg1=from%3DICN%2Cto%3D${to}%2Cdeparture%3D${dep}TANYT` +
                 `&leg2=from%3D${to}%2Cto%3DICN%2Cdeparture%3D${ret}TANYT` +
@@ -226,6 +226,26 @@ function searchFlightDeep() {
   };
 
   window.open(urls[selectedFlightPlatform] ?? urls.skyscanner, '_blank', 'noopener,noreferrer');
+}
+
+// ── 트립닷컴 제휴 추적 (홈 검색위젯) ─────────────────────────
+// 그동안 홈 위젯의 트립닷컴 링크는 추적값 없이 나가 수수료가 0이었다(누수).
+function _tcTrack(url){ return (window.AFF && AFF.track) ? AFF.track('tripcom', url) : url; }
+// 숙소는 도시 "이름"이 아니라 숫자 city ID가 필수(이름은 빈 결과 페이지).
+// AFF 레지스트리(TRIPCOM_CITY)의 ID로 만들고 날짜·인원까지 넘긴다(실측: checkin/checkout/adult 반영됨).
+const _TC_KO = { Osaka:'오사카', Fukuoka:'후쿠오카', Tokyo:'도쿄', Bangkok:'방콕', 'Da Nang':'다낭',
+                 Bali:'발리', Singapore:'싱가포르', Paris:'파리', Jeju:'제주', Busan:'부산' };
+function _tcHotel(city, cin, cout, guests){
+  if (!window.AFF || !AFF.url) return null;
+  const ko = _TC_KO[city] || city;
+  const tc = AFF.PARTNERS.find(p => p.key === 'tripcom');
+  const base = tc && AFF.url(tc, ko, 'stay', { city: ko, sub: 'home-stay' });
+  if (!base) return null;                       // city ID 없으면 만들지 않는다
+  const u = new URL(base);
+  u.searchParams.set('checkin',  cin.replace(/-/g, '/'));
+  u.searchParams.set('checkout', cout.replace(/-/g, '/'));
+  u.searchParams.set('adult', guests); u.searchParams.set('crn', '1');
+  return u.toString();
 }
 
 // ── 숙소 딥링크 ──
@@ -242,7 +262,7 @@ function searchHotelDeep() {
   const urls = {
     agoda:     `https://www.agoda.com/search?searchText=${enc}&checkIn=${cin}&checkOut=${cout}&rooms=1&adults=${guests}&lang=ko`,
     hotelscom: `https://www.hotels.com/search.do?q-destination=${enc}&q-check-in=${cin}&q-check-out=${cout}&q-rooms=1&q-room-0-adults=${guests}`,
-    tripcom:   `https://kr.trip.com/hotels/?locale=ko_KR&city=${enc}&checkIn=${cin}&checkOut=${cout}&adult=${guests}&rooms=1`,
+    tripcom:   _tcHotel(city, cin, cout, guests) || `https://kr.trip.com/hotels/?locale=ko_KR&city=${enc}&checkIn=${cin}&checkOut=${cout}&adult=${guests}&rooms=1`,
   };
 
   window.open(urls[selectedHotelPlatform] ?? urls.agoda, '_blank', 'noopener,noreferrer');
