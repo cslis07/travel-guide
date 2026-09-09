@@ -328,7 +328,7 @@
     '발리':'beach','다낭':'beach','나트랑':'beach','세부':'beach','코타키나발루':'beach',
     '오키나와':'beach','방콕':'beach','싱가포르':'beach','계림':'temperate',
     '삿포로':'cold','파리':'cold','백두산':'cold','장가계':'cold','홍콩':'temperate','타이베이':'beach','상하이':'temperate',
-    '제주':'beach','부산':'beach','강릉':'beach'
+    '속초':'beach','양양':'beach','삼척':'beach','태안':'beach','춘천':'temperate','포천':'temperate','대전':'temperate','제주':'beach','부산':'beach','강릉':'beach'
   };
   var LONGHAUL = { '파리':1,'발리':1,'코타키나발루':1,'세부':1,'나트랑':1,'싱가포르':1 };
   function climateOf(label){ return DEST_CLIMATE[label] || 'temperate'; }
