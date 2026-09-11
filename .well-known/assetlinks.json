@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "kr.co.travelcost.twa",
+      "sha256_cert_fingerprints": [
+        "09:35:47:B6:91:74:BC:7A:1B:FF:5D:50:88:0F:20:0F:C1:12:9E:DB:9E:9C:3C:66:52:F2:C2:50:0B:BA:A2:DB"
+      ]
+    }
+  }
+]
