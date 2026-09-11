@@ -11,6 +11,12 @@
 ### 🚀 배포
 - 프로덕션 배포 (`nav.js`·`sw.js`) — SW 캐시 v14→v15, nav.js/sw.js 프로덕션 반영 확인.
 
+### 📱 추가 — 안드로이드 앱(TWA APK)
+- travelcost.co.kr을 로드하는 **TWA APK 최초 빌드** — `Documents\travelcost.apk`(~1.2MB).
+  packageId `kr.co.travelcost.twa`, 서명키 `키스토어\travelcost-twa.jks`로 서명·검증.
+- `.well-known/assetlinks.json` 배포(서명 SHA256 등록) → 설치 앱에서 **주소창 제거(전체화면)**.
+- TWA라 이후 웹 배포는 앱에 자동 반영, APK 재빌드는 아이콘·스플래시 변경 시에만 필요.
+
 ### ♻️ 개선 — 내비게이션 통일(상단 헤더 + 하단 탭)
 - **문제**: 페이지마다 헤더 메뉴의 항목·순서·색·라벨이 제각각이었고, estimate/prepare에서는
   `여행지`가 존재하지 않는 `#destinations` 앵커를 가리켜 클릭해도 아무 데도 안 갔다.
