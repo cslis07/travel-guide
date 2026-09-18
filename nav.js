@@ -32,7 +32,7 @@
     { href: '/prepare',       key: '/prepare',  icon: 'check-circle', label: '출국 준비', color: C_PREP,   bold: true },
     { href: '/tours',         key: '/tours',    icon: 'ticket',       label: '투어·티켓' },
     { href: '/airport',       key: '/airport',  icon: 'plane',        label: '인천공항' },
-    { href: '/mytrip',        key: '/mytrip',   icon: 'briefcase',    label: '내 여행' }
+    { href: '/trips',         key: '/trips',    icon: 'briefcase',    label: '내 여행' }
   ];
 
   /* ── 하단 탭(모바일): 홈 + 여행 흐름 상위 4단계 (5개, HIG 권장) ──
@@ -89,6 +89,7 @@
     var last = p.split('/').pop() || '';
     if (!last || last === 'index') return '/';
     if (DEST_PAGES.indexOf(last) > -1) return 'dest';
+    if (last === 'trip') return '/trips';   // 여행 허브도 '내 여행' 활성
     return '/' + last;
   }
 

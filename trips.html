@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="트래블코스트 내 여행 — 여행마다 일정·예산·예약·준비물·공항을 하나로 관리하세요.">
+  <title>내 여행 | 트래블코스트</title>
+  <link rel="canonical" href="https://travelcost.co.kr/trips">
+  <meta name="robots" content="noindex,follow">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+<style>
+  body{background:var(--gray-50)}
+  .tw{max-width:640px;margin:0 auto;padding:0 16px 40px}
+  .tw-head{display:flex;align-items:center;justify-content:space-between;padding:20px 2px 8px}
+  .tw-head h1{font-size:24px;font-weight:800;letter-spacing:-.02em}
+  .tw-head .sub{font-size:12.5px;color:var(--gray-500);font-weight:600;margin-top:2px}
+  .newbtn{border:none;background:var(--primary);color:#fff;border-radius:14px;padding:11px 15px;font-size:13.5px;font-weight:800;display:flex;align-items:center;gap:6px;cursor:pointer;box-shadow:var(--shadow)}
+  .filters{display:flex;gap:7px;margin:6px 0 16px}
+  .fchip{padding:7px 13px;border-radius:999px;border:1px solid var(--gray-200);background:#fff;font-size:12.5px;font-weight:700;color:var(--gray-600);cursor:pointer}
+  .fchip.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .tcard{border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);background:#fff;cursor:pointer;transition:transform .12s,box-shadow .12s;margin-bottom:16px}
+  .tcard:active{transform:scale(.99)}
+  .tcover{height:130px;position:relative;padding:14px;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
+  .cov-blue{background:linear-gradient(135deg,#1B4FD8,#0ea5e9)} .cov-osaka{background:linear-gradient(135deg,#f97316,#e5484d)}
+  .cov-purple{background:linear-gradient(135deg,#7c3aed,#1B4FD8)} .cov-green{background:linear-gradient(135deg,#039855,#22c55e)}
+  .cov-pink{background:linear-gradient(135deg,#db2777,#f97316)}
+  .dday{align-self:flex-start;background:rgba(255,255,255,.24);backdrop-filter:blur(6px);padding:4px 11px;border-radius:999px;font-size:12px;font-weight:800}
+  .tcover h3{font-size:22px;font-weight:800;text-shadow:0 1px 10px rgba(0,0,0,.22)}
+  .tcover .dt{font-size:12.5px;font-weight:600;opacity:.96}
+  .tbar{padding:0 14px}.tbar .pr{height:6px;border-radius:999px;background:var(--gray-100);overflow:hidden;margin-top:12px}
+  .tbar .pr i{display:block;height:100%;background:var(--primary);border-radius:999px}
+  .tmeta{padding:11px 14px;display:flex;gap:14px;align-items:center;font-size:12px;color:var(--gray-600);font-weight:600}
+  .avz{margin-left:auto;display:flex}.avz span{width:22px;height:22px;border-radius:50%;border:2px solid #fff;margin-left:-7px;display:grid;place-items:center;font-size:10px;font-weight:800;color:#fff}
+  .empty{text-align:center;padding:60px 20px;color:var(--gray-500)}
+  .empty .em{font-size:44px}.empty h3{font-size:16px;color:var(--gray-700);margin:10px 0 4px}.empty p{font-size:13px}
+  .sech{font-size:12px;font-weight:800;color:var(--gray-400);letter-spacing:.02em;margin:8px 2px 10px;text-transform:uppercase}
+  /* 모달 */
+  .mwrap{position:fixed;inset:0;background:rgba(16,24,40,.5);display:none;align-items:flex-end;justify-content:center;z-index:1000}
+  .mwrap.on{display:flex}
+  .modal{background:#fff;width:100%;max-width:640px;border-radius:22px 22px 0 0;padding:18px 18px 28px;animation:up .25s cubic-bezier(.2,.9,.3,1);max-height:92vh;overflow-y:auto}
+  @keyframes up{from{transform:translateY(100%)}to{transform:none}}
+  .grip{width:38px;height:4px;background:var(--gray-200);border-radius:999px;margin:0 auto 14px}
+  .modal h3{font-size:18px;font-weight:800;margin-bottom:14px}
+  label.fl{display:block;font-size:12.5px;font-weight:700;color:var(--gray-600);margin:12px 0 5px}
+  .in{width:100%;padding:12px 13px;border:1px solid var(--gray-200);border-radius:12px;font-size:14px;font-family:inherit;background:var(--gray-50)}
+  .row2{display:flex;gap:10px}.row2>div{flex:1}
+  .covpick{display:flex;gap:8px;margin-top:4px}
+  .covpick i{width:34px;height:34px;border-radius:10px;cursor:pointer;border:2px solid transparent}
+  .covpick i.on{border-color:var(--gray-800);transform:scale(1.08)}
+  .save{width:100%;padding:14px;border:none;border-radius:14px;background:var(--primary);color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:18px}
+  svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+</style>
+</head>
+<body>
+<div class="tw">
+  <div class="tw-head">
+    <div><h1>내 여행</h1><div class="sub" id="subCount"></div></div>
+    <button class="newbtn" onclick="openNew()"><svg class="i" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>새 여행</button>
+  </div>
+  <div class="filters">
+    <span class="fchip on" data-f="upcoming" onclick="setF(this)">예정</span>
+    <span class="fchip" data-f="past" onclick="setF(this)">지난 여행</span>
+    <span class="fchip" data-f="all" onclick="setF(this)">전체</span>
+  </div>
+  <div id="list"></div>
+</div>
+
+<!-- 새 여행 모달 -->
+<div class="mwrap" id="newModal">
+  <div class="modal">
+    <div class="grip"></div>
+    <h3>새 여행 만들기</h3>
+    <label class="fl">어디로 가세요?</label>
+    <input class="in" id="f-city" placeholder="예: 오사카, 다낭, 강릉">
+    <div class="row2">
+      <div><label class="fl">출발일</label><input class="in" id="f-start" type="date"></div>
+      <div><label class="fl">도착일</label><input class="in" id="f-end" type="date"></div>
+    </div>
+    <label class="fl">총예산 (원, 선택)</label>
+    <input class="in" id="f-budget" type="number" inputmode="numeric" placeholder="예: 1200000">
+    <div class="row2">
+      <div><label class="fl">인원</label><input class="in" id="f-ppl" type="number" inputmode="numeric" value="1" min="1"></div>
+      <div><label class="fl">커버 색</label>
+        <div class="covpick" id="covpick">
+          <i class="cov-osaka on" data-c="osaka"></i><i class="cov-blue" data-c="blue"></i>
+          <i class="cov-purple" data-c="purple"></i><i class="cov-green" data-c="green"></i><i class="cov-pink" data-c="pink"></i>
+        </div>
+      </div>
+    </div>
+    <button class="save" onclick="createTrip()">여행 만들기</button>
+  </div>
+</div>
+
+<script src="/trips.js"></script>
+<script>
+var T = window.TripStore; T.seedIfEmpty();
+var curF = 'upcoming', curCover = 'osaka';
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function won(n){return '₩' + (n||0).toLocaleString('ko-KR');}
+
+function classify(t){
+  var end = T.daysBetween(new Date().toISOString().slice(0,10), t.end);
+  return end < 0 ? 'past' : 'upcoming';
+}
+function setF(el){ document.querySelectorAll('.fchip').forEach(function(c){c.classList.remove('on');}); el.classList.add('on'); curF = el.dataset.f; render(); }
+
+function render(){
+  var list = T.all().sort(function(a,b){ return new Date(a.start)-new Date(b.start); });
+  var up = list.filter(function(t){return classify(t)==='upcoming';});
+  var past = list.filter(function(t){return classify(t)==='past';});
+  document.getElementById('subCount').textContent = list.length + '개의 여행 · 예정 ' + up.length + '개';
+  var show = curF==='upcoming'?up : curF==='past'?past : list;
+  var el = document.getElementById('list');
+  if(!show.length){
+    el.innerHTML = '<div class="empty"><div class="em">🧳</div><h3>아직 여행이 없어요</h3><p>“새 여행”을 눌러 첫 여행을 만들어 보세요.</p></div>';
+    return;
+  }
+  el.innerHTML = show.map(card).join('');
+}
+function card(t){
+  var pct = T.spentPct(t), done = classify(t)==='past';
+  var mem = (t.members||[]).slice(0,3).map(function(m){return '<span style="background:'+m.color+'">'+esc(m.name.slice(0,1))+'</span>';}).join('');
+  if((t.members||[]).length>3) mem += '<span style="background:#98A2B3">+'+((t.members.length)-3)+'</span>';
+  var budgetLbl = T.budgetTotal(t) ? (pct+'% 사용') : '예산 설정 중';
+  var places = (t.days||[]).reduce(function(s,d){return s+((d.items||[]).length);},0);
+  return '<div class="tcard" onclick="location.href=\'/trip?id='+t.id+'\'">'
+    + '<div class="tcover cov-'+esc(t.cover)+'"'+(done?' style="filter:grayscale(.25)"':'')+'>'
+    +   '<span class="dday"'+(done?' style="background:rgba(0,0,0,.28)"':'')+'>'+T.ddayText(t)+'</span>'
+    +   '<div><h3>'+esc(t.city)+'</h3><div class="dt">'+T.fmtMD(t.start)+' – '+T.fmtMD(t.end)+' · '+T.tripLength(t)+'일 · '+(t.members||[]).length+'명</div></div>'
+    + '</div>'
+    + (T.budgetTotal(t)&&!done?'<div class="tbar"><div class="pr"><i style="width:'+pct+'%"></i></div></div>':'')
+    + '<div class="tmeta"><span>📍 일정 '+places+'곳</span><span>💰 '+budgetLbl+'</span><div class="avz">'+mem+'</div></div>'
+    + '</div>';
+}
+
+/* 새 여행 */
+function openNew(){
+  var d = new Date(Date.now()+7*864e5), d2 = new Date(Date.now()+9*864e5);
+  document.getElementById('f-start').value = d.toISOString().slice(0,10);
+  document.getElementById('f-end').value = d2.toISOString().slice(0,10);
+  document.getElementById('f-city').value=''; document.getElementById('f-budget').value=''; document.getElementById('f-ppl').value=1;
+  document.getElementById('newModal').classList.add('on');
+}
+document.getElementById('covpick').addEventListener('click',function(e){
+  var i=e.target.closest('i'); if(!i)return;
+  this.querySelectorAll('i').forEach(function(x){x.classList.remove('on');}); i.classList.add('on'); curCover=i.dataset.c;
+});
+document.getElementById('newModal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('on'); });
+function createTrip(){
+  var city=document.getElementById('f-city').value.trim()||'새 여행';
+  var start=document.getElementById('f-start').value, end=document.getElementById('f-end').value;
+  if(!start||!end||new Date(end)<new Date(start)){ alert('날짜를 확인해 주세요.'); return; }
+  var ppl=Math.max(1,parseInt(document.getElementById('f-ppl').value)||1);
+  var members=[{name:'나',color:T.MEMBER_COLORS[0]}];
+  for(var i=1;i<ppl;i++) members.push({name:'동행'+i,color:T.MEMBER_COLORS[i%T.MEMBER_COLORS.length]});
+  var t=T.create({city:city,cover:curCover,start:start,end:end,budgetTotal:parseInt(document.getElementById('f-budget').value)||0,members:members});
+  location.href='/trip?id='+t.id;
+}
+render();
+</script>
+<script src="/icons.js" defer></script>
+<script src="/nav.js" defer></script>
+</body>
+</html>
