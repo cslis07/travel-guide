@@ -39,10 +39,10 @@
      공항은 헤더·홈 배너·푸터에 남기고, 탐색 진입점인 '여행지'를 탭에 올린다. */
   var TABS = [
     { href: '/',              key: '/',         icon: 'home',        label: '홈' },
+    { href: '/trips',         key: '/trips',    icon: 'briefcase',   label: '내 여행' },
     { href: '/#destinations', key: 'dest',      icon: 'map-pin',     label: '여행지' },
     { href: '/estimate',      key: '/estimate', icon: 'coins',       label: '예산 견적' },
-    { href: '/prepare',       key: '/prepare',  icon: 'check-circle', label: '출국 준비' },
-    { href: '/tours',         key: '/tours',    icon: 'ticket',      label: '투어·티켓' }
+    { href: '/prepare',       key: '/prepare',  icon: 'check-circle', label: '출국 준비' }
   ];
 
   // 목적지 가이드 23곳 — 활성 표시용(전용 탭 없이 '여행지'가 대표)
