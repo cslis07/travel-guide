@@ -22,6 +22,11 @@
   .cov-blue{background:linear-gradient(135deg,#1B4FD8,#0ea5e9)}.cov-osaka{background:linear-gradient(135deg,#f97316,#e5484d)}
   .cov-purple{background:linear-gradient(135deg,#7c3aed,#1B4FD8)}.cov-green{background:linear-gradient(135deg,#039855,#22c55e)}.cov-pink{background:linear-gradient(135deg,#db2777,#f97316)}
   .back{position:absolute;top:18px;left:14px;width:34px;height:34px;border-radius:11px;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);display:grid;place-items:center;cursor:pointer;color:#fff}
+  .share{position:absolute;top:18px;right:14px;width:34px;height:34px;border-radius:11px;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);display:grid;place-items:center;cursor:pointer;color:#fff}
+  .tl-map{display:inline-flex;align-items:center;gap:4px;margin-top:7px;font-size:11px;font-weight:700;color:var(--primary);text-decoration:none}
+  .tl-map svg{width:13px;height:13px}
+  #tc-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:#101828;color:#fff;font-size:13px;font-weight:600;padding:11px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:3000;pointer-events:none;max-width:88vw;text-align:center}
+  #tc-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
   .cover .dday{align-self:flex-start;background:rgba(255,255,255,.24);backdrop-filter:blur(6px);padding:4px 11px;border-radius:999px;font-size:12px;font-weight:800}
   .cover h1{font-size:27px;font-weight:800;text-shadow:0 1px 12px rgba(0,0,0,.22)}
   .cover .dt{font-size:13px;font-weight:600;opacity:.96}
@@ -143,6 +148,8 @@
 <g id="ic-swap"><path d="M7 4 3 8l4 4"/><path d="M3 8h14M17 20l4-4-4-4"/><path d="M21 16H7"/></g>
 <g id="ic-tick"><polyline points="20 6 9 17 4 12"/></g>
 <g id="ic-arrow"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></g>
+<g id="ic-share"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/></g>
+<g id="ic-map"><line x1="8" y1="3" x2="8" y2="19"/><line x1="16" y1="5" x2="16" y2="21"/><polygon points="1 5 8 3 16 5 23 3 23 19 16 21 8 19 1 21"/></g>
 </defs></svg>
 
 <script src="/affiliates.js"></script>
@@ -168,6 +175,7 @@ function renderShell(){
   document.getElementById('wrap').innerHTML =
     '<div class="cover cov-'+esc(trip.cover)+'">'
     + '<div class="back" onclick="location.href=\'/trips\'">'+svg('ic-back')+'</div>'
+    + '<div class="share" onclick="shareTrip()" title="동행과 공유">'+svg('ic-share')+'</div>'
     + '<span class="dday">'+T.ddayText(trip)+' · '+T.tripLength(trip)+'일</span>'
     + '<h1>'+esc(trip.city)+'</h1>'
     + '<div class="dt">'+trip.start.replace(/-/g,'.')+' – '+T.fmtMD(trip.end)+' · 👤 '+mem+'</div>'
@@ -196,7 +204,7 @@ function renderPane(){
   else if(curTab==='budget'){ p.innerHTML=paneBudget(); drawDonut(); }
   else if(curTab==='resv') p.innerHTML=paneResv();
   else if(curTab==='pack') p.innerHTML=panePack();
-  else p.innerHTML=paneAir();
+  else { p.innerHTML=paneAir(); loadAirCong(); }
   updateFab();
 }
 
@@ -212,7 +220,9 @@ function panePlan(){
   items.forEach(function(it,i){
     var dc=DOTC[it.type]||DOTC.note, last=(i===items.length-1);
     body+='<div class="tl-item"><div class="tl-rail"><div class="tl-dot" style="background:'+dc[0]+';color:'+dc[1]+'">'+svg(dc[2])+'</div>'+(last?'':'<div class="tl-line"></div>')+'</div>'
-      +'<div class="tl-body"><div class="tl-time">'+esc(it.time||'')+'</div><div class="tl-card"><h4>'+esc(it.title)+'</h4>'+(it.memo?'<p>'+esc(it.memo)+'</p>':'')+'</div></div></div>';
+      +'<div class="tl-body"><div class="tl-time">'+esc(it.time||'')+'</div><div class="tl-card"><h4>'+esc(it.title)+'</h4>'+(it.memo?'<p>'+esc(it.memo)+'</p>':'')
+      +'<a class="tl-map" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((trip.city||'')+' '+it.title)+'">'+svg('ic-map')+' 지도에서 보기</a>'
+      +'</div></div></div>';
   });
   return '<div class="daychips">'+chips+'</div>'+body+'<div class="addrow" onclick="openItemSheet()">＋ 장소·메모·예약 추가</div>';
 }
@@ -293,12 +303,33 @@ function paneAir(){
     +'<div class="status">정시 · 탑승구 '+esc(f.terminal||'미정')+'</div></div>'
     : '<div class="card" style="text-align:center;padding:24px"><div style="font-size:36px">✈️</div><h4 style="margin:8px 0 4px;font-size:15px">항공편을 등록하세요</h4><p style="color:var(--gray-500);font-size:12.5px">편명을 넣으면 실시간 상태·탑승구를 여기서 확인해요.</p><button class="save" style="max-width:220px;margin:14px auto 0" onclick="openFlightSheet()">항공편 등록</button></div>';
   return fcard
-    + '<div class="sech">지금 인천공항</div>'
-    + '<div class="gauge"><div class="g"><div class="lv" style="color:var(--success)">원활</div><div class="meter"><i style="width:35%;background:var(--success)"></i></div><div class="lb">T2 출국장</div></div>'
-    +  '<div class="g"><div class="lv" style="color:var(--accent)">혼잡</div><div class="meter"><i style="width:82%;background:var(--accent)"></i></div><div class="lb">T2 주차</div></div>'
-    +  '<div class="g"><div class="lv">18분</div><div class="lb" style="margin-top:8px">보안검색 예상</div></div></div>'
+    + '<div class="sech">지금 인천공항 (실시간)</div>'
+    + '<div id="airCong"><div class="card" style="color:var(--gray-400);font-size:12.5px;text-align:center;padding:14px">⏳ 출국장 혼잡도 불러오는 중…</div></div>'
     + '<a class="biglink" href="/airport">🛫 인천공항 실시간 상세 (혼잡도·주차·항공편·라운지) '+svg('ic-arrow')+'</a>'
     + '<a class="biglink" href="/prepare">✅ 출발 전 체크리스트 열기 '+svg('ic-arrow')+'</a>';
+}
+function itemsOf(d){ var b=d&&d.response&&d.response.body; if(!b)return []; var i=b.items; if(!i)return []; if(Array.isArray(i))return i; if(i.item!==undefined)return Array.isArray(i.item)?i.item:[i.item]; return []; }
+function loadAirCong(){
+  var box=document.getElementById('airCong'); if(!box)return;
+  var fb='<div class="card" style="color:var(--gray-400);font-size:12.5px;text-align:center;padding:12px">실시간 혼잡도는 인천공항 페이지에서 확인하세요.</div>';
+  if(typeof fetch!=='function'){ box.innerHTML=fb; return; }
+  var termId=(trip.flight && /2/.test(trip.flight.terminal||'')) ? 'P02' : 'P01';
+  var termLbl=termId==='P02'?'제2터미널':'제1터미널';
+  fetch('/api/proxy?path='+encodeURIComponent('statusOfDepartureCongestion/getDepartureCongestion')+'&terminalId='+termId+'&numOfRows=200')
+    .then(function(r){ return r.ok?r.json():null; })
+    .then(function(d){
+      var list=itemsOf(d);
+      if(!list.length){ box.innerHTML='<div class="card" style="color:var(--gray-400);font-size:12.5px;text-align:center;padding:12px">실시간 혼잡도는 인천공항 페이지에서 확인하세요.</div>'; return; }
+      var maxWait=0,total=0;
+      list.forEach(function(g){ var wt=parseInt(g.waitTime||0)||0, wl=parseInt(g.waitLength||0)||0; if(wt>maxWait)maxWait=wt; total+=wl; });
+      var lv = maxWait<15?['원활','var(--success)',35] : maxWait<30?['보통','var(--accent)',65] : ['혼잡','var(--danger)',90];
+      box.innerHTML='<div class="gauge">'
+        +'<div class="g"><div class="lv" style="color:'+lv[1]+'">'+lv[0]+'</div><div class="meter"><i style="width:'+lv[2]+'%;background:'+lv[1]+'"></i></div><div class="lb">'+termLbl+' 출국장</div></div>'
+        +'<div class="g"><div class="lv">'+(total>0?total.toLocaleString('ko-KR')+'명':'-')+'</div><div class="lb" style="margin-top:8px">대기 인원</div></div>'
+        +'<div class="g"><div class="lv">'+(maxWait>0?'약 '+maxWait+'분':'-')+'</div><div class="lb" style="margin-top:8px">최대 대기</div></div></div>'
+        +'<div style="font-size:10px;color:var(--gray-400);text-align:center;margin-top:6px">출처: 인천국제공항공사 실시간 · '+termLbl+' 출국장 게이트 기준</div>';
+    })
+    .catch(function(){ box.innerHTML='<div class="card" style="color:var(--gray-400);font-size:12.5px;text-align:center;padding:12px">실시간 혼잡도는 인천공항 페이지에서 확인하세요.</div>'; });
 }
 
 /* ═══ 시트 ═══ */
@@ -404,6 +435,21 @@ function openFlightSheet(){
 function saveFlight(){
   trip.flight={no:document.getElementById('fl-no').value.trim(),airline:document.getElementById('fl-air').value.trim(),from:document.getElementById('fl-from').value.trim()||'ICN',to:document.getElementById('fl-to').value.trim(),dep:document.getElementById('fl-dep').value.trim(),arr:document.getElementById('fl-arr').value.trim(),date:trip.start,terminal:'미정'};
   T.upsert(trip); reget(); closeSheet(); renderShell();
+}
+
+/* ── 공유(동행 초대) — 서버 없이 링크로 여행 전달 ── */
+function toast(m){ var t=document.getElementById('tc-toast'); if(!t){ t=document.createElement('div'); t.id='tc-toast'; document.body.appendChild(t); } t.textContent=m; t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(function(){ t.classList.remove('on'); },2600); }
+function encTrip(t){
+  var slim={ city:t.city, cover:t.cover, start:t.start, end:t.end, members:t.members, budget:t.budget, days:t.days, expenses:t.expenses, reservations:t.reservations, checklist:t.checklist, flight:t.flight };
+  return btoa(unescape(encodeURIComponent(JSON.stringify(slim))));
+}
+function shareTrip(){
+  try{
+    var link=location.origin+'/trips?t='+encTrip(trip);
+    if(navigator.share){ navigator.share({ title:'트래블코스트 — '+trip.city+' 여행', text:trip.city+' 여행 계획을 공유합니다', url:link }).catch(function(){}); return; }
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(link).then(function(){ toast('공유 링크를 복사했어요 — 동행에게 보내세요'); }, function(){ prompt('이 링크를 복사해 공유하세요', link); }); }
+    else prompt('이 링크를 복사해 공유하세요', link);
+  }catch(e){ alert('공유 링크 생성에 실패했습니다.'); }
 }
 
 if(trip) renderShell();

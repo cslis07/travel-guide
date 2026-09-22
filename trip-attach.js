@@ -62,6 +62,8 @@
     if (p.budget) bits.push('예산 ₩' + p.budget.toLocaleString('ko-KR'));
     if (p.checklist && p.checklist.length) bits.push('준비물 ' + p.checklist.length + '개');
     if (p.itinerary && p.itinerary.length) bits.push('일정 ' + p.itinerary.length + '개');
+    if (p.reservations && p.reservations.length) bits.push('예약 ' + p.reservations.length + '개');
+    if (p.flight) bits.push('항공편');
     return bits.join(' · ') || '이 여행에 담기';
   }
 
@@ -117,7 +119,7 @@
       t.checklist = t.checklist || [];
       var have = {}; t.checklist.forEach(function (c) { have[c.text] = 1; });
       p.checklist.forEach(function (c) {
-        if (!have[c.text]) t.checklist.push({ id: 'a' + Math.random().toString(36).slice(2, 8), group: c.group || '기타', text: c.text, when: c.when || '', done: false });
+        if (!have[c.text]) t.checklist.push({ id: 'a' + Math.random().toString(36).slice(2, 8), group: c.group || '기타', text: c.text, when: c.when || '', done: !!c.done });
       });
     }
     if (p.itinerary && p.itinerary.length) {
@@ -125,6 +127,11 @@
       t.days[0].items = t.days[0].items || [];
       p.itinerary.forEach(function (it) { t.days[0].items.push({ id: 'i' + Math.random().toString(36).slice(2, 8), time: it.time || '', type: it.type || 'sight', title: it.title, memo: it.memo || '' }); });
     }
+    if (p.reservations && p.reservations.length) {
+      t.reservations = t.reservations || [];
+      p.reservations.forEach(function (r) { t.reservations.push({ id: 'r' + Math.random().toString(36).slice(2, 8), type: r.type || 'etc', title: r.title, detail: r.detail || '', status: r.status || 'planned', when: r.when || '' }); });
+    }
+    if (p.flight && !t.flight) { t.flight = p.flight; }
     return t;
   }
 

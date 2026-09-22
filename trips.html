@@ -98,9 +98,37 @@
 </div>
 
 <script src="/trips.js"></script>
+<script src="/trip-attach.js"></script>
 <script>
 var T = window.TripStore; T.seedIfEmpty();
 var curF = 'upcoming', curCover = 'osaka';
+
+/* ── 구 mytrip 데이터 이관(찜·편명·나만의 준비물) ── */
+function jget(k,d){ try{ return JSON.parse(localStorage.getItem(k)||d); }catch(e){ return JSON.parse(d); } }
+function legacyPayload(){
+  var saved=jget('tripguide_saved_places','[]'), flights=jget('icn_fav_flights','[]');
+  var custom=jget('icn_checklist_custom','[]'), state=jget('icn_checklist','{}');
+  var itinerary=(saved||[]).map(function(p){ return {type:'sight',title:p.title||'저장한 장소',memo:p.addr1||''}; });
+  var checklist=(custom||[]).map(function(c){ return {group:'나만의 준비물',text:c.text||'',when:'',done:!!state[c.id]}; }).filter(function(c){return c.text;});
+  var reservations=(flights||[]).map(function(f){ return {type:'flight',title:f.flightId||'항공편',detail:(f.dir==='dep'?'출발편':'도착편'),status:'planned'}; });
+  var dep=(flights||[]).filter(function(f){return f.dir==='dep';})[0]||(flights||[])[0], flight=null;
+  if(dep) flight={no:dep.flightId||'',airline:'',from:'ICN',to:'',dep:'',arr:'',date:'',terminal:'미정'};
+  var count=(saved||[]).length+(flights||[]).length+checklist.length;
+  return { count:count, payload:{label:'이전 내 여행 데이터 가져오기', itinerary:itinerary, checklist:checklist, reservations:reservations, flight:flight} };
+}
+function legacyBannerHtml(){
+  if(localStorage.getItem('tc_legacy_migrated')) return '';
+  var lp=legacyPayload(); if(lp.count<=0) return '';
+  window.__legacyPayload=lp.payload;
+  return '<div id="legacyBanner" style="display:flex;align-items:center;gap:10px;background:var(--accent-lt);'
+    +'border:1px solid #f6c99a;border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:12.5px;color:#7c3a00">'
+    +'<span style="font-size:20px">🗂️</span>'
+    +'<div style="flex:1;font-weight:700">이전에 저장한 찜·편명·준비물 '+lp.count+'개가 있어요<br><span style="font-weight:500;color:#9a5a20">여행 하나로 가져올 수 있습니다</span></div>'
+    +'<button onclick="importLegacy()" style="border:none;background:var(--accent);color:#fff;font-weight:800;font-size:12px;padding:8px 12px;border-radius:10px;cursor:pointer;white-space:nowrap">가져오기</button>'
+    +'<span onclick="dismissLegacy()" style="cursor:pointer;color:#b06a2a;font-weight:800;padding:4px">✕</span></div>';
+}
+function importLegacy(){ localStorage.setItem('tc_legacy_migrated','1'); window.TripAttach.open(window.__legacyPayload); }
+function dismissLegacy(){ localStorage.setItem('tc_legacy_migrated','1'); var b=document.getElementById('legacyBanner'); if(b) b.remove(); }
 
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function won(n){return '₩' + (n||0).toLocaleString('ko-KR');}
@@ -118,11 +146,12 @@ function render(){
   document.getElementById('subCount').textContent = list.length + '개의 여행 · 예정 ' + up.length + '개';
   var show = curF==='upcoming'?up : curF==='past'?past : list;
   var el = document.getElementById('list');
+  var banner = legacyBannerHtml();
   if(!show.length){
-    el.innerHTML = '<div class="empty"><div class="em">🧳</div><h3>아직 여행이 없어요</h3><p>“새 여행”을 눌러 첫 여행을 만들어 보세요.</p></div>';
+    el.innerHTML = banner + '<div class="empty"><div class="em">🧳</div><h3>아직 여행이 없어요</h3><p>“새 여행”을 눌러 첫 여행을 만들어 보세요.</p></div>';
     return;
   }
-  el.innerHTML = show.map(card).join('');
+  el.innerHTML = banner + show.map(card).join('');
 }
 function card(t){
   var pct = T.spentPct(t), done = classify(t)==='past';
@@ -163,6 +192,25 @@ function createTrip(){
   var t=T.create({city:city,cover:curCover,start:start,end:end,budgetTotal:parseInt(document.getElementById('f-budget').value)||0,members:members});
   location.href='/trip?id='+t.id;
 }
+
+/* ── 공유 링크(?t=)로 받은 여행 가져오기 ── */
+(function importShared(){
+  var enc = new URLSearchParams(location.search).get('t');
+  if(!enc) return;
+  try{
+    if(enc.length>600000) throw 0;
+    var obj = JSON.parse(decodeURIComponent(escape(atob(enc))));
+    if(!obj || !obj.city || !obj.start || !obj.end) throw 0;
+    var nt = T.create({ city:obj.city, cover:obj.cover||'blue', start:obj.start, end:obj.end,
+      members:(obj.members&&obj.members.length)?obj.members:[{name:'나',color:T.MEMBER_COLORS[0]}],
+      budgetTotal:(obj.budget&&obj.budget.total)||0 });
+    if(obj.days) nt.days=obj.days;
+    nt.expenses=obj.expenses||[]; nt.reservations=obj.reservations||[]; nt.checklist=obj.checklist||[]; nt.flight=obj.flight||null;
+    T.upsert(nt);
+    history.replaceState({},'', '/trips');
+    location.href='/trip?id='+nt.id; return;
+  }catch(e){ history.replaceState({},'', '/trips'); }
+})();
 render();
 </script>
 <script src="/icons.js" defer></script>
