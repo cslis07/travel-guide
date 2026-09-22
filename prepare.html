@@ -147,6 +147,13 @@
     <div class="pr-prog-bar"><i id="progBar" style="width:0%"></i></div>
   </div>
 
+  <button type="button" onclick="attachPrep()"
+    style="width:100%;margin:4px 0 2px;padding:13px;border:none;border-radius:var(--radius);
+    background:var(--primary);color:#fff;font-size:14.5px;font-weight:800;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:var(--shadow)">
+    🧳 이 준비물을 내 여행에 담기
+  </button>
+
   <div id="goodsTop" style="margin:18px 0"></div>
 
   <div id="stages"></div>
@@ -159,6 +166,8 @@
 </div>
 
 <script src="/affiliates.js"></script>
+<script src="/trips.js"></script>
+<script src="/trip-attach.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════════
    출국 준비 타임라인
@@ -420,6 +429,18 @@ function render(){
     p.innerHTML = AFF.disclosureHtml();
     document.querySelector('.pr-wrap').insertBefore(p, document.querySelector('.pr-foot'));
   }
+
+  /* 준비물 → 내 여행에 담기 */
+  window.attachPrep = function(){
+    var items = [];
+    STAGES.forEach(function(s){ (s.todos||[]).forEach(function(td){
+      items.push({ group: s.when, text: td.name, when: s.when });
+    }); });
+    var dep = (document.getElementById('departDate')||{}).value || '';
+    var end = '';
+    if(dep){ var e=new Date(dep); e.setDate(e.getDate()+3); end=e.toISOString().slice(0,10); }
+    window.TripAttach.open({ label:'준비물을 여행에 담기', checklist: items, start: dep, end: end });
+  };
 })();
 </script>
 

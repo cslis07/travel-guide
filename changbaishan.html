@@ -94,7 +94,7 @@
         <span class="dw-desc" id="dwDesc">현재 날씨</span>
         <span class="dw-detail" id="dwDetail"></span>
       </div>
-      <a href="tours.html?city=백두산" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 백두산 투어·패키지 실시간 검색 →</a>
+      <a href="tours.html?city=백두산" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 백두산 투어·패키지 실시간 검색 →</a><a href="#" onclick="TripAttach.open({label:'이 도시로 여행 만들기',city:'백두산'});return false;" style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;margin-left:8px;background:#1B4FD8;color:#fff;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🧳 백두산 여행 만들기</a>
     </div>
   </section>
 
@@ -707,5 +707,7 @@ if('serviceWorker' in navigator){
 <script src="/icons.js" defer></script>
 <script src="/nav.js" defer></script>
 <script src="/bizfooter.js" defer></script>
+<script src="/trips.js"></script>
+<script src="/trip-attach.js"></script>
 </body>
 </html>
