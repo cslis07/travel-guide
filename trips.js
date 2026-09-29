@@ -155,8 +155,26 @@
     e.id = uid(); e.krw = e.krw != null ? e.krw : toKRW(e.amount, e.currency || 'KRW');
     t.expenses = t.expenses || []; t.expenses.unshift(e); upsert(t); return t;
   }
+  function updateExpense(id, eid, patch) {
+    var t = get(id); if (!t) return; (t.expenses || []).forEach(function (e) { if (e.id === eid) { for (var k in patch) e[k] = patch[k]; } }); upsert(t); return t;
+  }
+  function removeExpense(id, eid) {
+    var t = get(id); if (!t) return; t.expenses = (t.expenses || []).filter(function (e) { return e.id !== eid; }); upsert(t); return t;
+  }
   function addReservation(id, r) { var t = get(id); if (!t) return; r.id = uid(); t.reservations = t.reservations || []; t.reservations.push(r); upsert(t); return t; }
+  function updateReservation(id, rid, patch) {
+    var t = get(id); if (!t) return; (t.reservations || []).forEach(function (r) { if (r.id === rid) { for (var k in patch) r[k] = patch[k]; } }); upsert(t); return t;
+  }
+  function removeReservation(id, rid) {
+    var t = get(id); if (!t) return; t.reservations = (t.reservations || []).filter(function (r) { return r.id !== rid; }); upsert(t); return t;
+  }
   function addChecklistItem(id, c) { var t = get(id); if (!t) return; c.id = uid(); c.done = false; t.checklist = t.checklist || []; t.checklist.push(c); upsert(t); return t; }
+  function updateChecklistItem(id, cid, patch) {
+    var t = get(id); if (!t) return; (t.checklist || []).forEach(function (c) { if (c.id === cid) { for (var k in patch) c[k] = patch[k]; } }); upsert(t); return t;
+  }
+  function removeChecklistItem(id, cid) {
+    var t = get(id); if (!t) return; t.checklist = (t.checklist || []).filter(function (c) { return c.id !== cid; }); upsert(t); return t;
+  }
   function toggleChecklist(id, cid) {
     var t = get(id); if (!t) return; (t.checklist || []).forEach(function (c) { if (c.id === cid) c.done = !c.done; }); upsert(t); return t;
   }
@@ -215,8 +233,10 @@
   window.TripStore = {
     KEY: KEY, RATES: RATES, CATS: CATS, MEMBER_COLORS: MEMBER_COLORS,
     all: all, get: get, create: create, upsert: upsert, remove: remove,
-    addExpense: addExpense, addReservation: addReservation,
-    addChecklistItem: addChecklistItem, toggleChecklist: toggleChecklist,
+    addExpense: addExpense, updateExpense: updateExpense, removeExpense: removeExpense,
+    addReservation: addReservation, updateReservation: updateReservation, removeReservation: removeReservation,
+    addChecklistItem: addChecklistItem, updateChecklistItem: updateChecklistItem, removeChecklistItem: removeChecklistItem,
+    toggleChecklist: toggleChecklist,
     addDayItem: addDayItem, updateDayItem: updateDayItem, removeDayItem: removeDayItem,
     ensureDays: ensureDays, seedIfEmpty: seedIfEmpty,
     // 계산

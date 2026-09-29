@@ -31,6 +31,8 @@
   .cov-purple{background:linear-gradient(135deg,#7c3aed,#1B4FD8)} .cov-green{background:linear-gradient(135deg,#039855,#22c55e)}
   .cov-pink{background:linear-gradient(135deg,#db2777,#f97316)}
   .dday{align-self:flex-start;background:rgba(255,255,255,.24);backdrop-filter:blur(6px);padding:4px 11px;border-radius:999px;font-size:12px;font-weight:800}
+  .tdel{position:absolute;top:12px;right:12px;width:32px;height:32px;border:none;border-radius:10px;background:rgba(0,0,0,.28);backdrop-filter:blur(6px);color:#fff;font-size:14px;cursor:pointer;line-height:1;z-index:2}
+  .tdel:active{background:rgba(0,0,0,.45)}
   .tcover h3{font-size:22px;font-weight:800;text-shadow:0 1px 10px rgba(0,0,0,.22)}
   .tcover .dt{font-size:12.5px;font-weight:600;opacity:.96}
   .tbar{padding:0 14px}.tbar .pr{height:6px;border-radius:999px;background:var(--gray-100);overflow:hidden;margin-top:12px}
@@ -138,6 +140,11 @@ function classify(t){
   return end < 0 ? 'past' : 'upcoming';
 }
 function setF(el){ document.querySelectorAll('.fchip').forEach(function(c){c.classList.remove('on');}); el.classList.add('on'); curF = el.dataset.f; render(); }
+function delTrip(id){
+  var t=T.get(id); if(!t) return;
+  if(!confirm('“'+t.city+'” 여행을 삭제할까요?\n일정·예산·예약·준비물이 모두 지워지며 되돌릴 수 없습니다.')) return;
+  T.remove(id); render();
+}
 
 function render(){
   var list = T.all().sort(function(a,b){ return new Date(a.start)-new Date(b.start); });
@@ -161,6 +168,7 @@ function card(t){
   var places = (t.days||[]).reduce(function(s,d){return s+((d.items||[]).length);},0);
   return '<div class="tcard" onclick="location.href=\'/trip?id='+t.id+'\'">'
     + '<div class="tcover cov-'+esc(t.cover)+'"'+(done?' style="filter:grayscale(.25)"':'')+'>'
+    +   '<button class="tdel" title="여행 삭제" onclick="event.stopPropagation();delTrip(\''+t.id+'\')">🗑</button>'
     +   '<span class="dday"'+(done?' style="background:rgba(0,0,0,.28)"':'')+'>'+T.ddayText(t)+'</span>'
     +   '<div><h3>'+esc(t.city)+'</h3><div class="dt">'+T.fmtMD(t.start)+' – '+T.fmtMD(t.end)+' · '+T.tripLength(t)+'일 · '+(t.members||[]).length+'명</div></div>'
     + '</div>'

@@ -268,7 +268,7 @@ function expList(){
   return '<div class="card">'+ex.map(function(e){var c=T.catByKey(e.category);
     var split=(e.paidFor&&e.paidFor.length>1)?' <span class="bdg">나눔 '+e.paidFor.length+'명</span>':'';
     var curTxt=(e.currency&&e.currency!=='KRW')?e.currency+' '+(e.amount||0).toLocaleString():'';
-    return '<div class="exp"><div class="ic" style="background:'+c.color+'22">'+c.emoji+'</div><div><div class="nm">'+esc(e.memo||c.label)+split+'</div><div class="mt">'+c.label+' · '+(e.method==='cash'?'현금':'카드')+' · '+esc(e.paidBy||'나')+'</div></div><div class="amt"><b>'+won(e.krw)+'</b>'+(curTxt?'<small>'+curTxt+'</small>':'')+'</div></div>';
+    return '<div class="exp" style="cursor:pointer" onclick="openExpenseSheet(\''+e.id+'\')"><div class="ic" style="background:'+c.color+'22">'+c.emoji+'</div><div><div class="nm">'+esc(e.memo||c.label)+split+'</div><div class="mt">'+c.label+' · '+(e.method==='cash'?'현금':'카드')+' · '+esc(e.paidBy||'나')+'</div></div><div class="amt"><b>'+won(e.krw)+'</b>'+(curTxt?'<small>'+curTxt+'</small>':'')+' <span style="color:var(--gray-300);font-size:14px">›</span></div></div>';
   }).join('')+'</div>';
 }
 function drawDonut(){
@@ -284,7 +284,7 @@ function paneResv(){
   var rs=trip.reservations||[];
   var body=rs.length?rs.map(function(r){var m=RESV[r.type]||RESV.etc;
     var tag=r.status==='confirmed'?'<span class="tag" style="background:#e7f7ef;color:var(--success)">확정</span>':'<span class="tag" style="background:var(--accent-lt);color:var(--accent)">예정</span>';
-    return '<div class="resv"><div class="ic" style="background:'+m[0]+'">'+svg(m[1])+'</div><div style="flex:1"><h4>'+esc(r.title)+'</h4><div class="rt">'+esc(r.detail||'').replace(/\n/g,'<br>')+'</div></div>'+tag+'</div>';
+    return '<div class="resv" style="cursor:pointer" onclick="openResvSheet(\''+r.id+'\')"><div class="ic" style="background:'+m[0]+'">'+svg(m[1])+'</div><div style="flex:1"><h4>'+esc(r.title)+'</h4><div class="rt">'+esc(r.detail||'').replace(/\n/g,'<br>')+'</div></div>'+tag+'</div>';
   }).join(''):'<div class="card" style="color:var(--gray-400);font-size:12.5px;text-align:center;margin-bottom:10px">항공·숙소·투어 예약을 추가해 흐름에 연결하세요.</div>';
   var af=affLink('tours','🎟️ 투어·티켓 최저가 비교 (마이리얼트립·클룩·trip.com)');
   return body+af;
@@ -304,11 +304,27 @@ function panePack(){
   Object.keys(groups).forEach(function(g){
     var arr=groups[g], done=arr.filter(function(c){return c.done;}).length;
     out+='<div class="gh">'+esc(g)+'<span class="cnt">'+done+'/'+arr.length+'</span></div>';
-    out+=arr.map(function(c){return '<div class="chk'+(c.done?' done':'')+'"><div class="box'+(c.done?' ck':'')+'" onclick="toggleChk(\''+c.id+'\')">'+(c.done?svg('ic-tick'):'')+'</div><div class="t">'+esc(c.text)+'</div>'+(c.when?'<span class="when">'+esc(c.when)+'</span>':'')+'</div>';}).join('');
+    out+=arr.map(function(c){return '<div class="chk'+(c.done?' done':'')+'"><div class="box'+(c.done?' ck':'')+'" onclick="toggleChk(\''+c.id+'\')">'+(c.done?svg('ic-tick'):'')+'</div><div class="t" style="cursor:pointer" onclick="editChk(\''+c.id+'\')">'+esc(c.text)+'</div>'+(c.when?'<span class="when">'+esc(c.when)+'</span>':'')+'<button class="tl-edit" style="width:24px;height:24px;font-size:12px;margin-left:'+(c.when?'6px':'auto')+'" title="수정" onclick="editChk(\''+c.id+'\')">✎</button></div>';}).join('');
   });
   return out+'<a class="aff" style="margin-top:12px" href="/prepare">'+svg('ic-check')+' 출발일 기준 준비 타임라인·추천템 보기 '+svg('ic-arrow')+'</a>';
 }
 function toggleChk(cid){ T.toggleChecklist(tid,cid); reget(); renderShell(); }
+var editChkId=null;
+function editChk(cid){
+  var c=(trip.checklist||[]).filter(function(x){return x.id===cid;})[0]; if(!c) return;
+  editChkId=cid;
+  openSheet('<h3>준비물 수정</h3>'
+    +'<div class="row2"><div><label class="fl">분류</label><input class="in" id="ck-group" value="'+esc(c.group||'기타')+'"></div><div><label class="fl">언제 (선택)</label><input class="in" id="ck-when" value="'+esc(c.when||'')+'"></div></div>'
+    +'<label class="fl">항목</label><input class="in" id="ck-text" value="'+esc(c.text||'')+'">'
+    +'<button class="save" onclick="saveChkEdit()">저장</button>'
+    +'<button class="save" style="background:var(--gray-100);color:var(--danger);margin-top:8px" onclick="deleteChk()">삭제</button>');
+}
+function saveChkEdit(){
+  var text=document.getElementById('ck-text').value.trim(); if(!text){alert('항목을 입력하세요.');return;}
+  T.updateChecklistItem(tid,editChkId,{group:document.getElementById('ck-group').value.trim()||'기타',text:text,when:document.getElementById('ck-when').value.trim()});
+  reget(); closeSheet(); renderShell();
+}
+function deleteChk(){ if(!editChkId) return; if(!confirm('이 준비물을 삭제할까요?')) return; T.removeChecklistItem(tid,editChkId); reget(); closeSheet(); renderShell(); }
 
 /* ── 공항 ── */
 function paneAir(){
@@ -355,14 +371,21 @@ function closeSheet(){ sheet.classList.remove('on'); }
 function openSheet(html){ sbody.innerHTML='<div class="grip"></div>'+html; sheet.classList.add('on'); }
 function fabAction(){ ({plan:openItemSheet,budget:openExpenseSheet,resv:openResvSheet,pack:openPackSheet,air:openFlightSheet}[curTab])(); }
 
-/* 지출 추가 */
-var exState={cur:'JPY',cat:'food',method:'card',paidBy:'나',paidFor:['나']};
-function openExpenseSheet(){
-  if(!T.budgetTotal(trip)){ openBudgetSheet(); return; }
+/* 지출 추가·수정·삭제 */
+var exState={cur:'JPY',cat:'food',method:'card',paidBy:'나',paidFor:['나']}, editExp=null;
+function openExpenseSheet(expId){
   var members=(trip.members||[]).map(function(m){return m.name;});
-  exState={cur:'JPY',cat:'food',method:'card',paidBy:members[0]||'나',paidFor:members.slice()};
+  editExp=null; var e=null;
+  if(typeof expId==='string'){ e=(trip.expenses||[]).filter(function(x){return x.id===expId;})[0]; }
+  if(e){
+    editExp=e.id;
+    exState={cur:e.currency||'KRW',cat:e.category||'etc',method:e.method||'card',paidBy:e.paidBy||members[0]||'나',paidFor:(e.paidFor&&e.paidFor.length?e.paidFor.slice():members.slice())};
+  } else {
+    if(!T.budgetTotal(trip)){ openBudgetSheet(); return; }
+    exState={cur:'JPY',cat:'food',method:'card',paidBy:members[0]||'나',paidFor:members.slice()};
+  }
   var curs=['JPY','KRW','USD','EUR','THB','VND'];
-  var catg=T.CATS.map(function(c){return '<div class="catpick'+(c.key==='food'?' on':'')+'" data-cat="'+c.key+'" onclick="pickCat(this)"><span class="e">'+c.emoji+'</span>'+c.label+'</div>';}).join('');
+  var catg=T.CATS.map(function(c){return '<div class="catpick'+(c.key===exState.cat?' on':'')+'" data-cat="'+c.key+'" onclick="pickCat(this)"><span class="e">'+c.emoji+'</span>'+c.label+'</div>';}).join('');
   var people='';
   if(members.length>1){
     people='<label class="fl">누가 냈나요?</label>'
@@ -373,14 +396,15 @@ function openExpenseSheet(){
       +  members.map(function(m){return '<span class="seg'+(exState.paidFor.indexOf(m)>-1?' on':'')+'" data-f="'+esc(m)+'" onclick="toggleFor(this)">'+esc(m)+'</span>';}).join('')
       +'</div>';
   }
-  openSheet('<h3>지출 추가</h3>'
-    +'<div class="amtin"><input class="val" id="ex-amt" type="number" inputmode="decimal" placeholder="0" oninput="updKRW()"><div class="krw" id="ex-krw">≈ ₩0</div></div>'
-    +'<div class="segrow" id="ex-cur">'+curs.map(function(c){return '<span class="seg'+(c==='JPY'?' on':'')+'" data-cur="'+c+'" onclick="pickCur(this)">'+c+'</span>';}).join('')+'</div>'
+  openSheet('<h3>'+(editExp?'지출 수정':'지출 추가')+'</h3>'
+    +'<div class="amtin"><input class="val" id="ex-amt" type="number" inputmode="decimal" placeholder="0" value="'+(e?(e.amount||''):'')+'" oninput="updKRW()"><div class="krw" id="ex-krw">≈ '+won(e?e.krw:0)+'</div></div>'
+    +'<div class="segrow" id="ex-cur">'+curs.map(function(c){return '<span class="seg'+(c===exState.cur?' on':'')+'" data-cur="'+c+'" onclick="pickCur(this)">'+c+'</span>';}).join('')+'</div>'
     +'<div class="catgrid">'+catg+'</div>'
-    +'<div class="segrow"><span class="seg on" data-m="card" onclick="pickM(this)">💳 카드</span><span class="seg" data-m="cash" onclick="pickM(this)">💵 현금</span></div>'
+    +'<div class="segrow"><span class="seg'+(exState.method==='card'?' on':'')+'" data-m="card" onclick="pickM(this)">💳 카드</span><span class="seg'+(exState.method==='cash'?' on':'')+'" data-m="cash" onclick="pickM(this)">💵 현금</span></div>'
     +people
-    +'<label class="fl">메모 (선택)</label><input class="in" id="ex-memo" placeholder="예: 이치란 라멘">'
-    +'<button class="save" onclick="saveExpense()">저장</button>');
+    +'<label class="fl">메모 (선택)</label><input class="in" id="ex-memo" placeholder="예: 이치란 라멘" value="'+(e?esc(e.memo||''):'')+'">'
+    +'<button class="save" onclick="saveExpense()">'+(editExp?'저장':'추가')+'</button>'
+    +(editExp?'<button class="save" style="background:var(--gray-100);color:var(--danger);margin-top:8px" onclick="deleteExpense()">삭제</button>':''));
 }
 function pickCur(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cur=el.dataset.cur; updKRW(); }
 function pickCat(el){ document.querySelectorAll('.catpick').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cat=el.dataset.cat; }
@@ -404,8 +428,15 @@ function saveExpense(){
   var members=(trip.members||[]).map(function(m){return m.name;});
   var paidBy=exState.paidBy||members[0]||'나';
   var paidFor=(exState.paidFor&&exState.paidFor.length)?exState.paidFor.slice():[paidBy];
-  T.addExpense(tid,{date:new Date().toISOString().slice(0,10),amount:v,currency:exState.cur,krw:T.toKRW(v,exState.cur),category:exState.cat,method:exState.method,paidBy:paidBy,paidFor:paidFor,memo:document.getElementById('ex-memo').value.trim()});
+  var data={amount:v,currency:exState.cur,krw:T.toKRW(v,exState.cur),category:exState.cat,method:exState.method,paidBy:paidBy,paidFor:paidFor,memo:document.getElementById('ex-memo').value.trim()};
+  if(editExp){ T.updateExpense(tid,editExp,data); }
+  else { data.date=new Date().toISOString().slice(0,10); T.addExpense(tid,data); }
   reget(); closeSheet(); renderShell();
+}
+function deleteExpense(){
+  if(!editExp) return;
+  if(!confirm('이 지출을 삭제할까요?')) return;
+  T.removeExpense(tid,editExp); reget(); closeSheet(); renderShell();
 }
 
 /* 예산 설정 */
@@ -449,23 +480,33 @@ function deleteItem(){
 }
 
 /* 예약 추가 */
-var rvType='flight';
-function openResvSheet(){
+var rvType='flight', rvStatus='confirmed', editResv=null;
+function openResvSheet(resId){
+  editResv=null; var r=null;
+  if(typeof resId==='string'){ r=(trip.reservations||[]).filter(function(x){return x.id===resId;})[0]; }
+  rvType = r?(r.type||'flight'):'flight'; rvStatus = r?(r.status||'confirmed'):'confirmed'; if(r) editResv=r.id;
   var types=[['flight','항공'],['hotel','숙소'],['tour','투어·티켓'],['etc','기타']];
-  openSheet('<h3>예약 추가</h3>'
-    +'<div class="segrow" id="rv-type">'+types.map(function(t,i){return '<span class="seg'+(i===0?' on':'')+'" data-t="'+t[0]+'" onclick="pickRv(this)">'+t[1]+'</span>';}).join('')+'</div>'
-    +'<label class="fl">제목</label><input class="in" id="rv-title" placeholder="예: 대한항공 KE723">'
-    +'<label class="fl">상세 (선택)</label><input class="in" id="rv-detail" placeholder="예: ICN 08:05 → KIX 10:35 · 2인">'
-    +'<div class="segrow" style="margin-top:12px"><span class="seg on" data-st="confirmed" onclick="pickSt(this)">확정</span><span class="seg" data-st="planned" onclick="pickSt(this)">예정</span></div>'
-    +'<button class="save" onclick="saveResv()">추가</button>');
+  openSheet('<h3>'+(editResv?'예약 수정':'예약 추가')+'</h3>'
+    +'<div class="segrow" id="rv-type">'+types.map(function(t){return '<span class="seg'+(t[0]===rvType?' on':'')+'" data-t="'+t[0]+'" onclick="pickRv(this)">'+t[1]+'</span>';}).join('')+'</div>'
+    +'<label class="fl">제목</label><input class="in" id="rv-title" placeholder="예: 대한항공 KE723" value="'+(r?esc(r.title||''):'')+'">'
+    +'<label class="fl">상세 (선택)</label><input class="in" id="rv-detail" placeholder="예: ICN 08:05 → KIX 10:35 · 2인" value="'+(r?esc(r.detail||''):'')+'">'
+    +'<div class="segrow" style="margin-top:12px"><span class="seg'+(rvStatus==='confirmed'?' on':'')+'" data-st="confirmed" onclick="pickSt(this)">확정</span><span class="seg'+(rvStatus==='planned'?' on':'')+'" data-st="planned" onclick="pickSt(this)">예정</span></div>'
+    +'<button class="save" onclick="saveResv()">'+(editResv?'저장':'추가')+'</button>'
+    +(editResv?'<button class="save" style="background:var(--gray-100);color:var(--danger);margin-top:8px" onclick="deleteResv()">삭제</button>':''));
 }
-var rvStatus='confirmed';
 function pickRv(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); rvType=el.dataset.t; }
 function pickSt(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); rvStatus=el.dataset.st; }
 function saveResv(){
   var title=document.getElementById('rv-title').value.trim(); if(!title){alert('제목을 입력하세요.');return;}
-  T.addReservation(tid,{type:rvType,title:title,detail:document.getElementById('rv-detail').value.trim(),status:rvStatus,when:''});
+  var data={type:rvType,title:title,detail:document.getElementById('rv-detail').value.trim(),status:rvStatus};
+  if(editResv){ T.updateReservation(tid,editResv,data); }
+  else { data.when=''; T.addReservation(tid,data); }
   reget(); closeSheet(); renderShell();
+}
+function deleteResv(){
+  if(!editResv) return;
+  if(!confirm('이 예약을 삭제할까요?')) return;
+  T.removeReservation(tid,editResv); reget(); closeSheet(); renderShell();
 }
 
 /* 준비물 추가 */
