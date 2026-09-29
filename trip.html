@@ -120,6 +120,13 @@
   .catgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
   .catpick{padding:9px 4px;border-radius:12px;border:1px solid var(--gray-200);text-align:center;font-size:10.5px;font-weight:700;color:var(--gray-600);cursor:pointer}
   .catpick.on{border-color:var(--primary);background:var(--primary-lt);color:var(--primary)}.catpick .e{font-size:18px;display:block}
+  .pk-g{font-size:12px;font-weight:800;color:var(--gray-400);margin:14px 2px 8px;letter-spacing:.02em}
+  .pk-wrap{display:flex;flex-wrap:wrap;gap:8px}
+  .pk-item{display:inline-flex;align-items:center;gap:6px;padding:9px 13px;border:1px solid var(--gray-200);border-radius:999px;font-size:13px;font-weight:600;color:var(--gray-700);cursor:pointer;background:#fff;transition:.12s}
+  .pk-item:active{transform:scale(.96)}
+  .pk-item.on{border-color:var(--success);background:var(--success);color:#fff}
+  .pk-box{display:inline-grid;place-items:center;width:16px;height:16px;font-weight:800;line-height:1}
+  .pk-box svg{width:12px;height:12px}
   label.fl{display:block;font-size:12.5px;font-weight:700;color:var(--gray-600);margin:10px 0 5px}
   .in{width:100%;padding:11px 12px;border:1px solid var(--gray-200);border-radius:11px;font-size:14px;font-family:inherit;background:var(--gray-50)}
   .row2{display:flex;gap:9px}.row2>div{flex:1}
@@ -411,16 +418,43 @@ function saveResv(){
 }
 
 /* 준비물 추가 */
-function openPackSheet(){
-  openSheet('<h3>준비물 추가</h3>'
-    +'<div class="row2"><div><label class="fl">분류</label><input class="in" id="pk-group" placeholder="예: 서류 / 짐" value="짐"></div><div><label class="fl">언제 (선택)</label><input class="in" id="pk-when" placeholder="예: D-3"></div></div>'
-    +'<label class="fl">항목</label><input class="in" id="pk-text" placeholder="예: eSIM 준비">'
-    +'<button class="save" onclick="savePack()">추가</button>');
+/* 추천 준비물 목록 — 골라서 담는 방식 */
+var PACK_PRESET = [
+  { group:'서류·예약', items:['여권 (6개월 이상)','비자·입국 서류','항공권 예약 확인','숙소 예약 확인','여행자보험','국제운전면허증','여권 사본·비상 연락처'] },
+  { group:'전자기기', items:['멀티 어댑터','보조배터리','충전기·케이블','eSIM 또는 유심','포켓 와이파이'] },
+  { group:'짐·생활', items:['상비약','세면도구','기초 화장품·선크림','속옷·양말','겉옷·우산','목베개·안대'] },
+  { group:'돈·현지', items:['환전 (현지 통화)','해외결제 카드','현지 교통패스','비상금'] }
+];
+function packSheetHtml(){
+  var have={}; (trip.checklist||[]).forEach(function(c){ have[c.text]=1; });
+  var body = PACK_PRESET.map(function(g){
+    var rows = g.items.map(function(txt){
+      var on=!!have[txt], t2=esc(txt).replace(/'/g,"\\'");
+      return '<div class="pk-item'+(on?' on':'')+'" onclick="togglePreset(\''+t2+'\',\''+g.group+'\')"><span class="pk-box">'+(on?svg('ic-tick'):'+')+'</span>'+esc(txt)+'</div>';
+    }).join('');
+    return '<div class="pk-g">'+esc(g.group)+'</div><div class="pk-wrap">'+rows+'</div>';
+  }).join('');
+  var added=(trip.checklist||[]).length;
+  return '<h3>준비물 추가</h3>'
+    +'<div style="font-size:12.5px;color:var(--gray-500);margin:-4px 0 12px">체크할 항목을 눌러 담으세요'+(added?' · 담은 항목 '+added+'개':'')+'</div>'
+    + body
+    +'<div class="pk-g">직접 추가</div><div class="row2" style="gap:8px"><input class="in" id="pk-custom" placeholder="예: 우산" style="flex:1" onkeydown="if(event.key===\'Enter\')addCustomPack()"><button class="seg" style="flex:0 0 auto" onclick="addCustomPack()">추가</button></div>'
+    +'<button class="save" onclick="closeSheet()">완료</button>';
 }
-function savePack(){
-  var text=document.getElementById('pk-text').value.trim(); if(!text){alert('항목을 입력하세요.');return;}
-  T.addChecklistItem(tid,{group:document.getElementById('pk-group').value.trim()||'기타',text:text,when:document.getElementById('pk-when').value.trim()});
-  reget(); closeSheet(); renderShell();
+function openPackSheet(){ openSheet(packSheetHtml()); }
+function rerenderPackSheet(){ reget(); renderShell(); setTab('pack'); sbody.innerHTML='<div class="grip"></div>'+packSheetHtml(); sheet.classList.add('on'); }
+function togglePreset(text, group){
+  trip.checklist=trip.checklist||[];
+  var i=trip.checklist.map(function(c){return c.text;}).indexOf(text);
+  if(i>-1) trip.checklist.splice(i,1);
+  else trip.checklist.push({id:'p'+Math.random().toString(36).slice(2,8),group:group,text:text,when:'',done:false});
+  T.upsert(trip); rerenderPackSheet();
+}
+function addCustomPack(){
+  var el=document.getElementById('pk-custom'), v=el?el.value.trim():''; if(!v)return;
+  trip.checklist=trip.checklist||[];
+  if(!trip.checklist.some(function(c){return c.text===v;})) trip.checklist.push({id:'p'+Math.random().toString(36).slice(2,8),group:'기타',text:v,when:'',done:false});
+  T.upsert(trip); rerenderPackSheet();
 }
 
 /* 항공편 등록 */
