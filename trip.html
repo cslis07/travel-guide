@@ -261,7 +261,7 @@ function expList(){
   var ex=trip.expenses||[];
   if(!ex.length) return '<div class="card" style="color:var(--gray-400);font-size:12.5px;text-align:center">지출을 추가하면 여기에 쌓입니다.</div>';
   return '<div class="card">'+ex.map(function(e){var c=T.catByKey(e.category);
-    var split=(e.paidFor&&e.paidFor.length>1)?' <span class="bdg">나눔</span>':'';
+    var split=(e.paidFor&&e.paidFor.length>1)?' <span class="bdg">나눔 '+e.paidFor.length+'명</span>':'';
     var curTxt=(e.currency&&e.currency!=='KRW')?e.currency+' '+(e.amount||0).toLocaleString():'';
     return '<div class="exp"><div class="ic" style="background:'+c.color+'22">'+c.emoji+'</div><div><div class="nm">'+esc(e.memo||c.label)+split+'</div><div class="mt">'+c.label+' · '+(e.method==='cash'?'현금':'카드')+' · '+esc(e.paidBy||'나')+'</div></div><div class="amt"><b>'+won(e.krw)+'</b>'+(curTxt?'<small>'+curTxt+'</small>':'')+'</div></div>';
   }).join('')+'</div>';
@@ -351,30 +351,55 @@ function openSheet(html){ sbody.innerHTML='<div class="grip"></div>'+html; sheet
 function fabAction(){ ({plan:openItemSheet,budget:openExpenseSheet,resv:openResvSheet,pack:openPackSheet,air:openFlightSheet}[curTab])(); }
 
 /* 지출 추가 */
-var exState={cur:'JPY',cat:'food',method:'card',split:false};
+var exState={cur:'JPY',cat:'food',method:'card',paidBy:'나',paidFor:['나']};
 function openExpenseSheet(){
   if(!T.budgetTotal(trip)){ openBudgetSheet(); return; }
-  exState={cur:'JPY',cat:'food',method:'card',split:false};
+  var members=(trip.members||[]).map(function(m){return m.name;});
+  exState={cur:'JPY',cat:'food',method:'card',paidBy:members[0]||'나',paidFor:members.slice()};
   var curs=['JPY','KRW','USD','EUR','THB','VND'];
   var catg=T.CATS.map(function(c){return '<div class="catpick'+(c.key==='food'?' on':'')+'" data-cat="'+c.key+'" onclick="pickCat(this)"><span class="e">'+c.emoji+'</span>'+c.label+'</div>';}).join('');
+  var people='';
+  if(members.length>1){
+    people='<label class="fl">누가 냈나요?</label>'
+      +'<div class="segrow" id="ex-payer">'+members.map(function(m){return '<span class="seg'+(m===exState.paidBy?' on':'')+'" data-p="'+esc(m)+'" onclick="pickPayer(this)">'+esc(m)+'</span>';}).join('')+'</div>'
+      +'<label class="fl">누구의 지출인가요? <span style="font-weight:500;color:var(--gray-400)">(나눔 대상 · 여러 명 선택)</span></label>'
+      +'<div class="segrow" id="ex-for">'
+      +  '<span class="seg'+(exState.paidFor.length===members.length?' on':'')+'" id="ex-forall" onclick="allPaidFor()">전체</span>'
+      +  members.map(function(m){return '<span class="seg'+(exState.paidFor.indexOf(m)>-1?' on':'')+'" data-f="'+esc(m)+'" onclick="toggleFor(this)">'+esc(m)+'</span>';}).join('')
+      +'</div>';
+  }
   openSheet('<h3>지출 추가</h3>'
     +'<div class="amtin"><input class="val" id="ex-amt" type="number" inputmode="decimal" placeholder="0" oninput="updKRW()"><div class="krw" id="ex-krw">≈ ₩0</div></div>'
     +'<div class="segrow" id="ex-cur">'+curs.map(function(c){return '<span class="seg'+(c==='JPY'?' on':'')+'" data-cur="'+c+'" onclick="pickCur(this)">'+c+'</span>';}).join('')+'</div>'
     +'<div class="catgrid">'+catg+'</div>'
     +'<div class="segrow"><span class="seg on" data-m="card" onclick="pickM(this)">💳 카드</span><span class="seg" data-m="cash" onclick="pickM(this)">💵 현금</span></div>'
-    +((trip.members||[]).length>1?'<div class="segrow"><span class="seg on" data-s="0" onclick="pickS(this)">👤 내가 씀</span><span class="seg" data-s="1" onclick="pickS(this)">👥 나눠 냄</span></div>':'')
+    +people
     +'<label class="fl">메모 (선택)</label><input class="in" id="ex-memo" placeholder="예: 이치란 라멘">'
     +'<button class="save" onclick="saveExpense()">저장</button>');
 }
 function pickCur(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cur=el.dataset.cur; updKRW(); }
 function pickCat(el){ document.querySelectorAll('.catpick').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cat=el.dataset.cat; }
 function pickM(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.method=el.dataset.m; }
-function pickS(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.split=el.dataset.s==='1'; }
+function pickPayer(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.paidBy=el.dataset.p; }
+function toggleFor(el){
+  var n=el.dataset.f, i=exState.paidFor.indexOf(n);
+  if(i>-1){ if(exState.paidFor.length<=1){ return; } exState.paidFor.splice(i,1); el.classList.remove('on'); }
+  else { exState.paidFor.push(n); el.classList.add('on'); }
+  var members=(trip.members||[]).map(function(m){return m.name;});
+  var all=document.getElementById('ex-forall'); if(all) all.classList.toggle('on', exState.paidFor.length===members.length);
+}
+function allPaidFor(){
+  var members=(trip.members||[]).map(function(m){return m.name;});
+  exState.paidFor=members.slice();
+  var wrap=document.getElementById('ex-for'); if(wrap) wrap.querySelectorAll('.seg').forEach(function(x){ x.classList.add('on'); });
+}
 function updKRW(){ var v=parseFloat(document.getElementById('ex-amt').value)||0; document.getElementById('ex-krw').textContent='≈ '+won(T.toKRW(v,exState.cur)); }
 function saveExpense(){
   var v=parseFloat(document.getElementById('ex-amt').value)||0; if(v<=0){alert('금액을 입력하세요.');return;}
   var members=(trip.members||[]).map(function(m){return m.name;});
-  T.addExpense(tid,{date:new Date().toISOString().slice(0,10),amount:v,currency:exState.cur,krw:T.toKRW(v,exState.cur),category:exState.cat,method:exState.method,paidBy:members[0]||'나',paidFor:exState.split?members:[members[0]||'나'],memo:document.getElementById('ex-memo').value.trim()});
+  var paidBy=exState.paidBy||members[0]||'나';
+  var paidFor=(exState.paidFor&&exState.paidFor.length)?exState.paidFor.slice():[paidBy];
+  T.addExpense(tid,{date:new Date().toISOString().slice(0,10),amount:v,currency:exState.cur,krw:T.toKRW(v,exState.cur),category:exState.cat,method:exState.method,paidBy:paidBy,paidFor:paidFor,memo:document.getElementById('ex-memo').value.trim()});
   reget(); closeSheet(); renderShell();
 }
 
