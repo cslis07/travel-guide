@@ -57,6 +57,9 @@
   .tl-time{font-size:11px;font-weight:700;color:var(--gray-400)}
   .tl-card{background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:11px;margin-top:4px}
   .tl-card h4{font-size:14px;font-weight:700}.tl-card p{font-size:11.5px;color:var(--gray-500);margin-top:2px}
+  .tl-cardhead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+  .tl-edit{border:none;background:var(--gray-100);color:var(--gray-500);width:26px;height:26px;border-radius:8px;font-size:13px;cursor:pointer;flex:0 0 auto;line-height:1}
+  .tl-edit:active{background:var(--gray-200)}
   .addrow{border:1.5px dashed var(--gray-300);border-radius:12px;padding:12px;text-align:center;color:var(--primary);font-weight:700;font-size:13px;background:#fff;cursor:pointer}
   /* 예산 */
   .donut{width:124px;height:124px;margin:2px auto 8px;position:relative}
@@ -227,7 +230,9 @@ function panePlan(){
   items.forEach(function(it,i){
     var dc=DOTC[it.type]||DOTC.note, last=(i===items.length-1);
     body+='<div class="tl-item"><div class="tl-rail"><div class="tl-dot" style="background:'+dc[0]+';color:'+dc[1]+'">'+svg(dc[2])+'</div>'+(last?'':'<div class="tl-line"></div>')+'</div>'
-      +'<div class="tl-body"><div class="tl-time">'+esc(it.time||'')+'</div><div class="tl-card"><h4>'+esc(it.title)+'</h4>'+(it.memo?'<p>'+esc(it.memo)+'</p>':'')
+      +'<div class="tl-body"><div class="tl-time">'+esc(it.time||'')+'</div><div class="tl-card">'
+      +'<div class="tl-cardhead"><h4>'+esc(it.title)+'</h4><button class="tl-edit" title="수정" onclick="editItem('+curDay+',\''+it.id+'\')">✎</button></div>'
+      +(it.memo?'<p>'+esc(it.memo)+'</p>':'')
       +'<a class="tl-map" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((trip.city||'')+' '+it.title)+'">'+svg('ic-map')+' 지도에서 보기</a>'
       +'</div></div></div>';
   });
@@ -409,20 +414,37 @@ function openBudgetSheet(){
 }
 function saveBudget(){ var v=parseInt(document.getElementById('bg-total').value)||0; trip.budget={total:v,currency:'KRW'}; T.upsert(trip); reget(); closeSheet(); curTab='budget'; renderShell(); }
 
-/* 일정 항목 추가 */
-function openItemSheet(){
+/* 일정 항목 추가·수정·삭제 */
+var itType='sight', editCtx=null;
+function openItemSheet(dayIdx, itemId){
+  editCtx=null;
+  var pre={time:'',type:'sight',title:'',memo:''};
+  if(itemId!=null){
+    var day=(trip.days||[])[dayIdx]||{}, it=((day.items||[]).filter(function(x){return x.id===itemId;}))[0];
+    if(it){ pre={time:it.time||'',type:it.type||'sight',title:it.title||'',memo:it.memo||''}; editCtx={dayIdx:dayIdx,itemId:itemId}; }
+  }
+  itType=pre.type;
   var types=[['sight','관광'],['food','식사'],['lodging','숙소'],['move','이동'],['flight','항공'],['note','메모']];
-  openSheet('<h3>'+(curDay+1)+'일차 일정 추가</h3>'
-    +'<div class="segrow" id="it-type">'+types.map(function(t,i){return '<span class="seg'+(i===0?' on':'')+'" data-t="'+t[0]+'" onclick="pickType(this)">'+t[1]+'</span>';}).join('')+'</div>'
-    +'<div class="row2"><div><label class="fl">시간</label><input class="in" id="it-time" placeholder="예: 13:00"></div><div><label class="fl">장소·제목</label><input class="in" id="it-title" placeholder="예: 도톤보리"></div></div>'
-    +'<label class="fl">메모 (선택)</label><input class="in" id="it-memo" placeholder="예: 다코야키·리버크루즈">'
-    +'<button class="save" onclick="saveItem()">추가</button>');
+  openSheet('<h3>'+(editCtx?'일정 수정':(curDay+1)+'일차 일정 추가')+'</h3>'
+    +'<div class="segrow" id="it-type">'+types.map(function(t){return '<span class="seg'+(t[0]===pre.type?' on':'')+'" data-t="'+t[0]+'" onclick="pickType(this)">'+t[1]+'</span>';}).join('')+'</div>'
+    +'<div class="row2"><div><label class="fl">시간</label><input class="in" id="it-time" placeholder="예: 13:00" value="'+esc(pre.time)+'"></div><div><label class="fl">장소·제목</label><input class="in" id="it-title" placeholder="예: 도톤보리" value="'+esc(pre.title)+'"></div></div>'
+    +'<label class="fl">메모 (선택)</label><input class="in" id="it-memo" placeholder="예: 다코야키·리버크루즈" value="'+esc(pre.memo)+'">'
+    +'<button class="save" onclick="saveItem()">'+(editCtx?'저장':'추가')+'</button>'
+    +(editCtx?'<button class="save" style="background:var(--gray-100);color:var(--danger);margin-top:8px" onclick="deleteItem()">삭제</button>':''));
 }
-var itType='sight';
+function editItem(dayIdx,itemId){ openItemSheet(dayIdx,itemId); }
 function pickType(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); itType=el.dataset.t; }
 function saveItem(){
   var title=document.getElementById('it-title').value.trim(); if(!title){alert('장소·제목을 입력하세요.');return;}
-  T.addDayItem(tid,curDay,{time:document.getElementById('it-time').value.trim(),type:itType,title:title,memo:document.getElementById('it-memo').value.trim()});
+  var patch={time:document.getElementById('it-time').value.trim(),type:itType,title:title,memo:document.getElementById('it-memo').value.trim()};
+  if(editCtx){ T.updateDayItem(tid,editCtx.dayIdx,editCtx.itemId,patch); }
+  else { T.addDayItem(tid,curDay,patch); }
+  reget(); closeSheet(); renderShell();
+}
+function deleteItem(){
+  if(!editCtx) return;
+  if(!confirm('이 일정을 삭제할까요?')) return;
+  T.removeDayItem(tid,editCtx.dayIdx,editCtx.itemId);
   reget(); closeSheet(); renderShell();
 }
 

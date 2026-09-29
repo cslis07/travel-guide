@@ -164,6 +164,16 @@
     var t = get(id); if (!t) return; ensureDays(t); item.id = uid();
     (t.days[dayIdx].items = t.days[dayIdx].items || []).push(item); upsert(t); return t;
   }
+  function updateDayItem(id, dayIdx, itemId, patch) {
+    var t = get(id); if (!t) return; ensureDays(t);
+    (t.days[dayIdx].items || []).forEach(function (it) { if (it.id === itemId) { for (var k in patch) it[k] = patch[k]; } });
+    upsert(t); return t;
+  }
+  function removeDayItem(id, dayIdx, itemId) {
+    var t = get(id); if (!t) return; ensureDays(t);
+    t.days[dayIdx].items = (t.days[dayIdx].items || []).filter(function (it) { return it.id !== itemId; });
+    upsert(t); return t;
+  }
 
   /* ── 데모 시드(비어 있을 때 1회) — 오사카 예시로 구조를 보여줌 ── */
   function seedIfEmpty() {
@@ -206,7 +216,8 @@
     KEY: KEY, RATES: RATES, CATS: CATS, MEMBER_COLORS: MEMBER_COLORS,
     all: all, get: get, create: create, upsert: upsert, remove: remove,
     addExpense: addExpense, addReservation: addReservation,
-    addChecklistItem: addChecklistItem, toggleChecklist: toggleChecklist, addDayItem: addDayItem,
+    addChecklistItem: addChecklistItem, toggleChecklist: toggleChecklist,
+    addDayItem: addDayItem, updateDayItem: updateDayItem, removeDayItem: removeDayItem,
     ensureDays: ensureDays, seedIfEmpty: seedIfEmpty,
     // 계산
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,
