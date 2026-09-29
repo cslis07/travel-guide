@@ -99,6 +99,20 @@
     return res;
   }
 
+  /* 개인별 정산: 낸 돈(paid)·부담(share)·차액(net) */
+  function balances(t) {
+    var members = (t.members || []).map(function (m) { return m.name; });
+    var paid = {}, share = {};
+    members.forEach(function (n) { paid[n] = 0; share[n] = 0; });
+    (t.expenses || []).forEach(function (e) {
+      var fors = (e.paidFor && e.paidFor.length) ? e.paidFor : members;
+      if (paid[e.paidBy] != null) paid[e.paidBy] += (e.krw || 0);
+      var per = (e.krw || 0) / fors.length;
+      fors.forEach(function (f) { if (share[f] != null) share[f] += per; });
+    });
+    return members.map(function (n) { return { name: n, paid: Math.round(paid[n]), share: Math.round(share[n]), net: Math.round(paid[n] - share[n]) }; });
+  }
+
   /* ── 일정: 시작~종료로 일차 배열 보장 ── */
   function ensureDays(t) {
     var len = tripLength(t); t.days = t.days || [];
@@ -197,7 +211,7 @@
     // 계산
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,
     dailyAllowance: dailyAllowance, remainingDays: remainingDays, byCategory: byCategory,
-    settlements: settlements, toKRW: toKRW,
+    settlements: settlements, balances: balances, toKRW: toKRW,
     // 날짜
     fmtMD: fmtMD, dow: dow, tripLength: tripLength, ddayText: ddayText, daysBetween: daysBetween,
     catByKey: function (k) { return CATS.filter(function (c) { return c.key === k; })[0] || CATS[6]; }

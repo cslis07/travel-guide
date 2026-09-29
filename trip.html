@@ -245,12 +245,16 @@ function paneBudget(){
   var catHtml=cats.length?cats.map(function(x){var pct=T.spent(trip)?Math.round(x.amt/T.spent(trip)*100):0;
     return '<div class="catbar"><div class="ic" style="background:'+x.cat.color+'22;color:'+x.cat.color+'">'+x.cat.emoji+'</div><div class="nm">'+x.cat.label+'</div><div class="tr"><i style="width:'+pct+'%;background:'+x.cat.color+'"></i></div><div class="amt">'+won(x.amt)+'</div></div>';
   }).join(''):'<div style="color:var(--gray-400);font-size:12.5px;text-align:center;padding:8px">아직 지출이 없어요.</div>';
-  var setl=T.settlements(trip).map(function(s){return '<div class="settle">'+svg('ic-swap','')+' 정산: '+esc(s.from)+' → '+esc(s.to)+' <b style="margin-left:auto">'+won(s.amt)+'</b></div>';}).join('');
+  var multi=(trip.members||[]).length>1;
+  var setlRows=T.settlements(trip).map(function(s){return '<div class="settle">'+svg('ic-swap','')+' '+esc(s.from)+' → '+esc(s.to)+' <b style="margin-left:auto">'+won(s.amt)+'</b></div>';}).join('');
+  var setl = !multi ? '' : '<div class="sech">그룹 정산</div>'
+    + (setlRows || '<div class="settle" style="background:var(--gray-100);color:var(--gray-600)">'+svg('ic-swap','')+' 주고받을 금액이 없어요 — 모두 공평</div>')
+    + '<button class="seg" style="width:100%;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="shareSettlement()">'+svg('ic-share')+' 정산 내역 공유</button>';
   return '<div class="card"><div class="donut" id="donut"></div><div style="text-align:center;font-size:12.5px;color:var(--gray-500);font-weight:600">총예산 '+won(T.budgetTotal(trip))+' · 사용 '+won(T.spent(trip))+'</div>'
     + '<div style="text-align:center;margin-top:8px"><button class="seg" onclick="openBudgetSheet()">예산 수정</button></div></div>'
     + '<div class="daily">'+svg('ic-wallet','')+'<div><div class="lbl">오늘 이후 하루 쓸 수 있는 돈</div><div class="big">'+won(T.dailyAllowance(trip))+'</div><div class="fm">(총예산 − 누적지출) ÷ 남은 '+T.remainingDays(trip)+'일</div></div></div>'
     + '<div class="sech">카테고리별</div><div class="card">'+catHtml+'</div>'
-    + (setl?'<div class="sech">그룹 정산</div>'+setl:'')
+    + setl
     + '<div class="sech">지출 내역</div>'+expList();
 }
 function expList(){
@@ -484,6 +488,30 @@ function shareTrip(){
     if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(link).then(function(){ toast('공유 링크를 복사했어요 — 동행에게 보내세요'); }, function(){ prompt('이 링크를 복사해 공유하세요', link); }); }
     else prompt('이 링크를 복사해 공유하세요', link);
   }catch(e){ alert('공유 링크 생성에 실패했습니다.'); }
+}
+
+/* ── 정산 내역 공유 — 단톡방에 붙여넣을 텍스트 ── */
+function shareSettlement(){
+  var setl=T.settlements(trip), bal=T.balances(trip), L=[];
+  L.push('💰 '+trip.city+' 여행 정산 ('+T.fmtMD(trip.start)+'~'+T.fmtMD(trip.end)+')');
+  L.push('총 지출 '+won(T.spent(trip))+' · '+(trip.members||[]).length+'명');
+  L.push('');
+  if(setl.length){ L.push('💸 보낼 돈'); setl.forEach(function(s){ L.push('· '+s.from+' → '+s.to+' : '+won(s.amt)); }); }
+  else L.push('💸 정산 완료 — 서로 주고받을 금액 없음');
+  L.push('');
+  L.push('👤 개인별 (낸 돈 / 부담)');
+  bal.forEach(function(b){
+    var tail = b.net>0 ? ' → 받을 '+won(b.net) : b.net<0 ? ' → 낼 '+won(-b.net) : ' → 정산됨';
+    L.push('· '+b.name+': '+won(b.paid)+' / '+won(b.share)+tail);
+  });
+  L.push('');
+  L.push('트래블코스트에서 계산 · '+location.origin+'/trips');
+  var text=L.join('\n');
+  try{
+    if(navigator.share){ navigator.share({ title:trip.city+' 여행 정산', text:text }).catch(function(){}); return; }
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ toast('정산 내역을 복사했어요 — 단톡방에 붙여넣으세요'); }, function(){ prompt('복사해 공유하세요', text); }); }
+    else prompt('복사해 공유하세요', text);
+  }catch(e){ prompt('복사해 공유하세요', text); }
 }
 
 if(trip) renderShell();
