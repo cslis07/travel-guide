@@ -14,9 +14,10 @@
 
   var KEY = 'tc_trips_v1';
 
-  /* 정적 환율(100단위는 JPY만; 1단위 기준으로 통일) — 홈 위젯이 실시간이라
-     여기선 입력 보조용 근사치. 사용자가 지출 입력 시 KRW를 확정 저장한다. */
-  var RATES = { KRW: 1, JPY: 9.2, USD: 1339, EUR: 1558, VND: 0.0518, THB: 39, CNY: 188, TWD: 42, HKD: 171, SGD: 995 };
+  /* 원/외화 1단위 환율 — 입력 보조용 근사치. 지출 저장 시 KRW로 확정 저장하므로
+     이후 환율이 변해도 기록값은 유지된다. JPY/USD/EUR/VND/THB/CNY는 2026-09-30 네이버 기준,
+     TWD/HKD/SGD는 미검증 근사치. (홈 위젯 open.er-api.com이 실시간 표기 담당) */
+  var RATES = { KRW: 1, JPY: 8.663, USD: 1358.7, EUR: 1538.46, VND: 0.0523, THB: 40.49, CNY: 202.55, TWD: 42, HKD: 171, SGD: 995 };
   var CATS = [
     { key: 'food',    label: '식비',  emoji: '🍜', color: '#F97316' },
     { key: 'transit', label: '교통',  emoji: '🚃', color: '#1B4FD8' },
