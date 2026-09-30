@@ -165,7 +165,7 @@
 <script src="/affiliates.js"></script>
 <script src="/trips.js"></script>
 <script>
-var T = window.TripStore; T.seedIfEmpty();
+var T = window.TripStore; T.seedIfEmpty(); T.refreshRates();
 var tid = new URLSearchParams(location.search).get('id');
 var trip = T.get(tid);
 if(!trip){ var a=T.all(); if(a.length){ location.replace('/trip?id='+a[0].id); } else { location.replace('/trips'); } }
@@ -397,7 +397,7 @@ function openExpenseSheet(expId){
       +'</div>';
   }
   openSheet('<h3>'+(editExp?'지출 수정':'지출 추가')+'</h3>'
-    +'<div class="amtin"><input class="val" id="ex-amt" type="number" inputmode="decimal" placeholder="0" value="'+(e?(e.amount||''):'')+'" oninput="updKRW()"><div class="krw" id="ex-krw">≈ '+won(e?e.krw:0)+'</div></div>'
+    +'<div class="amtin"><input class="val" id="ex-amt" type="number" inputmode="decimal" placeholder="0" value="'+(e?(e.amount||''):'')+'" oninput="updKRW()"><div class="krw" id="ex-krw">≈ '+won(e?e.krw:0)+'</div><div id="ex-fxnote" style="font-size:10px;color:var(--gray-400);margin-top:2px"></div></div>'
     +'<div class="segrow" id="ex-cur">'+curs.map(function(c){return '<span class="seg'+(c===exState.cur?' on':'')+'" data-cur="'+c+'" onclick="pickCur(this)">'+c+'</span>';}).join('')+'</div>'
     +'<div class="catgrid">'+catg+'</div>'
     +'<div class="segrow"><span class="seg'+(exState.method==='card'?' on':'')+'" data-m="card" onclick="pickM(this)">💳 카드</span><span class="seg'+(exState.method==='cash'?' on':'')+'" data-m="cash" onclick="pickM(this)">💵 현금</span></div>'
@@ -405,6 +405,17 @@ function openExpenseSheet(expId){
     +'<label class="fl">메모 (선택)</label><input class="in" id="ex-memo" placeholder="예: 이치란 라멘" value="'+(e?esc(e.memo||''):'')+'">'
     +'<button class="save" onclick="saveExpense()">'+(editExp?'저장':'추가')+'</button>'
     +(editExp?'<button class="save" style="background:var(--gray-100);color:var(--danger);margin-top:8px" onclick="deleteExpense()">삭제</button>':''));
+  setFxNote();
+  T.refreshRates(function(ok){ if(ok){ updKRW(); setFxNote(); } });
+}
+function setFxNote(){
+  var el=document.getElementById('ex-fxnote'); if(!el) return;
+  if(exState.cur==='KRW'){ el.textContent=''; return; }
+  var per=T.RATES[exState.cur]||0;
+  var unit = per<1?10000 : per<100?100 : 1;
+  var fx=T.fxState&&T.fxState();
+  var src=(fx&&fx.live)?'실시간 환율':'기준 환율(근사)';
+  el.textContent=(per? unit.toLocaleString()+' '+exState.cur+' ≈ '+Math.round(per*unit).toLocaleString()+'원 · ' : '')+src;
 }
 function pickCur(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cur=el.dataset.cur; updKRW(); }
 function pickCat(el){ document.querySelectorAll('.catpick').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cat=el.dataset.cat; }
@@ -422,7 +433,7 @@ function allPaidFor(){
   exState.paidFor=members.slice();
   var wrap=document.getElementById('ex-for'); if(wrap) wrap.querySelectorAll('.seg').forEach(function(x){ x.classList.add('on'); });
 }
-function updKRW(){ var v=parseFloat(document.getElementById('ex-amt').value)||0; document.getElementById('ex-krw').textContent='≈ '+won(T.toKRW(v,exState.cur)); }
+function updKRW(){ var v=parseFloat(document.getElementById('ex-amt').value)||0; document.getElementById('ex-krw').textContent='≈ '+won(T.toKRW(v,exState.cur)); setFxNote(); }
 function saveExpense(){
   var v=parseFloat(document.getElementById('ex-amt').value)||0; if(v<=0){alert('금액을 입력하세요.');return;}
   var members=(trip.members||[]).map(function(m){return m.name;});

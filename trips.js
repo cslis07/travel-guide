@@ -18,6 +18,34 @@
      이후 환율이 변해도 기록값은 유지된다. JPY/USD/EUR/VND/THB/CNY는 2026-09-30 네이버 기준,
      TWD/HKD/SGD는 미검증 근사치. (홈 위젯 open.er-api.com이 실시간 표기 담당) */
   var RATES = { KRW: 1, JPY: 8.663, USD: 1358.7, EUR: 1538.46, VND: 0.0523, THB: 40.49, CNY: 202.55, TWD: 42, HKD: 171, SGD: 995 };
+  var FX = { ts: 0, live: false };   // 실시간 환율 상태
+
+  /* 실시간 환율 로드 — open.er-api.com(무료·무키, CSP 허용). 6시간 캐시(localStorage),
+     실패 시 위 정적값 유지. RATES[cur] = 원/외화 1단위. */
+  function applyRates(r) { for (var k in r) { if (r[k] > 0) RATES[k] = r[k]; } }
+  function refreshRates(cb) {
+    var cached; try { cached = JSON.parse(localStorage.getItem('tc_fx') || 'null'); } catch (e) {}
+    var now = Date.now();
+    if (cached && cached.rates && (now - cached.ts) < 6 * 3600 * 1000) {
+      applyRates(cached.rates); FX = { ts: cached.ts, live: true }; if (cb) cb(true); return;
+    }
+    if (typeof fetch !== 'function') { if (cb) cb(false); return; }
+    fetch('https://open.er-api.com/v6/latest/KRW')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || d.result !== 'success' || !d.rates) { if (cb) cb(false); return; }
+        var out = { KRW: 1 };
+        ['JPY', 'USD', 'EUR', 'VND', 'THB', 'CNY', 'TWD', 'HKD', 'SGD'].forEach(function (c) {
+          if (d.rates[c] > 0) out[c] = Math.round((1 / d.rates[c]) * 10000) / 10000;
+        });
+        applyRates(out);
+        FX = { ts: (d.time_last_update_unix ? d.time_last_update_unix * 1000 : now), live: true };
+        try { localStorage.setItem('tc_fx', JSON.stringify({ ts: now, rates: out })); } catch (e) {}
+        if (cb) cb(true);
+      })
+      .catch(function () { if (cb) cb(false); });
+  }
+  function fxState() { return FX; }
   var CATS = [
     { key: 'food',    label: '식비',  emoji: '🍜', color: '#F97316' },
     { key: 'transit', label: '교통',  emoji: '🚃', color: '#1B4FD8' },
@@ -244,6 +272,7 @@
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,
     dailyAllowance: dailyAllowance, remainingDays: remainingDays, byCategory: byCategory,
     settlements: settlements, balances: balances, toKRW: toKRW,
+    refreshRates: refreshRates, fxState: fxState,
     // 날짜
     fmtMD: fmtMD, dow: dow, tripLength: tripLength, ddayText: ddayText, daysBetween: daysBetween,
     catByKey: function (k) { return CATS.filter(function (c) { return c.key === k; })[0] || CATS[6]; }
