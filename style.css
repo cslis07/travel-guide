@@ -59,7 +59,7 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   font-family: 'Pretendard Variable', Pretendard, 'Noto Sans KR',
-               -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+               -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   color: var(--dark);
   background: var(--white);
   line-height: 1.6;

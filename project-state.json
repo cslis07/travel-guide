@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "name": "트래블코스트",
+  "phase": "live",
+  "status": "active",
+  "progress": 80,
+  "quality": {
+    "core": 90,
+    "features": 80,
+    "ui": 85,
+    "mobile": 70,
+    "errors": 70,
+    "deployment": 100,
+    "analytics": 0,
+    "monetization": 50
+  },
+  "lastWork": {
+    "date": "2026-09-30T12:00:00+09:00",
+    "summary": "지출 실시간 환율 자동 갱신 구현(open.er-api, 6시간 캐시·실패 폴백), SW v23",
+    "result": "completed"
+  },
+  "completed": [
+    "예산 견적기(/estimate, 항공·숙소 실시간)",
+    "출국 준비 타임라인(/prepare)",
+    "인천공항 8탭 실시간 정보",
+    "투어 메타서치(/tours)",
+    "목적지 가이드 23곳(noindex)",
+    "내여행 허브: 일정·지출·예약·준비물 수정/삭제",
+    "지출 나눔 인원별 선택 및 정산 내역 단톡 공유",
+    "지출 환율 네이버 기준 최신화 + 실시간 자동 갱신",
+    "제휴 레지스트리(트립닷컴 추적·토스 준비물 8종)",
+    "하단 탭바·PWA·SW 오프라인·사업자정보 푸터",
+    "보안 4건 조치(SSRF·XSS·import·헤더)",
+    "프로덕션 스모크 40/40(9월 초 기준)",
+    "자체 도메인 travelcost.co.kr 연결"
+  ],
+  "nextActions": [
+    "신규 10곳 트립닷컴 숙소 city ID를 affiliates.js TRIPCOM_CITY에 배선",
+    "Search Console 소유권 인증 코드 삽입 후 sitemap 제출",
+    "TOUR_API_KEY·ICN_API_KEY를 Vercel 환경변수로 이전하고 폴백키 제거",
+    "360px 폭 모바일 점검 및 최근 내여행 기능 스모크 재실행"
+  ],
+  "blockers": [
+    "신규 10곳 트립닷컴 city ID 대기(사용자)",
+    "Search Console 인증 코드 대기(사용자)",
+    "상품 6종 쉐어링크·Airalo 제휴 가입 대기(사용자)"
+  ],
+  "monetization": {
+    "type": "affiliate",
+    "status": "in_progress"
+  },
+  "deployment": {
+    "status": "live",
+    "url": "https://travelcost.co.kr/"
+  },
+  "history": [
+    {
+      "date": "2026-09-30T10:00:00+09:00",
+      "summary": "지출 환율 네이버 기준 최신화(6종 통화), SW v22",
+      "result": "completed"
+    },
+    {
+      "date": "2026-09-29T18:00:00+09:00",
+      "summary": "지출·예약·준비물 수정/삭제 + 여행 삭제, SW v21",
+      "result": "completed"
+    },
+    {
+      "date": "2026-09-29T15:00:00+09:00",
+      "summary": "일정 장소 수정·삭제 기능, SW v20",
+      "result": "completed"
+    },
+    {
+      "date": "2026-09-29T12:00:00+09:00",
+      "summary": "지출 나눔 대상 인원별 선택(멤버 칩)",
+      "result": "completed"
+    },
+    {
+      "date": "2026-09-29T10:00:00+09:00",
+      "summary": "예산 정산 내역 공유(단톡 텍스트), SW v19",
+      "result": "completed"
+    },
+    {
+      "date": "2026-09-08T18:00:00+09:00",
+      "summary": "UI 전면 개편(하단탭·선아이콘) + 목적지 10곳 추가 + 제휴 누수 3건 회수",
+      "result": "completed"
+    }
+  ]
+}
