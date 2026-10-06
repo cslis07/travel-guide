@@ -57,6 +57,29 @@
   ];
   var MEMBER_COLORS = ['#F97316', '#1B4FD8', '#7C3AED', '#039855', '#DB2777', '#0EA5E9'];
 
+  /* 한글 도시명 → 좌표 (Open-Meteo 지오코딩이 한글명을 못 찾아 직접 매핑).
+     가이드 23곳 + 국내 7곳 + 별칭. 없으면 날씨는 조용히 생략. */
+  var CITY_GEO = {
+    '오사카': [34.6937, 135.5023], '후쿠오카': [33.5904, 130.4017], '도쿄': [35.6762, 139.6503],
+    '교토': [35.0116, 135.7681], '삿포로': [43.0618, 141.3545], '오키나와': [26.212, 127.679],
+    '장가계': [29.117, 110.479], '계림': [25.274, 110.290], '상하이': [31.230, 121.474],
+    '백두산': [42.008, 128.057], '타이베이': [25.033, 121.565], '홍콩': [22.319, 114.169],
+    '방콕': [13.7563, 100.5018], '다낭': [16.0544, 108.2022], '발리': [-8.4095, 115.1889],
+    '싱가포르': [1.3521, 103.8198], '나트랑': [12.238, 109.196], '세부': [10.317, 123.891],
+    '코타키나발루': [5.980, 116.073], '제주': [33.4996, 126.5312], '제주도': [33.4996, 126.5312],
+    '부산': [35.1796, 129.0756], '강릉': [37.7519, 128.8761], '파리': [48.8566, 2.3522],
+    '속초': [38.2070, 128.5918], '양양': [38.0754, 128.6190], '삼척': [37.4499, 129.1655],
+    '춘천': [37.8813, 127.7300], '포천': [37.8949, 127.2003], '대전': [36.3504, 127.3845],
+    '태안': [36.7456, 126.2980], '서울': [37.5665, 126.9780], '인천': [37.4563, 126.7052]
+  };
+  function cityGeo(name) {
+    var c = (name || '').trim(); if (CITY_GEO[c]) return { lat: CITY_GEO[c][0], lon: CITY_GEO[c][1] };
+    // 접미어 제거 후 재시도 (예: '오사카 여행')
+    var k = c.replace(/\s*(여행|시|특별시|광역시|도)$/,'').trim();
+    if (CITY_GEO[k]) return { lat: CITY_GEO[k][0], lon: CITY_GEO[k][1] };
+    return null;
+  }
+
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
   function load() { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } }
   function save(list) { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
@@ -285,7 +308,7 @@
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,
     dailyAllowance: dailyAllowance, remainingDays: remainingDays, byCategory: byCategory,
     settlements: settlements, balances: balances, toKRW: toKRW,
-    refreshRates: refreshRates, fxState: fxState,
+    refreshRates: refreshRates, fxState: fxState, cityGeo: cityGeo,
     // 날짜
     fmtMD: fmtMD, dow: dow, tripLength: tripLength, ddayText: ddayText, daysBetween: daysBetween,
     catByKey: function (k) { return CATS.filter(function (c) { return c.key === k; })[0] || CATS[6]; }

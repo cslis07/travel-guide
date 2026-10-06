@@ -264,9 +264,11 @@ function loadWeather(){
   if(_wx && _wxCity===trip.city){ renderWx(); return; }
   if(typeof fetch!=='function'){ return; }
   var city=(trip.city||'').trim(); if(!city){ return; }
-  // 캐시(도시별 좌표)
-  var geo=null; try{ geo=JSON.parse(localStorage.getItem('tc_geo_'+city)||'null'); }catch(e){}
-  (geo ? Promise.resolve(geo) : fetch('/api/proxy?_url='+encodeURIComponent('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=ko'))
+  // 1) 내장 좌표맵(한글명) → 2) localStorage 캐시 → 3) 지오코딩(영문 등)
+  var mapped=T.cityGeo?T.cityGeo(city):null;
+  var cached=null; try{ cached=JSON.parse(localStorage.getItem('tc_geo_'+city)||'null'); }catch(e){}
+  var known=mapped||cached;
+  (known ? Promise.resolve(known) : fetch('/api/proxy?_url='+encodeURIComponent('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=en'))
       .then(function(r){return r.ok?r.json():null;})
       .then(function(d){ var g=d&&d.results&&d.results[0]; if(!g) return null; var o={lat:g.latitude,lon:g.longitude}; try{localStorage.setItem('tc_geo_'+city,JSON.stringify(o));}catch(e){} return o; })
   ).then(function(g){
