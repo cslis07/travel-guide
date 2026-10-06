@@ -221,6 +221,18 @@
     t.days[dayIdx].items = (t.days[dayIdx].items || []).filter(function (it) { return it.id !== itemId; });
     upsert(t); return t;
   }
+  function moveDayItem(id, dayIdx, itemId, dir) {
+    var t = get(id); if (!t) return; ensureDays(t);
+    var arr = t.days[dayIdx].items || [], i = arr.map(function (x) { return x.id; }).indexOf(itemId), j = i + dir;
+    if (i < 0 || j < 0 || j >= arr.length) return t;
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; upsert(t); return t;
+  }
+  function setCatLimit(id, catKey, amount) {
+    var t = get(id); if (!t) return; t.budget = t.budget || { total: 0, currency: 'KRW' };
+    t.budget.catLimits = t.budget.catLimits || {};
+    if (amount > 0) t.budget.catLimits[catKey] = amount; else delete t.budget.catLimits[catKey];
+    upsert(t); return t;
+  }
 
   /* ── 데모 시드(비어 있을 때 1회) — 오사카 예시로 구조를 보여줌 ── */
   function seedIfEmpty() {
@@ -267,6 +279,7 @@
     addChecklistItem: addChecklistItem, updateChecklistItem: updateChecklistItem, removeChecklistItem: removeChecklistItem,
     toggleChecklist: toggleChecklist,
     addDayItem: addDayItem, updateDayItem: updateDayItem, removeDayItem: removeDayItem,
+    moveDayItem: moveDayItem, setCatLimit: setCatLimit,
     ensureDays: ensureDays, seedIfEmpty: seedIfEmpty,
     // 계산
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,

@@ -209,7 +209,7 @@ function updateFab(){ document.getElementById('fabtxt').textContent=FABMAP[curTa
 
 function renderPane(){
   var p=document.getElementById('pane'); p.className='pane on';
-  if(curTab==='plan') p.innerHTML=panePlan();
+  if(curTab==='plan'){ p.innerHTML=panePlan(); loadWeather(); }
   else if(curTab==='budget'){ p.innerHTML=paneBudget(); drawDonut(); }
   else if(curTab==='resv') p.innerHTML=paneResv();
   else if(curTab==='pack') p.innerHTML=panePack();
@@ -228,16 +228,105 @@ function panePlan(){
   if(!items.length) body='<div style="text-align:center;color:var(--gray-400);padding:30px 0;font-size:13px">이 날의 일정을 추가해 보세요.</div>';
   items.forEach(function(it,i){
     var dc=DOTC[it.type]||DOTC.note, last=(i===items.length-1);
+    var up = i>0 ? '<button class="tl-edit" title="위로" onclick="moveItem('+curDay+',\''+it.id+'\',-1)">▲</button>' : '';
+    var dn = i<items.length-1 ? '<button class="tl-edit" title="아래로" onclick="moveItem('+curDay+',\''+it.id+'\',1)">▼</button>' : '';
     body+='<div class="tl-item"><div class="tl-rail"><div class="tl-dot" style="background:'+dc[0]+';color:'+dc[1]+'">'+svg(dc[2])+'</div>'+(last?'':'<div class="tl-line"></div>')+'</div>'
       +'<div class="tl-body"><div class="tl-time">'+esc(it.time||'')+'</div><div class="tl-card">'
-      +'<div class="tl-cardhead"><h4>'+esc(it.title)+'</h4><button class="tl-edit" title="수정" onclick="editItem('+curDay+',\''+it.id+'\')">✎</button></div>'
+      +'<div class="tl-cardhead"><h4>'+esc(it.title)+'</h4><div style="display:flex;gap:4px;flex:0 0 auto">'+up+dn+'<button class="tl-edit" title="수정" onclick="editItem('+curDay+',\''+it.id+'\')">✎</button></div></div>'
       +(it.memo?'<p>'+esc(it.memo)+'</p>':'')
       +'<a class="tl-map" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((trip.city||'')+' '+it.title)+'">'+svg('ic-map')+' 지도에서 보기</a>'
       +'</div></div></div>';
   });
-  return '<div class="daychips">'+chips+'</div>'+body+'<div class="addrow" onclick="openItemSheet()">＋ 장소·메모·예약 추가</div>';
+  var mapBtn = items.length>=2 ? '<button class="seg" style="width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="dayRouteMap()">'+svg('ic-map')+' 하루 동선 지도로 보기</button>' : '';
+  return '<div class="daychips">'+chips+'</div>'
+    + '<div id="planwx"></div>'
+    + body
+    + '<div class="addrow" onclick="openItemSheet()">＋ 장소·메모·예약 추가</div>'
+    + mapBtn
+    + '<button class="seg" style="width:100%;margin-top:8px" onclick="exportICS()">📅 캘린더(.ics)로 내보내기</button>';
 }
 function setDay(i){ curDay=i; renderPane(); }
+function moveItem(dayIdx,id,dir){ T.moveDayItem(tid,dayIdx,id,dir); reget(); renderShell(); }
+function dayRouteMap(){
+  var items=((trip.days||[])[curDay]||{}).items||[]; if(items.length<2) return;
+  var url='https://www.google.com/maps/dir/'+items.map(function(it){ return encodeURIComponent((trip.city||'')+' '+it.title); }).join('/');
+  window.open(url,'_blank','noopener');
+}
+
+/* 날씨 예보 (Open-Meteo, /api/proxy 경유) — 여행 날짜 범위가 예보권(약 16일)이면 표시 */
+var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름조금'],3:['☁️','흐림'],45:['🌫️','안개'],48:['🌫️','안개'],
+51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','이슬비'],61:['🌦️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],
+71:['🌨️','약한 눈'],73:['🌨️','눈'],75:['❄️','강한 눈'],80:['🌦️','소나기'],81:['🌧️','소나기'],82:['⛈️','강한 소나기'],
+95:['⛈️','뇌우'],96:['⛈️','뇌우·우박'],99:['⛈️','뇌우·우박']};
+var _wx=null, _wxCity=null;
+function loadWeather(){
+  var box=document.getElementById('planwx'); if(!box) return;
+  if(_wx && _wxCity===trip.city){ renderWx(); return; }
+  if(typeof fetch!=='function'){ return; }
+  var city=(trip.city||'').trim(); if(!city){ return; }
+  // 캐시(도시별 좌표)
+  var geo=null; try{ geo=JSON.parse(localStorage.getItem('tc_geo_'+city)||'null'); }catch(e){}
+  (geo ? Promise.resolve(geo) : fetch('/api/proxy?_url='+encodeURIComponent('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=ko'))
+      .then(function(r){return r.ok?r.json():null;})
+      .then(function(d){ var g=d&&d.results&&d.results[0]; if(!g) return null; var o={lat:g.latitude,lon:g.longitude}; try{localStorage.setItem('tc_geo_'+city,JSON.stringify(o));}catch(e){} return o; })
+  ).then(function(g){
+    if(!g) return null;
+    var url='https://api.open-meteo.com/v1/forecast?latitude='+g.lat+'&longitude='+g.lon
+      +'&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max'
+      +'&timezone=auto&start_date='+trip.start+'&end_date='+trip.end;
+    return fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.ok?r.json():null;});
+  }).then(function(w){
+    if(!w || !w.daily || !w.daily.time){ return; }
+    var m={}, d=w.daily;
+    d.time.forEach(function(dt,i){ m[dt]={code:d.weather_code[i],tmax:Math.round(d.temperature_2m_max[i]),tmin:Math.round(d.temperature_2m_min[i]),pop:d.precipitation_probability_max[i]}; });
+    _wx=m; _wxCity=trip.city; renderWx();
+  }).catch(function(){});
+}
+function renderWx(){
+  var box=document.getElementById('planwx'); if(!box||!_wx) return;
+  var day=(trip.days||[])[curDay]; if(!day){ box.innerHTML=''; return; }
+  var w=_wx[day.date];
+  if(!w){ box.innerHTML='<div style="font-size:11px;color:var(--gray-400);text-align:center;padding:4px 0 10px">이 날짜는 예보 범위(약 16일) 밖이에요</div>'; return; }
+  var wm=WMO[w.code]||['🌡️','--'];
+  box.innerHTML='<div style="display:flex;align-items:center;gap:10px;background:var(--primary-lt);border-radius:12px;padding:10px 13px;margin-bottom:10px">'
+    +'<span style="font-size:24px">'+wm[0]+'</span>'
+    +'<div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--primary)">'+wm[1]+'</div>'
+    +'<div style="font-size:11px;color:var(--gray-500)">'+esc(trip.city)+' · '+T.fmtMD(day.date)+' '+T.dow(day.date)+'</div></div>'
+    +'<div style="text-align:right"><div style="font-size:14px;font-weight:800">'+w.tmax+'° / '+w.tmin+'°</div>'
+    +(w.pop!=null?'<div style="font-size:11px;color:var(--primary)">💧 '+w.pop+'%</div>':'')+'</div></div>';
+}
+
+/* 캘린더(.ics) 내보내기 — 일정 항목 + 예약 */
+function icsEsc(s){ return String(s==null?'':s).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n'); }
+function pad(n){ return (n<10?'0':'')+n; }
+function exportICS(){
+  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//트래블코스트//Trip//KR','CALSCALE:GREGORIAN'];
+  var stamp=new Date(), dtstamp=stamp.getUTCFullYear()+pad(stamp.getUTCMonth()+1)+pad(stamp.getUTCDate())+'T'+pad(stamp.getUTCHours())+pad(stamp.getUTCMinutes())+pad(stamp.getUTCSeconds())+'Z';
+  var n=0;
+  function dateCompact(d){ return d.replace(/-/g,''); }
+  function nextDay(d){ var x=new Date(d+'T00:00:00'); x.setDate(x.getDate()+1); return x.getFullYear()+pad(x.getMonth()+1)+pad(x.getDate()); }
+  (trip.days||[]).forEach(function(day){
+    (day.items||[]).forEach(function(it){
+      n++; L.push('BEGIN:VEVENT'); L.push('UID:tc-'+trip.id+'-'+it.id+'@travelcost.co.kr'); L.push('DTSTAMP:'+dtstamp);
+      var tm=(it.time||'').match(/^(\d{1,2}):(\d{2})/);
+      if(tm){ var hh=pad(+tm[1]),mm=tm[2]; L.push('DTSTART:'+dateCompact(day.date)+'T'+hh+mm+'00'); }
+      else { L.push('DTSTART;VALUE=DATE:'+dateCompact(day.date)); L.push('DTEND;VALUE=DATE:'+nextDay(day.date)); }
+      L.push('SUMMARY:'+icsEsc(it.title)); if(it.memo) L.push('DESCRIPTION:'+icsEsc(it.memo));
+      L.push('LOCATION:'+icsEsc((trip.city||'')+' '+it.title)); L.push('END:VEVENT');
+    });
+  });
+  (trip.reservations||[]).forEach(function(r){
+    n++; L.push('BEGIN:VEVENT'); L.push('UID:tc-'+trip.id+'-'+r.id+'@travelcost.co.kr'); L.push('DTSTAMP:'+dtstamp);
+    L.push('DTSTART;VALUE=DATE:'+dateCompact(trip.start)); L.push('DTEND;VALUE=DATE:'+nextDay(trip.end));
+    L.push('SUMMARY:'+icsEsc('🎫 '+r.title)); if(r.detail) L.push('DESCRIPTION:'+icsEsc(r.detail)); L.push('END:VEVENT');
+  });
+  L.push('END:VCALENDAR');
+  if(!n){ alert('내보낼 일정·예약이 없어요.'); return; }
+  var blob=new Blob([L.join('\r\n')],{type:'text/calendar;charset=utf-8'});
+  var url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download=(trip.city||'여행')+'.ics'; document.body.appendChild(a); a.click();
+  setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); },100);
+}
 
 /* ── 예산 ── */
 function paneBudget(){
@@ -246,8 +335,14 @@ function paneBudget(){
       + '<div class="sech">지출 내역</div>'+expList();
   }
   var cats=T.byCategory(trip);
-  var catHtml=cats.length?cats.map(function(x){var pct=T.spent(trip)?Math.round(x.amt/T.spent(trip)*100):0;
-    return '<div class="catbar"><div class="ic" style="background:'+x.cat.color+'22;color:'+x.cat.color+'">'+x.cat.emoji+'</div><div class="nm">'+x.cat.label+'</div><div class="tr"><i style="width:'+pct+'%;background:'+x.cat.color+'"></i></div><div class="amt">'+won(x.amt)+'</div></div>';
+  var limits=(trip.budget&&trip.budget.catLimits)||{};
+  var catHtml=cats.length?cats.map(function(x){
+    var lim=limits[x.cat.key]||0, over=lim>0&&x.amt>lim;
+    var pct = lim>0 ? Math.min(100,Math.round(x.amt/lim*100)) : (T.spent(trip)?Math.round(x.amt/T.spent(trip)*100):0);
+    var bar = over?'var(--danger)':x.cat.color;
+    var badge = over?' <span class="bdg" style="background:#fde7e9;color:var(--danger)">초과</span>':'';
+    var limTxt = lim>0?'<div style="font-size:10px;color:'+(over?'var(--danger)':'var(--gray-400)')+'">한도 '+won(lim)+'</div>':'';
+    return '<div class="catbar"><div class="ic" style="background:'+x.cat.color+'22;color:'+x.cat.color+'">'+x.cat.emoji+'</div><div class="nm">'+x.cat.label+badge+'</div><div class="tr"><i style="width:'+pct+'%;background:'+bar+'"></i></div><div class="amt" style="display:flex;flex-direction:column;align-items:flex-end">'+won(x.amt)+limTxt+'</div></div>';
   }).join(''):'<div style="color:var(--gray-400);font-size:12.5px;text-align:center;padding:8px">아직 지출이 없어요.</div>';
   var multi=(trip.members||[]).length>1;
   var setlRows=T.settlements(trip).map(function(s){return '<div class="settle">'+svg('ic-swap','')+' '+esc(s.from)+' → '+esc(s.to)+' <b style="margin-left:auto">'+won(s.amt)+'</b></div>';}).join('');
@@ -258,8 +353,40 @@ function paneBudget(){
     + '<div style="text-align:center;margin-top:8px"><button class="seg" onclick="openBudgetSheet()">예산 수정</button></div></div>'
     + '<div class="daily">'+svg('ic-wallet','')+'<div><div class="lbl">오늘 이후 하루 쓸 수 있는 돈</div><div class="big">'+won(T.dailyAllowance(trip))+'</div><div class="fm">(총예산 − 누적지출) ÷ 남은 '+T.remainingDays(trip)+'일</div></div></div>'
     + '<div class="sech">카테고리별</div><div class="card">'+catHtml+'</div>'
+    + '<button class="seg" style="width:100%;margin-top:6px" onclick="openLimitSheet()">카테고리 한도 설정</button>'
     + setl
-    + '<div class="sech">지출 내역</div>'+expList();
+    + '<div class="sech">지출 내역</div>'+expList()
+    + ((trip.expenses||[]).length ? '<button class="seg" style="width:100%;margin-top:8px" onclick="exportCSV()">지출 CSV 내보내기</button>' : '');
+}
+/* 카테고리 한도 설정 시트 */
+function openLimitSheet(){
+  var limits=(trip.budget&&trip.budget.catLimits)||{};
+  var rows=T.CATS.map(function(c){
+    return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-size:18px">'+c.emoji+'</span><span style="flex:0 0 46px;font-size:13px;font-weight:700">'+c.label+'</span>'
+      +'<input class="in" style="flex:1" type="number" inputmode="numeric" placeholder="한도 없음" value="'+(limits[c.key]||'')+'" data-cat="'+c.key+'"><span style="font-size:12px;color:var(--gray-400)">원</span></div>';
+  }).join('');
+  openSheet('<h3>카테고리 한도</h3><div style="font-size:12px;color:var(--gray-500);margin:-4px 0 12px">초과하면 카테고리에 빨간 "초과" 배지가 떠요. 비우면 한도 없음.</div>'+rows+'<button class="save" onclick="saveLimits()">저장</button>');
+}
+function saveLimits(){
+  document.querySelectorAll('#sheetBody input[data-cat]').forEach(function(el){
+    T.setCatLimit(tid, el.getAttribute('data-cat'), parseInt(el.value)||0);
+  });
+  reget(); closeSheet(); renderShell();
+}
+/* 지출 CSV 내보내기 */
+function exportCSV(){
+  var ex=trip.expenses||[]; if(!ex.length){ alert('내보낼 지출이 없어요.'); return; }
+  var head=['날짜','메모','카테고리','통화','금액','원화','결제','낸사람','나눔대상'];
+  function q(s){ s=String(s==null?'':s); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; }
+  var lines=[head.join(',')];
+  ex.forEach(function(e){ var c=T.catByKey(e.category);
+    lines.push([e.date||'',e.memo||'',c.label,e.currency||'KRW',e.amount||'',e.krw||'',(e.method==='cash'?'현금':'카드'),e.paidBy||'',(e.paidFor||[]).join('·')].map(q).join(','));
+  });
+  lines.push(['','','','','합계',T.spent(trip),'','',''].map(q).join(','));
+  var blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});   // BOM: 엑셀 한글
+  var url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download=(trip.city||'여행')+'_지출.csv'; document.body.appendChild(a); a.click();
+  setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); },100);
 }
 function expList(){
   var ex=trip.expenses||[];

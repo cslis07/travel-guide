@@ -25,6 +25,7 @@ const CORS = {
 const URL_ALLOWLIST = new Set([
   'api.open-meteo.com',
   'air-quality-api.open-meteo.com',
+  'geocoding-api.open-meteo.com',
 ]);
 
 // path 도 화이트리스트로 제한 (경로 탈출·타 엔드포인트 호출 방지)
