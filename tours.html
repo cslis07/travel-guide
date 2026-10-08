@@ -187,9 +187,6 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
 .pc-google:hover{background:#DCE6FF}
 .pc-more{display:block;text-align:right;padding:9px 0 2px;border-top:1px solid var(--gray-100);font-size:12.5px;font-weight:700;
   color:var(--primary);text-decoration:none}
-.pc-open{width:100%;margin:6px 0 2px;padding:10px;border:1px dashed var(--gray-300,#D0D5DD);border-radius:10px;background:#fff;
-  font-family:inherit;font-size:13px;font-weight:700;color:var(--primary);cursor:pointer}
-.pc-open:hover{border-color:var(--primary);background:var(--primary-lt,#EAF0FF)}
 .pc-retry{margin-left:6px;border:1px solid var(--gray-200);background:#fff;border-radius:999px;padding:4px 10px;
   font-family:inherit;font-size:12px;font-weight:700;color:var(--primary);cursor:pointer}
 @media(max-width:640px){
@@ -571,7 +568,8 @@ function renderItemsPage(scroll){
   grid.innerHTML = _ttMode === 'stay'
     ? pageItems.map((it, i) => `<div class="tt-stay">${itemCard(it)}<div class="pc-box" id="pc-${start + i}"></div></div>`).join('')
     : pageItems.map(itemCard).join('');
-  if(_ttMode === 'stay') pageItems.forEach((it, i) => priceCompareSlot(it, 'pc-' + (start + i), start + i === 0));
+  _pcGen++;
+  if(_ttMode === 'stay') pageItems.forEach((it, i) => priceCompareSlot(it, 'pc-' + (start + i)));
   if(head){
     const totalStr = _ttTotal >= 10000 ? '10,000+' : _ttTotal.toLocaleString();
     const totalTxt = _ttTotal ? `총 <b>${totalStr}</b>개 중 상위 ${total}개` : `${total}개`;
@@ -627,14 +625,17 @@ function pcLink(kind, r, ctx){
   }
 }
 function pcWon(n){ return '₩' + Number(n).toLocaleString(); }
-/* 마이리얼트립 상세 조회는 호출 제한이 빡빡해서 첫 번째 숙소만 자동으로 비교하고,
-   나머지는 버튼을 눌렀을 때 불러온다(서버도 호텔 매칭을 30일 캐시한다). */
-function priceCompareSlot(it, boxId, auto){
+/* 화면의 모든 숙소에 자동으로 비교표를 붙인다. 단 마이리얼트립 상세 조회는 호출 제한이 빡빡해
+   (실측 수십 회에 429) 동시에 쏘지 않고 위에서부터 하나씩 차례로 부른다.
+   서버가 호텔 매칭을 30일 캐시하므로 한 번 본 숙소는 다음부터 즉시 나온다.
+   새 검색·페이지 이동 시 _pcGen 이 바뀌어 이전 대기열은 화면에 쓰지 않고 버려진다. */
+let _pcQueue = Promise.resolve(), _pcGen = 0;
+function priceCompareSlot(it, boxId){
   const box = $(boxId); if(!box) return;
   if(!/products\/\d+/.test(String(it.url || ''))){ box.remove(); return; }
-  if(auto){ loadPriceCompare(it, boxId); return; }
-  box.innerHTML = `<button class="pc-open" type="button">💰 플랫폼별 가격 비교 보기</button>`;
-  box.querySelector('.pc-open').onclick = () => loadPriceCompare(it, boxId);
+  box.innerHTML = `<div class="pc-loading"><span class="tt-spin pc-spin"></span>다른 플랫폼 가격 찾는 중…</div>`;
+  const gen = _pcGen;
+  _pcQueue = _pcQueue.then(() => gen === _pcGen ? loadPriceCompare(it, boxId) : null).catch(() => {});
 }
 async function pcFetch(url){
   if(_pcCache.has(url)) return _pcCache.get(url);
@@ -649,7 +650,7 @@ async function loadPriceCompare(it, boxId){
   const ctx = _stayCtx;
   box.innerHTML = `<div class="pc-loading"><span class="tt-spin pc-spin"></span>다른 플랫폼 가격 찾는 중…</div>`;
   // v= : 서버 색인 방식이 바뀌면 올려서 30일 캐시된 옛 "못 찾음" 결과를 무효화(api/hotelprice.js IDX_VER)
-  const mt = await pcFetch(`/api/hotelprice?gid=${gid}&v=3`);
+  const mt = await pcFetch(`/api/hotelprice?gid=${gid}&v=4`);
   const pr = mt.ok && mt.match
     ? await pcFetch(`/api/hotelprice?key=${encodeURIComponent(mt.match.key)}&cur=${mt.match.cur}&ci=${ctx.ci}&co=${ctx.co}&ad=${ctx.ad}`)
     : null;

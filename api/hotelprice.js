@@ -41,7 +41,8 @@ const CITY = {
 
 const IDX_VER = 2;   // 2: 색인 정렬 popularity(누락 수정). 색인 형식이 바뀌면 올린다
 /* 매칭 규칙이 바뀌면 tours.html 의 gid 조회 v= 를 올려 30일 캐시된 옛 매칭(오매칭 포함)을 무효화한다.
-   v=3: 지명·체인명 제외 유사도(부산 해운대 오매칭 수정) */
+   v=3: 지명·체인명 제외 유사도(부산 해운대 오매칭 수정)
+   v=4: 촉음 받침(롯폰기↔Roppongi)·덩어리 걷어내기 양방식(APA 롯폰기 에키히가시 누락 수정) */
 const CURS = new Set(['JPY', 'THB', 'USD', 'HKD', 'CNY', 'EUR', 'GBP']);
 
 export default async function handler(req) {
@@ -168,6 +169,8 @@ function fold(s) {
     .replace(/eu/g, 'u').replace(/eo/g, 'o').replace(/ae/g, 'e')
     .replace(/[fp]/g, 'p').replace(/[vb]/g, 'b').replace(/[lr]/g, 'r').replace(/[kgcq]/g, 'k').replace(/[td]/g, 't')
     .replace(/sh/g, 's').replace(/ch|j|z/g, 'j').replace(/x/g, 'ks').replace(/w/g, 'u').replace(/y/g, 'i')
+    // 일본어 촉음(ッ)은 한글로 받침 ㅅ: 롯폰기 rotponki ↔ Roppongi, 삿포로 ↔ Sapporo
+    .replace(/t(?=[pkstj])/g, '')
     .replace(/(.)\1+/g, '$1');
 }
 const GENERIC = /(hotel|hostel|resort|inn|by ihg|호텔|호스텔|리조트)/gi;
@@ -181,20 +184,26 @@ function commonTokens(idx) {
   const min = Math.max(6, idx.length * 0.004);
   return new Set([...df].filter(([, c]) => c >= min).map(([t]) => t));
 }
-function distinct(name, common, korean) {
+function distinct(name, common, korean, inner) {
   const words = String(name).replace(GENERIC, ' ').split(korean ? /[\s\-–·,&()/]+/ : /[^A-Za-z0-9]+/);
   const keep = [];
   for (const w of words) {
     let f = fold(w);
     if (!f || common.has(f)) continue;
     // 한글은 "제주신화월드"처럼 붙여 쓰므로 흔한 단어(4자+)를 덩어리 안에서도 걷어낸다
-    if (korean) for (const c of common) if (c.length >= 4 && f.includes(c)) f = f.split(c).join('');
+    if (korean && inner) for (const c of common) if (c.length >= 4 && f.includes(c)) f = f.split(c).join('');
     if (f) keep.push(f);
   }
   return keep.join('');
 }
+/* 덩어리 안 걷어내기는 양날이다 — "제주신화월드"엔 필요하지만 "에키히가시"에선 흔한 "higashi"를
+   잘라 "에키"만 남긴다(APA 롯폰기 에키히가시 4m 놓침). 두 방식 중 높은 쪽을 쓴다.
+   통째로 흔한 단어(지명)는 두 방식 모두 빠지므로 오매칭 차단은 유지된다. */
 function sim(ko, en, common = new Set()) {
-  const a = distinct(ko, common, true), b = distinct(en, common, false);
+  return Math.max(sim1(distinct(ko, common, true, false), distinct(en, common, false)),
+                  sim1(distinct(ko, common, true, true), distinct(en, common, false)));
+}
+function sim1(a, b) {
   if (a.length < 2 || b.length < 2) return 0;
   const bg = s => { const m = new Map(); for (let i = 0; i < s.length - 1; i++) { const k = s.slice(i, i + 2); m.set(k, (m.get(k) || 0) + 1); } return m; };
   const A = bg(a), B = bg(b);
