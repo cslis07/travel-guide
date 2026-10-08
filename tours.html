@@ -182,6 +182,11 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
 .pc-note{font-size:11px;color:var(--gray-400);line-height:1.55;margin:6px 0 0}
 .pc-loading,.pc-empty{font-size:12.5px;color:var(--gray-500);padding:10px 0;display:flex;align-items:center;gap:8px}
 .pc-spin{width:14px;height:14px;border-width:2px;margin:0}
+.pc-google{display:block;text-align:center;margin:2px 0 6px;padding:11px;border-radius:10px;background:var(--primary-lt,#EAF0FF);
+  color:var(--primary);font-size:13.5px;font-weight:800;text-decoration:none}
+.pc-google:hover{background:#DCE6FF}
+.pc-more{display:block;text-align:right;padding:9px 0 2px;border-top:1px solid var(--gray-100);font-size:12.5px;font-weight:700;
+  color:var(--primary);text-decoration:none}
 .pc-open{width:100%;margin:6px 0 2px;padding:10px;border:1px dashed var(--gray-300,#D0D5DD);border-radius:10px;background:#fff;
   font-family:inherit;font-size:13px;font-weight:700;color:var(--primary);cursor:pointer}
 .pc-open:hover{border-color:var(--primary);background:var(--primary-lt,#EAF0FF)}
@@ -350,7 +355,7 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
   <p class="tt-note">
     마이리얼트립 실시간 데이터 + 트립닷컴·클룩·KKday·와그(투어) · 부킹닷컴·아고다(숙소) ·
     스카이스캐너(항공) 비교 링크를 제공합니다.<br>
-    숙소는 트립어드바이저 제휴 요금(Xotelo)으로 <b>같은 호텔의 플랫폼별 1박 가격</b>을 함께 보여주며, 같은 호텔로 확인되지 않으면 표시하지 않습니다.<br>
+    숙소는 트립어드바이저 제휴 요금(Xotelo)으로 <b>같은 호텔의 플랫폼별 1박 가격</b>을 함께 보여주며, 같은 호텔로 확인되지 않으면 가격 대신 구글 호텔 비교 링크를 보여줍니다.<br>
     그 밖의 비교 링크는 <b>검색 결과가 아니라 각 플랫폼의 검색 페이지로 연결</b>됩니다.<br>
     가격·재고·예약 가능 여부는 실시간 변동될 수 있으며, 예약·결제는 각 플랫폼에서 직접 진행하세요.<br>
     <a href="/privacy" style="color:var(--gray-400)">개인정보처리방침</a> · <a href="/terms" style="color:var(--gray-400)">이용약관</a>
@@ -644,18 +649,24 @@ async function loadPriceCompare(it, boxId){
   const ctx = _stayCtx;
   box.innerHTML = `<div class="pc-loading"><span class="tt-spin pc-spin"></span>다른 플랫폼 가격 찾는 중…</div>`;
   // v= : 서버 색인 방식이 바뀌면 올려서 30일 캐시된 옛 "못 찾음" 결과를 무효화(api/hotelprice.js IDX_VER)
-  const mt = await pcFetch(`/api/hotelprice?gid=${gid}&v=2`);
+  const mt = await pcFetch(`/api/hotelprice?gid=${gid}&v=3`);
   const pr = mt.ok && mt.match
     ? await pcFetch(`/api/hotelprice?key=${encodeURIComponent(mt.match.key)}&cur=${mt.match.cur}&ci=${ctx.ci}&co=${ctx.co}&ad=${ctx.ad}`)
     : null;
   if(!$(boxId)) return;   // 그 사이 페이지가 바뀜
+  /* 자동 비교가 안 될 때도 비교는 가능해야 한다 → 그 숙소 이름으로 구글 호텔을 연다.
+     "숙소명 도시"로 검색하면 그 숙소의 플랫폼별 가격 화면이 바로 열린다(실측: 팔레드시즈 부산). */
+  const hName = (mt.hotel && mt.hotel.name) || it.title || '';
+  const hCity = (mt.hotel && mt.hotel.city) || '';
+  const google = `https://www.google.com/travel/search?q=${encodeURIComponent((hName + ' ' + hCity).trim())}&hl=ko&gl=kr`;
+  const googleBtn = `<a class="pc-google" href="${esc(google)}" target="_blank" rel="noopener">구글 호텔에서 모든 플랫폼 가격 비교 ↗</a>`;
   if(!mt.ok || (mt.match && (!pr || !pr.ok))){
-    box.innerHTML = `<div class="pc-empty">가격 비교를 잠시 불러오지 못했어요 <button class="pc-retry" type="button">다시 시도</button></div>`;
+    box.innerHTML = `<div class="pc-empty">자동 가격 비교를 잠시 불러오지 못했어요 <button class="pc-retry" type="button">다시 시도</button></div>${googleBtn}`;
     box.querySelector('.pc-retry').onclick = () => loadPriceCompare(it, boxId);
     return;
   }
   if(!mt.match || !pr.rates.length){
-    box.innerHTML = `<div class="pc-empty">${mt.match ? '이 날짜에 다른 플랫폼 요금이 없어요' : '다른 플랫폼에서 같은 숙소를 확인하지 못했어요'} · 아래 「다른 플랫폼 가격 비교」 링크로 확인하세요</div>`;
+    box.innerHTML = `<div class="pc-empty">${mt.match ? '이 날짜에는 자동 비교할 다른 플랫폼 요금이 없어요' : '이 숙소는 자동 가격 비교를 지원하지 않아요'}</div>${googleBtn}`;
     return;
   }
   const d = { hotel: mt.hotel, match: mt.match, rates: pr.rates, cur: pr.cur, fx: pr.fx };
@@ -679,6 +690,7 @@ async function loadPriceCompare(it, boxId){
         `<span class="pc-price">${pcWon(x.krw)}</span>` +
         (x.href ? `<a class="pc-go" href="${esc(x.href)}" target="_blank" rel="nofollow sponsored noopener"><span class="pc-go-lg">사이트 </span>방문</a>` : '<span></span>') +
       `</div>`).join('') +
+    `<a class="pc-more" href="${esc(google)}" target="_blank" rel="noopener">더 많은 플랫폼 · 구글 호텔에서 보기 ↗</a>` +
     `<p class="pc-note">트립어드바이저 제휴 요금(Xotelo) 기준 · 세금·수수료 포함 여부는 플랫폼마다 다름${fxNote} · 비교 대상: ${esc(d.match.name)}</p>`;
 }
 

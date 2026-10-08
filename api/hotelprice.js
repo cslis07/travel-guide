@@ -39,7 +39,9 @@ const CITY = {
   '제주': [['g983296'], 'USD'], '제주시': [['g983296'], 'USD'], '서귀포': [['g983296'], 'USD'],
 };
 
-const IDX_VER = 2;   // 2: 색인 정렬 popularity(누락 수정). 올리면 tours.html 의 gid 조회 v= 도 같이 올릴 것
+const IDX_VER = 2;   // 2: 색인 정렬 popularity(누락 수정). 색인 형식이 바뀌면 올린다
+/* 매칭 규칙이 바뀌면 tours.html 의 gid 조회 v= 를 올려 30일 캐시된 옛 매칭(오매칭 포함)을 무효화한다.
+   v=3: 지명·체인명 제외 유사도(부산 해운대 오매칭 수정) */
 const CURS = new Set(['JPY', 'THB', 'USD', 'HKD', 'CNY', 'EUR', 'GBP']);
 
 export default async function handler(req) {
@@ -95,12 +97,13 @@ async function match(req, gid) {
     return parts.reduce((a, d) => (d && d.ok ? a.concat(d.list) : a), []);
   };
   const idx = await loadIdx(city[0]);
-  let m = bestMatch(hotel.name, lat, lng, idx);
+  const common = commonTokens(idx);
+  let m = bestMatch(hotel.name, lat, lng, idx, common);
   if (!m) {
     /* 도시 목록은 일부만 담는다(사도닉스 우에노는 도쿄 목록엔 없고 다이토구 목록엔 있다).
        주변 30곳이 속한 하위 지역(구·동네) 코드 상위 3개의 목록으로 한 번 더 찾는다. */
     const subs = nearbyAreas(lat, lng, idx, city[0]);
-    if (subs.length) m = bestMatch(hotel.name, lat, lng, await loadIdx(subs));
+    if (subs.length) m = bestMatch(hotel.name, lat, lng, await loadIdx(subs), common);
   }
   // 색인 로딩이 통째로 실패한 경우(Xotelo 장애)는 "없음"으로 오래 캐시하면 안 된다
   if (!m) return out({ ok: true, hotel, match: null, reason: 'nomatch' }, 200, idx.length ? 604800 : 0);
@@ -111,15 +114,20 @@ async function match(req, gid) {
 /* ── 매칭: 좌표 거리 + 이름 유사도 ──
    실측(도쿄 10곳): 30m 안이어도 옆 호텔일 수 있고(사도닉스↔도미인 47m),
    이름만 보면 지역명(신주쿠) 때문에 남의 호텔이 0.46까지 오른다. 그래서 둘을 같이 본다.
-   · 30m 이내 & 유사도 ≥ 0.30  또는  · 200m 이내 & 유사도 ≥ 0.55  → 정답 6/6, 오답 5/5 차단 */
-function bestMatch(name, lat, lng, idx) {
+   · 40m 이내 & 유사도 ≥ 0.30  또는  · 200m 이내 & 유사도 ≥ 0.55
+   실측(도쿄·부산·제주·방콕·다낭 20쌍): 정답 12/13, 오답 7/7 차단. 놓친 1건은 "더 낫"↔"Knot"처럼
+   발음 표기가 다른 경우 — 남의 가격을 보여주느니 안 보여주는 쪽을 택했다. */
+/* ⚠️ 지명이 겹치면 남의 호텔도 비슷해 보인다 — 실측 "부산 해운대 호텔 위드" ↔ "Toyoko Inn Busan Haeundae"
+   (87m, 0.61)로 오매칭. 그래서 그 도시 색인에서 흔한 단어(지명·체인명: Busan·Haeundae·Shinjuku·APA…)는
+   양쪽 이름에서 빼고 "그 호텔만의 단어"로 비교한다. */
+function bestMatch(name, lat, lng, idx, common) {
   const cosLat = Math.cos(lat * Math.PI / 180);
   let best = null;
   for (const [n, key, la, lo, ta] of idx) {
     const d = Math.hypot((la - lat) * 111000, (lo - lng) * 111000 * cosLat);
     if (d > 200) continue;
-    const s = sim(name, n);
-    if (!((d <= 30 && s >= 0.30) || s >= 0.55)) continue;
+    const s = sim(name, n, common);
+    if (!((d <= 40 && s >= 0.30) || s >= 0.55)) continue;
     const score = s - d / 1000;   // 유사도 우선, 같으면 가까운 쪽
     if (!best || score > best.score) best = { name: n, key, dist: Math.round(d), sim: Math.round(s * 100) / 100, ta, score };
   }
@@ -163,8 +171,30 @@ function fold(s) {
     .replace(/(.)\1+/g, '$1');
 }
 const GENERIC = /(hotel|hostel|resort|inn|by ihg|호텔|호스텔|리조트)/gi;
-function sim(ko, en) {
-  const a = fold(String(ko).replace(GENERIC, ' ')), b = fold(String(en).replace(GENERIC, ' '));
+/* 색인 이름에서 자주 나오는 단어(접은 형태) — 지명·체인명. 도시 규모에 비례(최소 6곳) */
+function commonTokens(idx) {
+  const df = new Map();
+  for (const h of idx) {
+    const seen = new Set(String(h[0]).replace(GENERIC, ' ').split(/[^A-Za-z0-9]+/).map(fold).filter(t => t.length >= 3));
+    for (const t of seen) df.set(t, (df.get(t) || 0) + 1);
+  }
+  const min = Math.max(6, idx.length * 0.004);
+  return new Set([...df].filter(([, c]) => c >= min).map(([t]) => t));
+}
+function distinct(name, common, korean) {
+  const words = String(name).replace(GENERIC, ' ').split(korean ? /[\s\-–·,&()/]+/ : /[^A-Za-z0-9]+/);
+  const keep = [];
+  for (const w of words) {
+    let f = fold(w);
+    if (!f || common.has(f)) continue;
+    // 한글은 "제주신화월드"처럼 붙여 쓰므로 흔한 단어(4자+)를 덩어리 안에서도 걷어낸다
+    if (korean) for (const c of common) if (c.length >= 4 && f.includes(c)) f = f.split(c).join('');
+    if (f) keep.push(f);
+  }
+  return keep.join('');
+}
+function sim(ko, en, common = new Set()) {
+  const a = distinct(ko, common, true), b = distinct(en, common, false);
   if (a.length < 2 || b.length < 2) return 0;
   const bg = s => { const m = new Map(); for (let i = 0; i < s.length - 1; i++) { const k = s.slice(i, i + 2); m.set(k, (m.get(k) || 0) + 1); } return m; };
   const A = bg(a), B = bg(b);
