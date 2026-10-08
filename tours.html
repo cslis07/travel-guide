@@ -162,6 +162,44 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
 .tt-price2{font-size:18px;font-weight:800;color:var(--primary)}
 .tt-book{font-size:12.5px;font-weight:700;color:var(--accent-dark);white-space:nowrap}
 
+/* 숙소 플랫폼별 가격 비교 (구글 호텔 "모든 옵션" 형태) */
+.tt-stay{display:flex;flex-direction:column;gap:0}
+.tt-stay .tt-item{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.pc-box{background:#fff;border:1px solid var(--gray-200);border-top:0;border-radius:0 0 16px 16px;padding:6px 14px 10px}
+.pc-box:empty{display:none}
+.tt-stay .tt-item:has(+ .pc-box:empty){border-radius:16px}
+.pc-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:8px 0 6px;font-size:13.5px;font-weight:800;color:var(--dark)}
+.pc-head small{font-size:11.5px;font-weight:600;color:var(--gray-400)}
+.pc-row{display:grid;grid-template-columns:26px 1fr auto auto;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--gray-100)}
+.pc-logo{width:26px;height:26px;border-radius:7px;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.pc-name{font-size:13.5px;font-weight:600;color:var(--dark);min-width:0;display:flex;align-items:center}
+.pc-name>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-name em{flex-shrink:0;font-style:normal;font-size:10.5px;font-weight:800;color:#067647;background:#ECFDF3;padding:2px 7px;border-radius:6px;margin-left:6px}
+.pc-price{font-size:15px;font-weight:800;color:var(--dark);white-space:nowrap}
+.pc-best .pc-price{color:#067647}
+.pc-go{font-size:12.5px;font-weight:700;color:var(--primary);border:1px solid var(--gray-200);border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap}
+.pc-go:hover{border-color:var(--primary);background:var(--primary-lt,#EAF0FF)}
+.pc-note{font-size:11px;color:var(--gray-400);line-height:1.55;margin:6px 0 0}
+.pc-loading,.pc-empty{font-size:12.5px;color:var(--gray-500);padding:10px 0;display:flex;align-items:center;gap:8px}
+.pc-spin{width:14px;height:14px;border-width:2px;margin:0}
+.pc-open{width:100%;margin:6px 0 2px;padding:10px;border:1px dashed var(--gray-300,#D0D5DD);border-radius:10px;background:#fff;
+  font-family:inherit;font-size:13px;font-weight:700;color:var(--primary);cursor:pointer}
+.pc-open:hover{border-color:var(--primary);background:var(--primary-lt,#EAF0FF)}
+.pc-retry{margin-left:6px;border:1px solid var(--gray-200);background:#fff;border-radius:999px;padding:4px 10px;
+  font-family:inherit;font-size:12px;font-weight:700;color:var(--primary);cursor:pointer}
+@media(max-width:640px){
+  .pc-box{padding:4px 12px 10px}
+  .pc-row{grid-template-columns:24px 1fr auto auto;gap:8px}
+  .pc-logo{width:24px;height:24px}
+  .pc-name{font-size:13px}
+  .pc-name em{margin-left:4px;padding:2px 5px}
+  .pc-go{font-size:12px;padding:5px 9px}
+  .pc-price{font-size:14px}
+}
+@media(max-width:400px){
+  .pc-go-lg{display:none}
+}
+
 /* 페이지네이션 */
 .tt-pager{display:flex;align-items:center;justify-content:center;gap:6px;margin:18px 0 4px;flex-wrap:wrap}
 .tt-page-btn{min-width:36px;height:36px;padding:0 10px;border:1px solid var(--gray-200);background:#fff;
@@ -312,7 +350,8 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
   <p class="tt-note">
     마이리얼트립 실시간 데이터 + 트립닷컴·클룩·KKday·와그(투어) · 부킹닷컴·아고다(숙소) ·
     스카이스캐너(항공) 비교 링크를 제공합니다.<br>
-    마이리얼트립 외에는 공개 가격 API가 없어 <b>검색 결과가 아니라 각 플랫폼의 검색 페이지로 연결</b>됩니다.<br>
+    숙소는 트립어드바이저 제휴 요금(Xotelo)으로 <b>같은 호텔의 플랫폼별 1박 가격</b>을 함께 보여주며, 같은 호텔로 확인되지 않으면 표시하지 않습니다.<br>
+    그 밖의 비교 링크는 <b>검색 결과가 아니라 각 플랫폼의 검색 페이지로 연결</b>됩니다.<br>
     가격·재고·예약 가능 여부는 실시간 변동될 수 있으며, 예약·결제는 각 플랫폼에서 직접 진행하세요.<br>
     <a href="/privacy" style="color:var(--gray-400)">개인정보처리방침</a> · <a href="/terms" style="color:var(--gray-400)">이용약관</a>
   </p>
@@ -523,7 +562,11 @@ function renderItemsPage(scroll){
   const pages = Math.max(1, Math.ceil(total / size));
   _ttPage = Math.min(Math.max(1, _ttPage), pages);
   const start = (_ttPage - 1) * size;
-  grid.innerHTML = _ttItems.slice(start, start + size).map(itemCard).join('');
+  const pageItems = _ttItems.slice(start, start + size);
+  grid.innerHTML = _ttMode === 'stay'
+    ? pageItems.map((it, i) => `<div class="tt-stay">${itemCard(it)}<div class="pc-box" id="pc-${start + i}"></div></div>`).join('')
+    : pageItems.map(itemCard).join('');
+  if(_ttMode === 'stay') pageItems.forEach((it, i) => priceCompareSlot(it, 'pc-' + (start + i), start + i === 0));
   if(head){
     const totalStr = _ttTotal >= 10000 ? '10,000+' : _ttTotal.toLocaleString();
     const totalTxt = _ttTotal ? `총 <b>${totalStr}</b>개 중 상위 ${total}개` : `${total}개`;
@@ -543,7 +586,103 @@ function renderPager(pages){
 }
 function ttGoPage(p){ _ttPage = p; renderItemsPage(true); }
 
+/* ── 숙소 플랫폼별 가격 비교 (구글 호텔 "모든 옵션" 방식) ──
+   /api/hotelprice 가 MRT 숙소 → 트립어드바이저 같은 호텔을 찾아 Trip.com·Booking·Agoda 등
+   1박 요금을 돌려준다. 같은 호텔이라고 확신이 안 서면 서버가 match:null 을 주고,
+   그때는 가격을 지어내지 않고 안내 한 줄만 남긴다. */
+let _ttMode = '', _stayCtx = null;
+const _pcCache = new Map();
+const PC_PLAT = {
+  CtripTA:    { label:'트립닷컴',   color:'#2577E3', link:'tripcom' },
+  BookingCom: { label:'부킹닷컴',   color:'#003580', link:'booking' },
+  Agoda:      { label:'아고다',     color:'#c1272d' },
+  Expedia:    { label:'익스피디아', color:'#1E243A', link:'expedia' },
+  HotelsCom2: { label:'호텔스닷컴', color:'#D32F2F', link:'hotels' },
+  HotelsCom:  { label:'호텔스닷컴', color:'#D32F2F', link:'hotels' },
+  Klook:      { label:'클룩',       color:'#e8384f', link:'klook' },
+};
+function pcLink(kind, r, ctx){
+  const en = encodeURIComponent(r.matchName), c = ctx;
+  // 검색어가 유지되는지 실측한 플랫폼만 검색 링크, 나머지는 그 호텔의 트립어드바이저 요금 페이지
+  const ta = r.ta ? 'https://www.tripadvisor.co.kr' + r.ta : '';
+  const partner = key => window.AFF && AFF.PARTNERS.find(p => p.key === key);
+  switch(kind){
+    case 'tripcom': {
+      const u = partner('tripcom') && AFF.url(partner('tripcom'), '', 'stay', { city: r.city });
+      return u || ta;   // 트립닷컴은 도시 ID가 있어야 정확하다(affiliates.js TRIPCOM_CITY)
+    }
+    case 'booking': {
+      const u = `https://www.booking.com/searchresults.ko.html?ss=${en}&checkin=${c.ci}&checkout=${c.co}&group_adults=${c.ad}&no_rooms=1`;
+      return window.AFF ? AFF.track('booking', u) : u;
+    }
+    case 'expedia': return `https://www.expedia.co.kr/Hotel-Search?destination=${en}&startDate=${c.ci}&endDate=${c.co}&adults=${c.ad}`;
+    case 'hotels':  return `https://kr.hotels.com/Hotel-Search?destination=${en}&startDate=${c.ci}&endDate=${c.co}&adults=${c.ad}`;
+    case 'klook':   return `https://www.klook.com/ko/search/?query=${en}`;
+    default: return ta;
+  }
+}
+function pcWon(n){ return '₩' + Number(n).toLocaleString(); }
+/* 마이리얼트립 상세 조회는 호출 제한이 빡빡해서 첫 번째 숙소만 자동으로 비교하고,
+   나머지는 버튼을 눌렀을 때 불러온다(서버도 호텔 매칭을 30일 캐시한다). */
+function priceCompareSlot(it, boxId, auto){
+  const box = $(boxId); if(!box) return;
+  if(!/products\/\d+/.test(String(it.url || ''))){ box.remove(); return; }
+  if(auto){ loadPriceCompare(it, boxId); return; }
+  box.innerHTML = `<button class="pc-open" type="button">💰 플랫폼별 가격 비교 보기</button>`;
+  box.querySelector('.pc-open').onclick = () => loadPriceCompare(it, boxId);
+}
+async function pcFetch(url){
+  if(_pcCache.has(url)) return _pcCache.get(url);
+  const d = await fetch(url).then(r => r.json()).catch(() => ({ ok:false }));
+  if(d.ok) _pcCache.set(url, d);
+  return d;
+}
+async function loadPriceCompare(it, boxId){
+  const box = $(boxId); if(!box || !_stayCtx) return;
+  const gid = (String(it.url || '').match(/products\/(\d+)/) || [])[1];
+  if(!gid){ box.remove(); return; }
+  const ctx = _stayCtx;
+  box.innerHTML = `<div class="pc-loading"><span class="tt-spin pc-spin"></span>다른 플랫폼 가격 찾는 중…</div>`;
+  const mt = await pcFetch(`/api/hotelprice?gid=${gid}`);
+  const pr = mt.ok && mt.match
+    ? await pcFetch(`/api/hotelprice?key=${encodeURIComponent(mt.match.key)}&cur=${mt.match.cur}&ci=${ctx.ci}&co=${ctx.co}&ad=${ctx.ad}`)
+    : null;
+  if(!$(boxId)) return;   // 그 사이 페이지가 바뀜
+  if(!mt.ok || (mt.match && (!pr || !pr.ok))){
+    box.innerHTML = `<div class="pc-empty">가격 비교를 잠시 불러오지 못했어요 <button class="pc-retry" type="button">다시 시도</button></div>`;
+    box.querySelector('.pc-retry').onclick = () => loadPriceCompare(it, boxId);
+    return;
+  }
+  if(!mt.match || !pr.rates.length){
+    box.innerHTML = `<div class="pc-empty">${mt.match ? '이 날짜에 다른 플랫폼 요금이 없어요' : '다른 플랫폼에서 같은 숙소를 확인하지 못했어요'} · 아래 「다른 플랫폼 가격 비교」 링크로 확인하세요</div>`;
+    return;
+  }
+  const d = { hotel: mt.hotel, match: mt.match, rates: pr.rates, cur: pr.cur, fx: pr.fx };
+  const r = { matchName: d.match.name, ta: d.match.ta, city: d.hotel.city };
+  const rows = d.rates.filter(x => x.krw).map(x => {
+    const meta = PC_PLAT[x.code] || { label: x.name, color:'#667085' };
+    return { label: meta.label, color: meta.color, krw: x.krw, href: pcLink(meta.link, r, ctx) };
+  });
+  // 마이리얼트립 가격(카드에 이미 있는 값)도 같은 표에 넣는다
+  const mrtKrw = Number(((String(it.price || '').match(/([\d,]+)\s*원/) || [])[1] || '').replace(/,/g, ''));
+  if(mrtKrw) rows.push({ label:'마이리얼트립', color:'#0BB8B4', krw: mrtKrw, href: affLink(it.url), mrt:true });
+  rows.sort((a, b) => a.krw - b.krw);
+  const min = rows.length ? rows[0].krw : 0;
+  const fxNote = d.cur && d.fx ? ` · 1${esc(d.cur)}=${(Math.round(d.fx * 100) / 100).toLocaleString()}원 환산` : '';
+  box.innerHTML =
+    `<div class="pc-head"><span>💰 플랫폼별 가격</span><small>1박 · 성인 ${ctx.ad}</small></div>` +
+    rows.map(x =>
+      `<div class="pc-row${x.krw === min ? ' pc-best' : ''}">` +
+        `<span class="pc-logo" style="background:${x.color}">${esc(x.label.slice(0,1))}</span>` +
+        `<span class="pc-name"><span>${esc(x.label)}</span>${x.krw === min ? '<em>최저가</em>' : ''}</span>` +
+        `<span class="pc-price">${pcWon(x.krw)}</span>` +
+        (x.href ? `<a class="pc-go" href="${esc(x.href)}" target="_blank" rel="nofollow sponsored noopener"><span class="pc-go-lg">사이트 </span>방문</a>` : '<span></span>') +
+      `</div>`).join('') +
+    `<p class="pc-note">트립어드바이저 제휴 요금(Xotelo) 기준 · 세금·수수료 포함 여부는 플랫폼마다 다름${fxNote} · 비교 대상: ${esc(d.match.name)}</p>`;
+}
+
 function ttShow(data, ctaUrl, ctaLabel, partnerQuery, partnerType){
+  _ttMode = partnerType || '';
   const cards = data.data && data.data.widget ? parseWidgetCards(data.data.widget) : [];
   let inner;
   if(cards.length){
@@ -664,6 +803,7 @@ async function ttRunStay(){
   const ci = $('stay-in').value, co = $('stay-out').value;
   if(ci && co && co <= ci){ ttError('체크아웃 날짜는 체크인보다 뒤여야 합니다.'); return; }
   _lastRun=ttRunStay; ttLockBtns(true); ttLoading('숙소 검색 중...');
+  _stayCtx = { ci, co, ad: Number($('stay-adult').value) };
   try{
     const data = await callMrt('searchStays', {
       keyword:q, checkIn:ci, checkOut:co,

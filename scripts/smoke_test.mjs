@@ -13,6 +13,7 @@ const checks = [
   ['/prepare', 200, '출국 준비'],
   ['/affiliates.js', 200, 'AFF'],
   ['/tours', 200, 'tt-tabs'],
+  ['/tours', 200, 'loadPriceCompare'],   // 숙소 플랫폼별 가격 비교
   ['/mytrip', 200, '내 여행'],
   ['/guide', 200, 'sidebar'],
   ['/osaka', 200, '오사카'],
@@ -48,9 +49,13 @@ const checks = [
 ];
 
 // API 프록시 (POST/GET)
+/* 숙소 플랫폼별 가격: 요금 모드만 점검한다(매칭 모드는 MRT 상세를 불러 호출 제한을 깎는다).
+   호텔 그레이서리 신주쿠, 30일 뒤 1박 — 요금 목록이 비어도 "ok":true 면 통과 */
+const _d = n => new Date(Date.now() + n * 864e5).toISOString().slice(0, 10);
 const apiChecks = [
   ['GET', '/api/tour?path=areaBasedList2&numOfRows=1&pageNo=1&areaCode=39', null, 'response'],
   ['POST', '/api/mrt', { tool: 'getCurrentTime', arguments: {} }, 'ok'],
+  ['GET', `/api/hotelprice?key=g298184-d6987624&cur=JPY&ci=${_d(30)}&co=${_d(31)}&ad=2`, null, '"ok":true'],
 ];
 
 let pass = 0, fail = 0;
