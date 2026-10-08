@@ -643,7 +643,8 @@ async function loadPriceCompare(it, boxId){
   if(!gid){ box.remove(); return; }
   const ctx = _stayCtx;
   box.innerHTML = `<div class="pc-loading"><span class="tt-spin pc-spin"></span>다른 플랫폼 가격 찾는 중…</div>`;
-  const mt = await pcFetch(`/api/hotelprice?gid=${gid}`);
+  // v= : 서버 색인 방식이 바뀌면 올려서 30일 캐시된 옛 "못 찾음" 결과를 무효화(api/hotelprice.js IDX_VER)
+  const mt = await pcFetch(`/api/hotelprice?gid=${gid}&v=2`);
   const pr = mt.ok && mt.match
     ? await pcFetch(`/api/hotelprice?key=${encodeURIComponent(mt.match.key)}&cur=${mt.match.cur}&ci=${ctx.ci}&co=${ctx.co}&ad=${ctx.ad}`)
     : null;

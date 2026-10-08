@@ -12,7 +12,7 @@ export const config = { runtime: 'edge' };
 
 const XO = 'https://data.xotelo.com/api/list';
 const PAGE = 100;
-const MAX_PAGES = 40;   // 상하이처럼 1만 곳 넘는 도시는 인기순 상위 4,000곳만
+const MAX_PAGES = 60;   // 상하이처럼 1만 곳 넘는 도시는 인기순 상위 6,000곳만
 
 export default async function handler(req) {
   const loc = new URL(req.url).searchParams.get('loc') || '';
@@ -52,8 +52,10 @@ export default async function handler(req) {
   }
 }
 
+/* ⚠️ sort=best_value 는 페이지를 넘기는 사이 순서가 흔들려 같은 호텔이 반복되고 다른 호텔이 빠진다
+   (실측 부산 2,229건 중 고유 1,773). popularity 는 고유 2,229 — 순서가 안정적이다. */
 async function page(loc, offset) {
-  const r = await fetch(`${XO}?location_key=${loc}&limit=${PAGE}&offset=${offset}&sort=best_value`);
+  const r = await fetch(`${XO}?location_key=${loc}&limit=${PAGE}&offset=${offset}&sort=popularity`);
   const d = await r.json();
   if (d.error || !d.result) throw new Error(d.error?.message || 'no result');
   return d.result;

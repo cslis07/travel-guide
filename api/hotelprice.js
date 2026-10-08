@@ -39,6 +39,7 @@ const CITY = {
   '제주': [['g983296'], 'USD'], '제주시': [['g983296'], 'USD'], '서귀포': [['g983296'], 'USD'],
 };
 
+const IDX_VER = 2;   // 2: 색인 정렬 popularity(누락 수정). 올리면 tours.html 의 gid 조회 v= 도 같이 올릴 것
 const CURS = new Set(['JPY', 'THB', 'USD', 'HKD', 'CNY', 'EUR', 'GBP']);
 
 export default async function handler(req) {
@@ -89,7 +90,8 @@ async function match(req, gid) {
   const origin = new URL(req.url).origin;
   const loadIdx = async locs => {
     const parts = await Promise.all(locs.map(loc =>
-      fetch(`${origin}/api/hotelidx?loc=${loc}`).then(r => r.json()).catch(() => null)));
+      // v= 는 색인 방식이 바뀌었을 때 CDN 7일 캐시를 우회하기 위한 값(hotelidx 는 무시)
+      fetch(`${origin}/api/hotelidx?loc=${loc}&v=${IDX_VER}`).then(r => r.json()).catch(() => null)));
     return parts.reduce((a, d) => (d && d.ok ? a.concat(d.list) : a), []);
   };
   const idx = await loadIdx(city[0]);
