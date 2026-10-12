@@ -175,7 +175,8 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
 .pc-name{font-size:13.5px;font-weight:600;color:var(--dark);min-width:0;display:flex;align-items:center}
 .pc-name>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pc-name em{flex-shrink:0;font-style:normal;font-size:10.5px;font-weight:800;color:#067647;background:#ECFDF3;padding:2px 7px;border-radius:6px;margin-left:6px}
-.pc-price{font-size:15px;font-weight:800;color:var(--dark);white-space:nowrap}
+.pc-price{font-size:15px;font-weight:800;color:var(--dark);white-space:nowrap;display:flex;flex-direction:column;align-items:flex-end;line-height:1.25}
+.pc-total{font-size:11px;font-weight:600;color:var(--gray-400)}
 .pc-best .pc-price{color:#067647}
 .pc-go{font-size:12.5px;font-weight:700;color:var(--primary);border:1px solid var(--gray-200);border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap}
 .pc-go:hover{border-color:var(--primary);background:var(--primary-lt,#EAF0FF)}
@@ -197,6 +198,7 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
   .pc-name em{margin-left:4px;padding:2px 5px}
   .pc-go{font-size:12px;padding:5px 9px}
   .pc-price{font-size:14px}
+  .pc-total{font-size:10.5px}
 }
 @media(max-width:400px){
   .pc-go-lg{display:none}
@@ -625,6 +627,12 @@ function pcLink(kind, r, ctx){
   }
 }
 function pcWon(n){ return '₩' + Number(n).toLocaleString(); }
+/* 체크인~체크아웃 숙박 일수(박). 날짜 미입력이면 0 → 1박 기준으로만 표시 */
+function pcNights(ctx){
+  if(!ctx || !ctx.ci || !ctx.co) return 0;
+  const n = Math.round((new Date(ctx.co) - new Date(ctx.ci)) / 86400000);
+  return n > 0 ? n : 0;
+}
 /* 화면의 모든 숙소에 자동으로 비교표를 붙인다. 단 마이리얼트립 상세 조회는 호출 제한이 빡빡해
    (실측 수십 회에 429) 동시에 쏘지 않고 위에서부터 하나씩 차례로 부른다.
    서버가 호텔 매칭을 30일 캐시하므로 한 번 본 숙소는 다음부터 즉시 나온다.
@@ -681,18 +689,20 @@ async function loadPriceCompare(it, boxId){
   if(mrtKrw) rows.push({ label:'마이리얼트립', color:'#0BB8B4', krw: mrtKrw, href: affLink(it.url), mrt:true });
   rows.sort((a, b) => a.krw - b.krw);
   const min = rows.length ? rows[0].krw : 0;
+  const nights = pcNights(ctx);
   const fxNote = d.cur && d.fx ? ` · 1${esc(d.cur)}=${(Math.round(d.fx * 100) / 100).toLocaleString()}원 환산` : '';
+  const stayNote = nights > 1 ? ` · 총액=1박×${nights}박` : '';
   box.innerHTML =
-    `<div class="pc-head"><span>💰 플랫폼별 가격</span><small>1박 · 성인 ${ctx.ad}</small></div>` +
+    `<div class="pc-head"><span>💰 플랫폼별 가격</span><small>${nights > 1 ? nights + '박' : '1박'} · 성인 ${ctx.ad}</small></div>` +
     rows.map(x =>
       `<div class="pc-row${x.krw === min ? ' pc-best' : ''}">` +
         `<span class="pc-logo" style="background:${x.color}">${esc(x.label.slice(0,1))}</span>` +
         `<span class="pc-name"><span>${esc(x.label)}</span>${x.krw === min ? '<em>최저가</em>' : ''}</span>` +
-        `<span class="pc-price">${pcWon(x.krw)}</span>` +
+        `<span class="pc-price">${pcWon(x.krw)}<small class="pc-total">${nights > 1 ? nights + '박 ' + pcWon(x.krw * nights) : '1박'}</small></span>` +
         (x.href ? `<a class="pc-go" href="${esc(x.href)}" target="_blank" rel="nofollow sponsored noopener"><span class="pc-go-lg">사이트 </span>방문</a>` : '<span></span>') +
       `</div>`).join('') +
     `<a class="pc-more" href="${esc(google)}" target="_blank" rel="noopener">더 많은 플랫폼 · 구글 호텔에서 보기 ↗</a>` +
-    `<p class="pc-note">트립어드바이저 제휴 요금(Xotelo) 기준 · 세금·수수료 포함 여부는 플랫폼마다 다름${fxNote} · 비교 대상: ${esc(d.match.name)}</p>`;
+    `<p class="pc-note">트립어드바이저 제휴 요금(Xotelo) 기준 · 1박 요금 비교${stayNote} · 세금·수수료 포함 여부는 플랫폼마다 다름${fxNote} · 비교 대상: ${esc(d.match.name)}</p>`;
 }
 
 function ttShow(data, ctaUrl, ctaLabel, partnerQuery, partnerType){
