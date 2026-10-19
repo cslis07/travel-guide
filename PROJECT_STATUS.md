@@ -1,127 +1,146 @@
 # 트래블코스트 (TravelCost) — PROJECT STATUS
 
-> **마지막 업데이트**: 2026-09-08 · 이번 세션 요약: **UI 전면 개편(하단탭·선아이콘·사업자정보) + 목적지 10곳 추가(23곳) + 수익화 배선·누수 3건 회수 + 지역필터 버그 수정 + 보안 4건**
+> **마지막 업데이트**: 2026-10-19 · 이번 세션 요약: **(상태문서 최신화)** — 10/08~10/12 작업 반영: `/tours` 숙소 검색에 **플랫폼별 1박 가격비교 + 숙박 총액**(트립닷컴·부킹·아고다 등, 같은 호텔 매칭, Xotelo 출처) 신설. Edge Function 2개(`hotelidx`·`hotelprice`) 추가. *직전 세션은 Trip 중심 리디자인.*
 > **프로젝트 경로**: `C:\Users\GB\Documents\travel-guide`
 > **GitHub**: `cslis07/travel-guide` (Public) · 기본=현재 브랜치 **`master`** (main 아님)
-> **배포**: https://travelcost.co.kr · **Vercel**(cslis07) · `master` push = 자동 프로덕션 · **자체 도메인 연결 완료**(구 `travel-guide-cslis07.vercel.app`)
-> **외부 서비스**: 없음(백엔드·DB 없음). Supabase/Firebase 미사용. localStorage만. 제휴 자동화는 **별도 프로젝트 posteady-clone `/deals`** 담당(여기 아님)
-> **규모**: HTML 33개(**목적지 가이드 23곳** + 도구/법적 10개) · Edge Function 3개(`api/`) · 공용 JS 9개 · 프로덕션 스모크 **40항목(40/40)**
+> **배포**: https://travelcost.co.kr · **Vercel**(cslis07) · `master` push = 자동 프로덕션 · 자체 도메인 연결 완료
+> **외부 서비스**: 없음(백엔드·DB 없음). localStorage만. 제휴 자동화는 별도 프로젝트 posteady-clone `/deals` 담당
+> **규모**: HTML 35개(목적지 가이드 23 + 도구/법적/Trip 12) · Edge Function **5개**(`api/`: tour·proxy·mrt·hotelidx·hotelprice) · 공용 JS 11개 · SW 캐시 **v25**
 
 ---
 
 ## 0. 지금 하던 일 (WIP)
 
-**깨끗한 상태** — `git status` 미커밋 0, 미푸시 0(`origin/master`와 동기), stash 없음. 최종 커밋 `a89086b`. 스모크 40/40. SW 캐시 `travelcost-v12`.
+**사실상 깨끗** — `git status` 미커밋은 `project-state.json`(Control Center 자동 상태파일, **요청 없이 커밋 금지**) + 이 세션에서 저장 중인 `PROJECT_STATUS.md` 2개뿐. 미푸시 0(`origin/master` 동기), stash 없음. **최종 커밋 `7e14740`**. SW `travelcost-v25`.
 
-**이번 세션 한 일**(자세히는 `CHANGELOG.md` 2026-09-07/08):
-- UI v2: 하단 탭바(`nav.js`)·선아이콘(`icons.js`)·사업자정보 푸터(`bizfooter.js`)·Pretendard·디자인토큰 개편
-- 목적지 10곳 추가(어르신 중국 4 + 트렌드 6) → 23곳, 전부 `noindex,follow`, 🇨🇳중국 필터
-- 수익화: `affiliates.js` 기후엔진·토스 준비물 8종·홈/견적/공항/prepare 배선, **제휴 누수 3건 회수**(홈위젯 트립닷컴 미추적·목적지 숙소 아고다행·공항 수익화 0)
-- 지역·시군구 필터 버그 수정(TourAPI 실코드로 재생성), 보안 4건(SSRF·XSS·import·헤더)
+**최근 세션 한 일 — 숙소 플랫폼별 가격비교**(2026-10-08~10-12, `CHANGELOG.md` 참조, 커밋 `cc99edb`~`7e14740` 6개, 전부 배포됨):
+- `/tours` 숙소 검색 결과 카드 아래에 **같은 호텔의 플랫폼별 1박 가격**(트립닷컴·부킹·아고다·클룩·Vio·익스피디아 + 마이리얼트립)을 낮은 순 표시, 최저가 배지. **2박 이상이면 숙박 총액(1박×박수)** 함께 표기.
+- **출처 = Xotelo**(트립어드바이저 제휴 요금, 무료·무인증, `data.xotelo.com/api/rates`). 현지통화→원화 환산.
+- **같은 호텔 매칭**: MRT 상세 좌표 + 로마자 유사도. 오매칭 차단(지명·체인명 제외 비교), 미지원 숙소는 **구글 호텔 비교 링크** 폴백. MRT 429 대응 CDN 캐시(매칭 30일·색인 7일).
+- 신규 Edge Function `api/hotelidx.js`·`api/hotelprice.js`. 지원 도시 33곳. `scripts/smoke_test.mjs` 42항목.
 
-**다음 채팅이 가장 먼저 할 것**: 코드 급한 것 없음. **사용자 입력 대기가 병목**(아래) — 값이 오면 바로 배선.
+**직전 세션 — Trip 중심 리디자인**(2026-09~10): `trips.js`(TripStore)·`trips.html`·`trip.html`(5탭)·`trip-attach.js` 신설. 일정·예산·예약·준비물·공항 전 항목 CRUD + 실시간 환율/날씨 + 그룹정산/공유 + ICS/CSV + 한글 웹폰트 제거.
+
+**다음 채팅이 가장 먼저 할 것**: 코드 급한 것 없음(검증·배포 완료). 사용자 입력 대기가 병목(아래).
 
 **사용자가 직접 해야 할 일**(코드로 불가):
-1. **신규 10곳 트립닷컴 숙소 city ID** — 장가계·계림·상하이·백두산·타이베이·홍콩·나트랑·세부·오키나와·코타키나발루. 링크생성기 '호텔 페이지'에서 도시 선택 → URL `city=` 숫자 → `affiliates.js` `TRIPCOM_CITY`에 추가하면 10곳 숙소도 5% 켜짐. (현재 13곳만 ID 보유)
-2. **"정말 누를" 상품 6종 쉐어링크** — eSIM·멀티어댑터·수하물저울·압축팩·목베개·방수팩. 오면 문제→해결 카드로 배선(빈 카드는 안 만듦).
-3. **Airalo eSIM 제휴 가입**(~15%, 트래픽 하한 없음) → ref 주면 배선.
-4. **GA4 측정 ID** — `analytics.js` `GA4_ID`(현재 빈 값=측정 불가). 클릭 이벤트 트래킹까지 붙일 준비 됨.
-5. **Google Search Console 소유권 인증** — 코드(`content="..."`) 주면 index 삽입 → sitemap 제출.
-6. **Vercel 환경변수** `TOUR_API_KEY`·`ICN_API_KEY`(현재 폴백키로 동작, 공개레포 노출 상태). 재발급→등록→폴백 제거 순.
+1. **신규 10곳 트립닷컴 숙소 city ID** — 장가계·계림·상하이·백두산·타이베이·홍콩·나트랑·세부·오키나와·코타키나발루 → `affiliates.js` `TRIPCOM_CITY`. (현재 13곳 보유)
+2. **상품 6종 쉐어링크**(eSIM·멀티어댑터·수하물저울·압축팩·목베개·방수팩) → 문제→해결 카드 배선.
+3. **Airalo eSIM 제휴 가입**(~15%) → ref 주면 배선.
+4. **Google Search Console 소유권 인증** 코드 → sitemap 제출.
+5. **Vercel 환경변수** `TOUR_API_KEY`·`ICN_API_KEY`(현재 공개레포 폴백키 동작) 재발급→등록→폴백 제거.
+   - ~~GA4 측정 ID~~ — **제외 결정**(방문추적 안 넣기로, 메모리 `feedback_no_visit_analytics`). `analytics.js`는 두되 `GA4_ID` 빈 값 유지.
 
 ---
 
 ## 1. 프로젝트 목적
 
-"**다 합쳐서 얼마 드나(`/estimate`)**"와 "**언제 뭘 준비하나(`/prepare`)**"에 답하는 한국 여행자용 도구 + 인천공항 실시간 + 제휴 수익화. 백엔드·DB 없는 정적 PWA.
+한국 여행자용 도구 + 인천공항 실시간 + 제휴 수익화. **백엔드·DB 없는 정적 PWA**.
 
-**방향 전환 이력**: (2026-08-11) OTA(여기어때·트립닷컴)와 가이드로 경쟁 불가 → 예산견적·출국준비 축으로 이동. (2026-09) 수익화는 **여행 맥락에 맞는 상품을 맞는 순간에** 노출(딜 자동화 아님 — 그건 posteady-clone).
+**방향 전환 이력**:
+- (2026-08-11) OTA·가이드로 경쟁 불가 → `/estimate`(얼마 드나)·`/prepare`(언제 뭘)로 축 이동.
+- (2026-09~10) **Trip 중심 리디자인** — "도구 나열"에서 **"하나의 여행(Trip) 안에 일정·예산·예약·준비물·공항을 묶는"** 구조로 전환. Wanderlog(일정·지도)+TravelSpend(예산·정산)+인천공항+(실시간) 통합. 기존 도구는 Trip의 엔진으로 흡수(estimate→예산, prepare→준비물, 가이드→도시).
 
 ---
 
 ## 2. 현재 구현된 기능
 
+### Trip 중심 (이번 세션 신설)
 | 라우트 | 기능 | 상태 |
 |--------|------|------|
-| `/` | 환율바·계산기, 항공/숙소/국내 검색위젯(딥링크), TourAPI 국내검색(주차·카페 필터·상세모달), 목적지 카드 23곳(🇨🇳중국 필터 포함), **여행 필수템 수익화 섹션** | ✅ |
-| `/estimate` | 총예산 견적기(항공·숙소는 MRT 실시간, 단가 인라인 수정), 날짜별 최저가, 범위 표시, **목적지 맞춤 준비물 블록** | ✅ |
-| `/prepare` | 출국 준비 타임라인(D-30~당일, "지금 할 것"), 항목 체크 저장, **상단 전체 준비물 + 항목별 인라인(충전→충전기)** | ✅ |
-| `/airport` | 인천공항 8탭(혼잡도·주차·셔틀·출입국·항공편·시설·내편명·출국준비), 도심공항터미널 카드, **출국준비 탭에 픽업·렌터카(5%)+준비물** | ✅ |
-| `/tours` | 메타서치 4탭(MRT 라이브 카드+페이지네이션) + 트립닷컴·클룩·KKday·와그·부킹·아고다 비교 | ✅ |
-| `/guide` `/mytrip` `/privacy` `/terms` `/404` | 이용가이드 / 내여행 허브(noindex) / 법적 / 커스텀404 | ✅ |
-| 목적지 가이드 **23곳** | 전부 오사카식 3유형(1인·친구·가족)+날씨. **전부 `noindex,follow`**(AI생성물 색인 제외, 제휴 링크는 작동) | ✅ |
-| 공통 | 하단 탭바(모바일)·PWA 설치·SW 오프라인·사업자정보 푸터·AI크롤러 차단·CSP | ✅ |
+| `/trips` | 내 여행 목록(카드: D-day·예산 사용률·인원), 예정/지난 필터, 새 여행 생성, **여행 삭제(🗑)**, 공유링크(`?t=`) 가져오기, 구 mytrip 데이터 이관 배너 | ✅실측 |
+| `/trip?id=` | 여행 허브 = 커버+요약 3지표 + 하위탭 5개. 커버에 공유 버튼 | ✅실측 |
+| ─ 일정 | 일차 타임라인(블록), ▲▼ 순서이동, 항목 수정/삭제, **날짜별 날씨**(기온·강수), 장소 지도링크, **하루 동선 지도**(구글지도 경유지), **.ics 내보내기** | ✅실측 |
+| ─ 예산 | 도넛(사용률), **일일 가용액=(총예산−누적)÷남은일수**, 카테고리 바+**한도/초과 배지**, 지출 추가/수정/삭제(통화·카테고리·결제·**낸사람/나눔대상 인원선택**), **그룹 정산**(순채무 최소전송)+**정산 내역 공유(단톡 텍스트)**, **지출 CSV 내보내기** | ✅실측 |
+| ─ 예약 | 항공/숙소/투어 카드 추가/수정/삭제, 상태(확정/예정), 투어 최저가 비교 연결 | ✅실측 |
+| ─ 준비물 | **추천 목록(24항목 4그룹)에서 골라 담기** + 직접 추가, 체크 토글, 항목 수정/삭제 | ✅실측 |
+| ─ 공항 | 내 항공편 카드 + **인천공항 실시간 출국장 혼잡도**(터미널별 대기 인원·분), /airport·/prepare 연결 | ✅실측 |
 
-> "이상해 보이지만 정상": 목적지 23곳이 검색에 안 잡히는 것은 **의도**(noindex). 색인 대상은 `/`·`/estimate`·`/prepare`·`/airport`·`/tours`·`/guide` 6곳.
+### 기존 도구 (유지)
+| 라우트 | 기능 | 상태 |
+|--------|------|------|
+| `/` | 환율바·계산기, 검색위젯(딥링크), TourAPI 국내검색, 목적지 카드 23곳, 필수템 수익화, **🧳 내 여행 배너** | ✅ |
+| `/estimate` | 총예산 견적기(MRT 실시간·국내 육로·명절/성수기 할증), **"이 예산으로 내 여행 만들기"** | ✅ |
+| `/prepare` | 출국 준비 타임라인, **"이 준비물을 내 여행에 담기"** | ✅ |
+| `/airport` | 인천공항 8탭, 도심공항터미널, 픽업·렌터카(5%) | ✅ |
+| `/tours` | 메타서치 4탭(MRT 라이브+페이지네이션). 숙소 탭에 **플랫폼별 1박 가격비교 + 숙박 총액**(같은 호텔 매칭, 최저가 배지, Xotelo 출처). 미지원 숙소는 구글 호텔 비교 링크 | ✅실측 |
+| `/guide` `/mytrip` `/privacy` `/terms` `/404` | 가이드 / (구)내여행 허브 / 법적 / 404 | ✅ |
+| 목적지 가이드 **23곳** | 3유형+날씨, 전부 `noindex,follow`, **"이 도시로 여행 만들기" 버튼** | ✅ |
+| 공통 | 하단 탭바(홈·**내 여행**·여행지·예산 견적·출국 준비), PWA·SW·사업자정보·AI크롤러 차단·CSP, **기기 기본 폰트** | ✅ |
+
+> "이상해 보이지만 정상": ① 목적지 23곳이 검색에 안 잡히는 것은 의도(noindex). ② 여행 예보가 안 뜨면 **여행 날짜가 예보권(약 16일) 밖**이라 정상. ③ `/trips` 첫 방문 시 **오사카 데모 여행 1건 자동 생성**(seedIfEmpty, 구조 체험용). ④ 구 `/mytrip`(export/import 유틸)은 보존 — 헤더 "내 여행"은 이제 `/trips`로 감.
 
 ---
 
-## 3. 수정한 주요 파일 (이번 세션 🆕/🔧)
+## 3. 수정한 주요 파일
 
+### 최근 세션 신규 🆕 (숙소 가격비교, 10/08~10/12)
 | 경로 | 역할 |
 |------|------|
-| `affiliates.js` 🆕 | **제휴 단일 레지스트리**. PARTNERS(트립닷컴 발급값 有·나머지 빈값), CATEGORIES(요율/rank), TRIPCOM_CITY(도시ID), TRAVEL_GOODS(토스 준비물 8), 기후엔진(`climateOf`/`goodsForTrip`), `goodsHtml`/`goodsFor`/`track`/`ctas`/`disclosure` |
-| `nav.js` 🆕 | 모바일 하단 탭바(홈·여행지·투어·내여행·공항), CSS 자체포함 |
-| `icons.js` 🆕 | Lucide 스타일 인라인 SVG 51종(`data-icon` 자동치환) |
-| `bizfooter.js` 🆕 | 전 페이지 사업자정보 법정표기(상호 피부담앙·대표·등록번호·주소, **생년월일 제외**) |
-| `destaff.js` 🆕 | 목적지 숙소 섹션에 트립닷컴(5%) 추적 CTA 주입, city ID 없으면 미생성 |
-| `main.js` 🔧 | 홈 위젯 트립닷컴 추적 부착(`_tcTrack`/`_tcHotel`), 지역필터 `AREA_MAP`/`SIGUNGU_MAP` 실코드화 + `populateAreaOptions`, `esc`/`safeUrl`/`safeText` |
-| `style.css` 🔧 | 디자인 v2 토큰(그레이 10단계·radius 16·2겹 그림자), `.cat-tag.china` |
-| `sw.js` 🔧 | 캐시 `travelcost-v12`, SHELL에 공용 JS 추가 |
-| `tours.html` 🔧 | 결과 카드 렌더러(`parseWidgetCards`), MRT 추적 `AFF.track` 통일 |
-| `estimate/prepare/airport/index.html` 🔧 | 준비물·픽업·렌터카 수익화 블록 |
-| 목적지 23곳 | osaka=정본 템플릿. 신규 10곳(zhangjiajie·guilin·shanghai·changbaishan·taipei·hongkong·nhatrang·cebu·okinawa·kotakinabalu) |
-| `api/proxy.js` 🔧 | SSRF 방어(호스트 허용목록+path 정규식), `api/tour.js` areaCode2 허용 |
-| `vercel.json` 🔧 | CSP·Permissions-Policy·HSTS·X-Robots-Tag |
+| `api/hotelidx.js` 🆕 | Xotelo **도시 호텔 색인** Edge Function. MRT 호텔명↔Xotelo 호텔키 매칭용 도시 목록(7일 CDN 캐시). 없으면 주변 하위 지역(구)으로 재탐색 |
+| `api/hotelprice.js` 🆕 | Xotelo **플랫폼별 요금** Edge Function(`data.xotelo.com/api/rates`). 좌표+로마자 유사도로 같은 호텔 매칭(30m·0.30 또는 200m·0.55), 지명·체인명 제외 비교로 오매칭 차단. 현지통화→원화. 매칭 30일 캐시 |
+| `tours.html` 🔧 | 숙소 결과 전체에 플랫폼별 가격 자동표시(위에서부터 순차 로드, MRT 429 회피) + **숙박 총액(2박↑)** + 미지원 숙소 구글 호텔 비교 링크 |
+
+### 직전 세션 신규 🆕 (Trip 리디자인)
+| 경로 | 역할 |
+|------|------|
+| `trips.js` | **여행 데이터 모델 `window.TripStore`**. localStorage `tc_trips_v1`. CRUD(여행·일정·지출·예약·준비물), 일일가용액·그룹정산(`balances`/`settlements`), 다통화(`RATES`+실시간 `refreshRates` open.er-api 6h캐시), **한글도시 좌표맵 `CITY_GEO`**(가이드23+국내7), `moveDayItem`·`setCatLimit`·update/remove 전 엔티티, `seedIfEmpty`(오사카 데모) |
+| `trips.html` | 내 여행 목록·새 여행 생성·여행 삭제·공유링크 가져오기·레거시 이관 배너 |
+| `trip.html` | 여행 허브(5탭). 날씨·동선지도·ICS·CSV·정산공유·전 항목 시트. 인라인 SVG 스프라이트 |
+| `trip-attach.js` | "여행에 담기" 공유 모듈(기존 선택/새 여행 생성 후 예산·준비물·일정·예약·항공편 적용) |
+| `nav.js`·`api/proxy.js`·`index.html`·전 HTML·`sw.js` | 하단탭 "내 여행" 승격 / open-meteo geocoding 허용 / 홈 배너 / 웹폰트 제거 / 캐시 v12→v25 |
+
+(코어 파일 `affiliates.js`·`destaff.js`·`icons.js`·`bizfooter.js`·`main.js`·`style.css` 역할은 변동 없음 — 필요 시 git log 참조)
 
 ---
 
 ## 4. 남은 작업
 
-### 🔴 사용자 입력 대기 (코드로 불가) — §0 참조
-트립닷컴 신규 10곳 city ID · 준비물 6종 링크 · Airalo 가입 · GA4 ID · Search Console 인증 · Vercel 환경변수
+### 🔴 사용자 입력 대기 (§0 참조)
+트립닷컴 신규 10곳 city ID · 상품 6종 링크 · Airalo 가입 · Search Console 인증 · Vercel 환경변수
 
 ### 🟡 코드 개선 (선택)
-- **문제→해결 카드**("📵 데이터 먹통?→eSIM") — *대기: 링크 6종 오면.*
-- **애드센스** — *선결: `ads.txt`(pub-ID 발급 후) + CSP `script-src`에 googlesyndication 추가(그때 최소범위로).* 도메인은 이미 연결됨.
-- Vercel KV 캐싱 — *트래픽 5K+ PV/일 전엔 Edge Cache로 충분.*
+- `scripts/smoke_test.mjs`(**42항목**)에 **Trip 페이지(/trips·/trip) 추가** — 현재 인-리포 스모크는 구 도구+숙소가격 위주, Trip 검증은 세션 jsdom 스모크(scratch, 비영속)로만 했음. *후순위: 핵심 로직은 jsdom 16/16·회귀 12/12·360px CDP로 검증됨.*
+- **문제→해결 카드**("📵 데이터 먹통?→eSIM") — *대기: 상품 링크 6종.*
+- **애드센스** — *선결: ads.txt + CSP script-src에 googlesyndication.*
+- `/airport` 실시간을 공항탭에 **그래프까지** 임베드 — *현재는 혼잡도 요약+링크.*
 
 ---
 
 ## 5. 실행 명령어
 
 ```bash
-npx vercel dev              # 전체 기능(Edge Function 포함). npx serve는 /api 404(정상)
-# 커밋 전 검증
-node --check api/*.js *.js  # JS 문법 (main·sw·analytics·pwa-install·icons·nav·bizfooter·affiliates·destaff)
-git push origin master      # = 자동 프로덕션 배포(~40초)
-# 재개 직후 스모크(살아있는지 1개로 확인)
-node scripts/smoke_test.mjs # 40항목 전부 ✅ 여야 정상. 배포 직후엔 ?_cb= 캐시버스터로 재확인
+npx vercel dev                 # 전체(Edge Function 포함). npx serve는 /api 404(정상)
+node --check *.js api/*.js     # JS 문법 (trips·trip-attach 포함 11개 + api 3개)
+git push origin master         # = 자동 프로덕션 배포(~40초)
+node scripts/smoke_test.mjs    # 42항목 프로덕션 스모크(구 도구+숙소가격). ?_cb= 캐시버스터로 재확인
 ```
-- **SW·공용 JS 수정 시 `sw.js` 캐시명 버전 범프 필수**(안 하면 구캐시 서빙 → "함수 undefined" 유령버그·수익화 미노출). 이번 세션 v9~v12로 여러 번 올림.
+- **SW·공용 JS 수정 시 `sw.js` 캐시명 버전 범프 필수**(현재 v25). 안 하면 cache-first 정적자산이 구버전 서빙 → "함수 undefined"·기능 미반영.
+- **HTML은 network-first**라 범프 없이도 즉시 반영. JS(trips.js 등) 변경 시에만 범프 필요.
+- Trip 로직 검증은 **jsdom 스모크**(세션 scratch에 `smoke*.js` 작성·`npm i jsdom`)로 했으며 영속 저장 안 됨. 재개 시 필요하면 재작성.
 
 ---
 
 ## 6. 배포·환경
 
-- **계정**: git push는 **cslis07 전용**(403 시 cmdkey 자격증명 2개 삭제 + `gh auth switch` → 재시도, 전역 정책)
+- **계정**: git push는 **cslis07 전용**(403 시 cmdkey 자격증명 삭제 + `gh auth switch`).
 - **환경변수 표**
 
 | 키 | 용도 | 설정된 곳 | 상태 |
 |----|------|-----------|------|
 | `TOUR_API_KEY` | 한국관광공사 | Vercel(권장) | 미등록 — 폴백키 동작(공개레포 노출) |
 | `ICN_API_KEY` | 인천공항 | Vercel(권장) | 미등록 — 폴백키 동작 |
-| `GA4_ID` | 애널리틱스 | `analytics.js` 상수 | 빈 값=의도적 미로드 |
-| 트립닷컴 발급값 | 제휴 추적 | `affiliates.js` `tripcom.aff` | **설정됨**(Allianceid/SID/trip_sub3, 공개 URL 노출값이라 비밀 아님) |
+| `GA4_ID` | 애널리틱스 | `analytics.js` 상수 | 빈 값 유지(방문추적 안 넣기로 결정) |
+| 트립닷컴 발급값 | 제휴 추적 | `affiliates.js` | 설정됨(공개 URL 노출값, 비밀 아님) |
 
-- **git에 있음(로컬 전용 없음)** — .env·키스토어 불필요(정적 사이트, 키는 Vercel/코드폴백).
+- **git에 없고 로컬에만 있는 필수 파일**: 없음(정적 사이트).
 - **Edge Function**: `runtime:'edge'` — Node 내장모듈 불가, Web Fetch만.
 
 ---
 
 ## 7. 무인 실행되는 것
 
-**없음** — GitHub Actions·cron·웹훅·스케줄 태스크 전무. 세션 없이 도는 것은 Vercel 정적 서빙과 CDN 캐시뿐. (제휴 자동발행은 별도 프로젝트 posteady-clone)
+**없음** — GitHub Actions·cron·웹훅·스케줄 태스크 전무. 세션 없이 도는 건 Vercel 정적 서빙·CDN 캐시뿐.
 
 ---
 
@@ -129,93 +148,107 @@ node scripts/smoke_test.mjs # 40항목 전부 ✅ 여야 정상. 배포 직후�
 
 | 증상 | 원인 | 해결 | 날짜 |
 |------|------|------|------|
-| 양평군 선택→화성시 결과 | `AREA_MAP`/`SIGUNGU_MAP` 손수작성이 TourAPI 실코드(가나다순)와 전부 어긋남 | areaCode2로 실코드 받아 재생성, select 하드코딩 제거→`populateAreaOptions` | 2026-08-20 |
-| 여행 준비물 블록 안 보임 | affiliates.js 고치고 SW 캐시명 미범프→구버전(goodsHtml 없는) 서빙 | 캐시 버전 범프 | 2026-09-07 |
-| tours 항공편 "결과 없음" | `summarize()`가 products/stays만 탐색 | 전용 `renderFlights()` | — |
-| 검색어 `"`·`<` 화면깨짐 | 이스케이프 없이 삽입 | `esc()` 전면 | 2026-08-05 |
-| 프리뷰 함수 전부 undefined | 구버전 SW가 옛 HTML 캐시 | SW 캐시명 범프 | — |
-| PowerShell 한글 커밋 pathspec 오류 | 히어독 `"..."` 파싱 깨짐 | Bash single-quote 커밋 | — |
+| 숙소 가격비교 20~30% 누락 | 호텔 목록 `best_value` 정렬이 페이지 사이 순서 흔들림 | `popularity` 정렬로 고유 색인 고정, 색인 캐시 v=2 무효화 | 2026-10-08 |
+| 숙소 오매칭("호텔 위드"→Toyoko Inn) | 지명이 유사도에 끼어듦 | 그 도시 호텔명 흔한 단어(지명·체인명) 제외 비교, 근거리 30→40m, 매칭캐시 v=3 | 2026-10-08 |
+| 일본 숙소 정답 놓침(롯폰기↔Roppongi) | 촉음 받침 로마자 변환 누락 | 촉음 보정+양방향 비교, 매칭캐시 v=4 | 2026-10-08 |
+| 날씨 예보가 안 뜸(한글 도시) | Open-Meteo 지오코딩이 **한글 도시명 미지원**(영문만) | `CITY_GEO` 한글→좌표 내장 매핑(가이드23+국내7), 미등록은 영문 지오코딩 폴백 | 2026-10-06 |
+| 헤드리스 Chrome innerWidth 500 고정 | 헤드리스 **최소 창폭 500px** | `Emulation.setDeviceMetricsOverride`로 360 강제(CDP) | 2026-10-06 |
+| 확장 resize_window가 뷰포트 미반영 | 확장 창 리사이즈가 innerWidth 안 바꿈 | 360 실측은 헤드리스 CDP로 | 2026-10-06 |
+| 지출 환율 부정확 | 정적 환율표 노후 | 네이버 기준 최신화 후 **실시간(open.er-api) 자동 갱신**(6h캐시·폴백) | 2026-09-30 |
+| 양평군→화성시 결과 | AREA/SIGUNGU 손수작성이 TourAPI 실코드와 어긋남 | areaCode2 실코드 재생성 | 2026-08-20 |
+| 준비물 블록 안 보임 | SW 캐시명 미범프 | 캐시 범프 | 2026-09-07 |
+| 검색어 `"`·`<` 화면깨짐 | 이스케이프 누락 | `esc()` 전면 | 2026-08-05 |
+| PowerShell 한글 커밋 pathspec 오류 | 히어독 파싱 깨짐 | Bash single-quote / `git commit -F` | — |
 
 ---
 
 ## 9. API 구조
 
 ### 내부 (Vercel Edge Functions)
-| 라우트 | 방식 | 역할·화이트리스트 | 캐시 |
-|--------|------|------|------|
-| `/api/tour?path=<ep>` | GET | TourAPI 프록시. path 정규식 검증. areaBasedList2·searchKeyword2·locationBasedList2·detail*·**areaCode2**(24h) | 5분~1시간 |
-| `/api/proxy?path=` or `?_url=` | GET | 인천공항 + 외부(**Open-Meteo 2호스트만 허용**, SSRF 방어) | 30초 |
-| `/api/mrt` | POST | 마이리얼트립 MCP `tools/call`. 도구 11종 화이트리스트 | 60초 |
+| 라우트 | 역할·화이트리스트 |
+|--------|------|
+| `/api/tour?path=` | TourAPI 프록시. path 정규식 검증. areaBasedList2·searchKeyword2·locationBasedList2·detail*·areaCode2 |
+| `/api/proxy?path=` or `?_url=` | 인천공항 + 외부. `_url`은 **Open-Meteo 3호스트만**(api·air-quality·**geocoding**) 허용(SSRF 방어) |
+| `/api/mrt` | 마이리얼트립 MCP. 도구 11종 화이트리스트 |
+| `/api/hotelidx?city=` | Xotelo 도시 호텔 색인(매칭용). 7일 CDN 캐시. 없으면 하위 지역 재탐색 |
+| `/api/hotelprice?…` | Xotelo 플랫폼별 요금. 좌표+로마자 유사도 매칭(오매칭 차단), 현지통화→원화, 30일 캐시 |
 
 ### 외부 의존
-- **한국관광공사 KorService2**: 일 1만 건(활용신청 시 10만). item 단건이면 비배열→배열화됨.
-- **인천공항 B551177**: 일 1만. T2 출국장 혼잡도 미제공.
-- **마이리얼트립 MCP**: 무인증. 투어/숙소는 `data.widget.children[]`→`parseWidgetCards`(최대 10개, copy_text 폴백). 항공은 `data.result.items[]`. fareCalendar는 실시간 아님(고지).
-- **트립닷컴 제휴**: 숙소는 **숫자 city ID 필수**(이름=빈결과 함정, `%2F` 날짜 본문반영 실측). 링크에 Allianceid/SID/trip_sub3 자동부착.
-- **토스쇼핑 쉐어링크**: 추적이 박힌 리다이렉트 단축링크(`toss.im/_m/…`), 고정링크 임베드. Open API 규격은 메모리 `reference_toss_sharelink_api.md`.
-- open.er-api.com(환율)·Open-Meteo(날씨): 무인증.
+- **Xotelo**(`data.xotelo.com/api/rates`, 숙소 플랫폼별 요금): **무료·무인증**. 트립어드바이저 제휴 요금. MRT 429 대응 위해 `hotelidx`/`hotelprice`가 CDN 장기 캐시. 확인 안 되면 가격을 지어내지 않고 안내만 표시.
+- **한국관광공사 KorService2** / **인천공항 B551177**: 각 일 1만 건. ICN T2 출국장 혼잡도는 `statusOfDepartureCongestion`(게이트별 waitTime분·waitLength명, body.items 배열).
+- **마이리얼트립 MCP**: 무인증. `parseWidgetCards`.
+- **트립닷컴 제휴**: 숙소 숫자 city ID 필수. Allianceid/SID/trip_sub3 자동부착.
+- **open.er-api.com**(환율): 무인증. `/v6/latest/KRW`→RATES 역산(원/외화 1단위). **CSP connect-src에 등록됨**(브라우저 직접 fetch).
+- **Open-Meteo**(날씨): `/api/proxy?_url=` 경유. forecast는 start_date/end_date 약 16일 이내만. geocoding은 한글 미지원→`CITY_GEO`.
+- **토스쇼핑 쉐어링크**: 리다이렉트 단축링크 임베드.
 
 ---
 
-## 10. 결정 기록 (코드에서 역추적 불가)
+## 10. 결정 기록 (코드 역추적 불가)
 
-- **목적지 23곳 전부 noindex**: 출처 없는 AI 일괄 생성물이라 애드센스·검색(scaled content abuse) 감점 → 삭제 대신 noindex,follow(제휴 링크는 살림). 색인 대상은 실데이터 도구 6곳.
-- **제휴 추적 단일 출처**: `affiliates.js` 한 곳에서만. 페이지·main.js가 자체 목록 두면 트립닷컴 빠지는 사고 발생했음 → `AFF.track`/`AFF.url`로 통일.
-- **트립닷컴 우선**: 유일 승인 파트너 + 숙소 5%(최고 요율). 아고다/부킹은 미승인(수수료 0)이라 목적지 숙소 CTA 맨 앞에 트립닷컴 주입.
-- **항공은 유입도구**: 0.5% + 세금제외라 사실상 수수료 없음. 배치는 수수료율 순(숙소>렌터카>픽업>투어>항공).
-- **사업자**: 개인사업자 피부담앙(일반과세자, 335-21-02118). 세금계산서 발행(YES) 권장, 쿠팡/토스도 같은 사업자로 통일 방향.
-- **CSP `unsafe-inline` 유지**: 무빌드 정적 사이트라 nonce 불가(구조적). 출력 이스케이프가 1차 방어선.
+- **Trip = localStorage 단일 모델(`TripStore`)**: 백엔드 없이 여행 전체를 `tc_trips_v1` 한 키에. 공유는 base64 URL(`/trips?t=`)로 전달→받는 쪽 복제.
+- **협업은 "링크 공유"가 한계**: 실시간 공동편집은 로그인+DB 필요 → 구조상 불가(§12).
+- **실시간 환율은 open.er-api**: 네이버 FX는 CORS·CSP로 브라우저 직접 호출 불가. open.er-api가 매매기준율과 사실상 동일(실측 1 JPY=8.6, 1 USD=1353).
+- **한글 웹폰트 제거**: 기기 기본 폰트로 폴백(로딩 속도, 메모리 `feedback_device_korean_font_no_webfont`). 라틴/모노는 유지.
+- **방문추적(GA4) 안 넣음**: 결정됨(메모리 `feedback_no_visit_analytics`). analytics.js는 두되 미로드.
+- **목적지 23곳 noindex**: AI 일괄생성물(scaled content abuse 회피), 삭제 대신 noindex,follow(제휴 링크는 살림).
+- **제휴 추적 단일 출처 `affiliates.js`**: 페이지가 자체 목록 두면 트립닷컴 빠지는 사고 발생했음.
+- **트립닷컴 우선**: 유일 승인·숙소 5% 최고요율. 항공은 0.5%(유입도구).
+- **CSP `unsafe-inline` 유지**: 무빌드 정적이라 nonce 불가. 출력 이스케이프가 1차 방어선.
 
 ### 🔒 보안 조치 이력 (2026-08-05 `e7c510a`, 09 보강)
-SSRF(_url 허용목록+https) · 경로탈출(path 정규식) · 저장형 XSS(esc/safeUrl/safeText 17곳+onclick→dataset) · 무검증 import(/mytrip 검증) · 보안헤더(CSP·Permissions-Policy·HSTS). 공격 페이로드 실측 차단.
+SSRF(_url 허용목록+https) · 경로탈출(path 정규식) · 저장형 XSS(esc/safeUrl/safeText) · 무검증 import(/mytrip·공유링크 검증) · 보안헤더(CSP·Permissions-Policy·HSTS).
 
 ---
 
 ## 11. ⛔ 하지 말 것 (누적)
 
-- **`vercel.json`에 `redirects` 추가 금지** — cleanUrls와 충돌해 리다이렉트 루프(과거 실장애).
-- **`api/proxy.js` `URL_ALLOWLIST`·`PATH_RE` 완화 금지** — 없애면 공개 오픈프록시(SSRF) 복귀.
-- **`main.js` `esc`/`safeUrl`/`safeText` 우회 금지** · **`onclick="fn('${값}')"` 재도입 금지** — localStorage는 /mytrip import로 외부주입 가능해 신뢰 불가.
+- **`project-state.json`은 요청 없이 커밋 금지**(Control Center 자동 상태파일).
+- **`sw.js` 수정 시 캐시명 버전 범프 필수**(현재 v25) — 안 하면 trips.js 등 구버전 서빙.
+- **`api/proxy.js` `URL_ALLOWLIST`·`PATH_RE` 완화 금지** — 오픈프록시(SSRF) 복귀. (open-meteo 3호스트가 전부)
+- **`main.js` `esc`/`safeUrl`/`safeText` 우회·`onclick="fn('${값}')"` 재도입 금지** — localStorage는 공유링크/import로 외부주입 가능.
 - **`api/*.js` `FALLBACK_KEY` 환경변수 등록 전 제거 금지** — 즉시 검색 사망.
-- **`sw.js` 수정 시 캐시명 버전 범프 필수** — 안 하면 수익화·기능 미반영 유령버그.
-- **`analytics.js` `GA4_ID=''`은 버그 아님** — 미설정 시 미로드가 의도.
-- **`npx serve`로 API 테스트 금지** — Edge Function은 Vercel 전용. `vercel dev` 사용.
-- **히스토리 rewrite(force push) 금지** — Public 포트폴리오 레포.
-- **목적지 23곳을 sitemap에 추가 금지** — noindex와 모순(URL만 색인되는 최악). robots.txt로 Disallow도 금지(크롤러가 noindex 메타를 못 읽음).
-- **PowerShell 히어독 한글 커밋 금지** — Bash single-quote 사용.
+- **`api/hotelidx`·`hotelprice`의 CDN 캐시 TTL(색인 7일·매칭 30일) 단축 금지** — MRT 429(호출제한) 재발. 매칭 캐시 버전(v=4)은 알고리즘 바꿀 때만 올릴 것.
+- **`vercel.json`에 `redirects` 추가 금지** — cleanUrls 충돌 리다이렉트 루프(과거 장애).
+- **목적지 23곳 sitemap 추가 금지**(noindex 모순). robots Disallow도 금지(크롤러가 noindex 메타를 못 읽음).
+- **`analytics.js` `GA4_ID=''`·웹폰트 없음은 버그 아님**(의도).
+- **`npx serve`로 API 테스트 금지** — `vercel dev` 사용. **force push 금지**(Public 포트폴리오).
+- **PowerShell 히어독 한글 커밋 금지** — Bash single-quote / `git commit -F`.
 
 ## 12. ❌ 보류 / 구조적 한계 (재시도 방지)
 
-- **클룩·KKday·부킹·아고다 라이브 결과 불가** — 공개 검색 API 없음(클룩 서버측 403 실측). 제휴 딥링크로 확정.
-- **쿠팡 파트너스 API** — ⏸ **누적 판매 15만원 달성 시** 개방(딥링크 API). 그전엔 수동 링크만. **재시도 트리거: 15만원**.
-- **토스 쉐어링크 Open API** — 승인 후 IP 등록 필요(미등록 시 403). 현재 수동 8개 링크. 자동화는 posteady-clone에서.
-- **Web Push 알림 불가** — 백엔드·DB 없음(구조적). ICS 캘린더 알림이 유일 경로.
-- **기기 간 상태 동기화(자동) 불가** — 로그인·DB 없음. URL/QR 수동 이동만.
-- **iOS 자동 설치 프롬프트 불가** — Safari 미지원, 안내 시트로 대체.
-- **T2 출국장 혼잡도** — 공공데이터 미제공.
-- ~~마이리얼트립 위젯 풀 카드 렌더~~ — 2026-08-04 구현(`parseWidgetCards`, copy_text 폴백, 최대 10개).
+- **실시간 공동편집(협업) 불가** — 로그인·DB 없음. 현재는 **여행 공유링크(`?t=`)로 복제본 전달**만. *재시도 트리거: 백엔드(Supabase 등) 도입 결정 시.*
+- **Web Push 알림 불가** — 백엔드 없음. **ICS 캘린더**가 알림 대체 경로.
+- **기기 간 자동 동기화 불가** — 공유링크/QR 수동 이동만.
+- **쿠팡 파트너스 API** — ⏸ 누적 판매 **15만원** 달성 시 개방. 그전 수동 링크.
+- **토스 쉐어링크 Open API** — 승인+출발지 IP 등록 필요(미등록 403). 현재 수동 8개. 자동화는 posteady-clone.
+- **클룩·KKday·부킹·아고다 라이브 결과 불가** — 공개 검색 API 없음(403). 딥링크로 확정.
+- **iOS 자동 설치 프롬프트 불가** · **T2 출국장 혼잡도 공공데이터 미제공**.
 
 ## 13. 용어
 
-- **AFF** = `affiliates.js`의 `window.AFF` 레지스트리. **goodsForTrip** = 목적지 기후 맞춤 준비물. **goodsFor(todoId)** = 체크리스트 항목별 인라인 상품. **destaff** = 목적지 숙소에 트립닷컴 CTA 주입 스크립트. **TRIPCOM_CITY** = 트립닷컴 숙소 도시ID 표. **피부담앙** = 사업자 상호(대표 이상민).
+- **TripStore** = `trips.js`의 `window.TripStore`(여행 모델). **Trip 허브** = `/trip?id=`. **TripAttach** = `trip-attach.js`(여행에 담기 시트). **CITY_GEO** = 한글도시→좌표맵. **일일가용액** = (총예산−누적)÷남은일수. **balances/settlements** = 개인별 낸돈·부담 / 순채무 최소전송. **AFF** = `affiliates.js` 제휴 레지스트리. **피부담앙** = 사업자 상호(대표 이상민).
 
 ## 14. 디렉토리 구조
 
 ```
 travel-guide/
 ├─ index.html airport.html tours.html estimate.html prepare.html guide.html mytrip.html
+├─ trips.html trip.html                    # 🆕 내 여행 목록 / 여행 허브
 ├─ privacy.html terms.html 404.html
-├─ osaka.html …(목적지 23곳, osaka=정본 템플릿, 전부 noindex)
-├─ main.js style.css sw.js                # 코어
-├─ affiliates.js destaff.js               # 제휴(단일 레지스트리 + 목적지 주입)
-├─ icons.js nav.js bizfooter.js           # UI 공용(아이콘·하단탭·사업자정보)
-├─ analytics.js pwa-install.js            # GA4 로더·앱설치
-├─ api/{tour,proxy,mrt}.js                # Edge Functions(키 은닉)
-├─ icons/ scripts/                        # 아이콘·OG·smoke_test
+├─ osaka.html …(목적지 23곳, osaka=정본, 전부 noindex, "도시로 여행 만들기" 버튼)
+├─ trips.js                                # 🆕 TripStore 모델(localStorage)
+├─ trip-attach.js                          # 🆕 여행에 담기 모듈
+├─ main.js style.css sw.js                 # 코어
+├─ affiliates.js destaff.js                # 제휴
+├─ icons.js nav.js bizfooter.js            # UI 공용(하단탭에 내 여행)
+├─ analytics.js pwa-install.js             # (GA4 미로드)·앱설치
+├─ api/{tour,proxy,mrt,hotelidx,hotelprice}.js  # Edge Functions(hotelidx·hotelprice=Xotelo 숙소가격)
+├─ icons/ scripts/smoke_test.mjs           # 아이콘·프로덕션 스모크(42, 구 도구+숙소가격)
 ├─ sitemap.xml robots.txt vercel.json manifest.webmanifest
 ├─ CHANGELOG.md API_SECURITY.md README.md
 ```
 
 ## 15. 다음 세션 시작 문구
 
-"travel-guide의 PROJECT_STATUS.md 읽고 §0 확인해줘. 깨끗한 상태이고 코드 급한 건 없음 — 사용자가 트립닷컴 신규 10곳 city ID / 준비물 6종 쉐어링크 / GA4 ID 중 무엇을 주는지에 따라 §0 '사용자 액션'대로 배선하면 된다. 값이 없으면 §4 코드개선(문제→해결 카드)은 링크 대기 상태."
+"travel-guide의 PROJECT_STATUS.md 읽고 §0 확인해줘. 최근 작업은 /tours 숙소 플랫폼별 가격비교+숙박총액(Xotelo, api/hotelidx·hotelprice) 완료·배포(최종커밋 7e14740, SW v25). 그전은 Trip 중심 리디자인. 미커밋은 project-state.json(커밋 금지)뿐. 코드 급한 건 없고, 사용자가 트립닷컴 신규 10곳 city ID / 상품 6종 링크 / Airalo·Search Console·Vercel 환경변수 중 무엇을 주는지에 따라 §0 '사용자 액션'대로 배선. Trip 로직은 trips.js(TripStore) 단일 출처, 숙소 매칭은 api/hotelprice.js(좌표+로마자 유사도), JS 수정 시 SW 캐시 범프 필수."
