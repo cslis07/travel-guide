@@ -40,7 +40,7 @@
   .avz{margin-left:auto;display:flex}.avz span{width:22px;height:22px;border-radius:50%;border:2px solid #fff;margin-left:-7px;display:grid;place-items:center;font-size:10px;font-weight:800;color:#fff}
   .empty{text-align:center;padding:60px 20px;color:var(--gray-500)}
   .empty .em{font-size:44px}.empty h3{font-size:16px;color:var(--gray-700);margin:10px 0 4px}.empty p{font-size:13px}
-  .sech{font-size:12px;font-weight:800;color:var(--gray-400);letter-spacing:.02em;margin:8px 2px 10px;text-transform:uppercase}
+  .sech{font-size:12px;font-weight:800;color:var(--gray-500);letter-spacing:.02em;margin:8px 2px 10px;text-transform:uppercase}
   /* 모달 */
   .mwrap{position:fixed;inset:0;background:rgba(16,24,40,.5);display:none;align-items:flex-end;justify-content:center;z-index:1000}
   .mwrap.on{display:flex}
@@ -77,16 +77,16 @@
   <div class="modal">
     <div class="grip"></div>
     <h3>새 여행 만들기</h3>
-    <label class="fl">어디로 가세요?</label>
+    <label class="fl" for="f-city">어디로 가세요?</label>
     <input class="in" id="f-city" placeholder="예: 오사카, 다낭, 강릉">
     <div class="row2">
-      <div><label class="fl">출발일</label><input class="in" id="f-start" type="date"></div>
-      <div><label class="fl">도착일</label><input class="in" id="f-end" type="date"></div>
+      <div><label class="fl" for="f-start">출발일</label><input class="in" id="f-start" type="date"></div>
+      <div><label class="fl" for="f-end">도착일</label><input class="in" id="f-end" type="date"></div>
     </div>
-    <label class="fl">총예산 (원, 선택)</label>
+    <label class="fl" for="f-budget">총예산 (원, 선택)</label>
     <input class="in" id="f-budget" type="number" inputmode="numeric" placeholder="예: 1200000">
     <div class="row2">
-      <div><label class="fl">인원</label><input class="in" id="f-ppl" type="number" inputmode="numeric" value="1" min="1"></div>
+      <div><label class="fl" for="f-ppl">인원</label><input class="in" id="f-ppl" type="number" inputmode="numeric" value="1" min="1"></div>
       <div><label class="fl">커버 색</label>
         <div class="covpick" id="covpick">
           <i class="cov-osaka on" data-c="osaka"></i><i class="cov-blue" data-c="blue"></i>

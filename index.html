@@ -116,11 +116,11 @@
           </div>
           <div class="sw-row">
             <div class="sw-field">
-              <label>출발지</label>
-              <input type="text" value="인천 (ICN)" readonly>
+              <label for="sw-from">출발지</label>
+              <input type="text" id="sw-from" value="인천 (ICN)" readonly>
             </div>
             <div class="sw-field">
-              <label>도착지</label>
+              <label for="sw-to">도착지</label>
               <select id="sw-to">
                 <option value="KIX">오사카 간사이 (KIX)</option>
                 <option value="FUK">후쿠오카 (FUK)</option>
@@ -136,15 +136,15 @@
               </select>
             </div>
             <div class="sw-field">
-              <label>출발일</label>
+              <label for="sw-dep">출발일</label>
               <input type="date" id="sw-dep">
             </div>
             <div class="sw-field">
-              <label>귀국일</label>
+              <label for="sw-ret">귀국일</label>
               <input type="date" id="sw-ret">
             </div>
             <div class="sw-field sw-field--sm">
-              <label>인원</label>
+              <label for="sw-pax">인원</label>
               <select id="sw-pax">
                 <option value="1">1명</option>
                 <option value="2" selected>2명</option>
@@ -166,7 +166,7 @@
           </div>
           <div class="sw-row">
             <div class="sw-field">
-              <label>여행지</label>
+              <label for="sw-hcity">여행지</label>
               <select id="sw-hcity">
                 <option value="Osaka">오사카</option>
                 <option value="Fukuoka">후쿠오카</option>
@@ -181,15 +181,15 @@
               </select>
             </div>
             <div class="sw-field">
-              <label>체크인</label>
+              <label for="sw-cin">체크인</label>
               <input type="date" id="sw-cin">
             </div>
             <div class="sw-field">
-              <label>체크아웃</label>
+              <label for="sw-cout">체크아웃</label>
               <input type="date" id="sw-cout">
             </div>
             <div class="sw-field sw-field--sm">
-              <label>인원</label>
+              <label for="sw-guests">인원</label>
               <select id="sw-guests">
                 <option value="1">1명</option>
                 <option value="2" selected>2명</option>
@@ -205,19 +205,19 @@
         <div class="sw-form" id="sw-domestic">
           <div class="sw-row">
             <div class="sw-field">
-              <label>시/도</label>
+              <label for="sw-area">시/도</label>
               <select id="sw-area" onchange="updateSigunguOptions('sw-sigungu', this.value)">
               <!-- 옵션은 main.js populateAreaOptions() 가 AREA_MAP 으로 채움 -->
               </select>
             </div>
             <div class="sw-field">
-              <label>구/군</label>
+              <label for="sw-sigungu">구/군</label>
               <select id="sw-sigungu">
                 <option value="">전체 구/군</option>
               </select>
             </div>
             <div class="sw-field">
-              <label>업종</label>
+              <label for="sw-ctype">업종</label>
               <select id="sw-ctype">
                 <option value="12">관광지</option>
                 <option value="14">문화시설</option>
@@ -231,7 +231,7 @@
           </div>
           <div class="sw-row sw-row--kw">
             <div class="sw-field sw-field--grow">
-              <label>키워드 (선택)</label>
+              <label for="sw-keyword">키워드 (선택)</label>
               <input type="text" id="sw-keyword" placeholder="예) 카페, 해수욕장, 박물관..." onkeydown="if(event.key==='Enter')searchDomestic()">
             </div>
             <button class="sw-btn" onclick="searchDomestic()">🔍 검색</button>
@@ -771,7 +771,7 @@
         <p>공항에서 폰 방전, 도착하니 데이터 먹통 — 미리 챙기면 안 겪습니다</p>
       </div>
       <div id="homeGoods"></div>
-      <p id="homeGoodsDisc" style="font-size:.72rem;color:var(--gray-400);text-align:center;margin-top:12px"></p>
+      <p id="homeGoodsDisc" style="font-size:.72rem;color:var(--gray-500);text-align:center;margin-top:12px"></p>
     </div>
   </section>
 

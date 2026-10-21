@@ -62,7 +62,7 @@
 .tt-card strong{color:var(--primary-dark);font-weight:700}
 .tt-card .star{color:#F59E0B}
 .tt-card .price{color:var(--accent-dark);font-weight:700}
-.tt-loading{text-align:center;padding:40px;color:var(--gray-400);font-size:14px}
+.tt-loading{text-align:center;padding:40px;color:var(--gray-500);font-size:14px}
 .tt-spin{width:28px;height:28px;border:3px solid var(--gray-200);border-top-color:var(--primary);
   border-radius:50%;animation:ttspin .8s linear infinite;margin:0 auto 12px}
 @keyframes ttspin{to{transform:rotate(360deg)}}
@@ -78,9 +78,9 @@
 .tt-btn:disabled{opacity:.55;cursor:not-allowed}
 
 /* 빈 초기 상태 */
-.tt-empty{text-align:center;padding:44px 20px;color:var(--gray-400)}
+.tt-empty{text-align:center;padding:44px 20px;color:var(--gray-500)}
 .tt-empty-icon{font-size:34px;margin-bottom:10px}
-.tt-empty-ex{font-size:12px;color:var(--gray-400);margin-top:10px;line-height:1.7}
+.tt-empty-ex{font-size:12px;color:var(--gray-500);margin-top:10px;line-height:1.7}
 
 /* 항공편 카드 */
 .tt-flight-head{font-size:13px;font-weight:700;color:var(--gray-600);margin-bottom:10px;padding:0 2px}
@@ -91,13 +91,13 @@
 a.tt-flight-card:hover{border-color:var(--primary);box-shadow:var(--shadow-hover)}
 .tt-flight-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
 .tt-flight-air{font-size:15px;font-weight:700;color:var(--dark)}
-.tt-flight-no{font-size:12px;font-weight:500;color:var(--gray-400)}
+.tt-flight-no{font-size:12px;font-weight:500;color:var(--gray-500)}
 .tt-flight-badge{background:#FFF3E9;color:var(--accent-dark);font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
 .tt-flight-price{margin-left:auto;font-size:17px;font-weight:800;color:var(--primary)}
 .tt-flight-leg{font-size:13px;color:var(--gray-600);line-height:1.9}
 .tt-flight-leg b{color:var(--dark);font-weight:700}
-.tt-leg-tag{display:inline-block;font-size:10px;font-weight:700;color:var(--gray-400);background:var(--gray-100);padding:1px 6px;border-radius:5px;margin-right:4px}
-.tt-leg-dur{font-size:11px;color:var(--gray-400);margin-left:4px}
+.tt-leg-tag{display:inline-block;font-size:10px;font-weight:700;color:var(--gray-500);background:var(--gray-100);padding:1px 6px;border-radius:5px;margin-right:4px}
+.tt-leg-dur{font-size:11px;color:var(--gray-500);margin-left:4px}
 .tt-flight-cta{display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:var(--accent-dark)}
 .tt-flight-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .tt-flight-head>span{flex:1;min-width:0}
@@ -110,13 +110,13 @@ a.tt-flight-card:hover{border-color:var(--primary);box-shadow:var(--shadow-hover
 /* 검색 히스토리 */
 .tt-history{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .tt-history:empty{display:none}
-.tt-hist-lbl{font-size:12px;font-weight:700;color:var(--gray-400);margin-right:2px}
+.tt-hist-lbl{font-size:12px;font-weight:700;color:var(--gray-500);margin-right:2px}
 .tt-hist-chip{
   background:#fff;border:1px solid var(--gray-200);border-radius:999px;padding:6px 13px;
   font-size:12.5px;font-family:inherit;color:var(--gray-600);cursor:pointer;transition:.12s;
 }
 .tt-hist-chip:hover{border-color:var(--primary);color:var(--primary)}
-.tt-hist-clear{background:none;border:none;color:var(--gray-400);cursor:pointer;font-size:13px;padding:4px}
+.tt-hist-clear{background:none;border:none;color:var(--gray-500);cursor:pointer;font-size:13px;padding:4px}
 .tt-hist-clear:hover{color:#C92A2A}
 
 /* 날짜별 최저가 캘린더 */
@@ -131,8 +131,8 @@ a.tt-flight-card:hover{border-color:var(--primary);box-shadow:var(--shadow-hover
 .tt-fare-cell:hover{border-color:var(--primary);box-shadow:var(--shadow)}
 .tt-fare-date{font-size:12.5px;font-weight:600;color:var(--dark)}
 .tt-fare-price{font-size:15px;font-weight:800;color:var(--primary)}
-.tt-fare-air{font-size:11px;color:var(--gray-400)}
-.tt-note{font-size:11.5px;color:var(--gray-400);text-align:center;margin-top:22px;line-height:1.7}
+.tt-fare-air{font-size:11px;color:var(--gray-500)}
+.tt-note{font-size:11.5px;color:var(--gray-500);text-align:center;margin-top:22px;line-height:1.7}
 
 /* ── 결과 카드 그리드 (투어·티켓 / 숙소) ── */
 .tt-items-head{display:flex;align-items:center;justify-content:space-between;gap:10px;
@@ -156,7 +156,7 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0}
 .tt-metarow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:auto}
 .tt-rate{font-size:12.5px;font-weight:700;color:#B45309}
-.tt-rate small{color:var(--gray-400);font-weight:500}
+.tt-rate small{color:var(--gray-500);font-weight:500}
 .tt-mloc{font-size:12px;color:var(--gray-500);display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
 .tt-pricerow{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .tt-price2{font-size:18px;font-weight:800;color:var(--primary)}
@@ -169,18 +169,18 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
 .pc-box:empty{display:none}
 .tt-stay .tt-item:has(+ .pc-box:empty){border-radius:16px}
 .pc-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:8px 0 6px;font-size:13.5px;font-weight:800;color:var(--dark)}
-.pc-head small{font-size:11.5px;font-weight:600;color:var(--gray-400)}
+.pc-head small{font-size:11.5px;font-weight:600;color:var(--gray-500)}
 .pc-row{display:grid;grid-template-columns:26px 1fr auto auto;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--gray-100)}
 .pc-logo{width:26px;height:26px;border-radius:7px;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
 .pc-name{font-size:13.5px;font-weight:600;color:var(--dark);min-width:0;display:flex;align-items:center}
 .pc-name>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pc-name em{flex-shrink:0;font-style:normal;font-size:10.5px;font-weight:800;color:#067647;background:#ECFDF3;padding:2px 7px;border-radius:6px;margin-left:6px}
 .pc-price{font-size:15px;font-weight:800;color:var(--dark);white-space:nowrap;display:flex;flex-direction:column;align-items:flex-end;line-height:1.25}
-.pc-total{font-size:11px;font-weight:600;color:var(--gray-400)}
+.pc-total{font-size:11px;font-weight:600;color:var(--gray-500)}
 .pc-best .pc-price{color:#067647}
 .pc-go{font-size:12.5px;font-weight:700;color:var(--primary);border:1px solid var(--gray-200);border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap}
 .pc-go:hover{border-color:var(--primary);background:var(--primary-lt,#EAF0FF)}
-.pc-note{font-size:11px;color:var(--gray-400);line-height:1.55;margin:6px 0 0}
+.pc-note{font-size:11px;color:var(--gray-500);line-height:1.55;margin:6px 0 0}
 .pc-loading,.pc-empty{font-size:12.5px;color:var(--gray-500);padding:10px 0;display:flex;align-items:center;gap:8px}
 .pc-spin{width:14px;height:14px;border-width:2px;margin:0}
 .pc-google{display:block;text-align:center;margin:2px 0 6px;padding:11px;border-radius:10px;background:var(--primary-lt,#EAF0FF);
@@ -268,11 +268,11 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
   <div class="tt-panel active" id="tt-panel-tna">
     <div class="tt-row">
       <div class="tt-field" style="flex:2">
-        <label>검색어 (도시 또는 상품명)</label>
+        <label for="tna-q">검색어 (도시 또는 상품명)</label>
         <input id="tna-q" placeholder="예: 오사카 유니버설, 다낭 바나힐, 방콕 왕궁" onkeydown="if(event.key==='Enter')ttRunTna()">
       </div>
       <div class="tt-field" style="flex:1">
-        <label>정렬</label>
+        <label for="tna-sort">정렬</label>
         <select id="tna-sort">
           <option value="recommended">추천순</option>
           <option value="price_asc">가격 낮은순</option>
@@ -288,19 +288,19 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
   <div class="tt-panel" id="tt-panel-stay">
     <div class="tt-row">
       <div class="tt-field" style="flex:2">
-        <label>지역/숙소명</label>
+        <label for="stay-q">지역/숙소명</label>
         <input id="stay-q" placeholder="예: 부산 해운대, 제주 서귀포, 도쿄 신주쿠" onkeydown="if(event.key==='Enter')ttRunStay()">
       </div>
     </div>
     <div class="tt-row">
-      <div class="tt-field"><label>체크인</label><input type="date" id="stay-in"></div>
-      <div class="tt-field"><label>체크아웃</label><input type="date" id="stay-out"></div>
-      <div class="tt-field"><label>인원</label>
+      <div class="tt-field"><label for="stay-in">체크인</label><input type="date" id="stay-in"></div>
+      <div class="tt-field"><label for="stay-out">체크아웃</label><input type="date" id="stay-out"></div>
+      <div class="tt-field"><label for="stay-adult">인원</label>
         <select id="stay-adult"><option value="1">성인 1</option><option value="2" selected>성인 2</option><option value="3">성인 3</option><option value="4">성인 4</option></select>
       </div>
     </div>
     <div class="tt-row">
-      <div class="tt-field"><label>국내/해외</label>
+      <div class="tt-field"><label for="stay-domestic">국내/해외</label>
         <select id="stay-domestic"><option value="true">국내</option><option value="false">해외</option></select>
       </div>
     </div>
@@ -310,24 +310,24 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
   <!-- 국내항공 -->
   <div class="tt-panel" id="tt-panel-dom">
     <div class="tt-row">
-      <div class="tt-field"><label>출발</label>
+      <div class="tt-field"><label for="dom-from">출발</label>
         <select id="dom-from"><option value="GMP">김포 GMP</option><option value="CJU">제주 CJU</option><option value="PUS">부산 PUS</option></select>
       </div>
-      <div class="tt-field"><label>도착</label>
+      <div class="tt-field"><label for="dom-to">도착</label>
         <select id="dom-to"><option value="CJU">제주 CJU</option><option value="GMP">김포 GMP</option><option value="PUS">부산 PUS</option><option value="TAE">대구 TAE</option><option value="KWJ">광주 KWJ</option></select>
       </div>
     </div>
-    <div class="tt-row"><div class="tt-field"><label>가는 날</label><input type="date" id="dom-date"></div></div>
+    <div class="tt-row"><div class="tt-field"><label for="dom-date">가는 날</label><input type="date" id="dom-date"></div></div>
     <button class="tt-btn" onclick="ttRunDom()">🔍 국내 항공권 검색</button>
   </div>
 
   <!-- 국제항공 -->
   <div class="tt-panel" id="tt-panel-intl">
     <div class="tt-row">
-      <div class="tt-field"><label>출발</label>
+      <div class="tt-field"><label for="intl-from">출발</label>
         <select id="intl-from"><option value="ICN">인천 ICN</option><option value="GMP">김포 GMP</option><option value="PUS">부산 PUS</option></select>
       </div>
-      <div class="tt-field"><label>도착</label>
+      <div class="tt-field"><label for="intl-to">도착</label>
         <select id="intl-to">
           <option value="KIX">오사카 KIX</option><option value="NRT">도쿄 나리타 NRT</option><option value="FUK">후쿠오카 FUK</option>
           <option value="BKK">방콕 BKK</option><option value="DAD">다낭 DAD</option><option value="SIN">싱가포르 SIN</option>
@@ -335,8 +335,8 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
       </div>
     </div>
     <div class="tt-row">
-      <div class="tt-field"><label>가는 날</label><input type="date" id="intl-date"></div>
-      <div class="tt-field"><label>오는 날</label><input type="date" id="intl-return"></div>
+      <div class="tt-field"><label for="intl-date">가는 날</label><input type="date" id="intl-date"></div>
+      <div class="tt-field"><label for="intl-return">오는 날</label><input type="date" id="intl-return"></div>
     </div>
     <button class="tt-btn" onclick="ttRunIntl()">🔍 국제 항공권 검색</button>
     <button class="tt-btn tt-btn-sub" onclick="ttRunFareCalendar()">📅 날짜별 최저가 보기</button>
@@ -357,7 +357,7 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
     숙소는 트립어드바이저 제휴 요금(Xotelo)으로 <b>같은 호텔의 플랫폼별 1박 가격</b>을 함께 보여주며, 같은 호텔로 확인되지 않으면 가격 대신 구글 호텔 비교 링크를 보여줍니다.<br>
     그 밖의 비교 링크는 <b>검색 결과가 아니라 각 플랫폼의 검색 페이지로 연결</b>됩니다.<br>
     가격·재고·예약 가능 여부는 실시간 변동될 수 있으며, 예약·결제는 각 플랫폼에서 직접 진행하세요.<br>
-    <a href="/privacy" style="color:var(--gray-400)">개인정보처리방침</a> · <a href="/terms" style="color:var(--gray-400)">이용약관</a>
+    <a href="/privacy" style="color:var(--gray-500)">개인정보처리방침</a> · <a href="/terms" style="color:var(--gray-500)">이용약관</a>
   </p>
 </div>
 
