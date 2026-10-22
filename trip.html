@@ -77,6 +77,17 @@
   .exp .nm{font-size:13px;font-weight:700}.exp .mt{font-size:11px;color:var(--gray-500)}
   .exp .amt{margin-left:auto;text-align:right}.exp .amt b{font-size:13.5px;font-weight:800}.exp .amt small{font-size:10px;color:var(--gray-500);display:block}
   .bdg{font-size:9.5px;font-weight:800;padding:2px 6px;border-radius:6px;background:var(--primary-lt);color:var(--primary)}
+  .memedit{cursor:pointer;border-bottom:1px dashed rgba(255,255,255,.7);padding-bottom:1px}.memedit .pen{font-size:11px;opacity:.9}
+  .memrow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .memchip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border-radius:999px;background:#fff;border:1px solid var(--gray-200);font-size:12.5px;font-weight:700;color:var(--gray-700,#344054)}
+  .memchip i{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .memchip.add{border-style:dashed;color:var(--primary);cursor:pointer}
+  .memedit-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}.memedit-row i{width:12px;height:12px;border-radius:50%;flex:0 0 auto}.memedit-row .in{flex:1;margin:0}
+  .memdel{flex:0 0 auto;width:44px;height:44px;border:none;border-radius:10px;background:var(--gray-100);color:var(--gray-500);font-size:15px;cursor:pointer}
+  .baltbl{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+  .baltbl th{font-size:11px;color:var(--gray-500);font-weight:700;text-align:right;padding:4px 0}.baltbl th:first-child,.baltbl td:first-child{text-align:left}
+  .baltbl td{text-align:right;padding:7px 0;border-top:1px solid var(--gray-100);font-weight:600}.baltbl td:first-child{font-weight:800;max-width:6em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .baltbl td:last-child{font-weight:800}.baltbl td.neg{color:var(--danger)}
   .settle{background:#e7f7ef;border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;color:#065f37;margin-bottom:8px}
   /* 예약 */
   .resv{display:flex;gap:11px;padding:13px;border-radius:14px;background:#fff;box-shadow:var(--shadow);margin-bottom:10px}
@@ -187,7 +198,7 @@ function renderShell(){
     + '<div class="share" onclick="shareTrip()" title="동행과 공유">'+svg('ic-share')+'</div>'
     + '<span class="dday">'+T.ddayText(trip)+' · '+T.tripLength(trip)+'일</span>'
     + '<h1>'+esc(trip.city)+'</h1>'
-    + '<div class="dt">'+trip.start.replace(/-/g,'.')+' – '+T.fmtMD(trip.end)+' · 👤 '+mem+'</div>'
+    + '<div class="dt">'+trip.start.replace(/-/g,'.')+' – '+T.fmtMD(trip.end)+' · <span class="memedit" role="button" tabindex="0" onclick="openMemberSheet()" title="같이 가는 사람 편집">👤 '+mem+' <span class="pen">✎</span></span></div>'
     + '</div>'
     + '<div class="quick">'
     +  '<div class="qc"><div class="n" style="color:var(--primary)">'+(T.budgetTotal(trip)?T.spentPct(trip)+'%':'—')+'</div><div class="l">예산 사용</div></div>'
@@ -334,6 +345,7 @@ function exportICS(){
 function paneBudget(){
   if(!T.budgetTotal(trip)){
     return '<div class="card" style="text-align:center;padding:26px"><div style="font-size:38px">💰</div><h4 style="margin:8px 0 4px;font-size:15px">총예산을 정해볼까요?</h4><p style="color:var(--gray-500);font-size:12.5px">예산을 넣으면 하루 쓸 수 있는 돈을 자동으로 계산해 드려요.</p><button class="save" style="max-width:220px;margin:14px auto 0" onclick="openBudgetSheet()">예산 설정</button></div>'
+      + settleSection()
       + '<div class="sech">지출 내역</div>'+expList();
   }
   var cats=T.byCategory(trip);
@@ -346,11 +358,7 @@ function paneBudget(){
     var limTxt = lim>0?'<div style="font-size:10px;color:'+(over?'var(--danger)':'var(--gray-400)')+'">한도 '+won(lim)+'</div>':'';
     return '<div class="catbar"><div class="ic" style="background:'+x.cat.color+'22;color:'+x.cat.color+'">'+x.cat.emoji+'</div><div class="nm">'+x.cat.label+badge+'</div><div class="tr"><i style="width:'+pct+'%;background:'+bar+'"></i></div><div class="amt" style="display:flex;flex-direction:column;align-items:flex-end">'+won(x.amt)+limTxt+'</div></div>';
   }).join(''):'<div style="color:var(--gray-500);font-size:12.5px;text-align:center;padding:8px">아직 지출이 없어요.</div>';
-  var multi=(trip.members||[]).length>1;
-  var setlRows=T.settlements(trip).map(function(s){return '<div class="settle">'+svg('ic-swap','')+' '+esc(s.from)+' → '+esc(s.to)+' <b style="margin-left:auto">'+won(s.amt)+'</b></div>';}).join('');
-  var setl = !multi ? '' : '<div class="sech">그룹 정산</div>'
-    + (setlRows || '<div class="settle" style="background:var(--gray-100);color:var(--gray-600)">'+svg('ic-swap','')+' 주고받을 금액이 없어요 — 모두 공평</div>')
-    + '<button class="seg" style="width:100%;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="shareSettlement()">'+svg('ic-share')+' 정산 내역 공유</button>';
+  var setl = settleSection();
   return '<div class="card"><div class="donut" id="donut"></div><div style="text-align:center;font-size:12.5px;color:var(--gray-500);font-weight:600">총예산 '+won(T.budgetTotal(trip))+' · 사용 '+won(T.spent(trip))+'</div>'
     + '<div style="text-align:center;margin-top:8px"><button class="seg" onclick="openBudgetSheet()">예산 수정</button></div></div>'
     + '<div class="daily">'+svg('ic-wallet','')+'<div><div class="lbl">오늘 이후 하루 쓸 수 있는 돈</div><div class="big">'+won(T.dailyAllowance(trip))+'</div><div class="fm">(총예산 − 누적지출) ÷ 남은 '+T.remainingDays(trip)+'일</div></div></div>'
@@ -360,6 +368,83 @@ function paneBudget(){
     + '<div class="sech">지출 내역</div>'+expList()
     + ((trip.expenses||[]).length ? '<button class="seg" style="width:100%;margin-top:8px" onclick="exportCSV()">지출 CSV 내보내기</button>' : '');
 }
+/* 갈 사람 + 그룹 정산 — 지출이 바뀔 때마다 다시 그려지므로 항상 자동 계산 상태 */
+function settleSection(){
+  var members=trip.members||[];
+  var chips=members.map(function(m){return '<span class="memchip"><i style="background:'+esc(m.color||'#98A2B3')+'"></i>'+esc(m.name)+'</span>';}).join('');
+  var head='<div class="sech" style="display:flex;align-items:center">갈 사람 · 그룹 정산<button class="seg" style="margin-left:auto;text-transform:none" onclick="openMemberSheet()">✎ 사람 편집</button></div>'
+    + '<div class="memrow">'+chips+'<span class="memchip add" role="button" tabindex="0" onclick="openMemberSheet(true)">＋ 추가</span></div>';
+  if(members.length<2){
+    return head+'<div class="settle" style="background:var(--gray-100);color:var(--gray-600)">'+svg('ic-swap','')+' 같이 가는 사람을 추가하면 누가 누구에게 얼마 보낼지 자동으로 계산돼요</div>';
+  }
+  if(!(trip.expenses||[]).length){
+    return head+'<div class="settle" style="background:var(--gray-100);color:var(--gray-600)">'+svg('ic-swap','')+' 지출을 추가하면 정산이 자동으로 계산돼요</div>';
+  }
+  var rows=T.settlements(trip).map(function(s){return '<div class="settle">'+svg('ic-swap','')+' '+esc(s.from)+' → '+esc(s.to)+' <b style="margin-left:auto">'+won(s.amt)+'</b></div>';}).join('');
+  var bal=T.balances(trip).map(function(b){
+    var sign=b.net>0?'+':b.net<0?'−':'';
+    return '<tr><td>'+esc(b.name)+'</td><td>'+won(b.paid)+'</td><td>'+won(b.share)+'</td><td class="'+(b.net<0?'neg':'')+'">'+sign+won(Math.abs(b.net))+'</td></tr>';
+  }).join('');
+  return head
+    + (rows || '<div class="settle" style="background:var(--gray-100);color:var(--gray-600)">'+svg('ic-swap','')+' 주고받을 금액이 없어요 — 모두 공평</div>')
+    + '<div class="card" style="padding:10px 12px"><table class="baltbl"><thead><tr><th>이름</th><th>낸 돈</th><th>부담액</th><th>차액</th></tr></thead><tbody>'+bal+'</tbody></table>'
+    + '<div style="font-size:11px;color:var(--gray-500);margin-top:6px">+ 돌려받을 돈 · − 보내야 할 돈 · 지출을 추가·수정하면 자동으로 다시 계산돼요</div></div>'
+    + '<button class="seg" style="width:100%;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="shareSettlement()">'+svg('ic-share')+' 정산 내역 공유</button>';
+}
+
+/* 갈 사람 편집 시트 — 이름이 지출(paidBy/paidFor)의 키라서 저장 시 지출도 함께 갱신 */
+var memDraft=[];
+function openMemberSheet(addNew){
+  memDraft=(trip.members||[]).map(function(m){return {orig:m.name,name:m.name,color:m.color};});
+  if(!memDraft.length) memDraft.push({orig:null,name:'나',color:T.MEMBER_COLORS[0]});
+  if(addNew===true) memDraft.push({orig:null,name:'',color:T.MEMBER_COLORS[memDraft.length%T.MEMBER_COLORS.length]});
+  drawMemberSheet(addNew===true);
+}
+function drawMemberSheet(focusLast){
+  var rows=memDraft.map(function(m,i){
+    return '<div class="memedit-row"><i style="background:'+esc(m.color)+'"></i>'
+      +'<input class="in" data-mi="'+i+'" aria-label="이름 '+(i+1)+'" placeholder="'+(i===0?'나':'동행 '+i)+'" value="'+esc(m.name)+'" oninput="memDraft['+i+'].name=this.value">'
+      +(memDraft.length>1?'<button class="memdel" aria-label="삭제" onclick="delMemberDraft('+i+')">✕</button>':'')+'</div>';
+  }).join('');
+  openSheet('<h3>같이 가는 사람</h3>'
+    +'<p style="font-size:12px;color:var(--gray-500);margin:-4px 0 12px">이름을 바꾸면 지출 내역의 결제자·나눔 대상도 함께 바뀌어요.</p>'
+    +rows
+    +'<div class="addrow" style="margin-top:4px" onclick="addMemberDraft()">＋ 사람 추가</div>'
+    +'<button class="save" onclick="saveMembers()">저장</button>');
+  if(focusLast){ var ins=sbody.querySelectorAll('input[data-mi]'); if(ins.length) ins[ins.length-1].focus(); }
+}
+function addMemberDraft(){
+  var used=memDraft.map(function(m){return m.color;}), col=T.MEMBER_COLORS.filter(function(c){return used.indexOf(c)<0;})[0]||T.MEMBER_COLORS[memDraft.length%T.MEMBER_COLORS.length];
+  memDraft.push({orig:null,name:'',color:col}); drawMemberSheet(true);
+}
+function delMemberDraft(i){
+  var m=memDraft[i];
+  if(m.orig){
+    var paid=(trip.expenses||[]).filter(function(e){return e.paidBy===m.orig;}).length;
+    if(paid && !confirm(m.orig+'님이 결제한 지출 '+paid+'건은 '+(memDraft[i===0?1:0].name||'다른 사람')+'님이 낸 것으로 바뀌어요. 삭제할까요?')) return;
+  }
+  memDraft.splice(i,1); drawMemberSheet();
+}
+function saveMembers(){
+  var list=memDraft.map(function(m){return {orig:m.orig,name:(m.name||'').trim(),color:m.color};}).filter(function(m){return m.name||m.orig;});
+  for(var i=0;i<list.length;i++){ if(!list[i].name){ alert('이름을 입력하세요.'); return; } }
+  var names=list.map(function(m){return m.name;});
+  if(names.some(function(n,i){return names.indexOf(n)!==i;})){ alert('같은 이름이 있어요. 서로 다르게 입력하세요.'); return; }
+  if(!list.length){ alert('최소 1명은 있어야 해요.'); return; }
+  var ren={}; list.forEach(function(m){ if(m.orig) ren[m.orig]=m.name; });
+  var fallback=list[0].name;
+  (trip.expenses||[]).forEach(function(e){
+    // 결제자가 삭제됐으면 첫 번째 사람이 낸 것으로(총지출 유지). paidFor가 비어 있으면 '전원'이라 그대로 둔다.
+    e.paidBy = ren.hasOwnProperty(e.paidBy) ? ren[e.paidBy] : fallback;
+    if(e.paidFor && e.paidFor.length){
+      var fors=e.paidFor.map(function(n){return ren[n];}).filter(Boolean);
+      e.paidFor = fors.length ? fors : [e.paidBy];
+    }
+  });
+  trip.members=list.map(function(m){return {name:m.name,color:m.color};});
+  T.upsert(trip); reget(); closeSheet(); renderShell();
+}
+
 /* 카테고리 한도 설정 시트 */
 function openLimitSheet(){
   var limits=(trip.budget&&trip.budget.catLimits)||{};
