@@ -103,7 +103,7 @@
   @media(max-width:620px){.sgg section{padding:30px 0}.sgg .section-title{display:block}.sgg .section-title p{margin-top:10px}.sgg .summary-grid{grid-template-columns:1fr}.sgg .cover{height:300px}.sgg .cover .cover-text{left:20px;right:20px;bottom:20px}.sgg .cover h2{font-size:28px}.sgg .dest-body{padding:18px}.sgg .place-grid{grid-template-columns:1fr}.sgg .days,.sgg .show-4 .days{grid-template-columns:1fr}.sgg .place-photo{height:200px}.sgg .place-content{min-height:auto}}
   </style>
 </head>
-<body>
+<body class="gx-product">
   <header class="header" id="header">
     <div class="container header-inner">
       <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
@@ -124,20 +124,24 @@
       <span class="fx-updated" id="fxUpdated"></span>
     </div>
   </div>
-  <section class="dest-hero" style="background:linear-gradient(135deg,#102428 0%,#174e58 52%,#2e7d8f 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
-    <div class="dest-hero-bg">☕</div>
-    <div class="dest-hero-overlay"></div>
-    <div class="dest-hero-content">
-      <span class="dest-hero-badge">☕ 강릉 · 2구역</span>
+  <section class="gx-hero">
+    <div class="gx-gallery"><div class="gx-track" id="gxTrack"><a class="gx-slide" href="#beach"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/%EA%B2%BD%ED%8F%AC%ED%95%B4%EB%B3%80.jpg/1280px-%EA%B2%BD%ED%8F%AC%ED%95%B4%EB%B3%80.jpg" alt="경포해변" fetchpriority="high" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">① 경포 · 해변</span></a><a class="gx-slide" href="#heritage"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/20151003OjukheonDSC03018.jpg/1280px-20151003OjukheonDSC03018.jpg" alt="오죽헌" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">② 오죽헌 · 선교장</span></a></div><span class="gx-count"><b id="gxIdx">1</b> / 2</span></div>
+    <div class="gx-info">
+      <div class="gx-crumb"><span>📍 국내</span><span class="gx-sep">›</span><span>강릉</span><button class="gx-share" type="button" onclick="gxShare()" aria-label="공유"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button></div>
+      <div class="gx-badges"><span class="gx-b gx-b1">2구역</span><span class="gx-b gx-b2">1박 2일 추천</span></div>
       <h1>강릉, 어디부터?</h1>
-      <p>동해 바다와 커피, 전통 한옥까지 — 강릉을 구역으로 나눠 취향별로 골랐습니다. 바다 보며 커피 한 잔, KTX로 가까운 동해안 여행지.</p>
-      <div class="dest-hero-stats"><div class="hero-stat"><strong>🚄 이동</strong><small>서울 → 강릉 KTX 약 2시간</small></div><div class="hero-stat"><strong>💴 결제</strong><small>원화·카드 (환전 불필요)</small></div><div class="hero-stat"><strong>🕐 시차</strong><small>없음 (국내)</small></div><div class="hero-stat"><strong>🌤 추천 시기</strong><small>5~6월·9~10월(쾌적)</small></div></div>
+      <p class="gx-desc">동해 바다와 커피, 전통 한옥까지 — 강릉을 구역으로 나눠 취향별로 골랐습니다. 바다 보며 커피 한 잔, KTX로 가까운 동해안 여행지.</p>
+      <div class="gx-tags"><span>#경포·해변</span><span>#오죽헌·선교장</span></div>
+      <div class="gx-price"><span class="gx-plabel">KTX 참고가</span><b>27,600원~</b><small>시기·노선별로 달라요 — 예약 전 확인</small></div>
+      <div class="gx-sum"><h2>여행 요약 정보</h2><div class="gx-grid"><div class="gx-cell"><b>🚄 이동</b><span>서울 → 강릉 KTX 약 2시간</span></div><div class="gx-cell"><b>💴 결제</b><span>원화·카드 (환전 불필요)</span></div><div class="gx-cell"><b>🕐 시차</b><span>없음 (국내)</span></div><div class="gx-cell"><b>🌤 추천 시기</b><span>5~6월·9~10월(쾌적)</span></div></div>
       <div class="dest-weather" id="destWeather" hidden>
         <span class="dw-icon" id="dwIcon">⛅</span><span class="dw-temp" id="dwTemp">--°</span><span class="dw-desc" id="dwDesc">현재 날씨</span><span class="dw-detail" id="dwDetail"></span>
       </div>
-      <a href="tours.html?city=강릉" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 강릉 투어·티켓 실시간 검색 →</a><a href="#" onclick="TripAttach.open({label:'이 도시로 여행 만들기',city:'강릉'});return false;" style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;margin-left:8px;background:#1B4FD8;color:#fff;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🧳 강릉 여행 만들기</a>
+      </div>
     </div>
   </section>
+  <nav class="gx-tabs" id="gxTabs" aria-label="가이드 섹션"><a href="#compare" class="on">한눈에 비교</a><a href="#zones">구역별 코스</a><a href="#tips">여행 팁</a></nav>
+  <div class="gx-cta"><a class="gx-btn gx-home" href="/" aria-label="홈"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></a><a class="gx-btn" href="tours.html?city=강릉">🎟 투어·티켓</a><a class="gx-btn gx-primary" href="#" onclick="TripAttach.open({label:'이 도시로 여행 만들기',city:'강릉'});return false;">🧳 강릉 여행 만들기</a></div>
   <div class="sgg">
   <section id="compare"><div class="wrap">
   <div class="section-title"><div><div class="eyebrow">QUICK PICK</div><h2>먼저, 취향별로 고르면</h2></div><p>순위라기보다 어떤 점을 가장 중요하게 보느냐에 따라 고르는 용도입니다. 강릉은 콤팩트해서 각 여행지는 권역입니다.</p></div>
@@ -148,7 +152,7 @@
   <tbody><tr><td>경포·해변</td><td class="good">바다·커피</td><td>★★★☆☆</td><td>★★★★☆</td><td>반나절~하루</td><td>연중</td></tr><tr><td>오죽헌·선교장</td><td>★★★☆☆</td><td class="good">전통 한옥</td><td>★★★★★</td><td>반나절</td><td>연중</td></tr></tbody>
   </table></div>
   </div></section>
-  <section style="padding-top:12px"><div class="wrap">
+  <section id="zones" style="padding-top:12px"><div class="wrap">
   <div aria-label="여행기간 선택" class="duration" role="group"><button class="active" onclick="setDuration(3,this)">2박 3일</button><button onclick="setDuration(4,this)">3박 4일</button></div>
   <div class="duration-note">버튼을 누르면 각 구역 코스에 여유 시간(야경·추가 코스)이 함께 추가됩니다. 2박3일이면 3구역, 3박4일이면 4구역 정도가 여유롭습니다.</div>
 
@@ -176,7 +180,7 @@
   <div class="info-line">정보: <a class="source-link" href="https://www.gn.go.kr/tour/index.do" target="_blank" rel="noopener">강릉 관광 공식</a></div>
   </div>
   </article>
-  <div class="note"><strong>여행 팁</strong> · 강릉은 KTX로 서울에서 약 2시간이라 당일치기도 가능합니다. 봄·가을이 쾌적하고 여름 해변은 붐빕니다. 경포·안목·정동진은 해안을 따라, 오죽헌·선교장은 시내 쪽에 있어 버스·택시로 이동합니다. 정동진 일출은 이른 새벽이니 일정에 참고하세요. 사진 © Wikimedia Commons 기여자 · 관광 정보는 강릉 관광 공식 사이트 참고. 운영 시간·요금은 방문 전 확인하세요.</div>
+  <div class="note" id="tips"><strong>여행 팁</strong> · 강릉은 KTX로 서울에서 약 2시간이라 당일치기도 가능합니다. 봄·가을이 쾌적하고 여름 해변은 붐빕니다. 경포·안목·정동진은 해안을 따라, 오죽헌·선교장은 시내 쪽에 있어 버스·택시로 이동합니다. 정동진 일출은 이른 새벽이니 일정에 참고하세요. 사진 © Wikimedia Commons 기여자 · 관광 정보는 강릉 관광 공식 사이트 참고. 운영 시간·요금은 방문 전 확인하세요.</div>
   </div></section>
   </div>
   <footer class="footer">
@@ -234,5 +238,6 @@
 <script src="/bizfooter.js" defer></script>
 <script src="/trips.js"></script>
 <script src="/trip-attach.js"></script>
+<script src="/guide-ui.js" defer></script>
 </body>
 </html>

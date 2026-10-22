@@ -119,7 +119,7 @@
   @media(max-width:620px){.sgg section{padding:30px 0}.sgg .section-title{display:block}.sgg .section-title p{margin-top:10px}.sgg .summary-grid{grid-template-columns:1fr}.sgg .cover{height:300px}.sgg .cover .cover-text{left:20px;right:20px;bottom:20px}.sgg .cover h2{font-size:28px}.sgg .dest-body{padding:18px}.sgg .place-grid{grid-template-columns:1fr}.sgg .days,.sgg .show-4 .days{grid-template-columns:1fr}.sgg .place-photo{height:200px}.sgg .place-content{min-height:auto}}
   </style>
 </head>
-<body>
+<body class="gx-product">
 
   <!-- ── HEADER ── -->
   <header class="header" id="header">
@@ -148,28 +148,27 @@
   </div>
 
   <!-- ── HERO ── -->
-  <section class="dest-hero" style="background:linear-gradient(135deg,#1d5f64 0%,#2c8d86 55%,#102b3a 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
-    <div class="dest-hero-bg">🌆</div>
-    <div class="dest-hero-overlay"></div>
-    <div class="dest-hero-content">
-      <span class="dest-hero-badge">🌆 싱가포르 · 도시 5구역</span>
+  <section class="gx-hero">
+    <div class="gx-gallery"><div class="gx-track" id="gxTrack"><a class="gx-slide" href="#marinabay"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Marina_Bay_Sands_%28I%29.jpg/1280px-Marina_Bay_Sands_%28I%29.jpg" alt="마리나베이샌즈와 스카이라인" fetchpriority="high" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">① 마리나베이</span></a><a class="gx-slide" href="#gardens"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Singapore_%28SG%29%2C_Gardens_By_The_Bay_--_2019_--_4831.jpg/1280px-Singapore_%28SG%29%2C_Gardens_By_The_Bay_--_2019_--_4831.jpg" alt="슈퍼트리 그로브 야경" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">② 가든스 바이 더 베이</span></a><a class="gx-slide" href="#sentosa"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/1_sentosa_aerial_2016.jpg/1280px-1_sentosa_aerial_2016.jpg" alt="센토사 섬 전경" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">③ 센토사</span></a><a class="gx-slide" href="#chinatown"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Aerial_perspective_of_Singapore%27s_Chinatown.jpg/1280px-Aerial_perspective_of_Singapore%27s_Chinatown.jpg" alt="차이나타운 전경" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">④ 차이나타운 + 도심</span></a><a class="gx-slide" href="#kampong"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Kampong_Glam_aerial_shot_-_20250628_-_RSKY.jpg/1280px-Kampong_Glam_aerial_shot_-_20250628_-_RSKY.jpg" alt="캄퐁글람 전경" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">⑤ 캄퐁글람 + 리틀인디아</span></a></div><span class="gx-count"><b id="gxIdx">1</b> / 5</span></div>
+    <div class="gx-info">
+      <div class="gx-crumb"><span>📍 동남아</span><span class="gx-sep">›</span><span>싱가포르</span><button class="gx-share" type="button" onclick="gxShare()" aria-label="공유"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button></div>
+      <div class="gx-badges"><span class="gx-b gx-b1">도시 5구역</span><span class="gx-b gx-b2">2박3일·3박4일</span></div>
       <h1>싱가포르, 어느 구역부터?</h1>
-      <p>깔끔하고 안전한 도시, 예쁜 정원 산책길, 워터프론트 야경, 향이 강하지 않은 무난한 음식 — 도시를 5개 구역으로 나눠 취향별로 골랐습니다.</p>
-      <div class="dest-hero-stats">
-        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 싱가포르 약 6시간 20분 직항</small></div>
-        <div class="hero-stat"><strong>💴 환율</strong><small>S$1 ≈ 1,000원 (2026 기준)</small></div>
-        <div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 1시간 느림 (KST-1)</small></div>
-        <div class="hero-stat"><strong>🌤 추천 시기</strong><small>연중 고온다습, 2~4월 쾌적</small></div>
-      </div>
+      <p class="gx-desc">깔끔하고 안전한 도시, 예쁜 정원 산책길, 워터프론트 야경, 향이 강하지 않은 무난한 음식 — 도시를 5개 구역으로 나눠 취향별로 골랐습니다.</p>
+      <div class="gx-tags"><span>#마리나베이</span><span>#가든스바이더베이</span><span>#센토사</span><span>#차이나타운+도심</span><span>#캄퐁글람+리틀인디아</span></div>
+      <div class="gx-price"><span class="gx-plabel">항공권 참고가</span><b>280,000원~</b><small>시기·노선별로 달라요 — 예약 전 확인</small></div>
+      <div class="gx-sum"><h2>여행 요약 정보</h2><div class="gx-grid"><div class="gx-cell"><b>✈ 비행시간</b><span>인천 → 싱가포르 약 6시간 20분 직항</span></div><div class="gx-cell"><b>💴 환율</b><span>S$1 ≈ 1,000원 (2026 기준)</span></div><div class="gx-cell"><b>🕐 시차</b><span>한국보다 1시간 느림 (KST-1)</span></div><div class="gx-cell"><b>🌤 추천 시기</b><span>연중 고온다습, 2~4월 쾌적</span></div></div>
       <div class="dest-weather" id="destWeather" hidden>
         <span class="dw-icon" id="dwIcon">⛅</span>
         <span class="dw-temp" id="dwTemp">--°</span>
         <span class="dw-desc" id="dwDesc">현재 날씨</span>
         <span class="dw-detail" id="dwDetail"></span>
       </div>
-      <a href="tours.html?city=싱가포르" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 싱가포르 투어·티켓 실시간 검색 →</a><a href="#" onclick="TripAttach.open({label:'이 도시로 여행 만들기',city:'싱가포르'});return false;" style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;margin-left:8px;background:#1B4FD8;color:#fff;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🧳 싱가포르 여행 만들기</a>
+      </div>
     </div>
   </section>
+  <nav class="gx-tabs" id="gxTabs" aria-label="가이드 섹션"><a href="#compare" class="on">한눈에 비교</a><a href="#zones">구역별 코스</a><a href="#tips">여행 팁</a></nav>
+  <div class="gx-cta"><a class="gx-btn gx-home" href="/" aria-label="홈"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></a><a class="gx-btn" href="tours.html?city=싱가포르">🎟 투어·티켓</a><a class="gx-btn gx-primary" href="#" onclick="TripAttach.open({label:'이 도시로 여행 만들기',city:'싱가포르'});return false;">🧳 싱가포르 여행 만들기</a></div>
 
   <!-- ── 구역 가이드 본문 (스코프: .sgg) ── -->
   <div class="sgg">
@@ -196,7 +195,7 @@
   </table>
   </div>
   </div></section>
-  <section style="padding-top:12px"><div class="wrap">
+  <section id="zones" style="padding-top:12px"><div class="wrap">
   <div aria-label="여행기간 선택" class="duration" role="group"><button class="active" onclick="setDuration(3,this)">2박 3일</button><button onclick="setDuration(4,this)">3박 4일</button></div>
   <div class="duration-note">버튼을 누르면 각 구역 코스에 여유 시간(야경·쇼)이 함께 추가됩니다. 2박3일이면 3구역, 3박4일이면 4구역 정도가 여유롭습니다.</div>
   <!-- MARINA BAY -->
@@ -314,7 +313,7 @@
   <div class="info-line">정보: <a class="source-link" href="https://www.visitsingapore.com/en/see-do-singapore/places-to-see/kampong-glam/" target="_blank" rel="noopener">Visit Singapore · 캄퐁글람</a> · <a class="source-link" href="https://www.visitsingapore.com/en/see-do-singapore/places-to-see/little-india/" target="_blank" rel="noopener">리틀인디아</a></div>
   </div>
   </article>
-  <div class="note">
+  <div class="note" id="tips">
   <strong>여행 팁</strong> · 싱가포르는 사계절 무덥고 습합니다(연중 26~33℃). 봄철에 해당하는 <b>2~4월이 비가 가장 적고 화창</b>해 야외 활동에 가장 좋습니다. 이동은 MRT(지하철)가 저렴하고 시원하며, 대부분 구역이 30~40분 내로 연결됩니다. 사원·모스크는 어깨·무릎을 가리는 복장이 필요합니다. 사진 © Wikimedia Commons 기여자 · 관광 정보는 각 공식 관광 사이트 링크 참고. 운영 시간·요금·쇼 시각은 방문 전 공식 페이지에서 확인하세요.
   </div>
   </div></section>
@@ -417,5 +416,6 @@ if('serviceWorker' in navigator){
 <script src="/bizfooter.js" defer></script>
 <script src="/trips.js"></script>
 <script src="/trip-attach.js"></script>
+<script src="/guide-ui.js" defer></script>
 </body>
 </html>

@@ -103,7 +103,7 @@
   @media(max-width:620px){.sgg section{padding:30px 0}.sgg .section-title{display:block}.sgg .section-title p{margin-top:10px}.sgg .summary-grid{grid-template-columns:1fr}.sgg .cover{height:300px}.sgg .cover .cover-text{left:20px;right:20px;bottom:20px}.sgg .cover h2{font-size:28px}.sgg .dest-body{padding:18px}.sgg .place-grid{grid-template-columns:1fr}.sgg .days,.sgg .show-4 .days{grid-template-columns:1fr}.sgg .place-photo{height:200px}.sgg .place-content{min-height:auto}}
   </style>
 </head>
-<body>
+<body class="gx-product">
   <header class="header" id="header">
     <div class="container header-inner">
       <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
@@ -124,20 +124,24 @@
       <span class="fx-updated" id="fxUpdated"></span>
     </div>
   </div>
-  <section class="dest-hero" style="background:linear-gradient(135deg,#241a2e 0%,#3e2a44 52%,#8a4d76 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
-    <div class="dest-hero-bg">⛩️</div>
-    <div class="dest-hero-overlay"></div>
-    <div class="dest-hero-content">
-      <span class="dest-hero-badge">⛩️ 교토 · 도시 5구역</span>
+  <section class="gx-hero">
+    <div class="gx-gallery"><div class="gx-track" id="gxTrack"><a class="gx-slide" href="#gion"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Kiyomizu.jpg/1280px-Kiyomizu.jpg" alt="기요미즈데라" fetchpriority="high" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">① 기온 · 히가시야마</span></a><a class="gx-slide" href="#arashiyama"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Arashiyama%2C_Part_II_-_Arashiyama7534.jpg/1280px-Arashiyama%2C_Part_II_-_Arashiyama7534.jpg" alt="아라시야마 대나무 숲" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">② 아라시야마</span></a><a class="gx-slide" href="#fushimi"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg/1280px-Torii_path_with_lantern_at_Fushimi_Inari_Taisha_Shrine%2C_Kyoto%2C_Japan.jpg" alt="후시미이나리 도리이" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">③ 후시미이나리 · 남부</span></a><a class="gx-slide" href="#kinkakuji"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Golden_Pavilion_Kinkaku-ji_water_mirror_2024.jpg/1280px-Golden_Pavilion_Kinkaku-ji_water_mirror_2024.jpg" alt="금각사(긴카쿠지)" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">④ 금각사 · 기타</span></a><a class="gx-slide" href="#station"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Kyoto-STA_Central.jpg/1280px-Kyoto-STA_Central.jpg" alt="교토역" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">⑤ 교토역 · 중심</span></a></div><span class="gx-count"><b id="gxIdx">1</b> / 5</span></div>
+    <div class="gx-info">
+      <div class="gx-crumb"><span>📍 일본</span><span class="gx-sep">›</span><span>교토</span><button class="gx-share" type="button" onclick="gxShare()" aria-label="공유"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button></div>
+      <div class="gx-badges"><span class="gx-b gx-b1">도시 5구역</span><span class="gx-b gx-b2">2박3일·3박4일</span></div>
       <h1>교토, 어느 구역부터?</h1>
-      <p>전통 거리·대나무 숲·천 개의 도리이·젠 정원까지 — 교토를 5개 구역으로 나눠 취향별로 골랐습니다. 처음이라면 기온·기요미즈부터.</p>
-      <div class="dest-hero-stats"><div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 간사이(KIX) + 열차 약 1시간 15분</small></div><div class="hero-stat"><strong>💴 환율</strong><small>100엔 ≈ 920원 (2026 기준)</small></div><div class="hero-stat"><strong>🕐 시차</strong><small>한국과 동일 (KST)</small></div><div class="hero-stat"><strong>🌸 추천 시기</strong><small>3~4월 벚꽃 · 11월 단풍</small></div></div>
+      <p class="gx-desc">전통 거리·대나무 숲·천 개의 도리이·젠 정원까지 — 교토를 5개 구역으로 나눠 취향별로 골랐습니다. 처음이라면 기온·기요미즈부터.</p>
+      <div class="gx-tags"><span>#기온·히가시야마</span><span>#아라시야마</span><span>#후시미이나리</span><span>#금각사·기타</span><span>#교토역·중심</span></div>
+      <div class="gx-price gx-pnote">🚆 오사카 당일치기 가능</div>
+      <div class="gx-sum"><h2>여행 요약 정보</h2><div class="gx-grid"><div class="gx-cell"><b>✈ 비행시간</b><span>인천 → 간사이(KIX) + 열차 약 1시간 15분</span></div><div class="gx-cell"><b>💴 환율</b><span>100엔 ≈ 920원 (2026 기준)</span></div><div class="gx-cell"><b>🕐 시차</b><span>한국과 동일 (KST)</span></div><div class="gx-cell"><b>🌸 추천 시기</b><span>3~4월 벚꽃 · 11월 단풍</span></div></div>
       <div class="dest-weather" id="destWeather" hidden>
         <span class="dw-icon" id="dwIcon">⛅</span><span class="dw-temp" id="dwTemp">--°</span><span class="dw-desc" id="dwDesc">현재 날씨</span><span class="dw-detail" id="dwDetail"></span>
       </div>
-      <a href="tours.html?city=교토" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 교토 투어·티켓 실시간 검색 →</a><a href="#" onclick="TripAttach.open({label:'이 도시로 여행 만들기',city:'교토'});return false;" style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;margin-left:8px;background:#1B4FD8;color:#fff;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🧳 교토 여행 만들기</a>
+      </div>
     </div>
   </section>
+  <nav class="gx-tabs" id="gxTabs" aria-label="가이드 섹션"><a href="#compare" class="on">한눈에 비교</a><a href="#zones">구역별 코스</a><a href="#tips">여행 팁</a></nav>
+  <div class="gx-cta"><a class="gx-btn gx-home" href="/" aria-label="홈"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></a><a class="gx-btn" href="tours.html?city=교토">🎟 투어·티켓</a><a class="gx-btn gx-primary" href="#" onclick="TripAttach.open({label:'이 도시로 여행 만들기',city:'교토'});return false;">🧳 교토 여행 만들기</a></div>
   <div class="sgg">
   <section id="compare"><div class="wrap">
   <div class="section-title"><div><div class="eyebrow">QUICK PICK</div><h2>먼저, 취향별로 고르면</h2></div><p>순위라기보다 어떤 점을 가장 중요하게 보느냐에 따라 고르는 용도입니다. 교토는 넓어서 각 여행지는 도시 안의 구역입니다.</p></div>
@@ -148,7 +152,7 @@
   <tbody><tr><td>기온·히가시야마</td><td class="good">최고</td><td>★★★★☆</td><td>★★★★☆</td><td>반나절~하루</td><td>3~4월·11월</td></tr><tr><td>아라시야마</td><td>★★★★☆</td><td class="good">매우 좋음</td><td>★★★★☆</td><td>반나절~하루</td><td>11월(단풍)</td></tr><tr><td>후시미이나리</td><td class="good">도리이</td><td>★★★★☆</td><td>★★★★☆</td><td>반나절</td><td>연중</td></tr><tr><td>금각사·기타</td><td class="good">정원</td><td>★★★★☆</td><td>★★★★★</td><td>반나절</td><td>연중</td></tr><tr><td>교토역·중심</td><td>★★★☆☆</td><td class="mid">보통</td><td>★★★★★</td><td>반나절</td><td>연중</td></tr></tbody>
   </table></div>
   </div></section>
-  <section style="padding-top:12px"><div class="wrap">
+  <section id="zones" style="padding-top:12px"><div class="wrap">
   <div aria-label="여행기간 선택" class="duration" role="group"><button class="active" onclick="setDuration(3,this)">2박 3일</button><button onclick="setDuration(4,this)">3박 4일</button></div>
   <div class="duration-note">버튼을 누르면 각 구역 코스에 여유 시간(야경·추가 코스)이 함께 추가됩니다. 2박3일이면 3구역, 3박4일이면 4구역 정도가 여유롭습니다.</div>
 
@@ -212,7 +216,7 @@
   <div class="info-line">정보: <a class="source-link" href="https://kyoto.travel/ko/" target="_blank" rel="noopener">교토 관광 공식</a></div>
   </div>
   </article>
-  <div class="note"><strong>여행 팁</strong> · 교토는 벚꽃(3월 말~4월)과 단풍(11월)이 절정이며 그만큼 붐빕니다. 사찰은 오전 일찍이 한산합니다. 이동은 버스·지하철+도보가 기본이고, 아라시야마·후시미는 열차로 접근합니다. 사원·신사에서는 조용히 참배하세요. 사진 © Wikimedia Commons 기여자 · 관광 정보는 교토 관광 공식 사이트 참고. 운영 시간·요금은 방문 전 확인하세요.</div>
+  <div class="note" id="tips"><strong>여행 팁</strong> · 교토는 벚꽃(3월 말~4월)과 단풍(11월)이 절정이며 그만큼 붐빕니다. 사찰은 오전 일찍이 한산합니다. 이동은 버스·지하철+도보가 기본이고, 아라시야마·후시미는 열차로 접근합니다. 사원·신사에서는 조용히 참배하세요. 사진 © Wikimedia Commons 기여자 · 관광 정보는 교토 관광 공식 사이트 참고. 운영 시간·요금은 방문 전 확인하세요.</div>
   </div></section>
   </div>
   <footer class="footer">
@@ -270,5 +274,6 @@
 <script src="/bizfooter.js" defer></script>
 <script src="/trips.js"></script>
 <script src="/trip-attach.js"></script>
+<script src="/guide-ui.js" defer></script>
 </body>
 </html>

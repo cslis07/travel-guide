@@ -103,7 +103,7 @@
   @media(max-width:620px){.sgg section{padding:30px 0}.sgg .section-title{display:block}.sgg .section-title p{margin-top:10px}.sgg .summary-grid{grid-template-columns:1fr}.sgg .cover{height:300px}.sgg .cover .cover-text{left:20px;right:20px;bottom:20px}.sgg .cover h2{font-size:28px}.sgg .dest-body{padding:18px}.sgg .place-grid{grid-template-columns:1fr}.sgg .days,.sgg .show-4 .days{grid-template-columns:1fr}.sgg .place-photo{height:200px}.sgg .place-content{min-height:auto}}
   </style>
 </head>
-<body>
+<body class="gx-product">
   <header class="header" id="header">
     <div class="container header-inner">
       <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
@@ -124,20 +124,24 @@
       <span class="fx-updated" id="fxUpdated"></span>
     </div>
   </div>
-  <section class="dest-hero" style="background:linear-gradient(135deg,#0f1f2e 0%,#163a52 52%,#2a6f97 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
-    <div class="dest-hero-bg">🏔️</div>
-    <div class="dest-hero-overlay"></div>
-    <div class="dest-hero-content">
-      <span class="dest-hero-badge">🏔️ 창바이산 · 백두산</span>
+  <section class="gx-hero">
+    <div class="gx-gallery"><div class="gx-track" id="gxTrack"><a class="gx-slide" href="#tianchi"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/%E4%BB%8E%E9%95%BF%E7%99%BD%E5%B1%B1%E8%A5%BF%E5%9D%A1%E7%9C%8B%E5%A4%A9%E6%B1%A0-2017-08-24_1.jpg/1280px-%E4%BB%8E%E9%95%BF%E7%99%BD%E5%B1%B1%E8%A5%BF%E5%9D%A1%E7%9C%8B%E5%A4%A9%E6%B1%A0-2017-08-24_1.jpg" alt="창바이산 천지" fetchpriority="high" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">① 천지 · 천문봉</span></a><a class="gx-slide" href="#waterfall"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Waterfall_in_Changbaishan%2C_Aug_10_2022.jpg/1280px-Waterfall_in_Changbaishan%2C_Aug_10_2022.jpg" alt="장백폭포" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">② 장백폭포 · 온천</span></a></div><span class="gx-count"><b id="gxIdx">1</b> / 2</span></div>
+    <div class="gx-info">
+      <div class="gx-crumb"><span>📍 중국</span><span class="gx-sep">›</span><span>창바이산</span><button class="gx-share" type="button" onclick="gxShare()" aria-label="공유"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button></div>
+      <div class="gx-badges"><span class="gx-b gx-b1">백두산</span><span class="gx-b gx-b2">3박 4일 추천</span></div>
       <h1>창바이산, 어디부터?</h1>
-      <p>민족의 영산 백두산과 신비로운 천지 — 창바이산(중국측)을 권역으로 나눠 골랐습니다. 화산 호수와 폭포·온천·원시림이 한데 모인 자연 명소.</p>
-      <div class="dest-hero-stats"><div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 연길/장백산 경유 약 2~4시간</small></div><div class="hero-stat"><strong>💴 환율</strong><small>1위안 ≈ 190원 (2026 기준)</small></div><div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 1시간 느림 (KST-1)</small></div><div class="hero-stat"><strong>🌤 추천 시기</strong><small>7~9월(천지 개방률 높음)</small></div></div>
+      <p class="gx-desc">민족의 영산 백두산과 신비로운 천지 — 창바이산(중국측)을 권역으로 나눠 골랐습니다. 화산 호수와 폭포·온천·원시림이 한데 모인 자연 명소.</p>
+      <div class="gx-tags"><span>#천지·천문봉</span><span>#장백폭포·온천</span></div>
+      <div class="gx-price gx-pnote">🚆 옌지 경유</div>
+      <div class="gx-sum"><h2>여행 요약 정보</h2><div class="gx-grid"><div class="gx-cell"><b>✈ 비행시간</b><span>인천 → 연길/장백산 경유 약 2~4시간</span></div><div class="gx-cell"><b>💴 환율</b><span>1위안 ≈ 190원 (2026 기준)</span></div><div class="gx-cell"><b>🕐 시차</b><span>한국보다 1시간 느림 (KST-1)</span></div><div class="gx-cell"><b>🌤 추천 시기</b><span>7~9월(천지 개방률 높음)</span></div></div>
       <div class="dest-weather" id="destWeather" hidden>
         <span class="dw-icon" id="dwIcon">⛅</span><span class="dw-temp" id="dwTemp">--°</span><span class="dw-desc" id="dwDesc">현재 날씨</span><span class="dw-detail" id="dwDetail"></span>
       </div>
-      <a href="tours.html?city=창바이산" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 창바이산 투어·티켓 실시간 검색 →</a><a href="#" onclick="TripAttach.open({label:'이 도시로 여행 만들기',city:'창바이산'});return false;" style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;margin-left:8px;background:#1B4FD8;color:#fff;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🧳 창바이산 여행 만들기</a>
+      </div>
     </div>
   </section>
+  <nav class="gx-tabs" id="gxTabs" aria-label="가이드 섹션"><a href="#compare" class="on">한눈에 비교</a><a href="#zones">구역별 코스</a><a href="#tips">여행 팁</a></nav>
+  <div class="gx-cta"><a class="gx-btn gx-home" href="/" aria-label="홈"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></a><a class="gx-btn" href="tours.html?city=창바이산">🎟 투어·티켓</a><a class="gx-btn gx-primary" href="#" onclick="TripAttach.open({label:'이 도시로 여행 만들기',city:'창바이산'});return false;">🧳 창바이산 여행 만들기</a></div>
   <div class="sgg">
   <section id="compare"><div class="wrap">
   <div class="section-title"><div><div class="eyebrow">QUICK PICK</div><h2>먼저, 취향별로 고르면</h2></div><p>순위라기보다 어떤 점을 가장 중요하게 보느냐에 따라 고르는 용도입니다. 창바이산은 자연 명소라 각 여행지는 권역·명소입니다.</p></div>
@@ -148,7 +152,7 @@
   <tbody><tr><td>천지·천문봉</td><td class="good">최고</td><td>★★★★☆</td><td>★★★★☆</td><td>하루</td><td>7~9월</td></tr><tr><td>장백폭포·온천</td><td class="good">폭포·온천</td><td>★★★★☆</td><td>★★★★☆</td><td>반나절~하루</td><td>6~9월</td></tr></tbody>
   </table></div>
   </div></section>
-  <section style="padding-top:12px"><div class="wrap">
+  <section id="zones" style="padding-top:12px"><div class="wrap">
   <div aria-label="여행기간 선택" class="duration" role="group"><button class="active" onclick="setDuration(3,this)">2박 3일</button><button onclick="setDuration(4,this)">3박 4일</button></div>
   <div class="duration-note">버튼을 누르면 각 구역 코스에 여유 시간(야경·추가 코스)이 함께 추가됩니다. 2박3일이면 3구역, 3박4일이면 4구역 정도가 여유롭습니다.</div>
 
@@ -176,7 +180,7 @@
   <div class="info-line">정보: <a class="source-link" href="https://www.travelchinaguide.com/attraction/jilin/changbai/" target="_blank" rel="noopener">창바이산 여행 정보</a></div>
   </div>
   </article>
-  <div class="note"><strong>여행 팁</strong> · 창바이산 천지는 날씨 변화가 커 여름(7~9월)에도 흐리면 안 보일 수 있습니다. 바람·추위 대비 겉옷 필수. 서파·북파 코스는 입구가 멀리 떨어져 있어 하루에 하나를 보통 선택합니다. 중국측 창바이산과 북한측 백두산은 다른 입산 경로입니다. 사진 © Wikimedia Commons 기여자 · 운영 시간·요금은 방문 전 확인하세요.</div>
+  <div class="note" id="tips"><strong>여행 팁</strong> · 창바이산 천지는 날씨 변화가 커 여름(7~9월)에도 흐리면 안 보일 수 있습니다. 바람·추위 대비 겉옷 필수. 서파·북파 코스는 입구가 멀리 떨어져 있어 하루에 하나를 보통 선택합니다. 중국측 창바이산과 북한측 백두산은 다른 입산 경로입니다. 사진 © Wikimedia Commons 기여자 · 운영 시간·요금은 방문 전 확인하세요.</div>
   </div></section>
   </div>
   <footer class="footer">
@@ -234,5 +238,6 @@
 <script src="/bizfooter.js" defer></script>
 <script src="/trips.js"></script>
 <script src="/trip-attach.js"></script>
+<script src="/guide-ui.js" defer></script>
 </body>
 </html>

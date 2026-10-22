@@ -119,7 +119,7 @@
   @media(max-width:620px){.sgg section{padding:30px 0}.sgg .section-title{display:block}.sgg .section-title p{margin-top:10px}.sgg .summary-grid{grid-template-columns:1fr}.sgg .cover{height:300px}.sgg .cover .cover-text{left:20px;right:20px;bottom:20px}.sgg .cover h2{font-size:28px}.sgg .dest-body{padding:18px}.sgg .place-grid{grid-template-columns:1fr}.sgg .days,.sgg .show-4 .days{grid-template-columns:1fr}.sgg .place-photo{height:200px}.sgg .place-content{min-height:auto}}
   </style>
 </head>
-<body>
+<body class="gx-product">
 
   <!-- ── HEADER ── -->
   <header class="header" id="header">
@@ -148,28 +148,27 @@
   </div>
 
   <!-- ── HERO ── -->
-  <section class="dest-hero" style="background:linear-gradient(135deg,#1a2238 0%,#3a2b52 52%,#8a2742 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
-    <div class="dest-hero-bg">🗼</div>
-    <div class="dest-hero-overlay"></div>
-    <div class="dest-hero-content">
-      <span class="dest-hero-badge">🗼 도쿄 · 도시 5구역</span>
+  <section class="gx-hero">
+    <div class="gx-gallery"><div class="gx-track" id="gxTrack"><a class="gx-slide" href="#shinjuku"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Tokyo_Metropolitan_Government_Building_2024.jpg/1280px-Tokyo_Metropolitan_Government_Building_2024.jpg" alt="도쿄도청 전망대와 신주쿠 마천루" fetchpriority="high" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">① 신주쿠</span></a><a class="gx-slide" href="#shibuya"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Shibuya_Crossing%2C_Aerial.jpg/1280px-Shibuya_Crossing%2C_Aerial.jpg" alt="시부야 스크램블 교차로 항공뷰" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">② 시부야 + 하라주쿠</span></a><a class="gx-slide" href="#asakusa"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Sensoji_2023.jpg/1280px-Sensoji_2023.jpg" alt="센소지 사원" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">③ 아사쿠사 + 우에노</span></a><a class="gx-slide" href="#odaiba"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Odaiba_close_up_-_2025_Jan_14_01-27PM.jpeg/1280px-Odaiba_close_up_-_2025_Jan_14_01-27PM.jpeg" alt="오다이바 도쿄만 전경" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">④ 오다이바</span></a><a class="gx-slide" href="#ginza"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Ginza-WAKO_at_night.jpg/1280px-Ginza-WAKO_at_night.jpg" alt="긴자 와코 백화점 야경" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.style.display='none'"><span class="gx-cap">⑤ 긴자 + 마루노우치</span></a></div><span class="gx-count"><b id="gxIdx">1</b> / 5</span></div>
+    <div class="gx-info">
+      <div class="gx-crumb"><span>📍 일본</span><span class="gx-sep">›</span><span>도쿄</span><button class="gx-share" type="button" onclick="gxShare()" aria-label="공유"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></button></div>
+      <div class="gx-badges"><span class="gx-b gx-b1">도시 5구역</span><span class="gx-b gx-b2">2박3일·3박4일</span></div>
       <h1>도쿄, 어느 구역부터?</h1>
-      <p>전망·정원·전통·도쿄만·고급 쇼핑까지 — 도쿄를 5개 구역으로 나눠 취향별로 골랐습니다. 처음 도쿄라면 신주쿠·시부야·아사쿠사부터.</p>
-      <div class="dest-hero-stats">
-        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 도쿄(나리타·하네다) 약 2시간 30분</small></div>
-        <div class="hero-stat"><strong>💴 환율</strong><small>100엔 ≈ 920원 (2026 기준)</small></div>
-        <div class="hero-stat"><strong>🕐 시차</strong><small>한국과 동일 (KST)</small></div>
-        <div class="hero-stat"><strong>🌸 추천 시기</strong><small>3~4월 벚꽃 · 10~11월 단풍</small></div>
-      </div>
+      <p class="gx-desc">전망·정원·전통·도쿄만·고급 쇼핑까지 — 도쿄를 5개 구역으로 나눠 취향별로 골랐습니다. 처음 도쿄라면 신주쿠·시부야·아사쿠사부터.</p>
+      <div class="gx-tags"><span>#신주쿠</span><span>#시부야+하라주쿠</span><span>#아사쿠사+우에노</span><span>#오다이바</span><span>#긴자+마루노우치</span></div>
+      <div class="gx-price"><span class="gx-plabel">항공권 참고가</span><b>210,000원~</b><small>시기·노선별로 달라요 — 예약 전 확인</small></div>
+      <div class="gx-sum"><h2>여행 요약 정보</h2><div class="gx-grid"><div class="gx-cell"><b>✈ 비행시간</b><span>인천 → 도쿄(나리타·하네다) 약 2시간 30분</span></div><div class="gx-cell"><b>💴 환율</b><span>100엔 ≈ 920원 (2026 기준)</span></div><div class="gx-cell"><b>🕐 시차</b><span>한국과 동일 (KST)</span></div><div class="gx-cell"><b>🌸 추천 시기</b><span>3~4월 벚꽃 · 10~11월 단풍</span></div></div>
       <div class="dest-weather" id="destWeather" hidden>
         <span class="dw-icon" id="dwIcon">⛅</span>
         <span class="dw-temp" id="dwTemp">--°</span>
         <span class="dw-desc" id="dwDesc">현재 날씨</span>
         <span class="dw-detail" id="dwDetail"></span>
       </div>
-      <a href="tours.html?city=도쿄" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 도쿄 투어·티켓 실시간 검색 →</a><a href="#" onclick="TripAttach.open({label:'이 도시로 여행 만들기',city:'도쿄'});return false;" style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;margin-left:8px;background:#1B4FD8;color:#fff;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🧳 도쿄 여행 만들기</a>
+      </div>
     </div>
   </section>
+  <nav class="gx-tabs" id="gxTabs" aria-label="가이드 섹션"><a href="#compare" class="on">한눈에 비교</a><a href="#zones">구역별 코스</a><a href="#tips">여행 팁</a></nav>
+  <div class="gx-cta"><a class="gx-btn gx-home" href="/" aria-label="홈"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></a><a class="gx-btn" href="tours.html?city=도쿄">🎟 투어·티켓</a><a class="gx-btn gx-primary" href="#" onclick="TripAttach.open({label:'이 도시로 여행 만들기',city:'도쿄'});return false;">🧳 도쿄 여행 만들기</a></div>
 
   <!-- ── 구역 가이드 본문 (스코프: .sgg) ── -->
   <div class="sgg">
@@ -196,7 +195,7 @@
   </table>
   </div>
   </div></section>
-  <section style="padding-top:12px"><div class="wrap">
+  <section id="zones" style="padding-top:12px"><div class="wrap">
   <div aria-label="여행기간 선택" class="duration" role="group"><button class="active" onclick="setDuration(3,this)">2박 3일</button><button onclick="setDuration(4,this)">3박 4일</button></div>
   <div class="duration-note">버튼을 누르면 각 구역 코스에 여유 시간(야경·추가 코스)이 함께 추가됩니다. 2박3일이면 3구역, 3박4일이면 4구역 정도가 여유롭습니다.</div>
 
@@ -320,7 +319,7 @@
   </div>
   </article>
 
-  <div class="note">
+  <div class="note" id="tips">
   <strong>여행 팁</strong> · 도쿄는 봄(3~4월 벚꽃)과 가을(10~11월 단풍)이 가장 쾌적하고, 여름은 덥고 습합니다. 이동은 지하철·JR이 촘촘하니 교통카드(Suica/Pasmo)가 편하고, 대부분 구역이 20~40분 내로 연결됩니다. 사원·신사는 조용히 참배하는 분위기를 지켜 주세요. 사진 © Wikimedia Commons 기여자 · 관광 정보는 GO TOKYO 등 공식 사이트 링크 참고. 운영 시간·요금은 방문 전 공식 페이지에서 확인하세요.
   </div>
   </div></section>
@@ -423,5 +422,6 @@ if('serviceWorker' in navigator){
 <script src="/bizfooter.js" defer></script>
 <script src="/trips.js"></script>
 <script src="/trip-attach.js"></script>
+<script src="/guide-ui.js" defer></script>
 </body>
 </html>
