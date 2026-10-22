@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="홍콩 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
+  <meta name="description" content="홍콩 여행 가이드 — 도시를 3개 구역(홍콩섬·센트럴, 침사추이·구룡, 란타우 근교)으로 나눠 취향별로 정리했습니다.">
   <title>홍콩 여행 가이드 | 트래블코스트</title>
   <meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://travelcost.co.kr/hongkong">
@@ -13,18 +13,8 @@
 <meta name="twitter:image" content="https://travelcost.co.kr/og-image.png">
   <link rel="stylesheet" href="style.css">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "TouristDestination",
-    "name": "홍콩",
-    "url": "https://travelcost.co.kr/hongkong",
-    "description": "홍콩 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
-    "inLanguage": "ko-KR",
-    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
-    "geo": { "@type": "GeoCoordinates", "latitude": 22.319, "longitude": 114.169 }
-  }
+  {"@context":"https://schema.org","@type":"TouristDestination","name":"홍콩","url":"https://travelcost.co.kr/hongkong","description":"홍콩 여행 가이드 — 도시를 3개 구역(홍콩섬·센트럴, 침사추이·구룡, 란타우 근교)으로 나눠 취향별로 정리했습니다.","inLanguage":"ko-KR","touristType":["1인 여행","친구 여행","가족 여행"],"geo":{"@type":"GeoCoordinates","latitude":22.3193,"longitude":114.1694}}
   </script>
-  <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
@@ -35,18 +25,85 @@
   <meta name="apple-mobile-web-app-title" content="트래블코스트">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <style>
-  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
-    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
-    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
-  .dw-icon{font-size:20px;line-height:1}
-  .dw-temp{font-size:18px;font-weight:800}
-  .dw-desc{font-weight:600}
-  .dw-detail{font-size:12px;opacity:.85}
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}.dw-temp{font-size:18px;font-weight:800}.dw-desc{font-weight:600}.dw-detail{font-size:12px;opacity:.85}
+  /* 구역 가이드 (스코프: .sgg) */
+  .sgg{--sgg-accent:#b8292f;--sgg-muted:#667085;--sgg-line:#e7ebf0;--sgg-warm:#fdeceb;--sgg-shadow:0 14px 34px rgba(28,42,55,.09)}
+  .sgg .wrap{width:min(1100px,calc(100% - 32px));margin:auto}
+  .sgg section{padding:40px 0}
+  .sgg .section-title{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:22px}
+  .sgg .section-title h2{font-size:28px;line-height:1.2;margin:0}
+  .sgg .section-title p{margin:0;color:var(--sgg-muted);max-width:620px}
+  .sgg .eyebrow{font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--sgg-accent)}
+  .sgg .summary-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .sgg .summary{background:#fff;border:1px solid var(--sgg-line);border-radius:20px;padding:18px;box-shadow:var(--sgg-shadow)}
+  .sgg .summary .rank{font-size:12px;font-weight:800;color:var(--sgg-accent);letter-spacing:.08em}
+  .sgg .summary h3{margin:5px 0 6px;font-size:19px}
+  .sgg .summary p{margin:0;color:var(--sgg-muted);font-size:14px}
+  .sgg .stars{margin-top:12px;font-size:15px;letter-spacing:1px;color:#d68a18}
+  .sgg .duration{display:flex;gap:8px;background:#fff;border:1px solid var(--sgg-line);padding:6px;border-radius:14px;width:max-content;margin:0 auto 6px}
+  .sgg .duration button{border:0;background:transparent;padding:10px 18px;border-radius:10px;font-weight:800;cursor:pointer;color:#5c6672}
+  .sgg .duration button.active{background:var(--sgg-accent);color:#fff}
+  .sgg .duration-note{text-align:center;color:var(--sgg-muted);font-size:13px;margin-bottom:24px}
+  .sgg .destination{background:#fff;border:1px solid var(--sgg-line);border-radius:28px;overflow:hidden;box-shadow:var(--sgg-shadow);margin-bottom:30px}
+  .sgg .cover{height:360px;position:relative;background:#dce6e8;overflow:hidden}
+  .sgg .cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .sgg .cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(9,20,25,.72) 100%)}
+  .sgg .cover .cover-text{position:absolute;z-index:2;left:30px;right:30px;bottom:26px;color:#fff}
+  .sgg .cover h2{font-size:34px;line-height:1.15;margin:4px 0}
+  .sgg .cover p{margin:0;color:rgba(255,255,255,.9);font-size:16px}
+  .sgg .badge{display:inline-block;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);font-size:12px;font-weight:800;backdrop-filter:blur(8px)}
+  .sgg .dest-body{padding:28px}
+  .sgg .why{background:linear-gradient(135deg,#f6f8fb,#fbfcfe);border:1px solid #e7ebf0;border-radius:18px;padding:18px 20px;margin-bottom:24px}
+  .sgg .why strong{color:var(--sgg-accent)}
+  .sgg .traits{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .sgg .trait{padding:7px 10px;border-radius:999px;background:#fff;border:1px solid #e2e8f0;font-size:12px;font-weight:700;color:#425466}
+  .sgg .subgrid{display:grid;grid-template-columns:1.45fr .8fr;gap:22px}
+  .sgg .places h3,.sgg .food h3,.sgg .plan h3{font-size:20px;margin:0 0 14px}
+  .sgg .place-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .sgg .place{border:1px solid var(--sgg-line);border-radius:16px;overflow:hidden;background:#fff;transition:transform .18s ease,box-shadow .18s ease;box-shadow:0 4px 14px rgba(24,33,43,.05)}
+  .sgg .place:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(24,33,43,.11)}
+  .sgg .place-photo{height:180px;position:relative;overflow:hidden;background:linear-gradient(135deg,#e6ebef,#f1f4f6)}
+  .sgg .place-photo::before{content:'📷';position:absolute;inset:0;display:grid;place-items:center;font-size:30px;opacity:.28}
+  .sgg .place-photo img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease}
+  .sgg .place:hover .place-photo img{transform:scale(1.035)}
+  .sgg .place-photo::after{content:'';position:absolute;z-index:2;inset:auto 0 0 0;height:48%;background:linear-gradient(180deg,transparent,rgba(10,22,28,.48));pointer-events:none}
+  .sgg .place-photo .photo-label{position:absolute;z-index:3;left:12px;bottom:10px;color:#fff;font-size:11px;font-weight:800;padding:5px 8px;border-radius:999px;background:rgba(0,0,0,.25);backdrop-filter:blur(6px)}
+  .sgg .place-content{padding:14px 15px 16px;min-height:104px}
+  .sgg .place-content b{display:block;margin-bottom:5px;font-size:15px}
+  .sgg .place-content span{font-size:13px;color:var(--sgg-muted);line-height:1.55}
+  .sgg .food-card{border:1px solid var(--sgg-line);border-radius:18px;overflow:hidden;background:#fff}
+  .sgg .food-card img{width:100%;height:170px;object-fit:cover;display:block;background:#eef1f4}
+  .sgg .food-card .content{padding:15px}
+  .sgg .food-card h4{margin:0 0 7px;font-size:18px}
+  .sgg .food-card p{margin:0;color:var(--sgg-muted);font-size:13px}
+  .sgg .food-list{display:grid;gap:9px;margin-top:12px}
+  .sgg .food-pill{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:12px;background:var(--sgg-warm);font-size:13px}
+  .sgg .food-pill b{white-space:nowrap}
+  .sgg .plan{margin-top:24px;border-top:1px solid var(--sgg-line);padding-top:22px}
+  .sgg .days{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+  .sgg .day{background:#f8fafb;border:1px solid var(--sgg-line);border-radius:15px;padding:14px}
+  .sgg .day em{font-style:normal;font-size:11px;font-weight:900;color:var(--sgg-accent);letter-spacing:.06em}
+  .sgg .day b{display:block;margin:5px 0;font-size:14px}
+  .sgg .day p{margin:0;font-size:12px;color:var(--sgg-muted)}
+  .sgg .day.extra{display:none}
+  .sgg .show-4 .day.extra{display:block}
+  .sgg .info-line{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;padding-top:18px;border-top:1px dashed var(--sgg-line);font-size:12px;color:var(--sgg-muted)}
+  .sgg .source-link{color:var(--sgg-accent);text-decoration:none;font-weight:700}
+  .sgg .source-link:hover{text-decoration:underline}
+  .sgg .compare{overflow:auto;background:#fff;border:1px solid var(--sgg-line);border-radius:20px;box-shadow:var(--sgg-shadow)}
+  .sgg table{border-collapse:collapse;width:100%;min-width:760px}
+  .sgg th,.sgg td{text-align:left;padding:14px 16px;border-bottom:1px solid var(--sgg-line);font-size:14px}
+  .sgg th{background:#f7f9fb;color:#39424f}
+  .sgg td:first-child{font-weight:800}
+  .sgg .good{color:#0a7a60;font-weight:800}
+  .sgg .mid{color:#a56a13;font-weight:800}
+  .sgg .note{background:#fff;border:1px solid var(--sgg-line);border-radius:18px;padding:18px;margin-top:4px}
+  @media(max-width:980px){.sgg .summary-grid{grid-template-columns:repeat(2,1fr)}.sgg .subgrid{grid-template-columns:1fr}.sgg .days{grid-template-columns:repeat(2,1fr)}.sgg .show-4 .days{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:620px){.sgg section{padding:30px 0}.sgg .section-title{display:block}.sgg .section-title p{margin-top:10px}.sgg .summary-grid{grid-template-columns:1fr}.sgg .cover{height:300px}.sgg .cover .cover-text{left:20px;right:20px;bottom:20px}.sgg .cover h2{font-size:28px}.sgg .dest-body{padding:18px}.sgg .place-grid{grid-template-columns:1fr}.sgg .days,.sgg .show-4 .days{grid-template-columns:1fr}.sgg .place-photo{height:200px}.sgg .place-content{min-height:auto}}
   </style>
 </head>
 <body>
-
-  <!-- ── HEADER ── -->
   <header class="header" id="header">
     <div class="container header-inner">
       <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
@@ -60,547 +117,80 @@
       <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
     </div>
   </header>
-
-  <!-- ── 환율 바 ── -->
   <div class="fx-bar" id="fxBar">
     <div class="container fx-inner">
       <span class="fx-label">💱 환율</span>
-      <div class="fx-rates" id="fxRates">
-        <span class="fx-skeleton">로딩 중…</span>
-      </div>
+      <div class="fx-rates" id="fxRates"><span class="fx-skeleton">로딩 중…</span></div>
       <span class="fx-updated" id="fxUpdated"></span>
     </div>
   </div>
-
-  <!-- ── HERO ── -->
-  <section class="dest-hero" style="background:linear-gradient(135deg,#831843 0%,#DB2777 45%,#FBCFE8 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+  <section class="dest-hero" style="background:linear-gradient(135deg,#1a1f2e 0%,#3a1e2a 52%,#b8292f 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
     <div class="dest-hero-bg">🌃</div>
     <div class="dest-hero-overlay"></div>
     <div class="dest-hero-content">
-      <span class="dest-hero-badge">🌃 홍콩</span>
-      <h1>홍콩</h1>
-      <p>백만불 야경과 미식의 도시 — 빅토리아피크·심포니·딤섬, 쇼핑과 디즈니까지</p>
-      <div class="dest-hero-stats">
-        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 홍콩 약 3시간 40분</small></div>
-        <div class="hero-stat"><strong>💴 환율</strong><small>HK$1(홍콩달러) ≈ 178원 (2026 기준)</small></div>
-        <div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 1시간 느림 (KST-1)</small></div>
-        <div class="hero-stat"><strong>🌤 추천 시기</strong><small>10~12월 (여름은 덥고 습함)</small></div>
-      </div>
+      <span class="dest-hero-badge">🌃 홍콩 · 3구역</span>
+      <h1>홍콩, 어디부터?</h1>
+      <p>빅토리아항 야경·딤섬·테마파크·불상까지 — 홍콩을 구역으로 나눠 취향별로 골랐습니다. 밤이 가장 아름다운 미식·쇼핑 도시.</p>
+      <div class="dest-hero-stats"><div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 홍콩 약 3시간 40분</small></div><div class="hero-stat"><strong>💴 환율</strong><small>1홍콩달러 ≈ 175원 (2026 기준)</small></div><div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 1시간 느림 (KST-1)</small></div><div class="hero-stat"><strong>🌤 추천 시기</strong><small>10~12월·3월(쾌적)</small></div></div>
       <div class="dest-weather" id="destWeather" hidden>
-        <span class="dw-icon" id="dwIcon">⛅</span>
-        <span class="dw-temp" id="dwTemp">--°</span>
-        <span class="dw-desc" id="dwDesc">현재 날씨</span>
-        <span class="dw-detail" id="dwDetail"></span>
+        <span class="dw-icon" id="dwIcon">⛅</span><span class="dw-temp" id="dwTemp">--°</span><span class="dw-desc" id="dwDesc">현재 날씨</span><span class="dw-detail" id="dwDetail"></span>
       </div>
       <a href="tours.html?city=홍콩" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 홍콩 투어·티켓 실시간 검색 →</a><a href="#" onclick="TripAttach.open({label:'이 도시로 여행 만들기',city:'홍콩'});return false;" style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;margin-left:8px;background:#1B4FD8;color:#fff;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🧳 홍콩 여행 만들기</a>
     </div>
   </section>
+  <div class="sgg">
+  <section id="compare"><div class="wrap">
+  <div class="section-title"><div><div class="eyebrow">QUICK PICK</div><h2>먼저, 취향별로 고르면</h2></div><p>순위라기보다 어떤 점을 가장 중요하게 보느냐에 따라 고르는 용도입니다. 홍콩은 콤팩트해서 각 여행지는 도시 안의 구역입니다.</p></div>
+  <div class="summary-grid"><div class="summary"><div class="rank">MOST ICONIC</div><h3>홍콩섬·센트럴</h3><p>빅토리아 피크 전망과 항구 야경.</p><div class="stars">★★★★★</div></div><div class="summary"><div class="rank">HARBOUR &amp; FOOD</div><h3>침사추이·구룡</h3><p>하버 야경·시장·딤섬의 구룡반도.</p><div class="stars">★★★★½</div></div><div class="summary"><div class="rank">NEARBY</div><h3>란타우 근교</h3><p>대불·디즈니·정원의 섬 나들이.</p><div class="stars">★★★★☆</div></div></div>
+  <div style="height:28px"></div>
+  <div class="compare"><table>
+  <thead><tr><th>구역</th><th>전망·야경</th><th>먹거리</th><th>무난한 음식</th><th>추천 소요</th><th>베스트 시기</th></tr></thead>
+  <tbody><tr><td>홍콩섬·센트럴</td><td class="good">최고</td><td>★★★★☆</td><td>★★★★★</td><td>반나절~하루</td><td>연중</td></tr><tr><td>침사추이·구룡</td><td class="good">하버 야경</td><td class="good">최고</td><td>★★★★★</td><td>반나절~하루</td><td>연중</td></tr><tr><td>란타우 근교</td><td>★★★☆☆</td><td>★★★☆☆</td><td>★★★★☆</td><td>하루</td><td>연중</td></tr></tbody>
+  </table></div>
+  </div></section>
+  <section style="padding-top:12px"><div class="wrap">
+  <div aria-label="여행기간 선택" class="duration" role="group"><button class="active" onclick="setDuration(3,this)">2박 3일</button><button onclick="setDuration(4,this)">3박 4일</button></div>
+  <div class="duration-note">버튼을 누르면 각 구역 코스에 여유 시간(야경·추가 코스)이 함께 추가됩니다. 2박3일이면 3구역, 3박4일이면 4구역 정도가 여유롭습니다.</div>
 
-  <!-- ── 여행 유형 탭 ── -->
-  <section class="type-select-bar">
-    <div class="container">
-      <p class="type-label">여행 유형을 선택하세요</p>
-      <div class="type-tabs">
-        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
-        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
-        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ══════════════════════════════════════════════════════
-       1인 여행
-       ══════════════════════════════════════════════════════ -->
-  <div class="type-content active" id="type-solo">
-
-    <!-- 일정 -->
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">👤 1인 여행</span>
-          <h2>2박 3일 추천 일정</h2>
-          <p>나만의 페이스로 즐기는 홍콩 — 야경·미식·골목을 자유롭게</p>
-        </div>
-
-        <div class="day-tabs" id="solo-tabs">
-          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
-          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
-          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
-        </div>
-
-        <div class="day-content active" id="solo-day1">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 1</span>
-            <div><h3>도착 → 침사추이 & 심포니 오브 라이트</h3><p>공항에서 침사추이로 이동, 저녁은 빅토리아 하버 야경의 중심에서</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 홍콩 국제공항(HKG) 도착</h4><p>에어포트 익스프레스(AEL, HK$115, 24분)로 카오룽·홍콩역, 또는 A21 버스(HK$34)로 침사추이 직행. 공항에서 옥토퍼스 카드 먼저 구매</p></div></div>
-            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>침사추이 도보권 숙소에 짐 맡기기. 혼여행은 게스트하우스·비즈니스 호텔이 가성비 최고</p></div></div>
-            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🌟 스타의 거리(Avenue of Stars)</h4><p>침사추이 하버프론트 산책로. 브루스 리 동상·핸드프린트, 빅토리아 하버 너머 센트럴 스카이라인 조망</p></div></div>
-            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍜 완탕면 & 로스트구스 저녁</h4><p>새우완탕면(HK$50~70) 한 그릇. 소흥(로스트구스) 오리구이도 별미(1인 HK$100~150)</p></div></div>
-            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>💡 심포니 오브 라이트(20:00 레이저쇼)</h4><p>매일 밤 8시 빅토리아 하버 양안 빌딩 레이저·조명쇼(약 10분). 스타의 거리 하버프론트가 명당</p></div></div>
-            <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body"><h4>🏮 템플 스트리트 야시장</h4><p>야우마테이~조던의 야시장. 노점 먹거리·기념품 구경. 편의점 밀크티 한 잔 들고 혼자 야간 산책 — 혼여행 묘미</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="solo-day2">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 2</span>
-            <div><h3>빅토리아피크 + 센트럴·란콰이퐁</h3><p>백만불 전망대와 홍콩섬 골목을 하루에 — 알차게 도는 코스</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🚶 미드레벨 에스컬레이터 & 소호</h4><p>세계 최장 야외 에스컬레이터(800m)를 타고 소호 골목 산책. 벽화·카페 거리, 만모사원도 도보권</p></div></div>
-            <div class="tl-item"><div class="tl-time">10:30</div><div class="tl-body"><h4>🚡 피크트램 → 빅토리아피크</h4><p>가파른 산악 트램으로 정상까지. 피크트램 왕복 HK$88(스카이 테라스 428 포함 HK$148). 낮 전망·인증샷 명소</p></div></div>
-            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🥟 딤섬 얌차 점심</h4><p>센트럴 노포에서 딤섬 얌차. 하가우(새우)·시우마이·창펀·에그타르트를 차와 함께. 1인 HK$80~150</p></div></div>
-            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🎨 셩완 & PMQ 골목</h4><p>옛 창고를 개조한 디자인 복합공간 PMQ, 골동품 거리 할리우드 로드 산책. 로컬 감성 카페도 많음</p></div></div>
-            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>⛴ 스타페리 하버 크로스</h4><p>센트럴 ↔ 침사추이 스타페리(HK$5, 10분). 배 위에서 보는 스카이라인이 홍콩 여행의 백미</p></div></div>
-            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍸 란콰이퐁 나이트</h4><p>센트럴 언덕 위 바·펍 골목. 혼자여도 활기찬 분위기. 맥주·칵테일 한 잔(HK$60~100)으로 하루 마무리</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="solo-day3">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 3</span>
-            <div><h3>몽콕 쇼핑 → 귀국</h3><p>마지막 날 카오룽 최대 번화가에서 기념품·먹거리 쇼핑</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🛍 몽콕 마켓 순례</h4><p>레이디스 마켓(의류·잡화 흥정), 플라워 마켓(꽃시장), 골드피시 마켓(금붕어 거리) 도보 구경. 스니커즈 스트리트도 인접</p></div></div>
-            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🥮 에그타르트 & 밀크티</h4><p>차찬텡(홍콩식 분식당)에서 바삭한 에그타르트와 진한 실크 밀크티(奶茶). 마지막 홍콩 점심 세트 HK$60~90</p></div></div>
-            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>홍콩역·카오룽역에서 에어포트 익스프레스(HK$115, 24분). 시내 사전 체크인(In-town Check-in) 가능. 비행 2.5~3시간 전 도착 권장</p></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 예산 -->
-    <section class="section section-alt">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">💰 예산 가이드</span>
-          <h2>1인 여행 예상 경비</h2>
-          <p>2박 3일 · 환율 HK$1 = 178원 기준</p>
-        </div>
-        <div class="budget-grid">
-          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">220,000 ~ 550,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박)</h4><span class="budget-range">100,000 ~ 320,000원</span><span class="budget-note">게스트하우스 ~ 4성 호텔</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (3일)</h4><span class="budget-range">30,000 ~ 55,000원</span><span class="budget-note">공항 AEL·옥토퍼스 포함</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">90,000 ~ 170,000원</span><span class="budget-note">1끼 HK$60~200 기준</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">30,000 ~ 70,000원</span><span class="budget-note">피크트램·옹핑360 등</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">50,000 ~ 150,000원</span><span class="budget-note">마켓·기념품</span></div></div>
-        </div>
-        <div class="budget-total">
-          <div>
-            <span class="total-label">2박 3일 1인 총 예상 경비</span>
-            <span class="total-amount">520,000 ~ 1,315,000원</span>
-          </div>
-          <span class="total-note">절약형(LCC+게스트하우스) ~ 여유형(FSC+4성 호텔) 기준</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- 숙소 -->
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">🏨 숙소 추천</span>
-          <h2>1인 여행자를 위한 숙소</h2>
-          <p>혼자 머물기 좋은 위치·가격·분위기</p>
-        </div>
-        <div class="hotel-grid">
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
-            <div class="hotel-body">
-              <h3>미라도 맨션 게스트하우스 (침사추이)</h3>
-              <p class="hotel-location">📍 침사추이역 도보 2분</p>
-              <p>침사추이 한복판 저가 게스트하우스. 방은 좁지만 위치 최고. 심포니·스타의 거리 도보권. 혼여행 가성비의 정석</p>
-              <div class="hotel-price">1박 <strong>HK$350~600</strong> (~62,000원~)</div>
-              <div class="hotel-tags"><span>싱글룸</span><span>Wi-Fi</span><span>역세권</span><span>MTR 인접</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Hong+Kong+Tsim+Sha+Tsui" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
-            <div class="hotel-body">
-              <h3>이비스 홍콩 센트럴 앤 셩완</h3>
-              <p class="hotel-location">📍 셩완역 도보 5분 · 센트럴 접근 좋음</p>
-              <p>홍콩섬 도심의 깔끔한 비즈니스 호텔. 란콰이퐁·피크트램·소호가 도보·전차권. 1인 여행에 무난한 선택</p>
-              <div class="hotel-price">1박 <strong>HK$700~1,100</strong> (~125,000원~)</div>
-              <div class="hotel-tags"><span>싱글/더블</span><span>Wi-Fi</span><span>도심</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Hong+Kong+Sheung+Wan" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
-            <div class="hotel-body">
-              <h3>도싯 몽콕 홍콩</h3>
-              <p class="hotel-location">📍 프린스에드워드역 도보 3분</p>
-              <p>몽콕 쇼핑가 중심의 모던 호텔. 레이디스 마켓·꽃시장 도보권. 무료 스마트폰 대여·청결한 시설로 인기</p>
-              <div class="hotel-price">1박 <strong>HK$800~1,300</strong> (~142,000원~)</div>
-              <div class="hotel-tags"><span>싱글룸</span><span>Wi-Fi</span><span>쇼핑가 인접</span><span>스마트폰 대여</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Hong+Kong+Mongkok" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-        </div>
-        <div class="aff-cta">
-          <a href="https://www.agoda.com/ko-kr/search?searchText=Hong+Kong" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
-          <a href="https://www.booking.com/searchresults.ko.html?ss=Hong+Kong" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
-        </div>
-      </div>
-    </section>
-  </div><!-- /type-solo -->
-
-
-  <!-- ══════════════════════════════════════════════════════
-       친구 여행
-       ══════════════════════════════════════════════════════ -->
-  <div class="type-content" id="type-friends">
-
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">👫 친구 여행</span>
-          <h2>2박 3일 추천 일정</h2>
-          <p>같이 먹고 찍고 즐기는 홍콩 완전 정복 — 야경·케이블카·나이트라이프</p>
-        </div>
-
-        <div class="day-tabs" id="friends-tabs">
-          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
-          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
-          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
-        </div>
-
-        <div class="day-content active" id="friends-day1">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 1</span>
-            <div><h3>도착 → 침사추이 먹방 & 심포니</h3><p>홍콩 도착 첫날, 침사추이 미식과 하버 야경으로 시작</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 홍콩 국제공항 도착</h4><p>에어포트 익스프레스(HK$115) or A21 버스(HK$34)로 침사추이. 옥토퍼스 카드부터 인원수대로 구매</p></div></div>
-            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🌟 스타의 거리 & 하버뷰 인증샷</h4><p>침사추이 하버프론트에서 센트럴 스카이라인 배경 단체 사진. 1881 헤리티지·시계탑도 근처</p></div></div>
-            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍜 완탕면·로스트구스·에그타르트 먹방</h4><p>새우완탕면·로스트구스(소흥)·차찬텡 밀크티·에그타르트 코스. 친구랑 나눠 먹으면 1인 HK$120~180</p></div></div>
-            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>💡 심포니 오브 라이트</h4><p>매일 밤 8시 빅토리아 하버 레이저쇼. 스타의 거리 하버프론트에서 함께 관람. 영상 촬영 필수</p></div></div>
-            <div class="tl-item"><div class="tl-time">21:30</div><div class="tl-body"><h4>🏮 템플 스트리트 야식</h4><p>야시장에서 볶음 국수·해산물 노점 야식. 심야 편의점 밀크티·군것질도 홍콩 여행의 묘미</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="friends-day2">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 2</span>
-            <div><h3>란타우섬 — 옹핑360 & 텐핑구 대불</h3><p>케이블카 타고 산 위 대불, 어촌마을 타이오까지 온종일</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🚠 옹핑360 케이블카</h4><p>퉁청역에서 옹핑까지 5.7km 케이블카(왕복 HK$235, 크리스탈 캐빈 유리바닥 추가). 산·바다·공항 활주로 조망</p></div></div>
-            <div class="tl-item"><div class="tl-time">10:30</div><div class="tl-body"><h4>🙏 텐핑구 대불(천단대불)</h4><p>옹핑 정상의 거대 청동 좌불. 268개 계단 오르면 대불과 마주함. 입장 무료(전시관은 유료). 포린사원도 함께</p></div></div>
-            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍤 타이오 어촌마을 점심</h4><p>수상가옥으로 유명한 옛 어촌. 새우젓·건어물 노점, 핑크 돌고래 보트 투어(HK$25~). 소박한 로컬 점심</p></div></div>
-            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🛍 시티게이트 아울렛</h4><p>퉁청역 옆 대형 아울렛. 브랜드 할인 쇼핑. 시내 복귀 전 가볍게 둘러보기 좋음</p></div></div>
-            <div class="tl-item"><div class="tl-time">19:00</div><div class="tl-body"><h4>🍸 란콰이퐁 나이트라이프</h4><p>센트럴 언덕 바·펍 골목. 친구끼리 칵테일·맥주로 홍콩의 밤. 인근 소호 레스토랑에서 저녁도 가능</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="friends-day3">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 3</span>
-            <div><h3>빅토리아피크 → 스탠리 마켓 or 몽콕 → 귀국</h3><p>백만불 전망 후 해변 마켓 또는 쇼핑 중 선택</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>🚡 피크트램 → 빅토리아피크</h4><p>아침 일찍 오르면 대기 짧음. 스카이 테라스 428에서 홍콩섬·카오룽 파노라마. 피크트램 왕복 HK$88</p></div></div>
-            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🥟 딤섬 얌차 점심</h4><p>센트럴로 내려와 딤섬 마무리. 하가우·창펀·에그타르트를 차와 함께. 1인 HK$80~150</p></div></div>
-            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🏖 스탠리 마켓 (선택A)</h4><p>버스 타고 남쪽 해변 마을 스탠리. 마켓에서 실크·기념품 흥정, 바닷가 산책. 여유로운 오후</p></div></div>
-            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🛍 몽콕 쇼핑 (선택B)</h4><p>레이디스 마켓·스니커즈 스트리트에서 마지막 쇼핑. 흥정은 기본. 캐릭터 굿즈·잡화 구매</p></div></div>
-            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>에어포트 익스프레스 막차 시간 사전 확인. 시내 사전 체크인 활용하면 짐 없이 편하게 이동</p></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-alt">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">💰 예산 가이드</span>
-          <h2>친구 여행 예상 경비 (1인)</h2>
-          <p>2박 3일 · 옹핑360 포함 · 2인 기준으로 나눈 숙박비</p>
-        </div>
-        <div class="budget-grid">
-          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">220,000 ~ 550,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (2박 · 1인당)</h4><span class="budget-range">90,000 ~ 250,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🚠</span><div class="budget-info"><h4>액티비티·입장</h4><span class="budget-range">40,000 ~ 80,000원</span><span class="budget-note">옹핑360·피크트램 등</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">110,000 ~ 190,000원</span><span class="budget-note">딤섬·먹방 3일 기준</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통</h4><span class="budget-range">35,000 ~ 60,000원</span><span class="budget-note">스타페리·트램·공항 포함</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>쇼핑·기타</h4><span class="budget-range">60,000 ~ 200,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
-        </div>
-        <div class="budget-total">
-          <div>
-            <span class="total-label">2박 3일 친구 여행 1인 총 예상 경비</span>
-            <span class="total-amount">555,000 ~ 1,330,000원</span>
-          </div>
-          <span class="total-note">절약형(LCC+2인 쉐어) ~ 여유형(FSC+하버뷰 호텔+액티비티 풀옵션)</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">🏨 숙소 추천</span>
-          <h2>친구 여행 추천 숙소</h2>
-          <p>침사추이·코즈웨이베이 접근성 좋은 2인 이상 숙소</p>
-        </div>
-        <div class="hotel-grid">
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
-            <div class="hotel-body">
-              <h3>펜타호텔 홍콩, 카오룽</h3>
-              <p class="hotel-location">📍 웡타이신·다이아몬드힐역 인접</p>
-              <p>합리적 가격의 세련된 트윈룸. MTR로 침사추이·몽콕 접근 편리. 친구 여행 가성비 선택</p>
-              <div class="hotel-price">2인 1박 <strong>HK$650~1,000</strong> (1인당 ~58,000원~)</div>
-              <div class="hotel-tags"><span>트윈룸</span><span>Wi-Fi</span><span>MTR 인접</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Hong+Kong+Kowloon" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
-            <div class="hotel-body">
-              <h3>홀리데이 인 익스프레스 코즈웨이베이</h3>
-              <p class="hotel-location">📍 코즈웨이베이역 도보 5분</p>
-              <p>쇼핑·나이트라이프 중심 코즈웨이베이의 인기 체인 호텔. 트윈룸·무료 조식. 타임스퀘어 쇼핑 도보권</p>
-              <div class="hotel-price">2인 1박 <strong>HK$1,000~1,600</strong> (1인당 ~89,000원~)</div>
-              <div class="hotel-tags"><span>트윈룸</span><span>무료 조식</span><span>쇼핑가</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Hong+Kong+Causeway+Bay" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge fam">하버뷰</span></div>
-            <div class="hotel-body">
-              <h3>하버 그랜드 카오룽</h3>
-              <p class="hotel-location">📍 훙홈 하버프론트</p>
-              <p>빅토리아 하버 전망 객실이 강점. 하버뷰 룸에서 심포니 오브 라이트를 방 안에서 감상. 루프탑 수영장</p>
-              <div class="hotel-price">2인 1박 <strong>HK$1,600~2,600</strong> (1인당 ~142,000원~)</div>
-              <div class="hotel-tags"><span>하버뷰</span><span>루프탑 수영장</span><span>트윈룸</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Hong+Kong+Hung+Hom" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-        </div>
-        <div class="aff-cta">
-          <a href="https://www.agoda.com/ko-kr/search?searchText=Hong+Kong" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
-          <a href="https://www.booking.com/searchresults.ko.html?ss=Hong+Kong" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
-        </div>
-      </div>
-    </section>
-  </div><!-- /type-friends -->
-
-
-  <!-- ══════════════════════════════════════════════════════
-       가족 여행
-       ══════════════════════════════════════════════════════ -->
-  <div class="type-content" id="type-family">
-
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
-          <h2>3박 4일 추천 일정</h2>
-          <p>아이와 함께하는 홍콩 — 디즈니랜드·오션파크·야경 3박 4일</p>
-        </div>
-
-        <div class="day-tabs" id="family-tabs">
-          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
-          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
-          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
-          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
-        </div>
-
-        <div class="day-content active" id="family-day1">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 1</span>
-            <div><h3>도착 → 침사추이 & 심포니 오브 라이트</h3><p>공항에서 침사추이로, 첫날 밤은 온 가족 하버 야경으로</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 홍콩 국제공항 도착</h4><p>짐 많은 가족은 에어포트 익스프레스(1인 HK$115, 만 3세 미만 무료) 추천. 무료 시내~호텔 셔틀버스 연계 편리</p></div></div>
-            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🏨 숙소 체크인 & 휴식</h4><p>침사추이 가족룸에 짐 풀고 잠깐 휴식. 아이 컨디션 조절 후 저녁 야경 일정 준비</p></div></div>
-            <div class="tl-item"><div class="tl-time">17:00</div><div class="tl-body"><h4>🌟 스타의 거리 & 홍콩 우주박물관</h4><p>하버프론트 산책로 산책. 아이가 지루하면 인근 우주박물관·과학관(어린이 전시)으로. 저녁은 완탕면·볶음밥</p></div></div>
-            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>💡 심포니 오브 라이트</h4><p>매일 밤 8시 하버 레이저쇼를 온 가족이 함께. 스타의 거리 하버프론트가 명당. 아이도 좋아하는 조명쇼</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="family-day2">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 2</span>
-            <div><h3>홍콩 디즈니랜드 — 아이가 평생 기억할 하루</h3><p>미키·판타지랜드·아이언맨까지 온종일 테마파크</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🏰 디즈니랜드 오픈런</h4><p>MTR 디즈니랜드 리조트선(미키 창문 열차)으로 입장. 1일권 어른 HK$639 / 어린이(3~11세) HK$475. 앱으로 대기시간 확인</p></div></div>
-            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🎠 판타지랜드 & 어드벤처랜드</h4><p>어린 아이는 판타지랜드(회전목마·덤보), 조금 큰 아이는 정글 리버 크루즈·미스틱 매너. 캐릭터 그리팅 스팟 확인</p></div></div>
-            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍔 파크 내 점심</h4><p>레스토랑·카페에서 가족 점심(4인 HK$400~700). 캐릭터 다이닝은 사전 예약 권장</p></div></div>
-            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🦸 토이스토리랜드 & 아이언맨 익스피리언스</h4><p>토이스토리랜드는 전 연령, 아이언맨 라이드는 초등 이상 인기. 퍼레이드 시간표 미리 체크</p></div></div>
-            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🎆 야간 불꽃쇼 & 귀숙</h4><p>성 앞 야간 멀티미디어쇼·불꽃 관람 후 MTR로 귀숙. 아이 지치면 오후에 미리 나와도 OK</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="family-day3">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 3</span>
-            <div><h3>오션파크 — 판다와 바다생물</h3><p>수족관·판다·케이블카·놀이기구가 한곳에</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🐼 오션파크 입장</h4><p>애드미럴티역에서 시티버스(629번) 직행. 입장 어른 HK$498 / 어린이 HK$249. 자이언트 판다·레서판다 먼저 관람</p></div></div>
-            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🚡 케이블카 & 정상 구역</h4><p>산 위 바다 전망 케이블카(또는 오션 익스프레스 열차)로 정상 이동. 아이들 좋아하는 대관람차·전망</p></div></div>
-            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🐠 그랜드 아쿠아리움 & 점심</h4><p>세계 최대급 수족관 돔에서 만타가오리·상어 관람. 파크 내 레스토랑 점심(4인 HK$350~600)</p></div></div>
-            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🎡 놀이기구 & 물놀이</h4><p>어린이용 회전기구·범퍼카부터 스릴 라이드까지. 여름엔 물놀이 구역 — 여벌 옷 준비. 펭귄·바다표범 전시도 필수</p></div></div>
-            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍚 시내 복귀 & 딤섬 저녁</h4><p>센트럴·코즈웨이베이로 복귀해 가족 딤섬 저녁. 아이도 좋아하는 새우완탕·차슈바오·에그타르트</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="family-day4">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 4</span>
-            <div><h3>빅토리아피크 → 마지막 쇼핑 → 귀국</h3><p>백만불 전망 감상 후 기념품 쇼핑하고 귀국</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>🚡 피크트램 → 빅토리아피크</h4><p>아침 일찍 오르면 대기 짧음. 피크트램 왕복 어른 HK$88 / 어린이 HK$44. 스카이 테라스 428에서 가족 인증샷</p></div></div>
-            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🛍 하버시티 마지막 쇼핑</h4><p>침사추이 대형몰 하버시티에서 캐릭터 상품·기념품. 아이 굿즈·홍콩 밀크티 티백·에그롤 과자 인기</p></div></div>
-            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이 동반 가족은 3시간 전 도착 권장. 시내 사전 체크인 후 에어포트 익스프레스가 짐 많을 때 가장 편함</p></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-alt">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">💰 예산 가이드</span>
-          <h2>가족 여행 예상 경비</h2>
-          <p>3박 4일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
-        </div>
-        <div class="budget-grid">
-          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">800,000 ~ 1,900,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 가족룸)</h4><span class="budget-range">450,000 ~ 1,000,000원</span><span class="budget-note">4인 가족룸 기준</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🏰</span><div class="budget-info"><h4>디즈니랜드 (4인)</h4><span class="budget-range">400,000 ~ 500,000원</span><span class="budget-note">어른 HK$639 / 어린이 HK$475</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🐼</span><div class="budget-info"><h4>오션파크 (4인)</h4><span class="budget-range">240,000 ~ 350,000원</span><span class="budget-note">어른 HK$498 / 어린이 HK$249</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">350,000 ~ 600,000원</span><span class="budget-note">4인 1끼 HK$300~700</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4인)</h4><span class="budget-range">100,000 ~ 180,000원</span><span class="budget-note">AEL·옥토퍼스·피크트램</span></div></div>
-        </div>
-        <div class="budget-total">
-          <div>
-            <span class="total-label">3박 4일 가족 여행 4인 총 예상 경비</span>
-            <span class="total-amount">2,340,000 ~ 4,530,000원</span>
-          </div>
-          <span class="total-note">절약형(LCC+가족룸 공유) ~ 여유형(FSC+4성 호텔+디즈니 호텔)</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">🏨 숙소 추천</span>
-          <h2>가족 여행 추천 숙소</h2>
-          <p>가족룸·키즈 어메니티·편의 시설이 잘 갖춰진 곳</p>
-        </div>
-        <div class="hotel-grid">
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
-            <div class="hotel-body">
-              <h3>리갈 카오룽 호텔</h3>
-              <p class="hotel-location">📍 침사추이 이스트 · 훙홈역 인접</p>
-              <p>넓은 객실과 가족룸을 갖춘 클래식 4성 호텔. 스타의 거리·하버시티 도보권. 아이 동반에 무난한 위치</p>
-              <div class="hotel-price">가족룸 1박 <strong>HK$1,200~1,900</strong> (~214,000원~)</div>
-              <div class="hotel-tags"><span>가족룸</span><span>조식 뷔페</span><span>Wi-Fi</span><span>침사추이</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Hong+Kong+Tsim+Sha+Tsui" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
-            <div class="hotel-body">
-              <h3>하버 그랜드 카오룽</h3>
-              <p class="hotel-location">📍 훙홈 하버프론트</p>
-              <p>하버뷰 가족룸·루프탑 수영장 완비. 방 안에서 심포니 오브 라이트 감상. 아이 어메니티·조식 뷔페 충실</p>
-              <div class="hotel-price">가족룸 1박 <strong>HK$1,800~3,000</strong> (~320,000원~)</div>
-              <div class="hotel-tags"><span>하버뷰</span><span>수영장</span><span>어린이 어메니티</span><span>조식 뷔페</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Hong+Kong+Hung+Hom" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge fam">디즈니 공식</span></div>
-            <div class="hotel-body">
-              <h3>디즈니 익스플로러스 롯지</h3>
-              <p class="hotel-location">📍 홍콩 디즈니랜드 리조트 내</p>
-              <p>디즈니 공식 리조트 호텔. 무료 셔틀로 파크 직행, 캐릭터 조식·수영장·아이 놀이시설. 디즈니 중심 여행에 최적</p>
-              <div class="hotel-price">가족룸 1박 <strong>HK$2,000~3,500</strong> (~356,000원~)</div>
-              <div class="hotel-tags"><span>디즈니 셔틀</span><span>캐릭터 조식</span><span>수영장</span><span>키즈 클럽</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Hong+Kong+Disneyland" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-        </div>
-        <div class="aff-cta">
-          <a href="https://www.agoda.com/ko-kr/search?searchText=Hong+Kong" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
-          <a href="https://www.booking.com/searchresults.ko.html?ss=Hong+Kong" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
-        </div>
-      </div>
-    </section>
-  </div><!-- /type-family -->
-
-
-  <!-- ══════════════════════════════════════════════════════
-       공통: 항공권
-       ══════════════════════════════════════════════════════ -->
-  <section class="section section-alt" id="flights">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">✈ 항공권</span>
-        <h2>인천 ↔ 홍콩 항공권</h2>
-        <p>비행시간 약 3시간 40분 · 인천 ICN → 홍콩 HKG · 공항→시내 에어포트 익스프레스 24분 HK$115</p>
-      </div>
-
-      <div class="table-wrap" style="margin-bottom:24px;">
-        <table>
-          <thead>
-            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><span class="airline-badge">✈ 홍콩익스프레스</span></td><td>LCC 직항</td><td>3h 40m</td><td class="price-cell">190,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/HKG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
-            <tr><td><span class="airline-badge">✈ 제주항공</span></td><td>LCC 직항</td><td>3h 45m</td><td class="price-cell">220,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/HKG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
-            <tr><td><span class="airline-badge">✈ 티웨이항공</span></td><td>LCC 직항</td><td>3h 45m</td><td class="price-cell">210,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/HKG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
-            <tr><td><span class="airline-badge">✈ 캐세이퍼시픽</span></td><td>FSC 직항</td><td>3h 40m</td><td class="price-cell">380,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/HKG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
-            <tr><td><span class="airline-badge">✈ 아시아나항공</span></td><td>FSC 직항</td><td>3h 40m</td><td class="price-cell">430,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/HKG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
-            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>3h 40m</td><td class="price-cell">450,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/HKG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="aff-cta">
-        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/HKG/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
-        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=HKG&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
-        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DHKG&leg2=from%3DHKG%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ══════════════════════════════════════════════════════
-       공통: 현지 팁
-       ══════════════════════════════════════════════════════ -->
-  <section class="section" id="tips">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">💡 현지 팁</span>
-        <h2>홍콩 여행 꿀팁</h2>
-        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
-      </div>
-      <div class="tips-grid">
-        <div class="tip-card"><span class="tip-icon">🛂</span><h3>무비자 90일</h3><p>한국 여권 소지자는 관광 목적 최대 90일 무비자 입국. 여권 유효기간은 입국일 기준 1개월 이상 권장. 별도 사전 등록 불필요(변동 시 외교부 확인)</p></div>
-        <div class="tip-card"><span class="tip-icon">💳</span><h3>옥토퍼스 카드 필수</h3><p>공항·MTR역에서 구매. MTR·버스·트램·스타페리는 물론 편의점·차찬텡 결제까지 한 장으로. 보증금 HK$50 포함, 잔액 환불 가능. 관광객용 무제한권도 있음</p></div>
-        <div class="tip-card"><span class="tip-icon">💡</span><h3>심포니 관람 명당</h3><p>레이저쇼는 매일 밤 8시(약 10분). 침사추이 스타의 거리 하버프론트 또는 완차이 골든 보히니아 광장이 정면 명당. 20~30분 전 자리 잡기. 무료</p></div>
-        <div class="tip-card"><span class="tip-icon">🥟</span><h3>딤섬 얌차 문화</h3><p>딤섬은 차(茶)와 함께 즐기는 '얌차'가 정석. 주전자 뚜껑을 열어두면 물 리필 신호. 노포는 합석·회전율이 빠름. 계산은 도장 찍힌 표로 계산대에서</p></div>
-        <div class="tip-card"><span class="tip-icon">📱</span><h3>디즈니·오션파크 앱</h3><p>홍콩 디즈니랜드·오션파크 공식 앱으로 대기시간·쇼 시간표·지도 확인. 입장권은 앱·공식몰 사전 구매가 편함. 성수기엔 프리미어 억세스(유료 우선입장) 고려</p></div>
-        <div class="tip-card"><span class="tip-icon">🌡</span><h3>여름 습도 & 실내 냉방</h3><p>6~9월은 35°C·습도 90%에 태풍 시즌. 반면 MTR·몰·식당 실내 냉방이 매우 강함 — 얇은 겉옷 필수. 10~12월이 가장 쾌적한 여행 적기</p></div>
-        <div class="tip-card"><span class="tip-icon">🔌</span><h3>콘센트 (영국식 3핀)</h3><p>홍콩 전압 220V, 플러그는 영국식 BF형 3핀(사각). 한국 돼지코가 안 맞으니 멀티어댑터 준비 필수. 호텔 프런트에서 대여해주기도 함</p></div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ── FOOTER ── -->
+  <article class="destination" id="central">
+  <div class="cover"><img alt="빅토리아 피크에서 본 홍콩" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/High_West_and_Victoria_Peak_from_Victoria_Gap_%28crop1%29.jpg/1280px-High_West_and_Victoria_Peak_from_Victoria_Gap_%28crop1%29.jpg"/><div class="cover-text"><span class="badge">피크 전망과 항구 야경</span><h2>① 홍콩섬 · 센트럴</h2><p>피크 전망 · 야경 · 나이트라이프</p></div></div>
+  <div class="dest-body">
+  <div class="why"><strong>왜 잘 맞나?</strong> 빅토리아 피크의 피크트램을 타고 올라 홍콩섬·구룡·항구를 한눈에 조망하고, 스타페리로 바다를 건너며, 밤엔 란콰이퐁의 바 거리까지 — 전망과 야경, 밤 문화가 모인 홍콩의 중심입니다.<div class="traits"><span class="trait">🚠 빅토리아 피크</span><span class="trait">⛴️ 스타페리</span><span class="trait">🍸 란콰이퐁</span><span class="trait">🌃 항구 야경</span></div></div>
+  <div class="subgrid">
+  <div class="places"><h3>추천 장소 · 사진으로 보기</h3><div class="place-grid"><div class="place"><div class="place-photo"><img alt="빅토리아항 야경" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Hong_Kong_Harbour_Night_2019-06-11.jpg/1280px-Hong_Kong_Harbour_Night_2019-06-11.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>빅토리아항 야경</b><span>세계 3대 야경으로 꼽히는 항구 스카이라인. 매일 밤 심포니 오브 라이트 쇼.</span></div></div><div class="place"><div class="place-photo"><img alt="스타페리" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Tsim_Sha_Tsui_Ferry_Pier.jpg/1280px-Tsim_Sha_Tsui_Ferry_Pier.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>스타페리</b><span>홍콩섬과 구룡을 잇는 100년 넘은 명물 페리. 저렴하게 즐기는 항구 유람.</span></div></div><div class="place"><div class="place-photo"><img alt="란콰이퐁" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/LKF_Street_View01.jpg/1280px-LKF_Street_View01.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>란콰이퐁</b><span>센트럴의 바·펍이 모인 나이트라이프 거리. 저녁에 가장 활기차다.</span></div></div></div></div>
+  <aside class="food"><h3>음식</h3><div class="food-card"><img alt="딤섬" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Chinese_DimSum_%289023590541%29.jpg/1280px-Chinese_DimSum_%289023590541%29.jpg"/><div class="content"><h4>딤섬 · 완탕면</h4><p>하가우·시우마이 등 다양한 딤섬은 홍콩의 상징. 새우완탕면과 함께 대부분 맵지 않아 무난합니다.</p></div></div><div class="food-list"><div class="food-pill"><b>딤섬</b><span>모둠 찜요리</span></div><div class="food-pill"><b>완탕면</b><span>새우 완탕 국수</span></div><div class="food-pill"><b>밀크티</b><span>홍콩식 나이차</span></div></div></aside>
+  </div>
+  <div class="plan"><h3>추천 코스</h3><div class="days"><div class="day"><em>오전</em><b>피크</b><p>빅토리아 피크 전망대</p></div><div class="day"><em>오후</em><b>페리</b><p>스타페리로 항구 건너기</p></div><div class="day"><em>저녁</em><b>야경</b><p>심포니 오브 라이트 → 란콰이퐁</p></div><div class="day extra"><em>야경 +α</em><b>루프탑</b><p>센트럴 루프탑 바 야경</p></div></div></div>
+  <div class="info-line">정보: <a class="source-link" href="https://www.discoverhongkong.com/kr/" target="_blank" rel="noopener">홍콩 관광 공식</a></div>
+  </div>
+  </article>
+  <article class="destination" id="kowloon">
+  <div class="cover"><img alt="침사추이에서 본 빅토리아항" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Vista_del_Puerto_de_Victoria_desde_Sky100%2C_Hong_Kong%2C_2013-08-09%2C_DD_10.JPG/1280px-Vista_del_Puerto_de_Victoria_desde_Sky100%2C_Hong_Kong%2C_2013-08-09%2C_DD_10.JPG"/><div class="cover-text"><span class="badge">하버 야경·시장·딤섬</span><h2>② 침사추이 · 구룡</h2><p>하버 산책 · 시장 · 쇼핑</p></div></div>
+  <div class="dest-body">
+  <div class="why"><strong>왜 잘 맞나?</strong> 침사추이의 스타의 거리에서 홍콩섬 스카이라인을 마주보고, 템플 스트리트 야시장과 몽콕의 번화한 거리에서 먹거리·쇼핑을 즐깁니다. 하버 야경과 홍콩식 먹거리가 가장 진한 구역입니다.<div class="traits"><span class="trait">🌟 스타의 거리</span><span class="trait">🏮 템플 스트리트</span><span class="trait">🛍️ 몽콕</span><span class="trait">🍗 차슈</span></div></div>
+  <div class="subgrid">
+  <div class="places"><h3>추천 장소 · 사진으로 보기</h3><div class="place-grid"><div class="place"><div class="place-photo"><img alt="스타의 거리" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Avenue_of_Stars_201901.jpg/1280px-Avenue_of_Stars_201901.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>스타의 거리</b><span>빅토리아항을 따라 홍콩 영화 스타를 기리는 산책로. 야경 명당.</span></div></div><div class="place"><div class="place-photo"><img alt="템플 스트리트" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/a/a6/GateOfTempleInHongKong.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>템플 스트리트</b><span>구룡의 대표 야시장. 먹거리·기념품·점집이 늘어선 밤 거리.</span></div></div><div class="place"><div class="place-photo"><img alt="몽콕" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Sai_Yeung_Choi_Street_South_2008_Night.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>몽콕</b><span>네온과 상점이 빽빽한 번화가. 레이디스 마켓·먹거리 거리로 유명.</span></div></div></div></div>
+  <aside class="food"><h3>음식</h3><div class="food-card"><img alt="차슈" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/9/95/Charsiu.jpg"/><div class="content"><h4>차슈 · 홍콩식 밀크티</h4><p>꿀을 발라 구운 돼지고기 차슈는 밥·면과 잘 어울립니다. 진한 홍콩식 밀크티(나이차)도 차찬텡의 명물입니다.</p></div></div><div class="food-list"><div class="food-pill"><b>차슈</b><span>꿀 구이 돼지</span></div><div class="food-pill"><b>밀크티</b><span>홍콩식 나이차</span></div><div class="food-pill"><b>완탕면</b><span>새우 국수</span></div></div></aside>
+  </div>
+  <div class="plan"><h3>추천 코스</h3><div class="days"><div class="day"><em>오전</em><b>하버</b><p>스타의 거리 하버 산책</p></div><div class="day"><em>오후</em><b>쇼핑</b><p>몽콕 레이디스 마켓</p></div><div class="day"><em>저녁</em><b>야시장</b><p>템플 스트리트 먹거리</p></div><div class="day extra"><em>야경 +α</em><b>심포니</b><p>침사추이에서 심포니 오브 라이트</p></div></div></div>
+  <div class="info-line">정보: <a class="source-link" href="https://www.discoverhongkong.com/kr/" target="_blank" rel="noopener">홍콩 관광 공식</a></div>
+  </div>
+  </article>
+  <article class="destination" id="lantau">
+  <div class="cover"><img alt="란타우 대불" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Tian_Tan_Buddha_2023081302.jpg/1280px-Tian_Tan_Buddha_2023081302.jpg"/><div class="cover-text"><span class="badge">대불·디즈니·정원의 섬</span><h2>③ 란타우 근교</h2><p>대불 · 테마파크 · 정원</p></div></div>
+  <div class="dest-body">
+  <div class="why"><strong>왜 잘 맞나?</strong> 케이블카로 오르는 란타우섬의 거대한 톈탄 대불과 포린사를 둘러보고, 홍콩 디즈니랜드에서 하루를, 도심의 난롄 정원에서 당나라식 정원 산책까지 — 자연·테마파크·정원을 묶는 근교 코스입니다.<div class="traits"><span class="trait">🙏 톈탄 대불</span><span class="trait">🚡 옹핑 케이블카</span><span class="trait">🏰 디즈니랜드</span><span class="trait">🌿 난롄 정원</span></div></div>
+  <div class="subgrid">
+  <div class="places"><h3>추천 장소 · 사진으로 보기</h3><div class="place-grid"><div class="place"><div class="place-photo"><img alt="홍콩 디즈니랜드" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Hong_Kong_Disneyland_Castle.jpg/1280px-Hong_Kong_Disneyland_Castle.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>홍콩 디즈니랜드</b><span>란타우섬의 디즈니 테마파크. 콤팩트해 하루면 충분, 가족 여행에 좋음.</span></div></div><div class="place"><div class="place-photo"><img alt="난롄 정원" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Nan_Lian_Garden_Overview_201807.jpg/1280px-Nan_Lian_Garden_Overview_201807.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>난롄 정원</b><span>도심 속 당나라 양식 정원. 금빛 정자와 연못으로 조용한 산책 명소.</span></div></div></div></div>
+  <aside class="food"><h3>음식</h3><div class="food-card"><img alt="에그타르트" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/HK_SSP_%E9%95%B7%E6%B2%99%E7%81%A3_Cheung_Sha_Wan_%E6%B7%B1%E7%9B%9B%E8%B7%AF_Sham_Shing_Road_%E6%B3%93%E6%99%AF%E6%BB%99%E5%95%86%E5%A0%B4_Banyan_Mall_shop_%E8%9B%8B%E6%92%BB%E7%8E%8B_King_Bakery_Studio_December_2019_SS2_egg_tarts.jpg/1280px-HK_SSP_%E9%95%B7%E6%B2%99%E7%81%A3_Cheung_Sha_Wan_%E6%B7%B1%E7%9B%9B%E8%B7%AF_Sham_Shing_Road_%E6%B3%93%E6%99%AF%E6%BB%99%E5%95%86%E5%A0%B4_Banyan_Mall_shop_%E8%9B%8B%E6%92%BB%E7%8E%8B_King_Bakery_Studio_December_2019_SS2_egg_tarts.jpg"/><div class="content"><h4>에그타르트 · 디저트</h4><p>바삭한 페이스트리에 부드러운 커스터드를 담은 에그타르트는 홍콩 대표 디저트. 달콤하고 누구나 좋아합니다.</p></div></div><div class="food-list"><div class="food-pill"><b>에그타르트</b><span>커스터드 타르트</span></div><div class="food-pill"><b>파인애플번</b><span>보로바오</span></div><div class="food-pill"><b>망고 디저트</b><span>허유산 스타일</span></div></div></aside>
+  </div>
+  <div class="plan"><h3>추천 코스</h3><div class="days"><div class="day"><em>오전</em><b>대불</b><p>옹핑 케이블카 → 톈탄 대불·포린사</p></div><div class="day"><em>오후</em><b>테마파크</b><p>홍콩 디즈니랜드</p></div><div class="day"><em>저녁</em><b>정원</b><p>난롄 정원·치린 수도원</p></div><div class="day extra"><em>야경 +α</em><b>불꽃</b><p>디즈니 야간 불꽃쇼</p></div></div></div>
+  <div class="info-line">정보: <a class="source-link" href="https://www.discoverhongkong.com/kr/" target="_blank" rel="noopener">홍콩 관광 공식</a></div>
+  </div>
+  </article>
+  <div class="note"><strong>여행 팁</strong> · 홍콩은 10~12월·3월이 쾌적하고 여름은 덥고 습합니다. 옥토퍼스 카드로 지하철(MTR)·버스·페리·편의점까지 해결되니 하나 만들어 두면 편합니다. 빅토리아항 심포니 오브 라이트는 매일 밤 8시, 침사추이 쪽에서 잘 보입니다. 사진 © Wikimedia Commons 기여자 · 관광 정보는 홍콩 관광 공식 사이트 참고. 운영 시간·요금은 방문 전 확인하세요.</div>
+  </div></section>
+  </div>
   <footer class="footer">
     <div class="container">
       <div class="footer-top">
@@ -610,26 +200,9 @@
           <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
         </div>
         <div class="footer-nav">
-          <div>
-            <h4>일본 투어·티켓</h4>
-            <a href="osaka.html">오사카</a>
-            <a href="fukuoka.html">후쿠오카</a>
-            <a href="tokyo.html">도쿄</a>
-            <a href="kyoto.html">교토</a>
-          </div>
-          <div>
-            <h4>동남아 투어·티켓</h4>
-            <a href="bangkok.html">방콕</a>
-            <a href="danang.html">다낭</a>
-            <a href="bali.html">발리</a>
-            <a href="singapore.html">싱가포르</a>
-          </div>
-          <div>
-            <h4>국내 투어·티켓</h4>
-            <a href="jeju.html">제주도</a>
-            <a href="busan.html">부산</a>
-            <a href="gangneung.html">강릉</a>
-          </div>
+          <div><h4>일본 투어·티켓</h4><a href="osaka.html">오사카</a><a href="fukuoka.html">후쿠오카</a><a href="tokyo.html">도쿄</a><a href="kyoto.html">교토</a></div>
+          <div><h4>동남아 투어·티켓</h4><a href="bangkok.html">방콕</a><a href="danang.html">다낭</a><a href="bali.html">발리</a><a href="singapore.html">싱가포르</a></div>
+          <div><h4>국내 투어·티켓</h4><a href="jeju.html">제주도</a><a href="busan.html">부산</a><a href="gangneung.html">강릉</a></div>
         </div>
       </div>
       <div class="footer-bottom">
@@ -639,63 +212,32 @@
       </div>
     </div>
   </footer>
-
   <script src="main.js"></script>
   <script>
-    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
     function initDayTabs() {}
-
-    // 여행 유형 탭 전환
-    function switchType(type, btn) {
-      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+    function setDuration(days, btn) {
+      document.querySelectorAll('.sgg .duration button').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById('type-' + type).classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
-    function showDay(type, day, btn) {
-      const tabsEl = document.getElementById(type + '-tabs');
-      const container = tabsEl.parentElement;
-      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
-      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      const target = document.getElementById(type + '-day' + day);
-      if (target) target.classList.add('active');
+      document.querySelectorAll('.sgg .destination').forEach(el => { if (days === 4) el.classList.add('show-4'); else el.classList.remove('show-4'); });
+      var note = document.querySelector('.sgg .duration-note');
+      if (note) note.textContent = days === 4 ? '3박 4일 기준입니다. 각 구역 코스에 야경·추가 코스 등 여유 시간이 추가되고, 4구역 정도를 여유롭게 볼 수 있습니다.' : '2박 3일 기준입니다. 핵심 3구역 중심의 압축 코스입니다.';
     }
   </script>
-<script>
-// PWA — Service Worker 등록
-if('serviceWorker' in navigator){
-  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-}
-</script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));}</script>
     <script src="/affiliates.js"></script>
   <script src="/destaff.js" defer></script>
 <script src="/analytics.js"></script>
 <script src="/pwa-install.js" defer></script>
   <script>
-  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
   (function(){
-    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
-      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
-      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
-      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
-    var url='https://api.open-meteo.com/v1/forecast?latitude=22.319&longitude=114.169'
-      +'&current=temperature_2m,weather_code,relative_humidity_2m'
-      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FHong_Kong';
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=22.3193&longitude=114.1694&current=temperature_2m,weather_code,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FHong_Kong';
     fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
       if(!w||!w.current) return;
-      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
-      var g=function(id){return document.getElementById(id);};
-      g('dwIcon').textContent=wm[0];
-      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
-      g('dwDesc').textContent=wm[1];
-      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
-      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
-      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
-      g('destWeather').hidden=false;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';g('destWeather').hidden=false;
     }).catch(function(){});
   })();
   </script>
