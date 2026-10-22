@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="방콕 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소를 정리했습니다.">
+  <meta name="description" content="방콕 여행 가이드 — 도시를 3개 구역(왕궁·사원, 카오산·차이나타운, 시장·리버사이드)으로 나눠 취향별로 정리했습니다.">
   <title>방콕 여행 가이드 | 트래블코스트</title>
   <meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://travelcost.co.kr/bangkok">
@@ -13,18 +13,8 @@
 <meta name="twitter:image" content="https://travelcost.co.kr/og-image.png">
   <link rel="stylesheet" href="style.css">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "TouristDestination",
-    "name": "방콕",
-    "url": "https://travelcost.co.kr/bangkok",
-    "description": "방콕 여행 완벽 가이드 — 1인·친구·가족 여행별 맞춤 일정, 예산, 추천 숙소",
-    "inLanguage": "ko-KR",
-    "touristType": ["1인 여행", "친구 여행", "가족 여행"],
-    "geo": { "@type": "GeoCoordinates", "latitude": 13.7563, "longitude": 100.5018 }
-  }
+  {"@context":"https://schema.org","@type":"TouristDestination","name":"방콕","url":"https://travelcost.co.kr/bangkok","description":"방콕 여행 가이드 — 도시를 3개 구역(왕궁·사원, 카오산·차이나타운, 시장·리버사이드)으로 나눠 취향별로 정리했습니다.","inLanguage":"ko-KR","touristType":["1인 여행","친구 여행","가족 여행"],"geo":{"@type":"GeoCoordinates","latitude":13.7563,"longitude":100.5018}}
   </script>
-  <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
@@ -35,18 +25,85 @@
   <meta name="apple-mobile-web-app-title" content="트래블코스트">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <style>
-  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;
-    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
-    border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
-  .dw-icon{font-size:20px;line-height:1}
-  .dw-temp{font-size:18px;font-weight:800}
-  .dw-desc{font-weight:600}
-  .dw-detail{font-size:12px;opacity:.85}
+  .dest-weather{display:inline-flex;align-items:center;gap:10px;margin-top:14px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:8px 16px;color:#fff;font-size:14px;backdrop-filter:blur(4px)}
+  .dw-icon{font-size:20px;line-height:1}.dw-temp{font-size:18px;font-weight:800}.dw-desc{font-weight:600}.dw-detail{font-size:12px;opacity:.85}
+  /* 구역 가이드 (스코프: .sgg) */
+  .sgg{--sgg-accent:#c8841f;--sgg-muted:#667085;--sgg-line:#e7ebf0;--sgg-warm:#fdf2e3;--sgg-shadow:0 14px 34px rgba(28,42,55,.09)}
+  .sgg .wrap{width:min(1100px,calc(100% - 32px));margin:auto}
+  .sgg section{padding:40px 0}
+  .sgg .section-title{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:22px}
+  .sgg .section-title h2{font-size:28px;line-height:1.2;margin:0}
+  .sgg .section-title p{margin:0;color:var(--sgg-muted);max-width:620px}
+  .sgg .eyebrow{font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--sgg-accent)}
+  .sgg .summary-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .sgg .summary{background:#fff;border:1px solid var(--sgg-line);border-radius:20px;padding:18px;box-shadow:var(--sgg-shadow)}
+  .sgg .summary .rank{font-size:12px;font-weight:800;color:var(--sgg-accent);letter-spacing:.08em}
+  .sgg .summary h3{margin:5px 0 6px;font-size:19px}
+  .sgg .summary p{margin:0;color:var(--sgg-muted);font-size:14px}
+  .sgg .stars{margin-top:12px;font-size:15px;letter-spacing:1px;color:#d68a18}
+  .sgg .duration{display:flex;gap:8px;background:#fff;border:1px solid var(--sgg-line);padding:6px;border-radius:14px;width:max-content;margin:0 auto 6px}
+  .sgg .duration button{border:0;background:transparent;padding:10px 18px;border-radius:10px;font-weight:800;cursor:pointer;color:#5c6672}
+  .sgg .duration button.active{background:var(--sgg-accent);color:#fff}
+  .sgg .duration-note{text-align:center;color:var(--sgg-muted);font-size:13px;margin-bottom:24px}
+  .sgg .destination{background:#fff;border:1px solid var(--sgg-line);border-radius:28px;overflow:hidden;box-shadow:var(--sgg-shadow);margin-bottom:30px}
+  .sgg .cover{height:360px;position:relative;background:#dce6e8;overflow:hidden}
+  .sgg .cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .sgg .cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(9,20,25,.72) 100%)}
+  .sgg .cover .cover-text{position:absolute;z-index:2;left:30px;right:30px;bottom:26px;color:#fff}
+  .sgg .cover h2{font-size:34px;line-height:1.15;margin:4px 0}
+  .sgg .cover p{margin:0;color:rgba(255,255,255,.9);font-size:16px}
+  .sgg .badge{display:inline-block;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);font-size:12px;font-weight:800;backdrop-filter:blur(8px)}
+  .sgg .dest-body{padding:28px}
+  .sgg .why{background:linear-gradient(135deg,#f6f8fb,#fbfcfe);border:1px solid #e7ebf0;border-radius:18px;padding:18px 20px;margin-bottom:24px}
+  .sgg .why strong{color:var(--sgg-accent)}
+  .sgg .traits{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .sgg .trait{padding:7px 10px;border-radius:999px;background:#fff;border:1px solid #e2e8f0;font-size:12px;font-weight:700;color:#425466}
+  .sgg .subgrid{display:grid;grid-template-columns:1.45fr .8fr;gap:22px}
+  .sgg .places h3,.sgg .food h3,.sgg .plan h3{font-size:20px;margin:0 0 14px}
+  .sgg .place-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .sgg .place{border:1px solid var(--sgg-line);border-radius:16px;overflow:hidden;background:#fff;transition:transform .18s ease,box-shadow .18s ease;box-shadow:0 4px 14px rgba(24,33,43,.05)}
+  .sgg .place:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(24,33,43,.11)}
+  .sgg .place-photo{height:180px;position:relative;overflow:hidden;background:linear-gradient(135deg,#e6ebef,#f1f4f6)}
+  .sgg .place-photo::before{content:'📷';position:absolute;inset:0;display:grid;place-items:center;font-size:30px;opacity:.28}
+  .sgg .place-photo img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s ease}
+  .sgg .place:hover .place-photo img{transform:scale(1.035)}
+  .sgg .place-photo::after{content:'';position:absolute;z-index:2;inset:auto 0 0 0;height:48%;background:linear-gradient(180deg,transparent,rgba(10,22,28,.48));pointer-events:none}
+  .sgg .place-photo .photo-label{position:absolute;z-index:3;left:12px;bottom:10px;color:#fff;font-size:11px;font-weight:800;padding:5px 8px;border-radius:999px;background:rgba(0,0,0,.25);backdrop-filter:blur(6px)}
+  .sgg .place-content{padding:14px 15px 16px;min-height:104px}
+  .sgg .place-content b{display:block;margin-bottom:5px;font-size:15px}
+  .sgg .place-content span{font-size:13px;color:var(--sgg-muted);line-height:1.55}
+  .sgg .food-card{border:1px solid var(--sgg-line);border-radius:18px;overflow:hidden;background:#fff}
+  .sgg .food-card img{width:100%;height:170px;object-fit:cover;display:block;background:#eef1f4}
+  .sgg .food-card .content{padding:15px}
+  .sgg .food-card h4{margin:0 0 7px;font-size:18px}
+  .sgg .food-card p{margin:0;color:var(--sgg-muted);font-size:13px}
+  .sgg .food-list{display:grid;gap:9px;margin-top:12px}
+  .sgg .food-pill{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:12px;background:var(--sgg-warm);font-size:13px}
+  .sgg .food-pill b{white-space:nowrap}
+  .sgg .plan{margin-top:24px;border-top:1px solid var(--sgg-line);padding-top:22px}
+  .sgg .days{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+  .sgg .day{background:#f8fafb;border:1px solid var(--sgg-line);border-radius:15px;padding:14px}
+  .sgg .day em{font-style:normal;font-size:11px;font-weight:900;color:var(--sgg-accent);letter-spacing:.06em}
+  .sgg .day b{display:block;margin:5px 0;font-size:14px}
+  .sgg .day p{margin:0;font-size:12px;color:var(--sgg-muted)}
+  .sgg .day.extra{display:none}
+  .sgg .show-4 .day.extra{display:block}
+  .sgg .info-line{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;padding-top:18px;border-top:1px dashed var(--sgg-line);font-size:12px;color:var(--sgg-muted)}
+  .sgg .source-link{color:var(--sgg-accent);text-decoration:none;font-weight:700}
+  .sgg .source-link:hover{text-decoration:underline}
+  .sgg .compare{overflow:auto;background:#fff;border:1px solid var(--sgg-line);border-radius:20px;box-shadow:var(--sgg-shadow)}
+  .sgg table{border-collapse:collapse;width:100%;min-width:760px}
+  .sgg th,.sgg td{text-align:left;padding:14px 16px;border-bottom:1px solid var(--sgg-line);font-size:14px}
+  .sgg th{background:#f7f9fb;color:#39424f}
+  .sgg td:first-child{font-weight:800}
+  .sgg .good{color:#0a7a60;font-weight:800}
+  .sgg .mid{color:#a56a13;font-weight:800}
+  .sgg .note{background:#fff;border:1px solid var(--sgg-line);border-radius:18px;padding:18px;margin-top:4px}
+  @media(max-width:980px){.sgg .summary-grid{grid-template-columns:repeat(2,1fr)}.sgg .subgrid{grid-template-columns:1fr}.sgg .days{grid-template-columns:repeat(2,1fr)}.sgg .show-4 .days{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:620px){.sgg section{padding:30px 0}.sgg .section-title{display:block}.sgg .section-title p{margin-top:10px}.sgg .summary-grid{grid-template-columns:1fr}.sgg .cover{height:300px}.sgg .cover .cover-text{left:20px;right:20px;bottom:20px}.sgg .cover h2{font-size:28px}.sgg .dest-body{padding:18px}.sgg .place-grid{grid-template-columns:1fr}.sgg .days,.sgg .show-4 .days{grid-template-columns:1fr}.sgg .place-photo{height:200px}.sgg .place-content{min-height:auto}}
   </style>
 </head>
 <body>
-
-  <!-- ── HEADER ── -->
   <header class="header" id="header">
     <div class="container header-inner">
       <a href="index.html" class="logo"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
@@ -60,576 +117,80 @@
       <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
     </div>
   </header>
-
-  <!-- ── 환율 바 ── -->
   <div class="fx-bar" id="fxBar">
     <div class="container fx-inner">
       <span class="fx-label">💱 환율</span>
-      <div class="fx-rates" id="fxRates">
-        <span class="fx-skeleton">로딩 중…</span>
-      </div>
+      <div class="fx-rates" id="fxRates"><span class="fx-skeleton">로딩 중…</span></div>
       <span class="fx-updated" id="fxUpdated"></span>
     </div>
   </div>
-
-  <!-- ── HERO ── -->
-  <section class="dest-hero" style="background:linear-gradient(135deg,#D97706 0%,#F59E0B 45%,#FBBF24 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
+  <section class="dest-hero" style="background:linear-gradient(135deg,#2a1e10 0%,#5a3a14 52%,#c8841f 100%);min-height:360px;position:relative;display:flex;align-items:flex-end;overflow:hidden;">
     <div class="dest-hero-bg">🛕</div>
     <div class="dest-hero-overlay"></div>
     <div class="dest-hero-content">
-      <span class="dest-hero-badge">🛕 태국 · 방콕</span>
-      <h1>방콕</h1>
-      <p>화려한 사원과 길거리 음식의 도시 — 왓포·카오산·야시장, 가성비 최고의 동남아 여행</p>
-      <div class="dest-hero-stats">
-        <div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 방콕 약 5시간 50분 직항</small></div>
-        <div class="hero-stat"><strong>💴 환율</strong><small>฿1 ≈ 39원 (2026 기준)</small></div>
-        <div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 2시간 느림 (KST-2)</small></div>
-        <div class="hero-stat"><strong>🌤 추천 시기</strong><small>11~2월 건기·선선</small></div>
-      </div>
+      <span class="dest-hero-badge">🛕 방콕 · 도시 3구역</span>
+      <h1>방콕, 어디부터?</h1>
+      <p>황금 사원·야시장·수상시장·루프탑까지 — 방콕을 구역으로 나눠 취향별로 골랐습니다. 먹거리와 볼거리가 넘치는 동남아 최고의 여행 도시.</p>
+      <div class="dest-hero-stats"><div class="hero-stat"><strong>✈ 비행시간</strong><small>인천 → 방콕 약 5시간 50분</small></div><div class="hero-stat"><strong>💴 환율</strong><small>1바트 ≈ 40원 (2026 기준)</small></div><div class="hero-stat"><strong>🕐 시차</strong><small>한국보다 2시간 느림 (KST-2)</small></div><div class="hero-stat"><strong>🌤 추천 시기</strong><small>11~2월(건기·선선)</small></div></div>
       <div class="dest-weather" id="destWeather" hidden>
-        <span class="dw-icon" id="dwIcon">⛅</span>
-        <span class="dw-temp" id="dwTemp">--°</span>
-        <span class="dw-desc" id="dwDesc">현재 날씨</span>
-        <span class="dw-detail" id="dwDetail"></span>
+        <span class="dw-icon" id="dwIcon">⛅</span><span class="dw-temp" id="dwTemp">--°</span><span class="dw-desc" id="dwDesc">현재 날씨</span><span class="dw-detail" id="dwDetail"></span>
       </div>
       <a href="tours.html?city=방콕" style="display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:#fff;color:#1B4FD8;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🎟 방콕 투어·티켓 실시간 검색 →</a><a href="#" onclick="TripAttach.open({label:'이 도시로 여행 만들기',city:'방콕'});return false;" style="display:inline-flex;align-items:center;gap:8px;margin-top:12px;margin-left:8px;background:#1B4FD8;color:#fff;padding:12px 22px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.15);">🧳 방콕 여행 만들기</a>
     </div>
   </section>
+  <div class="sgg">
+  <section id="compare"><div class="wrap">
+  <div class="section-title"><div><div class="eyebrow">QUICK PICK</div><h2>먼저, 취향별로 고르면</h2></div><p>순위라기보다 어떤 점을 가장 중요하게 보느냐에 따라 고르는 용도입니다. 방콕은 넓어서 각 여행지는 도시 안의 구역입니다.</p></div>
+  <div class="summary-grid"><div class="summary"><div class="rank">MOST ICONIC</div><h3>왕궁·사원</h3><p>황금 왕궁과 왓포·왓아룬 사원.</p><div class="stars">★★★★★</div></div><div class="summary"><div class="rank">NIGHT &amp; FOOD</div><h3>카오산·차이나타운</h3><p>야시장·거리 먹거리·루프탑.</p><div class="stars">★★★★½</div></div><div class="summary"><div class="rank">MARKET &amp; RIVER</div><h3>시장·리버사이드</h3><p>주말시장·수상시장·강변 나이트.</p><div class="stars">★★★★☆</div></div></div>
+  <div style="height:28px"></div>
+  <div class="compare"><table>
+  <thead><tr><th>구역</th><th>사원·문화</th><th>먹거리</th><th>무난한 음식</th><th>추천 소요</th><th>베스트 시기</th></tr></thead>
+  <tbody><tr><td>왕궁·사원</td><td class="good">최고</td><td>★★★☆☆</td><td>★★★★☆</td><td>반나절~하루</td><td>11~2월</td></tr><tr><td>카오산·차이나타운</td><td>★★★☆☆</td><td class="good">야시장</td><td>★★★★☆</td><td>반나절</td><td>연중</td></tr><tr><td>시장·리버사이드</td><td>★★★☆☆</td><td class="good">시장 먹거리</td><td>★★★★☆</td><td>반나절~하루</td><td>연중</td></tr></tbody>
+  </table></div>
+  </div></section>
+  <section style="padding-top:12px"><div class="wrap">
+  <div aria-label="여행기간 선택" class="duration" role="group"><button class="active" onclick="setDuration(3,this)">2박 3일</button><button onclick="setDuration(4,this)">3박 4일</button></div>
+  <div class="duration-note">버튼을 누르면 각 구역 코스에 여유 시간(야경·추가 코스)이 함께 추가됩니다. 2박3일이면 3구역, 3박4일이면 4구역 정도가 여유롭습니다.</div>
 
-  <!-- ── 여행 유형 탭 ── -->
-  <section class="type-select-bar">
-    <div class="container">
-      <p class="type-label">여행 유형을 선택하세요</p>
-      <div class="type-tabs">
-        <button class="type-tab active" onclick="switchType('solo',this)">👤 1인 여행</button>
-        <button class="type-tab" onclick="switchType('friends',this)">👫 친구 여행</button>
-        <button class="type-tab" onclick="switchType('family',this)">👨‍👩‍👧 가족 여행</button>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ══════════════════════════════════════════════════════
-       1인 여행
-       ══════════════════════════════════════════════════════ -->
-  <div class="type-content active" id="type-solo">
-
-    <!-- 일정 -->
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">👤 1인 여행</span>
-          <h2>3박 4일 추천 일정</h2>
-          <p>나만의 페이스로 즐기는 방콕 혼여행 — 사원·마사지·길거리 음식 자유롭게</p>
-        </div>
-
-        <div class="day-tabs" id="solo-tabs">
-          <button class="day-tab active" onclick="showDay('solo',1,this)">1일차</button>
-          <button class="day-tab" onclick="showDay('solo',2,this)">2일차</button>
-          <button class="day-tab" onclick="showDay('solo',3,this)">3일차</button>
-          <button class="day-tab" onclick="showDay('solo',4,this)">4일차</button>
-        </div>
-
-        <div class="day-content active" id="solo-day1">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 1</span>
-            <div><h3>도착 → 카오산로드</h3><p>공항 도착 후 시내로 이동, 첫날 밤은 배낭여행자의 성지에서</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 수완나품 공항 도착</h4><p>공항철도 ARL(파야타이까지 ฿45, 30분) 또는 그랩(Grab) 택시(시내까지 ฿300~400)로 이동</p></div></div>
-            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🏨 숙소 체크인</h4><p>카오산·리버사이드 게스트하우스에 짐 맡기기. 혼여행은 호스텔 도미토리가 ฿300~600으로 가성비 최고</p></div></div>
-            <div class="tl-item"><div class="tl-time">16:30</div><div class="tl-body"><h4>🛕 왓사켓 (황금산)</h4><p>318계단 올라 방콕 시내 360° 조망. 입장료 ฿100. 해 질 무렵 황금 체디와 노을이 절경</p></div></div>
-            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍜 카오산로드 길거리 음식</h4><p>팟타이(฿60~80), 망고 스티키라이스(฿60), 갓 짠 생과일 셰이크(฿40). 노점 순회하며 혼밥 투어</p></div></div>
-            <div class="tl-item"><div class="tl-time">20:30</div><div class="tl-body"><h4>🍺 카오산 야시장 & 버킷 칵테일</h4><p>전 세계 배낭여행자와 뒤섞이는 밤거리. 창 맥주(฿80), 얼음통 칵테일 버킷(฿150~200)으로 혼술의 묘미</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="solo-day2">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 2</span>
-            <div><h3>3대 사원 순례 + 리버사이드</h3><p>왕궁·왓포·왓아룬을 수상보트로 이어 도는 클래식 코스</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>👑 왕궁 & 에메랄드 사원</h4><p>방콕 최고의 볼거리. 입장료 ฿500. 어깨·무릎 가리는 복장 필수(입구에서 대여 가능). 오전 일찍 가야 덜 붐빔</p></div></div>
-            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🛕 왓포 (와불사원)</h4><p>길이 46m 황금 와불상. 입장료 ฿200(생수 포함). 태국 전통 마사지의 발상지 — 현장에서 30분 ฿320에 체험 가능</p></div></div>
-            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🚤 짜오프라야 강 도선 + 점심</h4><p>왓포 앞 선착장에서 도선(฿5)으로 강 건너기. 리버사이드 식당에서 똠얌꿍(฿150)·카오팟(฿80)</p></div></div>
-            <div class="tl-item"><div class="tl-time">14:30</div><div class="tl-body"><h4>⛩ 왓아룬 (새벽사원)</h4><p>도자기 파편으로 장식된 79m 대탑. 입장료 ฿100. 가파른 계단 위 전망. 강 건너에서 보는 실루엣이 특히 유명</p></div></div>
-            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🌃 아시아티크 야시장</h4><p>사톤 선착장에서 무료 셔틀보트. 대관람차·리버사이드 레스토랑·기념품 상점. 강바람 맞으며 저녁 산책</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="solo-day3">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 3</span>
-            <div><h3>짜뚜짝 시장 + 루프탑 바</h3><p>주말시장에서 쇼핑, 밤엔 마하나콘 스카이워크와 루프탑 칵테일</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🛍 짜뚜짝 주말시장</h4><p>15,000개 점포의 세계 최대급 시장(주말만 운영). MRT 깜팽펫역 하차. 의류·수공예·빈티지, 흥정은 기본</p></div></div>
-            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍜 보트누들 골목</h4><p>짜뚜짝 인근 또는 빅토리모뉴먼트 보트누들 거리. 한 그릇 ฿15~20의 미니 국수를 여러 그릇 쌓아 먹는 재미</p></div></div>
-            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>💆 타이 마사지 2시간</h4><p>여행 피로 풀기. 동네 마사지숍 발마사지 ฿250~350, 전신 타이 ฿300~450. 팁 ฿50~100 관습</p></div></div>
-            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🌆 마하나콘 스카이워크</h4><p>314m 방콕 최고 전망대. 입장료 ฿880~. 유리 바닥 스카이워크와 루프탑 바에서 시내 야경 감상</p></div></div>
-            <div class="tl-item"><div class="tl-time">21:00</div><div class="tl-body"><h4>🍸 루프탑 바 나이트캡</h4><p>실롬·사톤 일대 루프탑 바. 시그니처 칵테일 ฿350~500. 드레스코드(반바지·슬리퍼 금지) 있는 곳 많으니 주의</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="solo-day4">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 4</span>
-            <div><h3>짐톰슨 하우스 → 쇼핑 → 귀국</h3><p>마지막 날 실크 박물관과 시암 쇼핑 후 공항으로</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-body"><h4>🧵 짐톰슨 하우스</h4><p>태국 실크를 세계에 알린 미국인의 티크 목조 저택 박물관. 입장료 ฿200. 가이드 투어 포함, 초록 정원이 오아시스</p></div></div>
-            <div class="tl-item"><div class="tl-time">11:30</div><div class="tl-body"><h4>🛍 시암 파라곤 & MBK</h4><p>BTS 시암역. 대형몰 시암 파라곤·시암 센터, 서민 쇼핑몰 MBK에서 기념품·간식 마지막 쇼핑</p></div></div>
-            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🍛 푸드코트 마지막 점심</h4><p>파라곤·MBK 푸드코트에서 쿠폰 결제. 그린 카레·팟카파오(바질 볶음밥) ฿60~120으로 깔끔하게 마무리</p></div></div>
-            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>BTS+ARL 환승 또는 그랩(฿350~450). 국제선 3시간 전 도착 권장. 세금 환급(VAT Refund) 카운터 여유 있게</p></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 예산 -->
-    <section class="section section-alt">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">💰 예산 가이드</span>
-          <h2>1인 여행 예상 경비</h2>
-          <p>3박 4일 · 환율 ฿1 = 39원 기준</p>
-        </div>
-        <div class="budget-grid">
-          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">200,000 ~ 450,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박)</h4><span class="budget-range">45,000 ~ 180,000원</span><span class="budget-note">호스텔 ~ 4성 호텔</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4일)</h4><span class="budget-range">20,000 ~ 40,000원</span><span class="budget-note">BTS·그랩·공항 이동 포함</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비</h4><span class="budget-range">60,000 ~ 130,000원</span><span class="budget-note">1끼 ฿60~300 기준</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🎫</span><div class="budget-info"><h4>관광·입장료</h4><span class="budget-range">30,000 ~ 60,000원</span><span class="budget-note">왕궁·사원·전망대 등</span></div></div>
-          <div class="budget-card"><span class="budget-icon">💆</span><div class="budget-info"><h4>마사지·쇼핑</h4><span class="budget-range">50,000 ~ 150,000원</span><span class="budget-note">마사지·야시장 기념품</span></div></div>
-        </div>
-        <div class="budget-total">
-          <div>
-            <span class="total-label">3박 4일 1인 총 예상 경비</span>
-            <span class="total-amount">405,000 ~ 1,010,000원</span>
-          </div>
-          <span class="total-note">절약형(LCC+호스텔) ~ 여유형(FSC+4성 호텔) 기준</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- 숙소 -->
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">🏨 숙소 추천</span>
-          <h2>1인 여행자를 위한 숙소</h2>
-          <p>혼자 머물기 좋은 위치·가격·분위기</p>
-        </div>
-        <div class="hotel-grid">
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge budget">절약형</span></div>
-            <div class="hotel-body">
-              <h3>루브 호스텔 카오산</h3>
-              <p class="hotel-location">📍 카오산로드 도보 3분</p>
-              <p>깔끔한 디자인 호스텔. 도미토리·개인실 선택 가능. 옥상 라운지에서 세계 여행자와 교류하기 좋음</p>
-              <div class="hotel-price">1박 <strong>฿400~800</strong> (~16,000원~)</div>
-              <div class="hotel-tags"><span>도미토리</span><span>에어컨</span><span>Wi-Fi</span><span>공용 라운지</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Khaosan%20Bangkok%20hostel" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
-            <div class="hotel-body">
-              <h3>이비스 스타일 방콕 실롬</h3>
-              <p class="hotel-location">📍 BTS 총논시역 도보 5분</p>
-              <p>실롬 중심의 가성비 3성 호텔. 루프탑 바 밀집 지역, BTS 접근성 좋아 혼여행 이동 편리</p>
-              <div class="hotel-price">1박 <strong>฿1,200~1,900</strong> (~47,000원~)</div>
-              <div class="hotel-tags"><span>싱글룸</span><span>수영장</span><span>Wi-Fi</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=ibis%20Styles%20Bangkok%20Silom" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge fam">편의형</span></div>
-            <div class="hotel-body">
-              <h3>더 콰르터 아리 바이 UHG</h3>
-              <p class="hotel-location">📍 BTS 아리역 도보 4분</p>
-              <p>로컬 감성 카페거리 아리에 위치한 부티크 호텔. 혼자 여유롭게 머물기 좋고 조식·객실 만족도 높음</p>
-              <div class="hotel-price">1박 <strong>฿2,000~3,200</strong> (~78,000원~)</div>
-              <div class="hotel-tags"><span>1인 이용</span><span>조식</span><span>Wi-Fi</span><span>카페거리</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=The%20Quarter%20Ari%20Bangkok" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-        </div>
-        <div class="aff-cta">
-          <a href="https://www.agoda.com/ko-kr/search?searchText=Bangkok" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
-          <a href="https://www.booking.com/searchresults.ko.html?ss=Bangkok" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
-        </div>
-      </div>
-    </section>
-  </div><!-- /type-solo -->
-
-
-  <!-- ══════════════════════════════════════════════════════
-       친구 여행
-       ══════════════════════════════════════════════════════ -->
-  <div class="type-content" id="type-friends">
-
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">👫 친구 여행</span>
-          <h2>3박 4일 추천 일정</h2>
-          <p>같이 먹고 마시고 즐기는 방콕 완전 정복 — 야시장·루프탑·수상시장</p>
-        </div>
-
-        <div class="day-tabs" id="friends-tabs">
-          <button class="day-tab active" onclick="showDay('friends',1,this)">1일차</button>
-          <button class="day-tab" onclick="showDay('friends',2,this)">2일차</button>
-          <button class="day-tab" onclick="showDay('friends',3,this)">3일차</button>
-          <button class="day-tab" onclick="showDay('friends',4,this)">4일차</button>
-        </div>
-
-        <div class="day-content active" id="friends-day1">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 1</span>
-            <div><h3>도착 → 카오산로드 밤거리</h3><p>방콕 도착 첫날, 배낭여행자의 성지에서 흥 폭발</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 수완나품 공항 도착</h4><p>여럿이면 그랩(Grab) 밴 택시가 편함(시내 ฿350~500, n분의 1). 짐 맡기고 바로 출발</p></div></div>
-            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>💆 첫 마사지로 시작</h4><p>도착 피로 풀기. 전신 타이 마사지 2시간 ฿300~450. 친구끼리 나란히 누워 여행 시작 자축</p></div></div>
-            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍜 카오산로드 길거리 먹방</h4><p>팟타이·쏨땀(파파야 샐러드 ฿60)·꼬치·전갈튀김 도전까지. 친구랑 나눠 먹으면 1인 ฿150~250</p></div></div>
-            <div class="tl-item"><div class="tl-time">20:00</div><div class="tl-body"><h4>🍺 칵테일 버킷 & 버스킹</h4><p>얼음통 칵테일 버킷(฿150~200) 나눠 마시기. 길거리 밴드·버스킹과 함께하는 방콕의 밤</p></div></div>
-            <div class="tl-item"><div class="tl-time">22:00</div><div class="tl-body"><h4>🕺 라차다 or 카오산 클럽</h4><p>여력 있으면 카오산 클럽 or 택시로 이동. 창·싱하 맥주 ฿80~120. 무리 말고 첫날은 적당히</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="friends-day2">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 2</span>
-            <div><h3>사원 투어 + 아시아티크 야시장</h3><p>왕궁·왓포·왓아룬 인증샷 투어, 밤엔 강변 야시장</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">09:00</div><div class="tl-body"><h4>👑 왕궁 & 에메랄드 사원</h4><p>단체 인증샷 명소. 입장료 ฿500. 어깨·무릎 가리는 복장 필수. 여럿이면 아침 일찍 가서 사진 여유롭게</p></div></div>
-            <div class="tl-item"><div class="tl-time">11:00</div><div class="tl-body"><h4>🛕 왓포 & 왓아룬</h4><p>왓포 와불상(฿200) → 도선(฿5)으로 강 건너 왓아룬(฿100). 새벽사원 대탑 앞 커플·단체 사진 필수</p></div></div>
-            <div class="tl-item"><div class="tl-time">13:30</div><div class="tl-body"><h4>🍲 리버사이드 점심</h4><p>강변 식당에서 똠얌꿍·뿌팟퐁커리(게 카레 ฿300~)·모닝글로리 볶음. 여럿이 여러 메뉴 시켜 나눠 먹기</p></div></div>
-            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🛍 시암 쇼핑 & 카페</h4><p>BTS 시암역. 시암 파라곤·시암 센터에서 쇼핑, 요즘 핫한 카페에서 잠깐 휴식</p></div></div>
-            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🎡 아시아티크 야시장</h4><p>사톤 선착장 무료 셔틀보트. 대관람차(฿500)·강변 레스토랑·기념품. 야경 배경 단체샷 명소</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="friends-day3">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 3</span>
-            <div><h3>수상시장 근교 + 짜뚜짝 + 루프탑</h3><p>담넌사두억 반나절 투어 후 밤엔 루프탑 바</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">07:00</div><div class="tl-body"><h4>🚤 담넌사두억 수상시장 (근교)</h4><p>방콕 서남 100km. 반나절 투어(1인 ฿400~700, 왕복 차량+보트). 좁은 운하 사이 배 위 상점에서 과일·국수 흥정</p></div></div>
-            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🍜 시내 복귀 & 보트누들</h4><p>투어 후 방콕 복귀. 빅토리모뉴먼트 보트누들 거리에서 미니 국수(그릇당 ฿15~20) 쌓아 먹기 대결</p></div></div>
-            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🛍 짜뚜짝 주말시장</h4><p>주말이면 필수(MRT 깜팽펫역). 빈티지 의류·수공예·태국 간식. 여럿이 흩어졌다 만나며 흥정 쇼핑</p></div></div>
-            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🍸 루프탑 바 나이트</h4><p>실롬·사톤의 유명 루프탑 바. 시그니처 칵테일 ฿350~600. 드레스코드 확인(반바지·슬리퍼 금지 많음)</p></div></div>
-            <div class="tl-item"><div class="tl-time">22:00</div><div class="tl-body"><h4>🕺 라차다 딸랏롯파이 야시장</h4><p>레트로 감성 기차 야시장. 컬러풀 텐트 뷰포인트·바·먹거리. 마지막 밤을 시원한 창 맥주로 마무리</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="friends-day4">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 4</span>
-            <div><h3>마사지 + 마지막 쇼핑 → 귀국</h3><p>여행 마무리 마사지와 시내 쇼핑 후 공항으로</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>💆 마무리 타이 마사지</h4><p>귀국 전 몸 풀기. 발마사지 ฿250~350, 전신 ฿300~450. 좋았으면 팁 ฿50~100</p></div></div>
-            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🛍 시암·프라통 쇼핑</h4><p>시암 파라곤·MBK·빅C에서 기념품·과자(코코넛칩·망고칩)·태국 라면 대량 구매. 친구들 선물까지</p></div></div>
-            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🍛 마지막 태국 밥</h4><p>푸드코트 or 유명 로컬 식당에서 그린 카레·팟카파오·망고 스티키라이스로 마지막 만찬</p></div></div>
-            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>그랩 밴(฿350~500)으로 여럿이 편하게. 국제선 3시간 전 도착. VAT Refund 카운터 미리 확인</p></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-alt">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">💰 예산 가이드</span>
-          <h2>친구 여행 예상 경비 (1인)</h2>
-          <p>3박 4일 · 근교 투어 포함 · 2인 기준으로 나눈 숙박비</p>
-        </div>
-        <div class="budget-grid">
-          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (왕복)</h4><span class="budget-range">200,000 ~ 450,000원</span><span class="budget-note">LCC 얼리버드 ~ 대형항공사</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 1인당)</h4><span class="budget-range">60,000 ~ 180,000원</span><span class="budget-note">2인실 나눌 때 기준</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🚤</span><div class="budget-info"><h4>근교·투어</h4><span class="budget-range">25,000 ~ 50,000원</span><span class="budget-note">수상시장 반나절 투어</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비·주류</h4><span class="budget-range">90,000 ~ 180,000원</span><span class="budget-note">야시장·루프탑 4일 기준</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통</h4><span class="budget-range">25,000 ~ 50,000원</span><span class="budget-note">BTS·그랩·공항 이동</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🛍</span><div class="budget-info"><h4>마사지·쇼핑</h4><span class="budget-range">60,000 ~ 200,000원</span><span class="budget-note">사람마다 편차 큼</span></div></div>
-        </div>
-        <div class="budget-total">
-          <div>
-            <span class="total-label">3박 4일 친구 여행 1인 총 예상 경비</span>
-            <span class="total-amount">460,000 ~ 1,110,000원</span>
-          </div>
-          <span class="total-note">절약형(LCC+2인 쉐어) ~ 여유형(FSC+루프탑+4성 호텔)</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">🏨 숙소 추천</span>
-          <h2>친구 여행 추천 숙소</h2>
-          <p>야시장·루프탑 접근성 좋은 2인 이상 숙소</p>
-        </div>
-        <div class="hotel-grid">
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
-            <div class="hotel-body">
-              <h3>루믈리 38 바이 컴패스 호스피탤러티</h3>
-              <p class="hotel-location">📍 BTS 통로역 도보 6분 · 수쿰빗</p>
-              <p>수쿰빗 나이트라이프 중심의 트렌디 호텔. 트윈룸 가성비 좋고 루프탑 바·클럽 도보권. 친구 여행 최적</p>
-              <div class="hotel-price">2인 1박 <strong>฿2,000~3,000</strong> (1인당 ~39,000원~)</div>
-              <div class="hotel-tags"><span>트윈룸</span><span>수영장</span><span>Wi-Fi</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Sukhumvit%20Thonglor%20Bangkok%20hotel" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
-            <div class="hotel-body">
-              <h3>노보텔 방콕 스쿰빗 20</h3>
-              <p class="hotel-location">📍 BTS 아속역 · MRT 수쿰빗역 도보 5분</p>
-              <p>교통 허브 아속 인접. 옥상 수영장·바 보유, 터미널21 쇼핑몰 도보권. 어디든 이동 편한 위치</p>
-              <div class="hotel-price">2인 1박 <strong>฿3,000~4,500</strong> (1인당 ~59,000원~)</div>
-              <div class="hotel-tags"><span>트윈룸</span><span>루프탑 수영장</span><span>Wi-Fi</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Novotel%20Bangkok%20Sukhumvit%2020" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge fam">뷰 특화</span></div>
-            <div class="hotel-body">
-              <h3>차트리움 호텔 리버사이드 방콕</h3>
-              <p class="hotel-location">📍 짜오프라야 강변 · 셔틀보트 운행</p>
-              <p>강변 리버뷰 객실과 넓은 인피니티 풀. 아시아티크·리버사이드 야경 접근 좋음. 여럿이 뷰 즐기기 좋은 선택</p>
-              <div class="hotel-price">2인 1박 <strong>฿4,000~6,500</strong> (1인당 ~78,000원~)</div>
-              <div class="hotel-tags"><span>리버뷰</span><span>인피니티 풀</span><span>셔틀보트</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Chatrium%20Hotel%20Riverside%20Bangkok" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-        </div>
-        <div class="aff-cta">
-          <a href="https://www.agoda.com/ko-kr/search?searchText=Bangkok" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 전체 보기</a>
-          <a href="https://www.booking.com/searchresults.ko.html?ss=Bangkok" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
-        </div>
-      </div>
-    </section>
-  </div><!-- /type-friends -->
-
-
-  <!-- ══════════════════════════════════════════════════════
-       가족 여행
-       ══════════════════════════════════════════════════════ -->
-  <div class="type-content" id="type-family">
-
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">👨‍👩‍👧 가족 여행</span>
-          <h2>3박 4일 추천 일정</h2>
-          <p>아이와 함께하는 방콕 — 사원·수상시장·아유타야 유적 3박 4일</p>
-        </div>
-
-        <div class="day-tabs" id="family-tabs">
-          <button class="day-tab active" onclick="showDay('family',1,this)">1일차</button>
-          <button class="day-tab" onclick="showDay('family',2,this)">2일차</button>
-          <button class="day-tab" onclick="showDay('family',3,this)">3일차</button>
-          <button class="day-tab" onclick="showDay('family',4,this)">4일차</button>
-        </div>
-
-        <div class="day-content active" id="family-day1">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 1</span>
-            <div><h3>도착 → 리버사이드 & 아시아티크</h3><p>가족 도착 첫날, 강변에서 여유롭게 방콕 첫인사</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>✈ 수완나품 공항 도착</h4><p>짐 많은 가족은 그랩 밴/미터택시 추천(시내 ฿350~500). 유모차 있으면 밴이 편함</p></div></div>
-            <div class="tl-item"><div class="tl-time">15:30</div><div class="tl-body"><h4>🏨 숙소 체크인 & 수영장</h4><p>가족룸·수영장 있는 호텔에 체크인. 장거리 비행에 지친 아이는 수영장에서 놀며 컨디션 회복</p></div></div>
-            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🎡 아시아티크 야시장</h4><p>사톤 선착장 무료 셔틀보트. 대관람차(฿500)·먹거리·기념품. 강바람 맞으며 아이와 여유로운 첫 저녁</p></div></div>
-            <div class="tl-item"><div class="tl-time">19:30</div><div class="tl-body"><h4>🍽 강변 패밀리 디너</h4><p>아시아티크 강변 레스토랑. 볶음밥(카오팟 ฿80)·순한 팟타이·닭튀김 등 아이도 잘 먹는 메뉴 중심</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="family-day2">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 2</span>
-            <div><h3>왕궁·왓포 사원 투어</h3><p>방콕 대표 사원을 아이 눈높이에 맞춰 알차게</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">08:30</div><div class="tl-body"><h4>👑 왕궁 & 에메랄드 사원</h4><p>화려한 황금 궁전에 아이도 눈이 휘둥그레. 입장료 어른 ฿500 / 어린이(신장 120cm 이하) 무료. 복장 규정 주의, 오전 일찍 방문</p></div></div>
-            <div class="tl-item"><div class="tl-time">10:30</div><div class="tl-body"><h4>🛕 왓포 와불사원</h4><p>46m 거대 황금 와불에 아이들 감탄. 입장료 ฿200. 108개 동전 항아리에 동전 넣기 체험은 아이에게 인기</p></div></div>
-            <div class="tl-item"><div class="tl-time">12:30</div><div class="tl-body"><h4>🍜 리버사이드 점심 & 휴식</h4><p>에어컨 식당에서 뿌팟퐁커리·볶음밥·수박 셰이크. 한낮 더위 피해 잠깐 쉬어가기</p></div></div>
-            <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-body"><h4>🐟 시암 오션월드 (선택)</h4><p>시암 파라곤 지하 동남아 최대급 수족관. 입장료 어른 ฿1,090 / 어린이 ฿890. 상어 터널·펭귄으로 아이 만족도 최고</p></div></div>
-            <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-body"><h4>🍦 시암 파라곤 푸드코트 저녁</h4><p>쿠폰제 푸드코트에서 온 가족 각자 취향대로. 그린카레·국수·디저트. 넓고 시원해 아이 동반에 편함</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="family-day3">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 3</span>
-            <div><h3>담넌사두억 수상시장 (근교)</h3><p>배 타고 운하 누비며 아이가 좋아하는 하루</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">07:00</div><div class="tl-body"><h4>🚤 담넌사두억 수상시장</h4><p>방콕 서남 100km. 반나절 투어(어른 ฿500~700 / 어린이 할인). 긴꼬리 배 타고 운하 상점 사이 누비기 — 아이 최애</p></div></div>
-            <div class="tl-item"><div class="tl-time">10:00</div><div class="tl-body"><h4>🥥 배 위 간식 타임</h4><p>배 위 상점에서 갓 구운 코코넛 팬케이크·과일·볶음국수. 색색 과일 흥정하며 아이와 시장 체험</p></div></div>
-            <div class="tl-item"><div class="tl-time">13:00</div><div class="tl-body"><h4>🐘 사파리·코끼리 캠프 (선택)</h4><p>근교 투어에 사파리월드 or 윤리적 코끼리 캠프 결합 가능. 코끼리 먹이주기·물놀이는 아이에게 잊지 못할 추억</p></div></div>
-            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>🏊 시내 복귀 & 호텔 수영장</h4><p>투어 후 호텔 복귀. 더운 오후는 무리 말고 수영장에서 물놀이하며 재충전</p></div></div>
-            <div class="tl-item"><div class="tl-time">18:30</div><div class="tl-body"><h4>🍗 로컬 식당 저녁</h4><p>순한 볶음밥·닭구이(까이양)·모닝글로리. 아이 매운 것 못 먹으면 "마이펫(맵지 않게)" 요청</p></div></div>
-          </div>
-        </div>
-
-        <div class="day-content" id="family-day4">
-          <div class="day-header">
-            <span class="day-num-badge">DAY 4</span>
-            <div><h3>아유타야 유적 → 쇼핑 → 귀국</h3><p>세계유산 옛 수도를 둘러보고 귀국</p></div>
-          </div>
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-time">08:00</div><div class="tl-body"><h4>🛕 아유타야 유적 (근교·오전 반나절)</h4><p>방콕 북 80km 세계문화유산. 반일 투어(어른 ฿600~1,000). 왓 마하탓 나무뿌리 속 불두, 무너진 사원터에서 역사 체험</p></div></div>
-            <div class="tl-item"><div class="tl-time">12:00</div><div class="tl-body"><h4>🍜 아유타야 or 시내 점심</h4><p>귀환길 로컬 식당 or 시내 복귀 후 점심. 아유타야 명물 새우국수(꾸어이띠여우 꿍)도 별미</p></div></div>
-            <div class="tl-item"><div class="tl-time">14:00</div><div class="tl-body"><h4>🛍 빅C·시암 마지막 쇼핑</h4><p>빅C 대형마트에서 코코넛칩·망고칩·태국 라면·간식 대량 구매. 아이 캐릭터 기념품까지 챙기기</p></div></div>
-            <div class="tl-item"><div class="tl-time">16:00</div><div class="tl-body"><h4>✈ 공항 이동 → 귀국</h4><p>아이 동반 가족은 3시간 전 공항 도착 권장. 그랩 밴이 짐·유모차 있을 때 가장 편함</p></div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-alt">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">💰 예산 가이드</span>
-          <h2>가족 여행 예상 경비</h2>
-          <p>3박 4일 · 어른 2 + 초등생 2인 (4인 가족) 총비용</p>
-        </div>
-        <div class="budget-grid">
-          <div class="budget-card"><span class="budget-icon">✈</span><div class="budget-info"><h4>항공권 (4인 왕복)</h4><span class="budget-range">800,000 ~ 1,700,000원</span><span class="budget-note">어른 2 + 소아 2 합산</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🏨</span><div class="budget-info"><h4>숙박 (3박 · 가족룸)</h4><span class="budget-range">200,000 ~ 550,000원</span><span class="budget-note">4인 가족룸 기준</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🚤</span><div class="budget-info"><h4>근교·투어 (4인)</h4><span class="budget-range">150,000 ~ 300,000원</span><span class="budget-note">수상시장·아유타야 포함</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🐟</span><div class="budget-info"><h4>수족관·관광 (4인)</h4><span class="budget-range">120,000 ~ 200,000원</span><span class="budget-note">시암 오션월드·왕궁 등</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🍜</span><div class="budget-info"><h4>식비 (4인)</h4><span class="budget-range">200,000 ~ 400,000원</span><span class="budget-note">4인 1끼 ฿400~1,000</span></div></div>
-          <div class="budget-card"><span class="budget-icon">🚇</span><div class="budget-info"><h4>교통 (4인)</h4><span class="budget-range">60,000 ~ 130,000원</span><span class="budget-note">그랩 밴·BTS·공항 이동</span></div></div>
-        </div>
-        <div class="budget-total">
-          <div>
-            <span class="total-label">3박 4일 가족 여행 4인 총 예상 경비</span>
-            <span class="total-amount">1,530,000 ~ 3,280,000원</span>
-          </div>
-          <span class="total-note">절약형(LCC+가족룸 공유) ~ 여유형(FSC+4·5성 호텔+프라이빗 투어)</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">🏨 숙소 추천</span>
-          <h2>가족 여행 추천 숙소</h2>
-          <p>가족룸·수영장·편의 시설이 잘 갖춰진 곳</p>
-        </div>
-        <div class="hotel-grid">
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge budget">가성비</span></div>
-            <div class="hotel-body">
-              <h3>아마리 워터게이트 방콕</h3>
-              <p class="hotel-location">📍 BTS 칫롬역 · 쁘라뚜남 시장 인접</p>
-              <p>넓은 패밀리룸과 대형 수영장·키즈 시설. 쁘라뚜남 도매시장·센트럴월드 도보권으로 가족 쇼핑에 최적</p>
-              <div class="hotel-price">가족룸 1박 <strong>฿3,500~5,000</strong> (~137,000원~)</div>
-              <div class="hotel-tags"><span>패밀리룸</span><span>수영장</span><span>Wi-Fi</span><span>키즈 풀</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Amari%20Watergate%20Bangkok" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge rec">인기</span></div>
-            <div class="hotel-body">
-              <h3>센타라 그랜드 앳 센트럴월드</h3>
-              <p class="hotel-location">📍 BTS 칫롬·시암역 · 센트럴월드 직결</p>
-              <p>쇼핑몰 직결의 랜드마크 호텔. 인피니티 풀·키즈 클럽·조식 뷔페 완비. 가족 편의 시설 최상급</p>
-              <div class="hotel-price">가족룸 1박 <strong>฿5,500~9,000</strong> (~215,000원~)</div>
-              <div class="hotel-tags"><span>몰 직결</span><span>키즈 클럽</span><span>인피니티 풀</span><span>조식 뷔페</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Centara%20Grand%20CentralWorld%20Bangkok" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-          <div class="hotel-card">
-            <div class="hotel-badge-row"><span class="hotel-badge fam">리버·가족 특화</span></div>
-            <div class="hotel-body">
-              <h3>아바니+ 리버사이드 방콕</h3>
-              <p class="hotel-location">📍 짜오프라야 강변 · 셔틀보트 운행</p>
-              <p>강 건너 스카이라인 뷰와 루프탑 인피니티 풀. 넓은 객실·셔틀보트로 아이와 강변 여행에 딱 맞는 리조트형</p>
-              <div class="hotel-price">가족룸 1박 <strong>฿6,000~10,000</strong> (~234,000원~)</div>
-              <div class="hotel-tags"><span>리버뷰</span><span>인피니티 풀</span><span>셔틀보트</span><span>조식 뷔페</span></div>
-              <a href="https://www.agoda.com/ko-kr/search?searchText=Avani%20Riverside%20Bangkok" target="_blank" rel="noopener" class="hotel-cta">아고다에서 예약</a>
-            </div>
-          </div>
-        </div>
-        <div class="aff-cta">
-          <a href="https://www.agoda.com/ko-kr/search?searchText=Bangkok" target="_blank" rel="noopener" class="cta-btn primary">🏨 아고다 가족룸 전체 보기</a>
-          <a href="https://www.booking.com/searchresults.ko.html?ss=Bangkok" target="_blank" rel="noopener" class="cta-btn secondary">📋 부킹닷컴 비교</a>
-        </div>
-      </div>
-    </section>
-  </div><!-- /type-family -->
-
-
-  <!-- ══════════════════════════════════════════════════════
-       공통: 항공권
-       ══════════════════════════════════════════════════════ -->
-  <section class="section section-alt" id="flights">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">✈ 항공권</span>
-        <h2>인천 ↔ 방콕 항공권</h2>
-        <p>비행시간 약 5시간 50분 · 인천 ICN → 방콕 BKK(수완나품)</p>
-      </div>
-
-      <div class="table-wrap" style="margin-bottom:24px;">
-        <table>
-          <thead>
-            <tr><th>항공사</th><th>구분</th><th>비행시간</th><th>최저가 참고</th><th>예약</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><span class="airline-badge">✈ 에어아시아엑스</span></td><td>LCC 직항</td><td>5h 55m</td><td class="price-cell">200,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
-            <tr><td><span class="airline-badge">✈ 제주항공</span></td><td>LCC 직항</td><td>5h 50m</td><td class="price-cell">230,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
-            <tr><td><span class="airline-badge">✈ 티웨이항공</span></td><td>LCC 직항</td><td>5h 50m</td><td class="price-cell">240,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
-            <tr><td><span class="airline-badge">✈ 타이항공</span></td><td>FSC 직항</td><td>5h 50m</td><td class="price-cell">380,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
-            <tr><td><span class="airline-badge">✈ 아시아나항공</span></td><td>FSC 직항</td><td>5h 45m</td><td class="price-cell">400,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
-            <tr><td><span class="airline-badge">✈ 대한항공</span></td><td>FSC 직항</td><td>5h 45m</td><td class="price-cell">450,000원~</td><td><a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="book-btn">검색</a></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="aff-cta">
-        <a href="https://www.skyscanner.co.kr/transport/flights/ICN/BKK/?adults=1&cabinclass=economy" target="_blank" rel="noopener" class="cta-btn primary">✈ 스카이스캐너 최저가 검색</a>
-        <a href="https://kr.trip.com/flights/showfarefirst?dcity=ICN&acity=BKK&adult=1&cabin=Y" target="_blank" rel="noopener" class="cta-btn accent">🌐 Trip.com 비교</a>
-        <a href="https://www.expedia.co.kr/Flights-Search?trip=roundtrip&leg1=from%3DICN%2Cto%3DBKK&leg2=from%3DBKK%2Cto%3DICN&passengers=adults%3A1" target="_blank" rel="noopener" class="cta-btn secondary">💼 Expedia 패키지</a>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ══════════════════════════════════════════════════════
-       공통: 현지 팁
-       ══════════════════════════════════════════════════════ -->
-  <section class="section" id="tips">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-badge">💡 현지 팁</span>
-        <h2>방콕 여행 꿀팁</h2>
-        <p>처음 가는 분이라면 꼭 알아야 할 핵심 정보</p>
-      </div>
-      <div class="tips-grid">
-        <div class="tip-card"><span class="tip-icon">🚕</span><h3>그랩(Grab) 앱 필수</h3><p>택시 흥정·바가지 방지의 정답. 목적지·요금이 앱에 표시돼 안심. 공항~시내 ฿300~450. 출발 전 한국에서 미리 설치·카드 등록</p></div>
-        <div class="tip-card"><span class="tip-icon">🚆</span><h3>BTS·MRT & 래빗카드</h3><p>지상철 BTS·지하철 MRT가 교통체증 없이 빠름. 충전식 래빗(Rabbit)카드로 편하게. 1회권보다 카드가 편리하고 시간 절약</p></div>
-        <div class="tip-card"><span class="tip-icon">🛕</span><h3>사원 복장 규정</h3><p>왕궁·사원은 어깨·무릎을 반드시 가려야 입장. 민소매·반바지·짧은 치마 금지. 얇은 긴바지·스카프 지참, 입구에서 대여도 가능</p></div>
-        <div class="tip-card"><span class="tip-icon">💰</span><h3>흥정은 기본 문화</h3><p>야시장·수상시장·툭툭은 정찰가가 아님. 부르는 값의 50~70%부터 시작해 웃으며 흥정. 백화점·편의점·마트는 정찰제</p></div>
-        <div class="tip-card"><span class="tip-icon">🌧</span><h3>우기 스콜 대비 (5~10월)</h3><p>우기엔 오후에 짧고 강한 스콜이 쏟아짐. 접이 우산·방수 신발 준비. 비 오면 잠깐 카페·마사지숍에서 쉬어가면 됨</p></div>
-        <div class="tip-card"><span class="tip-icon">🍜</span><h3>길거리 음식 위생</h3><p>손님 많고 회전 빠른 노점이 신선. 생수는 밀봉 생수만, 얼음은 구멍 뚫린 공장 얼음이 안전. 매운 게 걱정되면 "마이펫" 한마디</p></div>
-        <div class="tip-card"><span class="tip-icon">💆</span><h3>마사지 팁 문화</h3><p>타이 마사지는 저렴하지만(전신 2시간 ฿300~450) 팁이 관습. 만족했다면 ฿50~100 정도. 호텔·고급 스파는 요금에 봉사료 포함 여부 확인</p></div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ── FOOTER ── -->
+  <article class="destination" id="palace">
+  <div class="cover"><img alt="방콕 왕궁(왓프라깨우)" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/0005574_-_Wat_Phra_Kaew_006.jpg/1280px-0005574_-_Wat_Phra_Kaew_006.jpg"/><div class="cover-text"><span class="badge">황금 왕궁과 사원</span><h2>① 왕궁 · 사원</h2><p>왕궁 · 와불 · 새벽 사원</p></div></div>
+  <div class="dest-body">
+  <div class="why"><strong>왜 잘 맞나?</strong> 에메랄드 불상을 모신 왕궁(왓프라깨우)을 중심으로, 거대한 황금 와불의 왓포, 강 건너 새벽 사원 왓아룬까지 — 방콕의 상징적인 황금 사원이 모인 올드시티 구역입니다. 보트로 강을 건너며 둘러보기 좋습니다.<div class="traits"><span class="trait">👑 왕궁</span><span class="trait">🛕 왓포 와불</span><span class="trait">🌅 왓아룬</span><span class="trait">🚤 짜오프라야강</span></div></div>
+  <div class="subgrid">
+  <div class="places"><h3>추천 장소 · 사진으로 보기</h3><div class="place-grid"><div class="place"><div class="place-photo"><img alt="왓포 와불" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%98%E0%B9%84%E0%B8%AA%E0%B8%A2%E0%B8%B2%E0%B8%AA%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%8A%E0%B8%95%E0%B8%B8%E0%B8%9E%E0%B8%99.jpg/1280px-%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%9E%E0%B8%B8%E0%B8%97%E0%B8%98%E0%B9%84%E0%B8%AA%E0%B8%A2%E0%B8%B2%E0%B8%AA%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%8A%E0%B8%95%E0%B8%B8%E0%B8%9E%E0%B8%99.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>왓포</b><span>길이 46m의 거대한 황금 와불과 전통 마사지의 본산으로 유명한 사원.</span></div></div><div class="place"><div class="place-photo"><img alt="왓아룬" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/%E0%B9%80%E0%B8%88%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B9%8C%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%98%E0%B8%B2%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B8%87%E0%B8%9B%E0%B8%A3%E0%B8%B2%E0%B8%87%E0%B8%84%E0%B9%8C%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%AD%E0%B8%A3%E0%B8%B8%E0%B8%932.jpg/1280px-%E0%B9%80%E0%B8%88%E0%B8%94%E0%B8%B5%E0%B8%A2%E0%B9%8C%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%98%E0%B8%B2%E0%B8%99%E0%B8%97%E0%B8%A3%E0%B8%87%E0%B8%9B%E0%B8%A3%E0%B8%B2%E0%B8%87%E0%B8%84%E0%B9%8C%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%AD%E0%B8%A3%E0%B8%B8%E0%B8%932.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>왓아룬</b><span>도자기로 장식한 첨탑의 ‘새벽 사원’. 강 건너 노을·야경이 아름답다.</span></div></div></div></div>
+  <aside class="food"><h3>음식</h3><div class="food-card"><img alt="팟타이" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Phat_Thai_kung_Chang_Khien_street_stall.jpg/1280px-Phat_Thai_kung_Chang_Khien_street_stall.jpg"/><div class="content"><h4>팟타이 · 쌀국수</h4><p>새콤달콤한 볶음 쌀국수 팟타이는 방콕 대표 음식. 맵지 않게 주문할 수 있어 누구나 즐기기 좋습니다.</p></div></div><div class="food-list"><div class="food-pill"><b>팟타이</b><span>볶음 쌀국수</span></div><div class="food-pill"><b>쌀국수</b><span>담백한 국물</span></div><div class="food-pill"><b>카오만까이</b><span>치킨라이스</span></div></div></aside>
+  </div>
+  <div class="plan"><h3>추천 코스</h3><div class="days"><div class="day"><em>오전</em><b>왕궁</b><p>왕궁·왓프라깨우</p></div><div class="day"><em>오후</em><b>사원</b><p>왓포 와불 → 보트</p></div><div class="day"><em>저녁</em><b>노을</b><p>왓아룬 노을·강변</p></div><div class="day extra"><em>야경 +α</em><b>크루즈</b><p>짜오프라야강 디너 크루즈</p></div></div></div>
+  <div class="info-line">정보: <a class="source-link" href="https://www.tourismthailand.org/" target="_blank" rel="noopener">태국 관광 공식</a></div>
+  </div>
+  </article>
+  <article class="destination" id="khaosan">
+  <div class="cover"><img alt="카오산 로드" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/2016_Bangkok%2C_Dystrykt_Phra_Nakhon%2C_Ulica_Khaosan_%2808%29.jpg/1280px-2016_Bangkok%2C_Dystrykt_Phra_Nakhon%2C_Ulica_Khaosan_%2808%29.jpg"/><div class="cover-text"><span class="badge">야시장·거리 먹거리·루프탑</span><h2>② 카오산 · 차이나타운</h2><p>배낭 거리 · 중화가 · 먹거리</p></div></div>
+  <div class="dest-body">
+  <div class="why"><strong>왜 잘 맞나?</strong> 배낭여행자의 성지 카오산 로드의 밤 분위기와, 야오와랏(차이나타운)의 노점 먹거리 거리, 그리고 짐 톰슨 하우스의 태국 실크 전통까지 — 방콕의 밤과 거리 먹거리가 가장 진한 구역입니다.<div class="traits"><span class="trait">🏮 카오산 로드</span><span class="trait">🥢 차이나타운</span><span class="trait">🧵 짐톰슨</span><span class="trait">🌃 나이트라이프</span></div></div>
+  <div class="subgrid">
+  <div class="places"><h3>추천 장소 · 사진으로 보기</h3><div class="place-grid"><div class="place"><div class="place-photo"><img alt="야오와랏 차이나타운" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/%282022%29_%E0%B8%95%E0%B8%B6%E0%B8%81%E0%B9%81%E0%B8%96%E0%B8%A7%E0%B8%A3%E0%B8%B4%E0%B8%A1%E0%B8%96%E0%B8%99%E0%B8%99%E0%B9%80%E0%B8%A2%E0%B8%B2%E0%B8%A7%E0%B8%A3%E0%B8%B2%E0%B8%8A_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%AA%E0%B8%B1%E0%B8%A1%E0%B8%9E%E0%B8%B1%E0%B8%99%E0%B8%98%E0%B8%A7%E0%B8%87%E0%B8%A8%E0%B9%8C_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_%284%29.jpg/1280px-%282022%29_%E0%B8%95%E0%B8%B6%E0%B8%81%E0%B9%81%E0%B8%96%E0%B8%A7%E0%B8%A3%E0%B8%B4%E0%B8%A1%E0%B8%96%E0%B8%99%E0%B8%99%E0%B9%80%E0%B8%A2%E0%B8%B2%E0%B8%A7%E0%B8%A3%E0%B8%B2%E0%B8%8A_%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%AA%E0%B8%B1%E0%B8%A1%E0%B8%9E%E0%B8%B1%E0%B8%99%E0%B8%98%E0%B8%A7%E0%B8%87%E0%B8%A8%E0%B9%8C_%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3_%284%29.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>야오와랏(차이나타운)</b><span>붉은 간판이 가득한 중화가. 밤이면 해산물·디저트 노점이 줄을 잇는다.</span></div></div><div class="place"><div class="place-photo"><img alt="짐 톰슨 하우스" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Main_House_of_Jim_Thompson_photo_Don_Ramey_Logan.jpg/1280px-Main_House_of_Jim_Thompson_photo_Don_Ramey_Logan.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>짐 톰슨 하우스</b><span>태국 실크를 부흥시킨 미국인의 전통 목조 가옥. 정원과 박물관이 고요하다.</span></div></div></div></div>
+  <aside class="food"><h3>음식</h3><div class="food-card"><img alt="똠얌꿍" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Tom_yam_kung_maenam.jpg/1280px-Tom_yam_kung_maenam.jpg"/><div class="content"><h4>똠얌꿍 · 거리 먹거리</h4><p>새콤·매콤·향긋한 똠얌꿍은 태국 대표 수프. 맵기를 조절할 수 있고, 차이나타운 노점의 해산물·디저트도 풍성합니다.</p></div></div><div class="food-list"><div class="food-pill"><b>똠얌꿍</b><span>새콤 매콤 수프</span></div><div class="food-pill"><b>꿰띠여우</b><span>쌀국수</span></div><div class="food-pill"><b>로띠</b><span>달콤 디저트</span></div></div></aside>
+  </div>
+  <div class="plan"><h3>추천 코스</h3><div class="days"><div class="day"><em>오전</em><b>실크</b><p>짐 톰슨 하우스</p></div><div class="day"><em>오후</em><b>거리</b><p>시내 쇼핑몰·마사지</p></div><div class="day"><em>저녁</em><b>중화가</b><p>야오와랏 노점 먹거리</p></div><div class="day extra"><em>야경 +α</em><b>카오산</b><p>카오산 로드 나이트라이프</p></div></div></div>
+  <div class="info-line">정보: <a class="source-link" href="https://www.tourismthailand.org/" target="_blank" rel="noopener">태국 관광 공식</a></div>
+  </div>
+  </article>
+  <article class="destination" id="market">
+  <div class="cover"><img alt="짜뚜짝 주말시장" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Bangkok_-_Jatujak_Market_02.JPG/1280px-Bangkok_-_Jatujak_Market_02.JPG"/><div class="cover-text"><span class="badge">주말시장·수상시장·강변</span><h2>③ 시장 · 리버사이드</h2><p>주말시장 · 수상시장 · 강변 나이트</p></div></div>
+  <div class="dest-body">
+  <div class="why"><strong>왜 잘 맞나?</strong> 세계 최대급 짜뚜짝 주말시장에서 쇼핑을 하고, 근교의 담넌사두억 수상시장에서 보트 위 먹거리를 즐긴 뒤, 강변의 아시아티크 야시장에서 저녁과 야경을 — 방콕의 시장과 리버사이드를 묶는 구역입니다.<div class="traits"><span class="trait">🛍️ 짜뚜짝</span><span class="trait">🛶 수상시장</span><span class="trait">🎡 아시아티크</span><span class="trait">🌃 강변 야경</span></div></div>
+  <div class="subgrid">
+  <div class="places"><h3>추천 장소 · 사진으로 보기</h3><div class="place-grid"><div class="place"><div class="place-photo"><img alt="담넌사두억 수상시장" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Understanding_the_%22floating_market%22_%2815801439261%29.jpg/1280px-Understanding_the_%22floating_market%22_%2815801439261%29.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>담넌사두억 수상시장</b><span>좁은 운하를 따라 보트 위에서 과일·먹거리를 파는 전통 수상시장.</span></div></div><div class="place"><div class="place-photo"><img alt="아시아티크" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Asiatique_%28II%29.jpg/1280px-Asiatique_%28II%29.jpg"/><span class="photo-label">추천 장소</span></div><div class="place-content"><b>아시아티크</b><span>강변 창고를 개조한 대형 야시장. 대관람차·레스토랑·공연이 모여 있다.</span></div></div></div></div>
+  <aside class="food"><h3>음식</h3><div class="food-card"><img alt="망고 스티키 라이스" loading="lazy" onerror="this.style.display='none'" referrerpolicy="no-referrer" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Mango_sticy_rice_%283859549574%29.jpg/1280px-Mango_sticy_rice_%283859549574%29.jpg"/><div class="content"><h4>망고 스티키 라이스 · 과일</h4><p>달콤한 망고와 코코넛 찰밥을 함께 먹는 망고 스티키 라이스는 태국 대표 디저트. 열대 과일도 저렴하고 풍성합니다.</p></div></div><div class="food-list"><div class="food-pill"><b>망고 찰밥</b><span>대표 디저트</span></div><div class="food-pill"><b>열대 과일</b><span>망고·두리안</span></div><div class="food-pill"><b>코코넛 아이스</b><span>시원한 간식</span></div></div></aside>
+  </div>
+  <div class="plan"><h3>추천 코스</h3><div class="days"><div class="day"><em>오전</em><b>수상시장</b><p>담넌사두억 보트 투어</p></div><div class="day"><em>오후</em><b>주말시장</b><p>짜뚜짝 쇼핑(주말)</p></div><div class="day"><em>저녁</em><b>강변</b><p>아시아티크 야시장·저녁</p></div><div class="day extra"><em>야경 +α</em><b>루프탑</b><p>강변 루프탑 바 야경</p></div></div></div>
+  <div class="info-line">정보: <a class="source-link" href="https://www.tourismthailand.org/" target="_blank" rel="noopener">태국 관광 공식</a></div>
+  </div>
+  </article>
+  <div class="note"><strong>여행 팁</strong> · 방콕은 11~2월 건기가 가장 쾌적하고, 3~5월은 매우 덥습니다. BTS·MRT와 보트가 교통 핵심이며 왕궁 사원은 복장 규정(어깨·무릎 가림)이 있습니다. 짜뚜짝은 주말에만, 담넌사두억 수상시장은 오전이 활기찹니다. 사진 © Wikimedia Commons 기여자 · 관광 정보는 태국 관광 공식 사이트 참고. 운영 시간·요금은 방문 전 확인하세요.</div>
+  </div></section>
+  </div>
   <footer class="footer">
     <div class="container">
       <div class="footer-top">
@@ -639,26 +200,9 @@
           <p class="disclaimer">본 페이지의 링크는 제휴 마케팅 링크를 포함합니다.<br>구매 시 수수료가 발생할 수 있으며, 이용자에게 추가 비용은 없습니다.</p>
         </div>
         <div class="footer-nav">
-          <div>
-            <h4>일본 투어·티켓</h4>
-            <a href="osaka.html">오사카</a>
-            <a href="fukuoka.html">후쿠오카</a>
-            <a href="tokyo.html">도쿄</a>
-            <a href="kyoto.html">교토</a>
-          </div>
-          <div>
-            <h4>동남아 투어·티켓</h4>
-            <a href="bangkok.html">방콕</a>
-            <a href="danang.html">다낭</a>
-            <a href="bali.html">발리</a>
-            <a href="singapore.html">싱가포르</a>
-          </div>
-          <div>
-            <h4>국내 투어·티켓</h4>
-            <a href="jeju.html">제주도</a>
-            <a href="busan.html">부산</a>
-            <a href="gangneung.html">강릉</a>
-          </div>
+          <div><h4>일본 투어·티켓</h4><a href="osaka.html">오사카</a><a href="fukuoka.html">후쿠오카</a><a href="tokyo.html">도쿄</a><a href="kyoto.html">교토</a></div>
+          <div><h4>동남아 투어·티켓</h4><a href="bangkok.html">방콕</a><a href="danang.html">다낭</a><a href="bali.html">발리</a><a href="singapore.html">싱가포르</a></div>
+          <div><h4>국내 투어·티켓</h4><a href="jeju.html">제주도</a><a href="busan.html">부산</a><a href="gangneung.html">강릉</a></div>
         </div>
       </div>
       <div class="footer-bottom">
@@ -668,63 +212,32 @@
       </div>
     </div>
   </footer>
-
   <script src="main.js"></script>
   <script>
-    // main.js의 initDayTabs()가 이 페이지의 탭과 충돌하지 않도록 오버라이드
     function initDayTabs() {}
-
-    // 여행 유형 탭 전환
-    function switchType(type, btn) {
-      document.querySelectorAll('.type-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.type-content').forEach(c => c.classList.remove('active'));
+    function setDuration(days, btn) {
+      document.querySelectorAll('.sgg .duration button').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById('type-' + type).classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // 일정 탭 전환 (타입별 독립 — 컨테이너 스코프)
-    function showDay(type, day, btn) {
-      const tabsEl = document.getElementById(type + '-tabs');
-      const container = tabsEl.parentElement;
-      container.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
-      container.querySelectorAll('.day-content').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      const target = document.getElementById(type + '-day' + day);
-      if (target) target.classList.add('active');
+      document.querySelectorAll('.sgg .destination').forEach(el => { if (days === 4) el.classList.add('show-4'); else el.classList.remove('show-4'); });
+      var note = document.querySelector('.sgg .duration-note');
+      if (note) note.textContent = days === 4 ? '3박 4일 기준입니다. 각 구역 코스에 야경·추가 코스 등 여유 시간이 추가되고, 4구역 정도를 여유롭게 볼 수 있습니다.' : '2박 3일 기준입니다. 핵심 3구역 중심의 압축 코스입니다.';
     }
   </script>
-<script>
-// PWA — Service Worker 등록
-if('serviceWorker' in navigator){
-  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-}
-</script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));}</script>
     <script src="/affiliates.js"></script>
   <script src="/destaff.js" defer></script>
 <script src="/analytics.js"></script>
 <script src="/pwa-install.js" defer></script>
   <script>
-  // 목적지 현재 날씨 (Open-Meteo, /api/proxy 경유)
   (function(){
-    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],
-      45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],
-      61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],
-      80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
-    var url='https://api.open-meteo.com/v1/forecast?latitude=13.7563&longitude=100.5018'
-      +'&current=temperature_2m,weather_code,relative_humidity_2m'
-      +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FBangkok';
+    var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름 조금'],3:['☁️','흐림'],45:['🌫️','안개'],48:['🌫️','짙은 안개'],51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','강한 이슬비'],61:['🌧️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],71:['🌨️','약한 눈'],73:['❄️','눈'],75:['❄️','강한 눈'],80:['🌦️','소나기'],81:['🌦️','소나기'],82:['⛈️','강한 소나기'],95:['⛈️','뇌우'],96:['⛈️','뇌우'],99:['⛈️','우박 동반 뇌우']};
+    var url='https://api.open-meteo.com/v1/forecast?latitude=13.7563&longitude=100.5018&current=temperature_2m,weather_code,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FBangkok';
     fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
       if(!w||!w.current) return;
-      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
-      var g=function(id){return document.getElementById(id);};
-      g('dwIcon').textContent=wm[0];
-      g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';
-      g('dwDesc').textContent=wm[1];
-      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;
-      var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
-      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';
-      g('destWeather').hidden=false;
+      var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];var g=function(id){return document.getElementById(id);};
+      g('dwIcon').textContent=wm[0];g('dwTemp').textContent=Math.round(c.temperature_2m)+'°';g('dwDesc').textContent=wm[1];
+      var hi=d&&d.temperature_2m_max?Math.round(d.temperature_2m_max[0]):null;var lo=d&&d.temperature_2m_min?Math.round(d.temperature_2m_min[0]):null;
+      g('dwDetail').textContent=(lo!=null?lo+'°/'+hi+'° · ':'')+'습도 '+(c.relative_humidity_2m||'--')+'%';g('destWeather').hidden=false;
     }).catch(function(){});
   })();
   </script>
