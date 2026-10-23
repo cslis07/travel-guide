@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-10-23 (4차)
+
+### 🔧 인프라 — 남은 Edge 함수 4개도 Node 서울(icn1)로
+- `api/tour`·`api/mrt`·`api/hotelidx`·`api/hotelprice`: `runtime: 'edge'` 제거 → Node.js Web 표준 핸들러(GET/POST/OPTIONS, 기존처럼 모든 메서드 같은 핸들러). `vercel.json` `regions: ["icn1"]`로 서울 실행 → 이제 **API 5개 전부 국내 IP**로 공공 API 호출(인천공항 503 같은 해외 차단 재발 방지). Edge는 Vercel 권장 종료 런타임
+- tour: Cloudflare 전용 `cf` 옵션 제거(Vercel에선 원래 효과 없었음, 캐시는 s-maxage CDN이 담당)
+- **스모크 테스트 강화**: tour는 `'response'`만 보면 오류 응답(`responseTime`)도 통과했음 → `"resultCode":"0000"` 확인, `hotelidx` 항목 추가(42→43)
+- 검증: 전 스모크 43/43(Edge·싱가포르 sin1) → 후 43/43(Node·서울 `icn1::icn1`), 4개 함수 직접 호출(캐시 우회) 전부 실데이터 200, 로컬 핸들러 7케이스(경로 차단·OPTIONS·mrt GET 405 포함) 동일 동작
+- 참고: 첫 푸시(ead435d)를 Vercel이 받지 못해 빈 커밋(53bdd76)으로 배포 재시도
+
 ## 2026-10-23 (3차)
 
 ### 🐛 수정 — 인천공항 실시간(/airport·내 여행 공항 탭) 전부 503
