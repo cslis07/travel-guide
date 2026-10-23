@@ -33,6 +33,7 @@
   .dday{align-self:flex-start;background:rgba(255,255,255,.24);backdrop-filter:blur(6px);padding:4px 11px;border-radius:999px;font-size:12px;font-weight:800}
   .tdel{position:absolute;top:12px;right:12px;width:32px;height:32px;border:none;border-radius:10px;background:rgba(0,0,0,.28);backdrop-filter:blur(6px);color:#fff;font-size:14px;cursor:pointer;line-height:1;z-index:2}
   .tdel:active{background:rgba(0,0,0,.45)}
+  .tcopy{position:absolute;top:12px;right:52px;height:32px;padding:0 10px;border:none;border-radius:10px;background:rgba(0,0,0,.28);backdrop-filter:blur(6px);color:#fff;font-size:12px;font-weight:800;cursor:pointer;z-index:2;font-family:inherit}
   .tcover h3{font-size:22px;font-weight:800;text-shadow:0 1px 10px rgba(0,0,0,.22)}
   .tcover .dt{font-size:12.5px;font-weight:600;opacity:.96}
   .tbar{padding:0 14px}.tbar .pr{height:6px;border-radius:999px;background:var(--gray-100);overflow:hidden;margin-top:12px}
@@ -143,7 +144,33 @@ function setF(el){ document.querySelectorAll('.fchip').forEach(function(c){c.cla
 function delTrip(id){
   var t=T.get(id); if(!t) return;
   if(!confirm('“'+t.city+'” 여행을 삭제할까요?\n일정·예산·예약·준비물이 모두 지워지며 되돌릴 수 없습니다.')) return;
+  // 이 여행 지출에 붙은 영수증 사진(IndexedDB)도 함께 지움 — 안 그러면 폰에 계속 남음
+  var rc=(t.expenses||[]).filter(function(e){return e.hasReceipt;}).map(function(e){return e.id;});
+  if(rc.length && window.indexedDB){
+    try{ var rq=indexedDB.open('tc-receipts',1); rq.onupgradeneeded=function(){ rq.result.createObjectStore('r'); };
+      rq.onsuccess=function(){ var st=rq.result.transaction('r','readwrite').objectStore('r'); rc.forEach(function(id){ st.delete(id); }); }; }catch(e){}
+  }
   T.remove(id); render();
+}
+/* 지난 여행을 템플릿으로 — 일정·준비물·사람·예산만 새 날짜로 복사(지출·예약·항공편은 빼고, 준비물은 다시 미체크) */
+function copyTrip(id){
+  var t=T.get(id); if(!t) return;
+  var d=new Date(Date.now()+30*864e5), def=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+  var start=(prompt('“'+t.city+'” 여행을 새 날짜로 다시 써요.\n새 출발일 (예: '+def+')', def)||'').trim();
+  if(!start) return;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(start) || isNaN(new Date(start+'T00:00:00'))){ alert('날짜를 2026-12-01 형식으로 적어 주세요.'); return; }
+  var len=T.tripLength(t), e=new Date(start+'T00:00:00'); e.setDate(e.getDate()+len-1);
+  var end=e.getFullYear()+'-'+('0'+(e.getMonth()+1)).slice(-2)+'-'+('0'+e.getDate()).slice(-2);
+  var uid=function(p){ return p+Math.random().toString(36).slice(2,9); };
+  var nt=T.create({ city:t.city, cover:t.cover, start:start, end:end,
+    members:(t.members||[]).map(function(m){ var o={name:m.name,color:m.color}; if(m.toss) o.toss=m.toss; return o; }),
+    budgetTotal:T.budgetTotal(t) });
+  if(t.budget&&t.budget.catLimits) nt.budget.catLimits=JSON.parse(JSON.stringify(t.budget.catLimits));
+  T.ensureDays(nt);
+  (t.days||[]).forEach(function(day,i){ if(nt.days[i]) nt.days[i].items=(day.items||[]).map(function(it){ return { id:uid('i'), time:it.time||'', type:it.type||'sight', title:it.title, memo:it.memo||'' }; }); });
+  nt.checklist=(t.checklist||[]).map(function(c){ return { id:uid('c'), group:c.group||'기타', text:c.text, when:c.when||'', done:false }; });
+  T.upsert(nt);
+  location.href='/trip?id='+nt.id;
 }
 
 function render(){
@@ -170,7 +197,8 @@ function card(t){
   var cst = (ph ? 'background-image:linear-gradient(180deg,rgba(0,0,0,.08) 30%,rgba(0,0,0,.62)),url(\''+ph+'\');' : '') + (done ? 'filter:grayscale(.25)' : '');
   return '<div class="tcard" onclick="location.href=\'/trip?id='+t.id+'\'">'
     + '<div class="tcover cov-'+esc(t.cover)+(ph?' ph':'')+'"'+(cst?' style="'+cst+'"':'')+'>'
-    +   '<button class="tdel" title="여행 삭제" onclick="event.stopPropagation();delTrip(\''+t.id+'\')">🗑</button>'
+    +   '<button class="tdel" title="여행 삭제" aria-label="여행 삭제" onclick="event.stopPropagation();delTrip(\''+t.id+'\')">🗑</button>'
+    +   '<button class="tcopy" title="이 여행을 새 날짜로 다시 쓰기" onclick="event.stopPropagation();copyTrip(\''+t.id+'\')">↻ 다시 쓰기</button>'
     +   '<span class="dday"'+(done?' style="background:rgba(0,0,0,.28)"':'')+'>'+T.ddayText(t)+'</span>'
     +   '<div><h3>'+esc(t.city)+'</h3><div class="dt">'+T.fmtMD(t.start)+' – '+T.fmtMD(t.end)+' · '+T.tripLength(t)+'일 · '+(t.members||[]).length+'명</div></div>'
     + '</div>'
