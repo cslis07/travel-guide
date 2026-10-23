@@ -70,8 +70,26 @@
     '부산': [35.1796, 129.0756], '강릉': [37.7519, 128.8761], '파리': [48.8566, 2.3522],
     '속초': [38.2070, 128.5918], '양양': [38.0754, 128.6190], '삼척': [37.4499, 129.1655],
     '춘천': [37.8813, 127.7300], '포천': [37.8949, 127.2003], '대전': [36.3504, 127.3845],
-    '태안': [36.7456, 126.2980], '서울': [37.5665, 126.9780], '인천': [37.4563, 126.7052]
+    '태안': [36.7456, 126.2980], '서울': [37.5665, 126.9780], '인천': [37.4563, 126.7052],
+    // 가이드 표기(2026-10 개편)와 맞춤 — 가이드에서 만든 여행이 날씨를 못 받던 문제
+    '장자제': [29.117, 110.479], '구이린': [25.274, 110.290], '창바이산': [42.008, 128.057], '나하': [26.212, 127.679]
   };
+
+  /* ── 도시별 시간대(IANA) — 현지 시각·시차 표시용. 없으면 날씨 응답(timezone=auto)에서 배운 값(tc_tz_도시) ── */
+  var CITY_TZ = {
+    '오사카': 'Asia/Tokyo', '후쿠오카': 'Asia/Tokyo', '도쿄': 'Asia/Tokyo', '교토': 'Asia/Tokyo', '삿포로': 'Asia/Tokyo', '오키나와': 'Asia/Tokyo', '나하': 'Asia/Tokyo',
+    '장가계': 'Asia/Shanghai', '장자제': 'Asia/Shanghai', '계림': 'Asia/Shanghai', '구이린': 'Asia/Shanghai', '상하이': 'Asia/Shanghai', '백두산': 'Asia/Shanghai', '창바이산': 'Asia/Shanghai',
+    '타이베이': 'Asia/Taipei', '홍콩': 'Asia/Hong_Kong', '방콕': 'Asia/Bangkok', '다낭': 'Asia/Ho_Chi_Minh', '나트랑': 'Asia/Ho_Chi_Minh',
+    '발리': 'Asia/Makassar', '싱가포르': 'Asia/Singapore', '세부': 'Asia/Manila', '코타키나발루': 'Asia/Kuching', '파리': 'Europe/Paris'
+  };
+  function cityTz(name) {
+    var c = (name || '').trim(), k = c.replace(/\s*(여행|시|특별시|광역시|도)$/, '').trim();
+    if (CITY_TZ[c]) return CITY_TZ[c];
+    if (CITY_TZ[k]) return CITY_TZ[k];
+    for (var key in CITY_TZ) { if (c.indexOf(key) > -1) return CITY_TZ[key]; }
+    if (CITY_GEO[c] || CITY_GEO[k]) return 'Asia/Seoul';   // 국내 도시
+    try { return localStorage.getItem('tc_tz_' + c) || ''; } catch (e) { return ''; }
+  }
   function cityGeo(name) {
     var c = (name || '').trim(); if (CITY_GEO[c]) return { lat: CITY_GEO[c][0], lon: CITY_GEO[c][1] };
     // 접미어 제거 후 재시도 (예: '오사카 여행')
@@ -88,6 +106,8 @@
   function parseD(s) { var p = (s || '').split('-'); return new Date(+p[0], (+p[1] || 1) - 1, +p[2] || 1); }
   function fmtMD(s) { var d = parseD(s); return (d.getMonth() + 1) + '.' + d.getDate(); }
   function dow(s) { return ['일','월','화','수','목','금','토'][parseD(s).getDay()]; }
+  /* 로컬 날짜 'YYYY-MM-DD' — toISOString()은 UTC라 한국(UTC+9) 자정~오전 9시엔 하루 전 날짜가 됨(일차 날짜가 하루씩 밀리던 원인) */
+  function iso(d) { d = d || new Date(); return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
   function daysBetween(a, b) { return Math.round((parseD(b) - parseD(a)) / 86400000); }
   function tripLength(t) { return Math.max(1, daysBetween(t.start, t.end) + 1); }
   function today() { var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
@@ -104,7 +124,7 @@
     var now = today(), s = parseD(t.start), e = parseD(t.end);
     if (now < s) return tripLength(t);
     if (now > e) return 0;
-    return Math.max(1, daysBetween(now.toISOString().slice(0, 10), t.end) + 1);
+    return Math.max(1, daysBetween(iso(now), t.end) + 1);
   }
 
   /* ── 예산 계산 ── */
@@ -169,7 +189,7 @@
   function ensureDays(t) {
     var len = tripLength(t); t.days = t.days || [];
     for (var i = 0; i < len; i++) {
-      var date = new Date(parseD(t.start).getTime() + i * 86400000).toISOString().slice(0, 10);
+      var sd = parseD(t.start); sd.setDate(sd.getDate() + i); var date = iso(sd);
       if (!t.days[i]) t.days[i] = { date: date, items: [] };
       else t.days[i].date = date;
     }
@@ -260,8 +280,8 @@
   /* ── 데모 시드(비어 있을 때 1회) — 오사카 예시로 구조를 보여줌 ── */
   function seedIfEmpty() {
     if (load().length) return;
-    var start = new Date(today().getTime() + 24 * 86400000).toISOString().slice(0, 10);
-    var end = new Date(today().getTime() + 27 * 86400000).toISOString().slice(0, 10);
+    var start = iso(new Date(today().getTime() + 24 * 86400000));
+    var end = iso(new Date(today().getTime() + 27 * 86400000));
     var t = create({ city: '오사카', cover: 'osaka', start: start, end: end,
       members: [{ name: '나', color: '#F97316' }, { name: '민수', color: '#1B4FD8' }],
       budgetTotal: 1240000,
@@ -341,9 +361,9 @@
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,
     dailyAllowance: dailyAllowance, remainingDays: remainingDays, byCategory: byCategory,
     settlements: settlements, balances: balances, toKRW: toKRW,
-    refreshRates: refreshRates, fxState: fxState, cityGeo: cityGeo, cityPhoto: cityPhoto,
+    refreshRates: refreshRates, fxState: fxState, cityGeo: cityGeo, cityPhoto: cityPhoto, cityTz: cityTz,
     // 날짜
-    fmtMD: fmtMD, dow: dow, tripLength: tripLength, ddayText: ddayText, daysBetween: daysBetween,
+    fmtMD: fmtMD, iso: iso, dow: dow, tripLength: tripLength, ddayText: ddayText, daysBetween: daysBetween,
     catByKey: function (k) { return CATS.filter(function (c) { return c.key === k; })[0] || CATS[6]; }
   };
 })();

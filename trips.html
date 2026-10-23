@@ -46,6 +46,16 @@
   /* 모달 */
   .mwrap{position:fixed;inset:0;background:rgba(16,24,40,.5);display:none;align-items:flex-end;justify-content:center;z-index:1000}
   .mwrap.on{display:flex}
+  .tw-head>div:first-child{flex:1}
+  .bkbtn{border:1px solid var(--gray-200);background:#fff;color:var(--gray-700);border-radius:14px;padding:10px 12px;font-size:13px;font-weight:800;margin-right:8px;cursor:pointer;font-family:inherit}
+  .bk-p{font-size:13px;color:var(--gray-600);line-height:1.6;margin:4px 0 10px}.bk-last{font-size:12.5px;font-weight:700;color:var(--primary);margin-bottom:8px}
+  .bk-chk{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;min-height:40px}.bk-chk small{font-weight:500;color:var(--gray-500)}
+  .bk-restore{display:flex;align-items:center;justify-content:center;min-height:48px;margin-top:8px;border:1.5px dashed var(--gray-300);border-radius:14px;font-size:14px;font-weight:800;color:var(--primary);cursor:pointer}
+  .bk-note{font-size:11.5px;color:var(--gray-500);margin-top:10px;line-height:1.5}
+  .bk-banner{display:flex;align-items:center;gap:10px;background:#FFFAEB;border:1px solid #FEDF89;border-radius:14px;padding:11px 13px;margin-bottom:14px}
+  .bk-banner span{font-size:20px}.bk-banner div{flex:1;font-size:12.5px;color:#93370D}.bk-banner small{display:block;color:#B54708}
+  .bk-banner button{border:none;background:#B54708;color:#fff;font-weight:800;font-size:12.5px;padding:8px 12px;border-radius:10px;cursor:pointer;font-family:inherit}
+  #bk-toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#101828;color:#fff;font-size:13px;font-weight:600;padding:11px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:3000;pointer-events:none;max-width:88vw;text-align:center}#bk-toast.on{opacity:1}
   .modal{background:#fff;width:100%;max-width:640px;border-radius:22px 22px 0 0;padding:18px 18px 28px;animation:up .25s cubic-bezier(.2,.9,.3,1);max-height:92vh;overflow-y:auto}
   @keyframes up{from{transform:translateY(100%)}to{transform:none}}
   .grip{width:38px;height:4px;background:var(--gray-200);border-radius:999px;margin:0 auto 14px}
@@ -64,6 +74,7 @@
 <div class="tw">
   <div class="tw-head">
     <div><h1>내 여행</h1><div class="sub" id="subCount"></div></div>
+    <button class="bkbtn" onclick="openBackup()" aria-label="백업·복원">📦 백업</button>
     <button class="newbtn" onclick="openNew()"><svg class="i" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>새 여행</button>
   </div>
   <div class="filters">
@@ -73,6 +84,18 @@
   </div>
   <div id="list"></div>
 </div>
+
+<!-- 백업·복원 -->
+<div class="mwrap" id="bkModal"><div class="modal">
+  <div class="grip"></div>
+  <h3>백업 · 복원</h3>
+  <p class="bk-p">여행·지출·준비물은 <b>이 폰의 브라우저에만</b> 저장돼요. 브라우저 데이터를 지우거나 폰을 바꾸면 사라지니, 백업 파일을 카톡 '나와의 채팅'·드라이브 등에 보관하세요.</p>
+  <div class="bk-last" id="bkLast"></div>
+  <label class="bk-chk"><input type="checkbox" id="bkRc" checked> 영수증 사진도 넣기 <small id="bkRcN"></small></label>
+  <button class="save" onclick="doBackup()">📥 백업 파일 저장</button>
+  <label class="bk-restore">📤 백업 파일에서 복원<input type="file" id="bkFile" accept=".json,application/json" hidden onchange="doRestore(this)"></label>
+  <p class="bk-note">복원은 덮어쓰지 않고 <b>합쳐요</b> — 없는 여행은 추가, 같은 여행이 내용만 다르면 '(복원)' 사본으로 추가, 똑같으면 건너뜀.</p>
+</div></div>
 
 <!-- 새 여행 모달 -->
 <div class="mwrap" id="newModal">
@@ -131,6 +154,86 @@ function legacyBannerHtml(){
     +'<button onclick="importLegacy()" style="border:none;background:var(--accent);color:#fff;font-weight:800;font-size:12px;padding:8px 12px;border-radius:10px;cursor:pointer;white-space:nowrap">가져오기</button>'
     +'<span onclick="dismissLegacy()" style="cursor:pointer;color:#b06a2a;font-weight:800;padding:4px">✕</span></div>';
 }
+
+/* ═══ 백업·복원 — 서버가 없어 데이터가 이 폰 브라우저에만 있음. 파일로 보관/복원(합치기) ═══ */
+var BK_KEYS=['icn_fav_flights','icn_checklist','icn_checklist_custom','tripguide_prepare_done','tripguide_depart_date'];
+/* IndexedDB는 연결을 꼭 닫고(안 닫으면 다른 탭·삭제가 막힘), 응답이 없어도 4초 뒤엔 넘어가 백업·복원이 멈추지 않게 */
+function once(cb,v){ var done=false, t=setTimeout(function(){ if(!done){ done=true; cb(v); } },4000); return function(x){ if(!done){ done=true; clearTimeout(t); cb(x); } }; }
+function rcAll(cb){   // 영수증(IndexedDB) 전부 {id:dataUrl}
+  cb=once(cb,{}); if(!window.indexedDB) return cb({});
+  try{ var rq=indexedDB.open('tc-receipts',1); rq.onupgradeneeded=function(){ rq.result.createObjectStore('r'); };
+    rq.onsuccess=function(){ var db=rq.result, out={}, cur=db.transaction('r').objectStore('r').openCursor();
+      cur.onsuccess=function(e){ var c=e.target.result; if(c){ out[c.key]=c.value; c.continue(); } else { db.close(); cb(out); } }; cur.onerror=function(){ db.close(); cb(out); }; };
+    rq.onerror=rq.onblocked=function(){ cb({}); }; }catch(e){ cb({}); }
+}
+function rcPutAll(map,cb){
+  cb=once(cb,0); var ids=Object.keys(map||{}); if(!ids.length||!window.indexedDB) return cb(0);
+  try{ var rq=indexedDB.open('tc-receipts',1); rq.onupgradeneeded=function(){ rq.result.createObjectStore('r'); };
+    rq.onsuccess=function(){ var db=rq.result, tx=db.transaction('r','readwrite'), st=tx.objectStore('r'), n=0;
+      ids.forEach(function(id){ var v=map[id]; if(typeof v==='string'&&/^data:image\/jpeg;base64,/.test(v)&&v.length<3e6){ st.put(v,id); n++; } });
+      tx.oncomplete=function(){ db.close(); cb(n); }; tx.onerror=tx.onabort=function(){ db.close(); cb(0); }; };
+    rq.onerror=rq.onblocked=function(){ cb(0); }; }catch(e){ cb(0); }
+}
+function lastBackupText(){
+  var t=+(localStorage.getItem('tc_last_backup')||0); if(!t) return '아직 백업한 적이 없어요';
+  var d=Math.floor((Date.now()-t)/864e5); return '마지막 백업: '+(d?d+'일 전':'오늘')+' ('+new Date(t).toLocaleDateString('ko-KR')+')';
+}
+function openBackup(){
+  document.getElementById('bkLast').textContent=lastBackupText();
+  var n=0; T.all().forEach(function(t){ (t.expenses||[]).forEach(function(e){ if(e.hasReceipt) n++; }); });
+  document.getElementById('bkRcN').textContent=n?'('+n+'장 — 파일이 커져요)':'(사진 없음)';
+  document.getElementById('bkModal').classList.add('on');
+}
+function closeBackup(){ document.getElementById('bkModal').classList.remove('on'); }
+document.getElementById('bkModal').addEventListener('click',function(e){ if(e.target===this) closeBackup(); });
+function doBackup(){
+  var withRc=document.getElementById('bkRc').checked;
+  var extra={}; BK_KEYS.forEach(function(k){ var v=localStorage.getItem(k); if(v!=null) extra[k]=v; });
+  (withRc?rcAll:function(cb){ cb({}); })(function(rc){
+    var data={ app:'travelcost', v:1, exported:new Date().toISOString(), trips:T.all(), receipts:rc, extra:extra };
+    var d=new Date(), name='travelcost-backup-'+d.getFullYear()+('0'+(d.getMonth()+1)).slice(-2)+('0'+d.getDate()).slice(-2)+'.json';
+    var blob=new Blob([JSON.stringify(data)],{type:'application/json'});
+    var done=function(){ localStorage.setItem('tc_last_backup',String(Date.now())); closeBackup(); render(); toastB('백업 파일을 저장했어요 — 안전한 곳에 보관하세요'); };
+    try{ var f=new File([blob],name,{type:'application/json'});
+      if(navigator.canShare&&navigator.canShare({files:[f]})){ navigator.share({files:[f],title:'트래블코스트 백업'}).then(done).catch(function(){}); return; } }catch(e){}
+    var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },60000); done();   // 너무 빨리 해제하면 큰 백업(영수증 포함) 다운로드가 끊길 수 있음
+  });
+}
+function doRestore(inp){
+  var f=inp.files&&inp.files[0]; if(!f) return;   // 입력칸 비우기는 다 읽은 뒤에(먼저 비우면 파일을 못 읽는 브라우저가 있음)
+  if(f.size>60e6){ alert('파일이 너무 커요.'); return; }
+  var r=new FileReader();
+  r.onerror=function(){ inp.value=''; alert('파일을 읽지 못했어요. 다시 골라 주세요.'); };
+  r.onload=function(){
+    inp.value='';
+    var data; try{ data=JSON.parse(r.result); }catch(e){ alert('백업 파일을 읽지 못했어요.'); return; }
+    if(!data||data.app!=='travelcost'||!Array.isArray(data.trips)){ alert('트래블코스트 백업 파일이 아니에요.'); return; }
+    var mine={}; T.all().forEach(function(t){ mine[t.id]=t; });
+    var added=0, copied=0, same=0;
+    data.trips.forEach(function(t){
+      if(!t||typeof t!=='object'||!t.id||!t.city||!/^\d{4}-\d{2}-\d{2}$/.test(t.start||'')||!/^\d{4}-\d{2}-\d{2}$/.test(t.end||'')) return;
+      var cur=mine[t.id];
+      if(!cur){ T.upsert(t); added++; return; }
+      if(JSON.stringify(cur)===JSON.stringify(t)){ same++; return; }
+      var c=JSON.parse(JSON.stringify(t)); c.id='r'+Math.random().toString(36).slice(2,11); c.city=String(t.city).slice(0,30)+' (복원)'; T.upsert(c); copied++;
+    });
+    Object.keys(data.extra||{}).forEach(function(k){ if(BK_KEYS.indexOf(k)>-1&&localStorage.getItem(k)==null&&typeof data.extra[k]==='string') localStorage.setItem(k,data.extra[k]); });
+    rcPutAll(data.receipts,function(n){
+      closeBackup(); render();
+      alert('복원했어요 — 새 여행 '+added+'개'+(copied?', 사본 '+copied+'개':'')+(same?', 이미 있음 '+same+'개':'')+(n?', 영수증 '+n+'장':''));
+    });
+  };
+  r.readAsText(f);
+}
+function backupBannerHtml(){
+  var list=T.all(); if(!list.length) return '';
+  var t=+(localStorage.getItem('tc_last_backup')||0), old=!t||(Date.now()-t)>14*864e5;
+  if(!old) return '';
+  return '<div class="bk-banner"><span>📦</span><div><b>여행 데이터는 이 폰에만 저장돼요</b><small>'+lastBackupText()+'</small></div><button onclick="openBackup()">백업</button></div>';
+}
+function toastB(m){ var t=document.getElementById('bk-toast'); if(!t){ t=document.createElement('div'); t.id='bk-toast'; document.body.appendChild(t); } t.textContent=m; t.classList.add('on'); clearTimeout(toastB._t); toastB._t=setTimeout(function(){ t.classList.remove('on'); },2600); }
+
 function importLegacy(){ localStorage.setItem('tc_legacy_migrated','1'); window.TripAttach.open(window.__legacyPayload); }
 function dismissLegacy(){ localStorage.setItem('tc_legacy_migrated','1'); var b=document.getElementById('legacyBanner'); if(b) b.remove(); }
 
@@ -138,7 +241,7 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return
 function won(n){return '₩' + (n||0).toLocaleString('ko-KR');}
 
 function classify(t){
-  var end = T.daysBetween(new Date().toISOString().slice(0,10), t.end);
+  var end = T.daysBetween(T.iso ? T.iso() : new Date().toISOString().slice(0,10), t.end);
   return end < 0 ? 'past' : 'upcoming';
 }
 function setF(el){ document.querySelectorAll('.fchip').forEach(function(c){c.classList.remove('on');}); el.classList.add('on'); curF = el.dataset.f; render(); }
@@ -149,7 +252,7 @@ function delTrip(id){
   var rc=(t.expenses||[]).filter(function(e){return e.hasReceipt;}).map(function(e){return e.id;});
   if(rc.length && window.indexedDB){
     try{ var rq=indexedDB.open('tc-receipts',1); rq.onupgradeneeded=function(){ rq.result.createObjectStore('r'); };
-      rq.onsuccess=function(){ var st=rq.result.transaction('r','readwrite').objectStore('r'); rc.forEach(function(id){ st.delete(id); }); }; }catch(e){}
+      rq.onsuccess=function(){ var db=rq.result, tx=db.transaction('r','readwrite'), st=tx.objectStore('r'); rc.forEach(function(id){ st.delete(id); }); tx.oncomplete=tx.onerror=tx.onabort=function(){ db.close(); }; }; }catch(e){}
   }
   T.remove(id); render();
 }
@@ -181,7 +284,7 @@ function render(){
   document.getElementById('subCount').textContent = list.length + '개의 여행 · 예정 ' + up.length + '개';
   var show = curF==='upcoming'?up : curF==='past'?past : list;
   var el = document.getElementById('list');
-  var banner = legacyBannerHtml();
+  var banner = legacyBannerHtml() + backupBannerHtml();
   if(!show.length){
     el.innerHTML = banner + '<div class="empty"><div class="em">🧳</div><h3>아직 여행이 없어요</h3><p>“새 여행”을 눌러 첫 여행을 만들어 보세요.</p></div>';
     return;

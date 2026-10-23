@@ -159,6 +159,8 @@
 
   <div id="goodsTop" style="margin:18px 0"></div>
 
+  <section class="en-sec" id="entry"></section>
+
   <div id="stages"></div>
 
   <section class="pk-sec" id="items">
@@ -433,6 +435,70 @@ function render(){
   }
 }
 
+
+/* ═══ 🛂 입국 준비 — 한국 일반여권·단기 관광 기준. 2026-10-23 공식 사이트·외교부 0404 사증면제표(2026.9 기준)로 확인한 것만.
+   확인 못 한 것은 단정하지 않는다(권장·논의 중·시작일 미정). 링크는 공식 주소만(유료 대행 사이트 다수). ═══ */
+var ENTRY_CHECKED = '2026-10-23';
+var ENTRY = {
+  jp:{ n:'일본', visa:'무비자 90일', items:[
+    { t:'Visit Japan Web', w:'입국심사·세관 정보를 미리 등록하고 QR로 통과 (권장)', when:'출발 전', d:'D-3', u:'https://services.digital.go.jp/en/visit-japan-web/' }]},
+  tw:{ n:'대만', visa:'무비자 90일', items:[
+    { t:'대만 온라인 입국카드 (TWAC)', w:'입국카드를 온라인으로 제출', when:'도착 3일 전부터', fee:'무료', d:'D-3', u:'https://twac.immigration.gov.tw' }]},
+  hk:{ n:'홍콩', visa:'무비자 90일', items:[], note:'방문객 입국카드는 2024년 10월 폐지 — 따로 낼 서류 없어요' },
+  cn:{ n:'중국', visa:'무비자 30일 (2026-12-31까지 한시 시행)', items:[
+    { t:'외국인 입국카드 온라인 작성', w:'미리 작성은 선택 — 안 하면 공항에서 QR·키오스크·종이로 작성', when:'출발 전(선택)', d:'D-3', u:'https://s.nia.gov.cn/ArrivalCardFillingPC/' }]},
+  th:{ n:'태국', visa:'무비자 90일', items:[
+    { t:'태국 디지털 입국카드 (TDAC)', w:'필수', when:'도착 3일(72시간) 이내', fee:'무료', d:'D-3', u:'https://tdac.immigration.go.th/' }]},
+  vn:{ n:'베트남', visa:'무비자 45일', items:[], note:'필수 온라인 사전등록은 확인된 것이 없어요' },
+  id:{ n:'인도네시아(발리)', visa:'비자 필요 — 도착비자(e-VOA) 30일, IDR 500,000 (요금 인상 논의 중)', items:[
+    { t:'e-VOA (전자 도착비자)', w:'출발 전 온라인 발급 권장(도착 공항에서도 가능)', when:'출발 전', d:'D-7', u:'https://evisa.imigrasi.go.id' },
+    { t:'All Indonesia 입국신고', w:'필수 — 도착 직전에 제출', when:'도착 며칠 전', d:'D-2', u:'https://allindonesia.imigrasi.go.id' },
+    { t:'발리 관광세 (Love Bali)', w:'1인 IDR 150,000 · 출국 전 온라인 납부 권장(현장 현금 불가)', when:'출발 전', d:'D-3', u:'https://lovebali.baliprov.go.id' }]},
+  sg:{ n:'싱가포르', visa:'무비자 90일', items:[
+    { t:'SG Arrival Card', w:'필수 — 안 내면 입국이 거부될 수 있어요(MyICA 앱도 가능)', when:'도착일 포함 3일 이내', fee:'무료', d:'D-2', u:'https://www.ica.gov.sg/enter-transit-depart/entering-singapore/sg-arrival-card' }]},
+  ph:{ n:'필리핀', visa:'무비자 30일', items:[
+    { t:'eTravel', w:'필수', when:'도착 72시간 이내', fee:'무료', d:'D-3', u:'https://www.etravel.gov.ph/' }]},
+  my:{ n:'말레이시아', visa:'무비자 90일', items:[
+    { t:'말레이시아 디지털 입국카드 (MDAC)', w:'필수 — 방문할 때마다', when:'도착일 포함 3일 이내', d:'D-2', u:'https://imigresen-online.imi.gov.my/mdac/main' }]},
+  fr:{ n:'프랑스(쉥겐)', visa:'무비자 90일 (180일 중)', items:[
+    { t:'EES 출입국 등록', w:'첫 입국 때 공항에서 지문·얼굴 등록 — 미리 낼 것 없음', when:'도착 공항에서' }],
+    note:'ETIAS(사전 여행허가)는 아직 시행 전이에요 — 시작일 미정' }
+};
+var CITY_CC = { '오사카':'jp','후쿠오카':'jp','도쿄':'jp','교토':'jp','삿포로':'jp','오키나와':'jp','나하':'jp','타이베이':'tw','홍콩':'hk',
+  '상하이':'cn','장가계':'cn','장자제':'cn','계림':'cn','구이린':'cn','백두산':'cn','창바이산':'cn','방콕':'th','다낭':'vn','나트랑':'vn',
+  '발리':'id','싱가포르':'sg','세부':'ph','코타키나발루':'my','파리':'fr' };
+function cityCC(city){ city=String(city||''); for (var k in CITY_CC) if (city.indexOf(k)>-1) return CITY_CC[k]; return ''; }
+function entryCC(){
+  if (TRIP) return cityCC(TRIP.city);
+  try { return localStorage.getItem('tc_entry_cc') || ''; } catch(e){ return ''; }
+}
+function pickEntry(cc){ try{ localStorage.setItem('tc_entry_cc', cc); }catch(e){} renderEntry(); }
+function addEntryItem(i){
+  var e=ENTRY[entryCC()], it=e&&e.items[i]; if(!it||!TRIP) return;
+  var t=TripStore.get(TRIP.id); t.checklist=t.checklist||[];
+  if(!t.checklist.some(function(c){ return c.text===it.t; })) t.checklist.push({ id:'e'+Math.random().toString(36).slice(2,9), group:'입국 준비', text:it.t, when:it.d||'', done:false });
+  TripStore.upsert(t); renderEntry();
+}
+function renderEntry(){
+  var box=$('entry'); if(!box) return;
+  var cc=entryCC(), e=ENTRY[cc];
+  if (TRIP && !cc) { box.innerHTML=''; return; }   // 국내·목록에 없는 도시
+  var picker='';
+  if (!TRIP) picker='<div class="en-pick">'+Object.keys(ENTRY).map(function(k){ return '<button type="button" class="en-cc'+(k===cc?' on':'')+'" onclick="pickEntry(\''+k+'\')">'+esc(ENTRY[k].n)+'</button>'; }).join('')+'</div>';
+  var have=function(t){ return TRIP && (TripStore.get(TRIP.id).checklist||[]).some(function(c){ return c.text===t; }); };
+  var body = !e ? '<div class="en-empty">가는 나라를 고르면 입국 서류를 보여 드려요</div>'
+    : '<div class="en-visa">🛂 <b>'+esc(e.n)+'</b> · '+esc(e.visa)+'</div>'
+      + e.items.map(function(it,i){
+          return '<div class="en-it"><div class="en-t"><b>'+esc(it.t)+'</b>'+(it.fee?'<span class="en-fee">'+esc(it.fee)+'</span>':'')+'</div>'
+            + '<div class="en-w">'+esc(it.w)+(it.when?' · <b>'+esc(it.when)+'</b>':'')+'</div>'
+            + '<div class="en-a">'+(it.u?'<a href="'+esc(it.u)+'" target="_blank" rel="noopener">공식 사이트 ↗</a>':'')
+            + (TRIP&&it.d ? (have(it.t)?'<em>✓ 준비물에 있음</em>':'<button type="button" onclick="addEntryItem('+i+')">+ 준비물에 담기 ('+esc(it.d)+')</button>') : '')+'</div></div>';
+        }).join('')
+      + (e.note?'<div class="en-note">ℹ️ '+esc(e.note)+'</div>':'');
+  box.innerHTML='<h2>🛂 입국 준비'+(TRIP&&e?' — '+esc(TRIP.city):'')+'</h2>'+picker+body
+    +'<p class="en-foot">한국 일반여권·관광 기준 · '+ENTRY_CHECKED+' 공식 사이트 확인 · 규정이 자주 바뀌니 <b>출발 전 공식 페이지에서 다시 확인</b>하세요. 무비자 일수: <a href="https://0404.go.kr/bbs/contsPst/MST0000000000113/13/detail" target="_blank" rel="noopener">외교부 해외안전여행</a><br>⚠ 수수료를 받는 대행·사칭 사이트가 많아요 — 위 공식 주소만 이용하세요.</p>';
+}
+
 (function init(){
   var saved = '';
   try { saved = localStorage.getItem(KEY_DATE) || ''; } catch(e){}
@@ -453,6 +519,7 @@ function render(){
   });
 
   render();
+  renderEntry();
   if (window.PackList) PackList.mount($('packList'), function(d, n){
     $('pkProgText').textContent = d + ' / ' + n + ' 챙김';
     $('pkProgBar').style.width = (n ? d / n * 100 : 0) + '%';

@@ -74,7 +74,7 @@
     curCover = payload.cover || 'osaka';
     var T = window.TripStore;
     var trips = T ? T.all().filter(function (t) {
-      return T.daysBetween(new Date().toISOString().slice(0, 10), t.end) >= 0;
+      return T.daysBetween(T.iso ? T.iso() : new Date().toISOString().slice(0, 10), t.end) >= 0;
     }) : [];
     var listHtml = trips.map(function (t) {
       var m = (t.members && t.members[0] && t.members[0].color) || '#1B4FD8';

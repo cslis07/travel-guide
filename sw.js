@@ -4,14 +4,23 @@
 //  - HTML / API : 네트워크 우선 (항상 최신). 실패 시 캐시 → 최후에 오프라인 폴백
 //  - 정적 자산  : 캐시 우선 + 백그라운드 갱신 (stale-while-revalidate)
 
-const CACHE = 'travelcost-v31';
+const CACHE = 'travelcost-v33';
 
 // 설치 시 미리 담아둘 최소 셸 (오프라인 폴백용)
+// 페이지는 깨끗한 주소로(cleanUrls라 '/x.html'은 리다이렉트 응답이 캐시돼 오프라인 내비게이션에 못 씀)
+// 내 여행·출국 준비는 현지에서 데이터가 끊겨도 열려야 하므로 처음 설치 때부터 담는다(2026-10-23)
 const SHELL = [
   '/',
-  '/index.html',
-  '/estimate.html',
-  '/prepare.html',
+  '/trips',
+  '/trip',
+  '/prepare',
+  '/estimate',
+  '/airport',
+  '/trips.js',
+  '/trip-attach.js',
+  '/city-places.js',
+  '/checklist.js',
+  '/home-ui.js',
   '/style.css',
   '/main.js',
   '/icons.js',
@@ -26,7 +35,7 @@ const SHELL = [
   '/icons/apple-touch-icon.png',
 ];
 
-const OFFLINE_FALLBACK = '/index.html';
+const OFFLINE_FALLBACK = '/';
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -71,6 +80,11 @@ self.addEventListener('fetch', e => {
           const cached = await caches.match(req);
           if (cached) return cached;
           if (isHtml) {
+            // 같은 페이지의 다른 ?id= 도 열리게(여행 데이터는 localStorage라 셸만 있으면 됨)
+            const any = await caches.match(req, { ignoreSearch: true });
+            if (any) return any;
+            const shell = await caches.match(url.pathname.replace(/\.html$/, '') || '/');
+            if (shell) return shell;
             const fallback = await caches.match(OFFLINE_FALLBACK);
             if (fallback) return fallback;
           }
