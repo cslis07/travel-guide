@@ -724,8 +724,7 @@ tr:hover td{background:var(--a-hover)}
 .pc-c{flex:1;background:var(--card2);border:1px solid var(--border);border-radius:11px;padding:10px;text-align:center}.pc-c small{display:block;font-size:.68rem;color:var(--muted)}.pc-c b{font-size:1.05rem}
 .pc-c.win{border-color:var(--g)}.pc-c.win b{color:var(--g)}.pc-tip{font-size:.75rem;margin-top:8px;color:var(--text2)}
 .pc-note{font-size:.62rem;color:var(--muted);margin-top:10px;line-height:1.5}.pc-note a{color:var(--accent)}
-.trip-link{background:var(--a-dim);border-radius:12px;padding:10px 12px;font-size:.76rem;line-height:1.5;margin-bottom:10px;color:var(--text)}.trip-link a{color:var(--accent);font-weight:700;white-space:nowrap}
-.trip-import{width:100%;margin-top:10px;min-height:44px}
+.prep-move{display:block;margin-top:12px;background:var(--a-dim);border-radius:12px;padding:12px 14px;text-decoration:none;color:var(--text);font-size:.8rem}.prep-move b{display:block;color:var(--accent)}.prep-move span{font-size:.72rem;color:var(--text2)}
 #check-progress-lbl{font-size:.72rem;color:var(--text2);font-weight:600;white-space:nowrap}
 .check-reset-btn{
   background:none;border:1px solid var(--border);color:var(--muted);
@@ -1503,7 +1502,7 @@ button,select,input,a{touch-action:manipulation}
 <!-- ⑧ 출국 준비 (체크리스트 + 수하물·면세) -->
 <div id="tab-prep" class="tab-panel">
   <div class="sub-tabs">
-    <button class="sub-btn active" onclick="setPrepTab('check',this)">✅ 체크리스트</button>
+    <button class="sub-btn active" onclick="setPrepTab('check',this)">🚶 출국 진행</button>
     <button class="sub-btn" onclick="setPrepTab('route',this)">🚗 공항 가는 길</button>
     <button class="sub-btn" onclick="setPrepTab('map',this)">🗺 평면도</button>
     <button class="sub-btn" onclick="setPrepTab('lounge',this)">🛋 라운지</button>
@@ -1571,14 +1570,7 @@ button,select,input,a{touch-action:manipulation}
       </div>
     </div>
 
-    <div class="check-head">
-      <div class="check-progress-wrap">
-        <div class="check-progress-bar"><div class="check-progress-fill" id="check-fill"></div></div>
-        <span id="check-progress-lbl">0 / 0 완료</span>
-      </div>
-      <button class="check-reset-btn" onclick="resetChecklist()">↺ 초기화</button>
-    </div>
-    <div id="check-area"></div>
+    <a class="prep-move" href="/prepare#items">📋 <b>챙길 물건 체크리스트는 '출국 준비'로 옮겼어요</b><span>여행 준비물·준비 타임라인과 한 곳에서 체크해요 — 예전 체크 상태도 그대로예요 ›</span></a>
   </div>
 
   <div id="prep-bag" style="display:none">
@@ -3733,7 +3725,6 @@ function drawMap(){
   svg.innerHTML = out;
 }
 function loadPrepTab(){
-  renderChecklist();
   renderDepartTracker();
 }
 
@@ -3858,114 +3849,11 @@ function renderLounges(){
   `).join('');
 }
 
-const CHECK_KEY = 'icn_checklist';
-const CHECK_GROUPS = [
-  { title: '📄 필수 서류', items: [
-    '여권 (유효기간 6개월 이상)', '항공권 / 모바일 탑승권',
-    '호텔·숙소 예약 확인서', '여행자 보험', '국제운전면허증 (필요시)',
-    '비자 (필요한 국가)', '여권 사본 (분실 대비)',
-  ]},
-  { title: '💳 결제·통화', items: [
-    '신용카드 (해외 결제 가능)', '현지 통화 환전', '비상금 USD',
-    '해외 결제 차단 해제 확인',
-  ]},
-  { title: '📱 전자기기', items: [
-    '휴대폰 + 충전기', '보조배터리 (100Wh 이하)',
-    '멀티어댑터 / 변환플러그', '이어폰',
-    '카메라 + 메모리카드', '노트북 (필요시)',
-    '유심 / eSIM / 포켓와이파이',
-  ]},
-  { title: '👕 의류·세면', items: [
-    '속옷 / 양말 (일수만큼)', '잠옷 / 편한옷',
-    '운동화 / 슬리퍼', '겉옷 / 우산',
-    '칫솔·치약·세면도구 (100ml 이하)', '수건',
-  ]},
-  { title: '💊 위생·약품', items: [
-    '상비약 (감기약·진통제·소화제·지사제)', '처방약 + 처방전 영문',
-    '마스크', '손소독제 (100ml 이하)', '밴드·연고',
-  ]},
-  { title: '🎒 기타', items: [
-    '여행용 캐리어 (위탁용)', '기내용 가방', '지퍼백 (액체류 정리)',
-    '간식 / 컵라면', '여행 일정표 / 가이드북',
-  ]},
-];
-const CHECK_CUSTOM_KEY = 'icn_checklist_custom';
-function getCheckState(){
-  try { return JSON.parse(localStorage.getItem(CHECK_KEY) || '{}'); }
-  catch(e){ return {}; }
-}
-function setCheckState(s){
-  localStorage.setItem(CHECK_KEY, JSON.stringify(s));
-}
-// 커스텀 항목: [{id, text}] — 사용자가 추가한 준비물
-function getCustomItems(){
-  try { return JSON.parse(localStorage.getItem(CHECK_CUSTOM_KEY) || '[]'); }
-  catch(e){ return []; }
-}
-function setCustomItems(arr){
-  localStorage.setItem(CHECK_CUSTOM_KEY, JSON.stringify(arr));
-}
-function addCustomCheckItem(){
-  const inp = el('check-custom-input');
-  const text = (inp?.value || '').trim();
-  if(!text) { inp?.focus(); return; }
-  const arr = getCustomItems();
-  arr.push({ id: 'c' + Date.now() + Math.floor(Math.random()*1000), text });
-  setCustomItems(arr);
-  if(inp) inp.value = '';
-  renderChecklist();
-}
-function removeCustomCheckItem(id, e){
-  if(e) e.stopPropagation();
-  setCustomItems(getCustomItems().filter(x => x.id !== id));
-  const s = getCheckState(); delete s[id]; setCheckState(s);
-  renderChecklist();
-}
-function toggleCheck(key){
-  const s = getCheckState();
-  s[key] = !s[key];
-  setCheckState(s);
-  renderChecklist();
-}
-function resetChecklist(){
-  if(!confirm('체크 상태를 모두 초기화할까요? (추가한 항목은 유지됩니다)')) return;
-  setCheckState({});
-  renderChecklist();
-}
-
-/* ═══ 체크리스트 하나로 — 다가오는(또는 여행 중) 여행이 있으면 그 여행 '준비물'(TripStore)을 여기서 같이 체크 ═══ */
-function escT(v){ return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function nearTrip(){
   const T=window.TripStore; if(!T) return null;
   const d=new Date(), today=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
   return T.all().filter(t=>t.end>=today).sort((a,b)=>a.start<b.start?-1:1)[0]||null;
 }
-function renderTripChecklist(area, tr){
-  const T=window.TripStore, cl=tr.checklist||[];
-  const groups={}; cl.forEach(c=>{ (groups[c.group||'기타']=groups[c.group||'기타']||[]).push(c); });
-  const done=cl.filter(c=>c.done).length;
-  const head=`<div class="trip-link">🧳 <b>${escT(tr.city)} 여행(${escT(T.ddayText(tr))}) 준비물</b>과 같은 목록이에요 — 여기서 체크하면 내 여행에도 반영돼요 <a href="/trip?id=${encodeURIComponent(tr.id)}&tab=pack">내 여행에서 열기 ›</a></div>`;
-  const body=Object.keys(groups).map(g=>`<div class="check-group"><div class="check-group-title">${escT(g)}</div><div class="check-items">`
-    +groups[g].map(c=>`<div class="check-item${c.done?' done':''}" data-cid="${escT(c.id)}" onclick="toggleTripCheck(this.dataset.cid)"><div class="check-box">${c.done?'✓':''}</div><div class="check-label">${escT(c.text)}${c.when?` <small style="color:var(--muted)">${escT(c.when)}</small>`:''}</div></div>`).join('')
-    +`</div></div>`).join('');
-  const missing=CHECK_GROUPS.reduce((n,g)=>n+g.items.filter(it=>!cl.some(c=>c.text===it)).length,0);
-  area.innerHTML=head+(body||'<div class="fav-empty">이 여행엔 아직 준비물이 없어요.</div>')
-    +(missing?`<button class="check-add-btn trip-import" onclick="importAirportChecklist()">✚ 공항 기본 체크리스트에서 없는 ${missing}개 추가</button>`:'');
-  const lbl=el('check-progress-lbl'), fill=el('check-fill');
-  if(lbl) lbl.textContent=`${done} / ${cl.length} 완료`;
-  if(fill) fill.style.width=cl.length?(done*100/cl.length)+'%':'0%';
-}
-function toggleTripCheck(cid){ const tr=nearTrip(); if(!tr) return; window.TripStore.toggleChecklist(tr.id,cid); renderChecklist(); }
-function importAirportChecklist(){
-  const tr=nearTrip(); if(!tr) return; const T=window.TripStore, t=T.get(tr.id), st=getCheckState();
-  t.checklist=t.checklist||[];
-  CHECK_GROUPS.forEach((g,gi)=>g.items.forEach((it,ii)=>{
-    if(!t.checklist.some(c=>c.text===it)) t.checklist.push({id:'a'+Math.random().toString(36).slice(2,9),group:g.title.replace(/^\S+\s/,''),text:it,when:'',done:!!st['d'+gi+'_'+ii]});
-  }));
-  getCustomItems().forEach(c=>{ if(!t.checklist.some(x=>x.text===c.text)) t.checklist.push({id:'a'+Math.random().toString(36).slice(2,9),group:'나만의 준비물',text:c.text,when:'',done:!!st[c.id]}); });
-  T.upsert(t); renderChecklist();
-}
-
 /* ═══ 주차 요금 계산기 — 소형차 공식 요금(2026-10-23 airport.kr 확인). 24시간 단위로 1일 최대 적용 ═══ */
 function parkFee(min, kind){
   if(min<=10) return 0;
@@ -3998,54 +3886,6 @@ function calcPark(){
     ${sh>lo?`<div class="pc-tip">💡 장기주차장이 <b>${won(sh-lo)}</b> 저렴해요 (셔틀로 터미널 이동)</div>`:''}</div>`;
 }
 
-function renderChecklist(){
-  const area = el('check-area');
-  if(!area) return;
-  const tr = nearTrip();
-  if(tr){ renderTripChecklist(area, tr); return; }
-  const state = getCheckState();
-  let total = 0, done = 0;
-  // 기본 그룹 — 안정적 키(d그룹_항목, 텍스트와 무관)
-  const groupsHtml = CHECK_GROUPS.map((g, gi) => {
-    const itemsHtml = g.items.map((it, ii) => {
-      const key = `d${gi}_${ii}`;
-      const checked = !!state[key];
-      total++; if(checked) done++;
-      return `<div class="check-item${checked?' done':''}" onclick="toggleCheck('${key}')">
-        <div class="check-box">${checked ? '✓' : ''}</div>
-        <div class="check-label">${it}</div>
-      </div>`;
-    }).join('');
-    return `<div class="check-group">
-      <div class="check-group-title">${g.title}</div>
-      <div class="check-items">${itemsHtml}</div>
-    </div>`;
-  }).join('');
-  // 커스텀 그룹 — 추가 입력 + 삭제 가능 항목
-  const custom = getCustomItems();
-  const customItemsHtml = custom.map(c => {
-    const checked = !!state[c.id];
-    total++; if(checked) done++;
-    return `<div class="check-item${checked?' done':''}" onclick="toggleCheck('${c.id}')">
-      <div class="check-box">${checked ? '✓' : ''}</div>
-      <div class="check-label">${c.text.replace(/</g,'&lt;')}</div>
-      <button class="check-del" onclick="removeCustomCheckItem('${c.id}',event)" title="삭제">✕</button>
-    </div>`;
-  }).join('');
-  const customGroupHtml = `<div class="check-group">
-    <div class="check-group-title">➕ 나만의 준비물</div>
-    <div class="check-items">${customItemsHtml || ''}</div>
-    <div class="check-add-row">
-      <input class="check-custom-input" id="check-custom-input" placeholder="예: 멀미약, 아이 여권, 우산…" onkeydown="if(event.key==='Enter')addCustomCheckItem()">
-      <button class="check-add-btn" onclick="addCustomCheckItem()">추가</button>
-    </div>
-  </div>`;
-  area.innerHTML = groupsHtml + customGroupHtml;
-  const lbl = el('check-progress-lbl');
-  const fill = el('check-fill');
-  if(lbl) lbl.textContent = `${done} / ${total} 완료`;
-  if(fill) fill.style.width = total ? (done * 100 / total) + '%' : '0%';
-}
 </script>
   <script src="/affiliates.js"></script>
   <script>

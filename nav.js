@@ -8,7 +8,8 @@
    → 어느 페이지를 봐도 같은 메뉴 · 같은 순서 · 같은 라벨.
 
    설계 원칙(직관성):
-   1) 여행 흐름 순서 = 왼→오:  여행지 → 예산 견적 → 출국 준비 → 투어·티켓 → 인천공항 → 내 여행
+   1) 여행 흐름 순서 = 왼→오:  여행지 → 경비 계산 → 출국 준비 → 투어·티켓 → 인천공항 → 내 여행
+      ('예산 견적'→'경비 계산': 내 여행의 '예산' 탭과 이름이 겹쳐 헷갈려서 2026-10-23 변경)
    2) 색 위계 최소화:  핵심 도구 2개(예산=파랑·준비=초록)만 강조, 나머지 중립색
    3) 데스크톱 헤더와 모바일 하단 탭이 같은 순서를 말한다(일관성)
 
@@ -21,27 +22,28 @@
   'use strict';
 
   /* ── 브랜드 강조색 (핵심 도구 2개만) ── */
-  var C_BUDGET = '#1B4FD8';  // 예산 견적
+  var C_BUDGET = '#1B4FD8';  // 경비 계산
   var C_PREP   = '#039855';  // 출국 준비
 
   /* ── 상단 헤더(데스크톱): 여행 흐름 순서 ──
      key = currentKey()와 매칭되는 활성 판정용 값 */
   var HEADER_LINKS = [
     { href: '/#destinations', key: 'dest',      icon: 'map-pin',      label: '여행지' },
-    { href: '/estimate',      key: '/estimate', icon: 'coins',        label: '예산 견적', color: C_BUDGET, bold: true },
+    { href: '/estimate',      key: '/estimate', icon: 'coins',        label: '경비 계산', color: C_BUDGET, bold: true },
     { href: '/prepare',       key: '/prepare',  icon: 'check-circle', label: '출국 준비', color: C_PREP,   bold: true },
     { href: '/tours',         key: '/tours',    icon: 'ticket',       label: '투어·티켓' },
     { href: '/airport',       key: '/airport',  icon: 'plane',        label: '인천공항' },
     { href: '/trips',         key: '/trips',    icon: 'briefcase',    label: '내 여행' }
   ];
 
-  /* ── 하단 탭(모바일): 홈 + 여행 흐름 상위 4단계 (5개, HIG 권장) ──
-     공항은 헤더·홈 배너·푸터에 남기고, 탐색 진입점인 '여행지'를 탭에 올린다. */
+  /* ── 하단 탭(모바일): 자주 여는 곳 5개 (HIG 권장) ──
+     2026-10-23: '예산 견적'(여행 전 한 번 쓰는 도구) 대신 방문 2위인 '인천공항'을 탭에 올림.
+     경비 계산은 상단 헤더·홈 바로가기 칩·새 여행 만들기 창에서 연다. */
   var TABS = [
     { href: '/',              key: '/',         icon: 'home',        label: '홈' },
     { href: '/trips',         key: '/trips',    icon: 'briefcase',   label: '내 여행' },
     { href: '/#destinations', key: 'dest',      icon: 'map-pin',     label: '여행지' },
-    { href: '/estimate',      key: '/estimate', icon: 'coins',       label: '예산 견적' },
+    { href: '/airport',       key: '/airport',  icon: 'plane',       label: '인천공항' },
     { href: '/prepare',       key: '/prepare',  icon: 'check-circle', label: '출국 준비' }
   ];
 

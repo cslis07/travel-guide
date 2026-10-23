@@ -133,6 +133,8 @@
        출발일만 넣으면 각 항목이 며칠에 해당하는지 날짜로 배치해 드립니다.</p>
   </div>
 
+  <div id="prTrip"></div>
+
   <div class="pr-date">
     <label for="departDate">출발일</label>
     <div class="pr-date-row">
@@ -146,7 +148,9 @@
     <div class="pr-prog-bar"><i id="progBar" style="width:0%"></i></div>
   </div>
 
-  <button type="button" onclick="attachPrep()"
+  <a class="pr-jump" href="#items">📋 챙길 물건 체크리스트로 ↓</a>
+
+  <button type="button" id="attachPrepBtn" onclick="attachPrep()"
     style="width:100%;margin:4px 0 2px;padding:13px;border:none;border-radius:var(--radius);
     background:var(--primary);color:#fff;font-size:14.5px;font-weight:800;cursor:pointer;
     display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:var(--shadow)">
@@ -156,6 +160,12 @@
   <div id="goodsTop" style="margin:18px 0"></div>
 
   <div id="stages"></div>
+
+  <section class="pk-sec" id="items">
+    <h2>📋 챙길 물건</h2>
+    <div class="pr-prog"><span id="pkProgText">0 / 0 챙김</span><div class="pr-prog-bar"><i id="pkProgBar" style="width:0%"></i></div></div>
+    <div id="packList"></div>
+  </section>
 
   <p class="pr-foot">
     체크 상태는 이 브라우저에만 저장되며 서버로 전송되지 않습니다.<br>
@@ -167,14 +177,15 @@
 <script src="/affiliates.js"></script>
 <script src="/trips.js"></script>
 <script src="/trip-attach.js"></script>
+<script src="/checklist.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════════
    출국 준비 타임라인
 
    설계 원칙
-   1) 이 페이지의 가치는 "무엇을"이 아니라 "언제"다.
-      항목 나열은 이미 /airport 체크리스트가 하고 있으므로 중복하지 않고,
-      출발일 기준으로 날짜를 계산해 배치하는 것에 집중한다.
+   1) 이 페이지의 가치는 "무엇을"이 아니라 "언제"다 — 출발일 기준으로 날짜를 계산해 배치.
+      2026-10-23부터 '출국 준비'는 여기 한 곳: 아래 '챙길 물건'(checklist.js, 예전 /airport 체크리스트)도
+      이 페이지로 옮겼고, 다가오는 여행이 있으면 둘 다 그 여행 '준비물'에 저장된다.
    2) 검증하지 못한 규정·요금은 숫자로 적지 않는다. 공식 페이지로 넘긴다.
       (여권 잔여기간·액체류 용량 같은 값은 국가·시점별로 달라 여기서 단정하면 위험하다)
    3) 수수료를 받을 수 없는 영역(보험·환전)은 CTA 대신 정보 안내만 노출한다.
@@ -194,7 +205,7 @@ var STAGES = [
         links:[{ label:'국가·지역별 정보 ↗', url:'https://www.0404.go.kr/dev/country.mofa', ext:true }] },
       { id:'budget', name:'총예산 계산',
         desc:'항공·숙소만 보지 말고 식비·교통·투어까지 합산해 상한을 정해두면 이후 결정이 빨라집니다.',
-        links:[{ label:'예산 견적기로 계산', url:'/estimate' }] },
+        links:[{ label:'경비 계산으로 예산 잡기', url:'/estimate' }] },
       { id:'flight', name:'항공권 예약', cat:'flight',
         desc:'날짜가 유연하면 앞뒤 며칠을 비교해보세요.',
         links:[{ label:'항공권 검색', url:'/tours' }] },
@@ -291,10 +302,29 @@ function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
 var KEY_DATE = 'tripguide_depart_date';
 var KEY_DONE = 'tripguide_prepare_done';
 
+/* 다가오는(또는 여행 중인) 여행이 있으면 타임라인 체크를 그 여행 '준비물'에 저장(src:'prep', pk=단계_항목).
+   내 여행 준비물 탭·이 페이지가 같은 목록을 보게 해 '출국 준비'를 한 곳으로 모은다. */
+var TRIP = (window.PackList && PackList.nearTrip()) || null;
 function getDone(){
+  if (TRIP) {
+    var t = TripStore.get(TRIP.id), m = {};
+    ((t&&t.checklist)||[]).forEach(function(c){ if (c.src==='prep' && c.done && c.pk) m[c.pk]=1; });
+    return m;
+  }
   try { return JSON.parse(localStorage.getItem(KEY_DONE) || '{}'); } catch(e){ return {}; }
 }
 function setDone(map){
+  if (TRIP) {
+    var t = TripStore.get(TRIP.id); if (!t) return;
+    t.checklist = t.checklist || [];
+    STAGES.forEach(function(st){ st.todos.forEach(function(td){
+      var tid = st.id+'_'+td.id, c = t.checklist.filter(function(x){ return x.src==='prep' && x.pk===tid; })[0];
+      if (c) c.done = !!map[tid];
+      else if (map[tid]) t.checklist.push({ id:'p'+Math.random().toString(36).slice(2,9), group:'출국 준비 '+st.when, text:td.name, when:st.when, done:true, src:'prep', pk:tid });
+    }); });
+    TripStore.upsert(t);
+    return;
+  }
   try { localStorage.setItem(KEY_DONE, JSON.stringify(map)); } catch(e){}
 }
 
@@ -406,7 +436,15 @@ function render(){
 (function init(){
   var saved = '';
   try { saved = localStorage.getItem(KEY_DATE) || ''; } catch(e){}
-  if (saved) $('departDate').value = saved;
+  if (TRIP) {
+    // 여행 출발일로 고정 + 여행 만들기 전 이 기기에서 체크해 둔 것은 한 번 옮겨 담기
+    $('departDate').value = TRIP.start; $('departDate').disabled = true;
+    $('prTrip').innerHTML = '<div class="pr-trip">🧳 <b>' + esc(TRIP.city) + ' 여행(' + esc(TripStore.ddayText(TRIP)) + ')</b> 출발일 기준이에요 — 체크하면 내 여행 준비물에도 반영돼요. <a href="/trip?id=' + encodeURIComponent(TRIP.id) + '&tab=pack">내 여행에서 열기 ›</a></div>';
+    var btn = $('attachPrepBtn'); if (btn) btn.style.display = 'none';
+    var t0 = TripStore.get(TRIP.id), had = ((t0&&t0.checklist)||[]).some(function(c){ return c.src==='prep'; }), local = {};
+    try { local = JSON.parse(localStorage.getItem(KEY_DONE) || '{}'); } catch(e){}
+    if (!had && Object.keys(local).length) setDone(local);
+  } else if (saved) $('departDate').value = saved;
 
   $('departDate').addEventListener('change', function(){
     try { localStorage.setItem(KEY_DATE, $('departDate').value); } catch(e){}
@@ -415,6 +453,10 @@ function render(){
   });
 
   render();
+  if (window.PackList) PackList.mount($('packList'), function(d, n){
+    $('pkProgText').textContent = d + ' / ' + n + ' 챙김';
+    $('pkProgBar').style.width = (n ? d / n * 100 : 0) + '%';
+  });
 
   /* 상단 전체 여행 준비물 블록(항목별 인라인과 중복 노출) */
   if (window.AFF && AFF.goodsHtml) {

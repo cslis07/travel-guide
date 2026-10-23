@@ -50,6 +50,38 @@
     + '<span class="hx-nx-cta">' + cta + ' ›</span></a>';
 })();
 
+/* 환율 계산기 — 홈 맨 위를 차지하던 바를 접어 두고 칩으로 연다 */
+function hxFx() {
+  var bar = document.getElementById('fxCalcBar'); if (!bar) return false;
+  bar.classList.toggle('hx-hide');
+  if (!bar.classList.contains('hx-hide')) {
+    var inp = document.getElementById('fxCalcAmount');
+    bar.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (inp) setTimeout(function () { inp.focus(); }, 300);
+  }
+  return false;
+}
+
+/* 여행지 목록 — 처음엔 8곳만, '전체 보기'로 펼침(분류 필터·검색을 쓰면 자동으로 펼침) */
+(function () {
+  'use strict';
+  var grid = document.getElementById('destGrid');
+  if (!grid) return;
+  var total = grid.querySelectorAll('.dest-card').length, SHOW = 8;
+  if (total <= SHOW) return;
+  grid.classList.add('hx-collapsed');
+  var btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'hx-more hx-more-btn';
+  btn.innerHTML = '여행지 ' + total + '곳 모두 보기 <span>(' + (total - SHOW) + '곳 더) ›</span>';
+  var open = function () { grid.classList.remove('hx-collapsed'); btn.remove(); };
+  btn.addEventListener('click', open);
+  grid.parentNode.insertBefore(btn, grid.nextSibling);
+  ['filterDest', 'doSearch'].forEach(function (fn) {
+    var orig = window[fn]; if (typeof orig !== 'function') return;
+    window[fn] = function (cat) { if (fn === 'doSearch' || cat !== '전체') open(); return orig.apply(this, arguments); };
+  });
+})();
+
 /* 홈 '여행핫딜'형 동작 — 고정 카테고리 탭: 해당 섹션으로 이동(항공권·숙소는 검색 탭 전환) + 스크롤 위치에 맞춰 밑줄 이동.
    마크업은 scripts/home_hotdeal_layout.py 가 만든다(.hx-*). */
 (function () {

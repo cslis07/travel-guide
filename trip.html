@@ -120,6 +120,10 @@
   .bc-live{font-size:13px;color:var(--gray-800);margin-top:8px;line-height:1.6}.bc-live .lst{background:var(--gray-100)}
   .bc-entry{font-size:12.5px;color:var(--gray-700);background:var(--gray-50);border-radius:9px;padding:7px 9px;margin-top:8px}
   .bc-links{display:flex;gap:8px;margin-top:10px}.bc-links a{flex:1;text-align:center;font-size:12.5px;font-weight:800;color:var(--primary);background:var(--primary-lt);border-radius:10px;padding:10px 6px;text-decoration:none}
+  .bsegs{display:flex;gap:6px;background:var(--gray-100);padding:4px;border-radius:12px;margin-bottom:12px}
+  .bseg{flex:1;min-height:40px;border:none;border-radius:9px;background:transparent;font:inherit;font-size:13px;font-weight:800;color:var(--gray-600);cursor:pointer}
+  .bseg.on{background:#fff;color:var(--gray-900);box-shadow:0 1px 3px rgba(16,24,40,.12)}
+  .bseg b{display:inline-block;min-width:18px;padding:0 5px;border-radius:9px;background:var(--danger);color:#fff;font-size:11px;margin-left:2px}
   .rc-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.rc-prev{width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid var(--gray-200);cursor:zoom-in}
   .rc-pick{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border:1.5px dashed var(--gray-300);border-radius:11px;font-size:13px;font-weight:700;color:var(--primary);cursor:pointer;background:#fff}
   .rc-del{min-height:44px;padding:0 12px;border:none;border-radius:11px;background:var(--gray-100);color:var(--danger);font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
@@ -419,12 +423,26 @@ function exportICS(mode){
 }
 
 /* ── 예산 ── */
+/* 예산 탭 — 2명 이상이면 [예산 · 정산 · 지출] 세 칸으로 나눠 한 화면에 블록이 몰리지 않게(혼자면 한 화면) */
+var budSeg=null;
+function setBudSeg(k){ budSeg=k; renderPane(); window.scrollTo(0, Math.min(window.scrollY, document.querySelector('.subtabs').offsetTop)); }
 function paneBudget(){
+  var multi=(trip.members||[]).length>1;
+  if(!multi) return budgetMain()+settleSection()+expPart();
+  var ended=T.daysBetween(todayISO(),trip.end)<0, nset=T.settlements(trip).length, nex=(trip.expenses||[]).length;
+  if(!budSeg) budSeg = ended&&nset ? 'settle' : 'budget';   // 다녀온 여행에 정산이 남았으면 정산부터
+  var seg=function(k,label){ return '<button class="bseg'+(budSeg===k?' on':'')+'" onclick="setBudSeg(\''+k+'\')">'+label+'</button>'; };
+  return '<div class="bsegs">'+seg('budget','💰 예산')+seg('settle','🤝 정산'+(nset?' <b>'+nset+'</b>':''))+seg('exp','🧾 지출 '+nex)+'</div>'
+    + (budSeg==='settle' ? settleSection() : budSeg==='exp' ? expPart() : budgetMain());
+}
+function expPart(){
+  return '<div class="sech">지출 내역</div>'+expList()
+    + ((trip.expenses||[]).length ? '<button class="seg" style="width:100%;margin-top:8px" onclick="exportCSV()">지출 CSV 내보내기</button>' : '');
+}
+function budgetMain(){
   if(!T.budgetTotal(trip)){
     return '<div class="card" style="text-align:center;padding:26px"><div style="font-size:38px">💰</div><h4 style="margin:8px 0 4px;font-size:15px">총예산을 정해볼까요?</h4><p style="color:var(--gray-500);font-size:12.5px">예산을 넣으면 하루 쓸 수 있는 돈을 자동으로 계산해 드려요.</p><button class="save" style="max-width:220px;margin:14px auto 0" onclick="openBudgetSheet()">예산 설정</button></div>'
-      + reportBtn()
-      + settleSection()
-      + '<div class="sech">지출 내역</div>'+expList();
+      + reportBtn();
   }
   var cats=T.byCategory(trip);
   var limits=(trip.budget&&trip.budget.catLimits)||{};
@@ -436,7 +454,6 @@ function paneBudget(){
     var limTxt = lim>0?'<div style="font-size:10px;color:'+(over?'var(--danger)':'var(--gray-400)')+'">한도 '+won(lim)+'</div>':'';
     return '<div class="catbar"><div class="ic" style="background:'+x.cat.color+'22;color:'+x.cat.color+'">'+x.cat.emoji+'</div><div class="nm">'+x.cat.label+badge+'</div><div class="tr"><i style="width:'+pct+'%;background:'+bar+'"></i></div><div class="amt" style="display:flex;flex-direction:column;align-items:flex-end">'+won(x.amt)+limTxt+'</div></div>';
   }).join(''):'<div style="color:var(--gray-500);font-size:12.5px;text-align:center;padding:8px">아직 지출이 없어요.</div>';
-  var setl = settleSection();
   var ended = T.daysBetween(todayISO(), trip.end) < 0;
   return (ended?reportBtn():'')
     + '<div class="card"><div class="donut" id="donut"></div><div style="text-align:center;font-size:12.5px;color:var(--gray-500);font-weight:600">총예산 '+won(T.budgetTotal(trip))+' · 사용 '+won(T.spent(trip))+'</div>'
@@ -444,10 +461,7 @@ function paneBudget(){
     + '<div class="daily">'+svg('ic-wallet','')+'<div><div class="lbl">오늘 이후 하루 쓸 수 있는 돈</div><div class="big">'+won(T.dailyAllowance(trip))+'</div><div class="fm">(총예산 − 누적지출) ÷ 남은 '+T.remainingDays(trip)+'일</div></div></div>'
     + '<div class="sech">카테고리별</div><div class="card">'+catHtml+'</div>'
     + '<button class="seg" style="width:100%;margin-top:6px" onclick="openLimitSheet()">카테고리 한도 설정</button>'
-    + (ended?'':reportBtn())
-    + setl
-    + '<div class="sech">지출 내역</div>'+expList()
-    + ((trip.expenses||[]).length ? '<button class="seg" style="width:100%;margin-top:8px" onclick="exportCSV()">지출 CSV 내보내기</button>' : '');
+    + (ended?'':reportBtn());
 }
 /* 갈 사람 + 그룹 정산 — 지출이 바뀔 때마다 다시 그려지므로 항상 자동 계산 상태 */
 function settleSection(){
