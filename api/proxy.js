@@ -1,13 +1,12 @@
-// Vercel Edge Function — runs at the closest PoP to the user (Korea → Seoul/Tokyo edge)
-// Solves two problems:
-//  1. CORS: browser → edge function → Korean API (no browser CORS restriction)
-//  2. Latency: edge PoP is near Korea, so 10s Vercel limit is not a problem
+// Vercel Function (Node.js, 서울 icn1 고정 — vercel.json "regions")
+// 2026-10: 인천공항 API(B551177)가 해외 IP 호출에 SERVICETIMEOUT_ERROR(05)를 돌려줌.
+//   Edge는 싱가포르(sin1)에서 실행돼 전부 503 → Node + 서울 리전으로 옮겨 국내 IP로 호출한다.
+// 역할: CORS 우회(브라우저 → 함수 → 공공 API) + 키 숨김
 //
 // Usage:
 //   /api/proxy?path=<korean-api-path>&<...params>        — Korean API (apis.data.go.kr)
 //   /api/proxy?_url=<full-external-url>                  — Any external URL (Open-Meteo etc.)
 
-export const config = { runtime: 'edge' };
 
 // 인천공항 공공데이터 키 — 환경변수 우선, 없으면 폴백 (환경변수 등록 후 폴백 제거 권장)
 const KEY  = process.env.ICN_API_KEY || '9ae1336587e873e0ff6a0524e0b0cc0333868f67f9fb4180c0be654fb7794615';
@@ -38,7 +37,7 @@ function isAllowedUrl(raw) {
   return URL_ALLOWLIST.has(u.hostname);               // 서브도메인 와일드카드 없음
 }
 
-export default async function handler(req) {
+async function handler(req) {
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 200, headers: CORS });
   }
@@ -79,6 +78,7 @@ export default async function handler(req) {
   try {
     const upstream = await fetch(targetUrl, {
       headers: { 'User-Agent': 'TravelGuide/1.0' },
+      signal: AbortSignal.timeout(12000),   // 공공 API가 멈추면 12초에 끊고 502로 알림
     });
     const text = await upstream.text();
 
@@ -98,3 +98,6 @@ export default async function handler(req) {
     });
   }
 }
+
+// Node.js 런타임의 Web 표준 핸들러(Request → Response)
+export { handler as GET, handler as OPTIONS };
