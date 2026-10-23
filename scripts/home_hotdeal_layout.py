@@ -91,7 +91,7 @@ def main():
             '<a href="#destinations">여행지</a><a href="#essentials">필수템</a></nav>')
     chips = ('  <div class="hx-band" id="hxTop"><div class="container"><div id="hxNext"></div></div><div class="container hx-chips">'
              '<a href="/trips">🧳 내 여행 만들기</a><a href="airport.html">✈ 인천공항 <b class="hx-live">LIVE</b></a>'
-             '<a href="#" onclick="return hxFx()">💱 환율 계산기</a><a href="estimate.html">🧮 경비 계산</a><a href="prepare.html">✅ 출국 준비</a><a href="tours.html">🎟 투어·티켓</a></div></div>\n'
+             '<a href="#" onclick="return hxFx()">💱 환율 계산기</a><a href="#" onclick="return hxFxAlert()">🔔 환율 알림</a><a href="estimate.html">🧮 경비 계산</a><a href="prepare.html">✅ 출국 준비</a><a href="tours.html">🎟 투어·티켓</a></div></div>\n'
              + rail("🔥 지금 많이 찾는 여행지", PICKS, by, info) + "\n"
              + rail("🌴 따뜻한 휴양지 가이드", RESORTS, by, info))
 

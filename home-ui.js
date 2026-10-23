@@ -50,6 +50,49 @@
     + '<span class="hx-nx-cta">' + cta + ' ›</span></a>';
 })();
 
+/* 환율 좋은 날 알림 — 목표 환율(원)을 정해 두면, 홈을 열 때 실시간 환율(trips.js RATES = 1단위당 원)과 비교해 배너.
+   푸시가 아니라 '열었을 때' 확인(서버 없음). 단위는 엔·동처럼 작은 통화는 100/10,000 단위로. */
+var FX_CUR = { JPY: ['엔', '¥'], USD: ['달러', '$'], EUR: ['유로', '€'], THB: ['바트', '฿'], VND: ['동', '₫'], CNY: ['위안', '¥'], TWD: ['대만달러', 'NT$'], HKD: ['홍콩달러', 'HK$'], SGD: ['싱가포르달러', 'S$'] };
+function fxUnit(c) { var r = (window.TripStore && TripStore.RATES[c]) || 1; return r < 1 ? 10000 : r < 100 ? 100 : 1; }
+function fxNow(c) { var T = window.TripStore; return T ? Math.round(T.RATES[c] * fxUnit(c) * 10) / 10 : 0; }
+function fxLoad() { try { return JSON.parse(localStorage.getItem('tc_fx_alert') || 'null'); } catch (e) { return null; } }
+function hxFxAlert() {
+  var box = document.getElementById('hxFxBox'); if (!box) return false;
+  if (!box.hidden) { box.hidden = true; return false; }
+  var a = fxLoad() || { cur: 'JPY', target: '' };
+  box.innerHTML = '<div class="fxa"><b>🔔 환율 좋은 날 알림</b><small>정한 환율 이하로 내려가면, 홈을 열 때 알려 드려요</small>'
+    + '<div class="fxa-r"><select id="fxaCur">' + Object.keys(FX_CUR).map(function (c) { return '<option value="' + c + '"' + (c === a.cur ? ' selected' : '') + '>' + FX_CUR[c][0] + ' (' + c + ')</option>'; }).join('') + '</select>'
+    + '<span id="fxaUnit"></span><input id="fxaVal" type="number" inputmode="decimal" placeholder="목표" value="' + (a.target || '') + '"><span>원 이하</span></div>'
+    + '<div class="fxa-now" id="fxaNow"></div><div class="fxa-b"><button onclick="hxFxSave()">저장</button>' + (fxLoad() ? '<button class="off" onclick="hxFxOff()">알림 끄기</button>' : '') + '</div></div>';
+  box.hidden = false;
+  var upd = function () { var c = document.getElementById('fxaCur').value, u = fxUnit(c); document.getElementById('fxaUnit').textContent = FX_CUR[c][1] + u.toLocaleString('ko-KR') + ' ='; document.getElementById('fxaNow').textContent = '지금 ' + FX_CUR[c][1] + u.toLocaleString('ko-KR') + ' = ' + fxNow(c).toLocaleString('ko-KR') + '원'; };
+  document.getElementById('fxaCur').addEventListener('change', upd);
+  if (window.TripStore) TripStore.refreshRates(upd); else upd();
+  return false;
+}
+function hxFxSave() {
+  var c = document.getElementById('fxaCur').value, v = parseFloat(document.getElementById('fxaVal').value);
+  if (!(v > 0)) { alert('목표 환율을 숫자로 넣어 주세요'); return; }
+  try { localStorage.setItem('tc_fx_alert', JSON.stringify({ cur: c, target: v })); } catch (e) {}
+  document.getElementById('hxFxBox').hidden = true; fxCheck();
+}
+function hxFxOff() { try { localStorage.removeItem('tc_fx_alert'); } catch (e) {} document.getElementById('hxFxBox').hidden = true; fxCheck(); }
+function fxCheck() {
+  var el = document.getElementById('hxFxHit'), a = fxLoad(); if (!el) return;
+  if (!a || !window.TripStore) { el.innerHTML = ''; return; }
+  TripStore.refreshRates(function () {
+    var now = fxNow(a.cur), u = fxUnit(a.cur), sym = FX_CUR[a.cur][1] + u.toLocaleString('ko-KR'), hit = now > 0 && now <= a.target;
+    el.innerHTML = '<a class="fxhit' + (hit ? ' on' : '') + '" href="#" onclick="return hxFxAlert()">' + (hit ? '🔔 <b>' + FX_CUR[a.cur][0] + ' 목표 환율 도달!</b> ' : '🔔 ' + FX_CUR[a.cur][0] + ' 알림 · ')
+      + sym + ' = <b>' + now.toLocaleString('ko-KR') + '원</b> (목표 ' + a.target.toLocaleString('ko-KR') + '원 이하)</a>';
+  });
+}
+(function () {
+  var next = document.getElementById('hxNext'); if (!next) return;
+  var hit = document.createElement('div'); hit.id = 'hxFxHit'; next.parentNode.insertBefore(hit, next.nextSibling);
+  var box = document.createElement('div'); box.id = 'hxFxBox'; box.hidden = true; hit.parentNode.insertBefore(box, hit.nextSibling);
+  fxCheck();
+})();
+
 /* 환율 계산기 — 홈 맨 위를 차지하던 바를 접어 두고 칩으로 연다 */
 function hxFx() {
   var bar = document.getElementById('fxCalcBar'); if (!bar) return false;

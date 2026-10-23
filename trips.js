@@ -82,6 +82,11 @@
     '타이베이': 'Asia/Taipei', '홍콩': 'Asia/Hong_Kong', '방콕': 'Asia/Bangkok', '다낭': 'Asia/Ho_Chi_Minh', '나트랑': 'Asia/Ho_Chi_Minh',
     '발리': 'Asia/Makassar', '싱가포르': 'Asia/Singapore', '세부': 'Asia/Manila', '코타키나발루': 'Asia/Kuching', '파리': 'Europe/Paris'
   };
+  /* 도시 → 나라 코드(입국 준비·현지어·비상 연락·현지 정보 공용) */
+  var CITY_CC = { '오사카':'jp','후쿠오카':'jp','도쿄':'jp','교토':'jp','삿포로':'jp','오키나와':'jp','나하':'jp','타이베이':'tw','홍콩':'hk',
+    '상하이':'cn','장가계':'cn','장자제':'cn','계림':'cn','구이린':'cn','백두산':'cn','창바이산':'cn','방콕':'th','다낭':'vn','나트랑':'vn',
+    '발리':'id','싱가포르':'sg','세부':'ph','코타키나발루':'my','파리':'fr' };
+  function countryOf(city) { city = String(city || ''); for (var k in CITY_CC) if (city.indexOf(k) > -1) return CITY_CC[k]; return ''; }
   function cityTz(name) {
     var c = (name || '').trim(), k = c.replace(/\s*(여행|시|특별시|광역시|도)$/, '').trim();
     if (CITY_TZ[c]) return CITY_TZ[c];
@@ -361,7 +366,7 @@
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,
     dailyAllowance: dailyAllowance, remainingDays: remainingDays, byCategory: byCategory,
     settlements: settlements, balances: balances, toKRW: toKRW,
-    refreshRates: refreshRates, fxState: fxState, cityGeo: cityGeo, cityPhoto: cityPhoto, cityTz: cityTz,
+    refreshRates: refreshRates, fxState: fxState, cityGeo: cityGeo, cityPhoto: cityPhoto, cityTz: cityTz, countryOf: countryOf,
     // 날짜
     fmtMD: fmtMD, iso: iso, dow: dow, tripLength: tripLength, ddayText: ddayText, daysBetween: daysBetween,
     catByKey: function (k) { return CATS.filter(function (c) { return c.key === k; })[0] || CATS[6]; }

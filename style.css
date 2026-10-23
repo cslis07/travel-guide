@@ -10,6 +10,7 @@
    ───────────────────────────────────────── */
 
 :root {
+  --surface: #FFFFFF;          /* 카드·시트 바탕 — 다크 모드에서 바뀜 */
   /* 브랜드 — 신뢰의 파랑(교통·항공) + 행동 유도 오렌지(예약·가격) */
   --primary: #1B4FD8;
   --primary-dark: #1640B0;
@@ -1724,7 +1725,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
   width: 100%;
 }
 
-.sw-field select option { color: #1e293b; background: #fff; }
+.sw-field select option { color: #1e293b; background:var(--surface,#fff); }
 .sw-field input[readonly] { cursor: default; opacity: .75; }
 
 .sw-field input:focus,
@@ -2761,7 +2762,7 @@ body.gx-product .sgg #compare .section-title h2::before{content:"\201C";display:
 body.gx-product .sgg #compare .section-title p{margin:10px auto 0}
 /* 하단 고정 버튼 바 — 상품 페이지에선 전역 탭바 대신 */
 .gx-cta{position:fixed;left:0;right:0;bottom:0;z-index:950;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(255,255,255,.96);border-top:1px solid var(--gray-200);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
-.gx-btn{flex:1;min-height:48px;display:flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--gray-300);border-radius:12px;background:#fff;color:var(--gray-800);font-size:14px;font-weight:800;text-decoration:none;white-space:nowrap;padding:0 10px}
+.gx-btn{flex:1;min-height:48px;display:flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--gray-300);border-radius:12px;background:var(--surface,#fff);color:var(--gray-800);font-size:14px;font-weight:800;text-decoration:none;white-space:nowrap;padding:0 10px}
 .gx-home{flex:0 0 48px;padding:0;color:var(--gray-700)}
 .gx-primary{flex:1.5;background:var(--primary);border-color:var(--primary);color:#fff}
 body.gx-product .tabbar{display:none!important}
@@ -2777,7 +2778,7 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 @media(min-width:760px){.hx-tabs{justify-content:center}}
 .hx-band{background:linear-gradient(120deg,var(--primary-lt) 0%,#F4F0FF 55%,var(--accent-lt) 100%);padding:14px 0}
 .hx-chips{display:flex;flex-wrap:wrap;gap:8px}
-.hx-chips a{display:inline-flex;align-items:center;gap:5px;min-height:40px;padding:0 14px;border-radius:999px;background:#fff;color:var(--gray-800);font-size:13.5px;font-weight:700;text-decoration:none;box-shadow:0 1px 3px rgba(16,24,40,.08)}
+.hx-chips a{display:inline-flex;align-items:center;gap:5px;min-height:40px;padding:0 14px;border-radius:999px;background:var(--surface,#fff);color:var(--gray-800);font-size:13.5px;font-weight:700;text-decoration:none;box-shadow:0 1px 3px rgba(16,24,40,.08)}
 .hx-live{font-size:10px;font-weight:800;color:#fff;background:var(--danger);padding:1px 5px;border-radius:4px}
 .hx-sec{padding:22px 0 6px}
 .hx-h{font-size:19px;font-weight:800;letter-spacing:-.03em;color:var(--gray-900);margin:0 0 12px}
@@ -2787,7 +2788,7 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 .hx-ph{position:relative;height:300px;background:linear-gradient(135deg,#1d2939,#475467)}
 .hx-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hx-ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(0,0,0,.72) 100%)}
-.hx-badge{position:absolute;z-index:1;left:12px;top:12px;background:#fff;color:var(--gray-800);font-size:11.5px;font-weight:800;padding:4px 8px;border-radius:7px}
+.hx-badge{position:absolute;z-index:1;left:12px;top:12px;background:var(--surface,#fff);color:var(--gray-800);font-size:11.5px;font-weight:800;padding:4px 8px;border-radius:7px}
 .hx-txt{position:absolute;z-index:1;left:14px;right:14px;bottom:12px;color:#fff}
 .hx-txt h3{font-size:21px;font-weight:800;letter-spacing:-.03em;line-height:1.25;margin:0;color:#fff}
 .hx-txt h3 small{display:block;font-size:12px;font-weight:600;opacity:.88;margin-top:2px}
@@ -2795,7 +2796,7 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 .hx-price b{font-size:18px;font-weight:800;color:#FFD9C2}
 .hx-tags{display:flex;flex-wrap:wrap;gap:2px 6px;margin-top:6px;font-size:12px;opacity:.92}
 .hx-strip{background:var(--primary);color:#fff;text-align:center;font-size:13px;font-weight:800;padding:10px}
-.hx-more{display:flex;align-items:center;justify-content:center;gap:4px;min-height:46px;margin-top:12px;border:1px solid var(--gray-200);border-radius:10px;background:#fff;color:var(--gray-800);font-size:14px;font-weight:600;text-decoration:none}
+.hx-more{display:flex;align-items:center;justify-content:center;gap:4px;min-height:46px;margin-top:12px;border:1px solid var(--gray-200);border-radius:10px;background:var(--surface,#fff);color:var(--gray-800);font-size:14px;font-weight:600;text-decoration:none}
 .hx-more span{color:var(--gray-500)}
 #hxTop,#hero,#destinations,#essentials{scroll-margin-top:104px}
 /* 여행지 목록 — 이벤트 목록처럼 썸네일 왼쪽 행(모바일) */
@@ -2819,7 +2820,7 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 .gx-course small{font-size:12px;font-weight:700;color:var(--gray-600)}
 /* 홈 '내 다음 여행' 카드 */
 #hxNext:empty{display:none}
-.hx-next{display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:12px;text-decoration:none;box-shadow:0 2px 10px rgba(16,24,40,.08)}
+.hx-next{display:flex;align-items:center;gap:12px;background:var(--surface,#fff);border-radius:14px;padding:12px 14px;margin-bottom:12px;text-decoration:none;box-shadow:0 2px 10px rgba(16,24,40,.08)}
 .hx-nx-dot{flex:0 0 44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff;font-size:18px;font-weight:800}
 .hx-nx-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
 .hx-nx-body small{font-size:11.5px;font-weight:700;color:var(--primary)}
@@ -2832,7 +2833,7 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 #destGrid.hx-collapsed .dest-card:nth-child(n+9){display:none}
 .hx-more-btn{width:100%;cursor:pointer;font-family:inherit}
 .hx-info{max-width:1200px;margin:8px auto 24px;padding:0 16px}
-.hx-info>summary{cursor:pointer;list-style:none;min-height:48px;display:flex;align-items:center;justify-content:center;border:1px solid var(--gray-200);border-radius:10px;background:#fff;font-size:14px;font-weight:600;color:var(--gray-700)}
+.hx-info>summary{cursor:pointer;list-style:none;min-height:48px;display:flex;align-items:center;justify-content:center;border:1px solid var(--gray-200);border-radius:10px;background:var(--surface,#fff);font-size:14px;font-weight:600;color:var(--gray-700)}
 .hx-info>summary::-webkit-details-marker{display:none}
 .hx-info>summary::after{content:"＋";margin-left:6px;color:var(--gray-500)}
 .hx-info[open]>summary::after{content:"－"}
@@ -2841,7 +2842,7 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 .pr-trip a,.pk-trip a{color:var(--primary);font-weight:800;white-space:nowrap}
 .pr-jump{display:block;text-align:center;margin:6px 0 2px;font-size:13px;font-weight:700;color:var(--primary);text-decoration:none}
 .pk-sec{margin-top:28px}.pk-sec h2{font-size:20px;font-weight:800;letter-spacing:-.02em;margin:0 0 10px}
-.pk-g{background:#fff;border:1px solid var(--gray-200);border-radius:14px;padding:6px 12px;margin-bottom:10px}
+.pk-g{background:var(--surface,#fff);border:1px solid var(--gray-200);border-radius:14px;padding:6px 12px;margin-bottom:10px}
 .pk-gt{font-size:13px;font-weight:800;color:var(--gray-700);padding:8px 0 4px}
 .pk-item{display:flex;align-items:center;gap:10px;min-height:44px;border-top:1px solid var(--gray-100);cursor:pointer;font-size:14px;color:var(--gray-800)}
 .pk-gt+.pk-item{border-top:none}
@@ -2861,10 +2862,10 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 /* 🛂 입국 준비(/prepare #entry) */
 .en-sec{margin:22px 0 6px}.en-sec h2{font-size:20px;font-weight:800;letter-spacing:-.02em;margin:0 0 10px}
 .en-pick{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.en-cc{min-height:38px;padding:0 12px;border:1px solid var(--gray-200);border-radius:999px;background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--gray-700);cursor:pointer}
+.en-cc{min-height:38px;padding:0 12px;border:1px solid var(--gray-200);border-radius:999px;background:var(--surface,#fff);font:inherit;font-size:13px;font-weight:700;color:var(--gray-700);cursor:pointer}
 .en-cc.on{background:var(--primary);border-color:var(--primary);color:#fff}
 .en-visa{background:var(--primary-lt);border-radius:12px;padding:11px 13px;font-size:14px;color:var(--gray-800);margin-bottom:8px}
-.en-it{background:#fff;border:1px solid var(--gray-200);border-radius:14px;padding:12px 14px;margin-bottom:8px}
+.en-it{background:var(--surface,#fff);border:1px solid var(--gray-200);border-radius:14px;padding:12px 14px;margin-bottom:8px}
 .en-t{display:flex;align-items:center;gap:8px;font-size:15px}.en-fee{font-size:11.5px;font-weight:800;color:var(--success);background:#ECFDF3;padding:2px 7px;border-radius:6px}
 .en-w{font-size:13px;color:var(--gray-600);margin-top:3px;line-height:1.5}.en-w b{color:var(--gray-800)}
 .en-a{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
@@ -2874,3 +2875,32 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 .en-note{font-size:13px;color:var(--gray-700);background:var(--gray-50);border-radius:10px;padding:9px 11px;margin-bottom:8px}
 .en-empty{font-size:13px;color:var(--gray-500);text-align:center;padding:14px}
 .en-foot{font-size:11.5px;color:var(--gray-500);line-height:1.6;margin-top:6px}.en-foot a{color:var(--primary)}
+/* 🔔 환율 좋은 날 알림(홈) */
+#hxFxHit:empty{display:none}
+.fxhit{display:block;background:var(--surface,#fff);border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:12.5px;color:var(--gray-700);text-decoration:none;box-shadow:0 1px 3px rgba(16,24,40,.08)}
+.fxhit.on{background:#ECFDF3;color:#05603A;border:1px solid #ABEFC6}.fxhit b{font-weight:800}
+.fxa{background:var(--surface,#fff);border-radius:14px;padding:12px 14px;margin-bottom:10px;box-shadow:0 2px 10px rgba(16,24,40,.08)}
+.fxa>b{display:block;font-size:14px}.fxa>small{display:block;font-size:11.5px;color:var(--gray-500);margin:2px 0 8px}
+.fxa-r{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;font-weight:700;color:var(--gray-700)}
+.fxa-r select,.fxa-r input{min-height:40px;border:1px solid var(--gray-200);border-radius:9px;padding:0 8px;font:inherit;font-size:13.5px}.fxa-r input{width:90px}
+.fxa-now{font-size:12px;color:var(--primary);font-weight:700;margin-top:6px}
+.fxa-b{display:flex;gap:8px;margin-top:10px}.fxa-b button{flex:1;min-height:42px;border:none;border-radius:10px;background:var(--primary);color:#fff;font:inherit;font-weight:800;cursor:pointer}.fxa-b button.off{background:var(--gray-100);color:var(--gray-700)}
+
+/* ══ 다크 모드 — 폰이 다크 모드면 자동(2026-10-23). 가이드 23곳(.gx-product)은 각자 인라인 스타일이라 밝게 유지 ══ */
+@media (prefers-color-scheme: dark) {
+  body:not(.gx-product) {
+    color-scheme: dark;
+    --white: #12161d; --surface: #181d26; --dark: #eef1f5;
+    --gray-50: #0d1015; --gray-100: #1e232c; --gray-200: #2b313c; --gray-300: #3b4250; --gray-400: #5d6676;
+    --gray-500: #8f98a8; --gray-600: #aab2c0; --gray-700: #c7cdd7; --gray-800: #e0e4ea; --gray-900: #f3f5f8;
+    --primary: #3d6ff0; --primary-lt: #1b2747; --accent-lt: #3a2416;
+    --shadow: 0 1px 2px rgba(0,0,0,.45), 0 4px 16px rgba(0,0,0,.35);
+    background: var(--gray-50);
+  }
+  body:not(.gx-product) .header { background: rgba(13,16,21,.88); border-bottom-color: rgba(255,255,255,.08); }
+  body:not(.gx-product) .abar, body:not(.gx-product) .gx-cta, body:not(.gx-product) #bk-toast { background: rgba(18,22,29,.96); }
+  body:not(.gx-product) .hx-band { background: linear-gradient(120deg,#16203a 0%,#1d1a30 55%,#2a1d14 100%); }
+  body:not(.gx-product) img { opacity: .94; }
+  body:not(.gx-product) .fx-bar { background: #141a2b; border-color: rgba(255,255,255,.06); }
+  body:not(.gx-product) .fx-calc-bar { background: #2a2312; }
+}

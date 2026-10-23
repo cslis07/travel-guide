@@ -21,9 +21,9 @@
   .tw-head .sub{font-size:12.5px;color:var(--gray-500);font-weight:600;margin-top:2px}
   .newbtn{border:none;background:var(--primary);color:#fff;border-radius:14px;padding:11px 15px;font-size:13.5px;font-weight:800;display:flex;align-items:center;gap:6px;cursor:pointer;box-shadow:var(--shadow)}
   .filters{display:flex;gap:7px;margin:6px 0 16px}
-  .fchip{padding:7px 13px;border-radius:999px;border:1px solid var(--gray-200);background:#fff;font-size:12.5px;font-weight:700;color:var(--gray-600);cursor:pointer}
+  .fchip{padding:7px 13px;border-radius:999px;border:1px solid var(--gray-200);background:var(--surface,#fff);font-size:12.5px;font-weight:700;color:var(--gray-600);cursor:pointer}
   .fchip.on{background:var(--primary);color:#fff;border-color:var(--primary)}
-  .tcard{border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);background:#fff;cursor:pointer;transition:transform .12s,box-shadow .12s;margin-bottom:16px}
+  .tcard{border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);background:var(--surface,#fff);cursor:pointer;transition:transform .12s,box-shadow .12s;margin-bottom:16px}
   .tcard:active{transform:scale(.99)}
   .tcover.ph{height:170px;background-size:cover;background-position:center}
   .tcover{height:130px;position:relative;padding:14px;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
@@ -47,7 +47,7 @@
   .mwrap{position:fixed;inset:0;background:rgba(16,24,40,.5);display:none;align-items:flex-end;justify-content:center;z-index:1000}
   .mwrap.on{display:flex}
   .tw-head>div:first-child{flex:1}
-  .bkbtn{border:1px solid var(--gray-200);background:#fff;color:var(--gray-700);border-radius:14px;padding:10px 12px;font-size:13px;font-weight:800;margin-right:8px;cursor:pointer;font-family:inherit}
+  .bkbtn{border:1px solid var(--gray-200);background:var(--surface,#fff);color:var(--gray-700);border-radius:14px;padding:10px 12px;font-size:13px;font-weight:800;margin-right:8px;cursor:pointer;font-family:inherit}
   .bk-p{font-size:13px;color:var(--gray-600);line-height:1.6;margin:4px 0 10px}.bk-last{font-size:12.5px;font-weight:700;color:var(--primary);margin-bottom:8px}
   .bk-chk{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;min-height:40px}.bk-chk small{font-weight:500;color:var(--gray-500)}
   .bk-restore{display:flex;align-items:center;justify-content:center;min-height:48px;margin-top:8px;border:1.5px dashed var(--gray-300);border-radius:14px;font-size:14px;font-weight:800;color:var(--primary);cursor:pointer}
@@ -56,7 +56,7 @@
   .bk-banner span{font-size:20px}.bk-banner div{flex:1;font-size:12.5px;color:#93370D}.bk-banner small{display:block;color:#B54708}
   .bk-banner button{border:none;background:#B54708;color:#fff;font-weight:800;font-size:12.5px;padding:8px 12px;border-radius:10px;cursor:pointer;font-family:inherit}
   #bk-toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#101828;color:#fff;font-size:13px;font-weight:600;padding:11px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:3000;pointer-events:none;max-width:88vw;text-align:center}#bk-toast.on{opacity:1}
-  .modal{background:#fff;width:100%;max-width:640px;border-radius:22px 22px 0 0;padding:18px 18px 28px;animation:up .25s cubic-bezier(.2,.9,.3,1);max-height:92vh;overflow-y:auto}
+  .modal{background:var(--surface,#fff);width:100%;max-width:640px;border-radius:22px 22px 0 0;padding:18px 18px 28px;animation:up .25s cubic-bezier(.2,.9,.3,1);max-height:92vh;overflow-y:auto}
   @keyframes up{from{transform:translateY(100%)}to{transform:none}}
   .grip{width:38px;height:4px;background:var(--gray-200);border-radius:999px;margin:0 auto 14px}
   .modal h3{font-size:18px;font-weight:800;margin-bottom:14px}
@@ -250,9 +250,9 @@ function delTrip(id){
   if(!confirm('“'+t.city+'” 여행을 삭제할까요?\n일정·예산·예약·준비물이 모두 지워지며 되돌릴 수 없습니다.')) return;
   // 이 여행 지출에 붙은 영수증 사진(IndexedDB)도 함께 지움 — 안 그러면 폰에 계속 남음
   var rc=(t.expenses||[]).filter(function(e){return e.hasReceipt;}).map(function(e){return e.id;});
-  if(rc.length && window.indexedDB){
+  if(window.indexedDB){
     try{ var rq=indexedDB.open('tc-receipts',1); rq.onupgradeneeded=function(){ rq.result.createObjectStore('r'); };
-      rq.onsuccess=function(){ var db=rq.result, tx=db.transaction('r','readwrite'), st=tx.objectStore('r'); rc.forEach(function(id){ st.delete(id); }); tx.oncomplete=tx.onerror=tx.onabort=function(){ db.close(); }; }; }catch(e){}
+      rq.onsuccess=function(){ var db=rq.result, tx=db.transaction('r','readwrite'), st=tx.objectStore('r'); rc.forEach(function(id){ st.delete(id); }); st.delete(IDBKeyRange.bound('j:'+id+':','j:'+id+':￿')); tx.oncomplete=tx.onerror=tx.onabort=function(){ db.close(); }; }; }catch(e){}   // 영수증 + 여행 일기 사진(j:여행id:날짜)
   }
   T.remove(id); render();
 }
