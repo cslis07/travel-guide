@@ -89,7 +89,7 @@ def main():
     tabs = ('  <nav class="hx-tabs" id="hxTabs" aria-label="홈 메뉴">'
             '<a href="#hxTop" class="on">추천</a><a href="#hero" data-sw="flight">항공권</a><a href="#hero" data-sw="hotel">숙소</a>'
             '<a href="#destinations">여행지</a><a href="#essentials">필수템</a></nav>')
-    chips = ('  <div class="hx-band" id="hxTop"><div class="container hx-chips">'
+    chips = ('  <div class="hx-band" id="hxTop"><div class="container"><div id="hxNext"></div></div><div class="container hx-chips">'
              '<a href="/trips">🧳 내 여행 만들기</a><a href="airport.html">✈ 인천공항 <b class="hx-live">LIVE</b></a>'
              '<a href="estimate.html">🧮 예산 견적</a><a href="prepare.html">✅ 출국 준비</a><a href="tours.html">🎟 투어·티켓</a></div></div>\n'
              + rail("🔥 지금 많이 찾는 여행지", PICKS, by, info) + "\n"
@@ -125,6 +125,8 @@ def main():
 
     if "/home-ui.js" not in src:
         src = src.replace('<script src="/nav.js" defer></script>', '<script src="/home-ui.js" defer></script>\n<script src="/nav.js" defer></script>', 1)
+    if "/trips.js" not in src:   # '내 다음 여행' 카드가 TripStore를 읽음
+        src = src.replace('<script src="/home-ui.js" defer></script>', '<script src="/trips.js"></script>\n<script src="/home-ui.js" defer></script>', 1)
     write("index.html", src)
     print("index.html updated:", len(cs), "cards")
 

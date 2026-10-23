@@ -294,6 +294,39 @@
     upsert(t);
   }
 
+  /* ── 도시 커버 사진: 가이드 첫 구역 사진(Wikimedia 500px, 홈 썸네일과 동일·200 검증) ── */
+  var CITY_PHOTO = {
+    "오사카": 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Osaka_Dotonbori_Ebisu_Bridge.jpg/500px-Osaka_Dotonbori_Ebisu_Bridge.jpg',
+    "후쿠오카": 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/JR_Hakata_City_2011_Jan.jpg/500px-JR_Hakata_City_2011_Jan.jpg',
+    "도쿄": 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Tokyo_Metropolitan_Government_Building_2024.jpg/500px-Tokyo_Metropolitan_Government_Building_2024.jpg',
+    "교토": 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Kiyomizu.jpg/500px-Kiyomizu.jpg',
+    "삿포로": 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Hokkaido_Sapporo_Odori_Park.jpg/500px-Hokkaido_Sapporo_Odori_Park.jpg',
+    "오키나와": 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Naha_Okinawa_Japan_Shuri-Castle-01.jpg/500px-Naha_Okinawa_Japan_Shuri-Castle-01.jpg',
+    "상하이": 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/The_Bund_2.jpg/500px-The_Bund_2.jpg',
+    "타이베이": 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Taipei_Skyline_20220708.jpg/500px-Taipei_Skyline_20220708.jpg',
+    "홍콩": 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/High_West_and_Victoria_Peak_from_Victoria_Gap_%28crop1%29.jpg/500px-High_West_and_Victoria_Peak_from_Victoria_Gap_%28crop1%29.jpg',
+    "구이린": 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Guilin_2006_19-03.jpg/500px-Guilin_2006_19-03.jpg',
+    "장자제": 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/1_tianzishan_wulingyuan_zhangjiajie_2012.jpg/500px-1_tianzishan_wulingyuan_zhangjiajie_2012.jpg',
+    "창바이산": 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/%E4%BB%8E%E9%95%BF%E7%99%BD%E5%B1%B1%E8%A5%BF%E5%9D%A1%E7%9C%8B%E5%A4%A9%E6%B1%A0-2017-08-24_1.jpg/500px-%E4%BB%8E%E9%95%BF%E7%99%BD%E5%B1%B1%E8%A5%BF%E5%9D%A1%E7%9C%8B%E5%A4%A9%E6%B1%A0-2017-08-24_1.jpg',
+    "방콕": 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/0005574_-_Wat_Phra_Kaew_006.jpg/500px-0005574_-_Wat_Phra_Kaew_006.jpg',
+    "다낭": 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/My_Khe_Beach%2C_Da_Nang%2C_Vietnam.jpg/500px-My_Khe_Beach%2C_Da_Nang%2C_Vietnam.jpg',
+    "발리": 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Rice_terraces%2C_Bali.jpg/500px-Rice_terraces%2C_Bali.jpg',
+    "싱가포르": 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Marina_Bay_Sands_%28I%29.jpg/500px-Marina_Bay_Sands_%28I%29.jpg',
+    "나트랑": 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Nha_Trang_%2C_Vietnam_-_panoramio_%2835%29.jpg/500px-Nha_Trang_%2C_Vietnam_-_panoramio_%2835%29.jpg',
+    "세부": 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Magellan%27s_Cross_2024-07-05.jpg/500px-Magellan%27s_Cross_2024-07-05.jpg',
+    "코타키나발루": 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Panoramic_view_of_Kota_Kinabalu_City.jpg/500px-Panoramic_view_of_Kota_Kinabalu_City.jpg',
+    "제주": 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Seongsan_Ilchulbong_from_the_air.jpg/500px-Seongsan_Ilchulbong_from_the_air.jpg',
+    "부산": 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Haeundae_Beach_May_2024.jpg/500px-Haeundae_Beach_May_2024.jpg',
+    "강릉": 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/%EA%B2%BD%ED%8F%AC%ED%95%B4%EB%B3%80.jpg/500px-%EA%B2%BD%ED%8F%AC%ED%95%B4%EB%B3%80.jpg',
+    "파리": 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Tour_Eiffel_Wikimedia_Commons_%28cropped%29.jpg/500px-Tour_Eiffel_Wikimedia_Commons_%28cropped%29.jpg'
+  };
+  function cityPhoto(city) {
+    city = String(city || '');
+    if (CITY_PHOTO[city]) return CITY_PHOTO[city];
+    for (var k in CITY_PHOTO) { if (city.indexOf(k) > -1) return CITY_PHOTO[k]; }   // '오사카 가족여행' 같은 이름도
+    return '';
+  }
+
   window.TripStore = {
     KEY: KEY, RATES: RATES, CATS: CATS, MEMBER_COLORS: MEMBER_COLORS,
     all: all, get: get, create: create, upsert: upsert, remove: remove,
@@ -308,7 +341,7 @@
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,
     dailyAllowance: dailyAllowance, remainingDays: remainingDays, byCategory: byCategory,
     settlements: settlements, balances: balances, toKRW: toKRW,
-    refreshRates: refreshRates, fxState: fxState, cityGeo: cityGeo,
+    refreshRates: refreshRates, fxState: fxState, cityGeo: cityGeo, cityPhoto: cityPhoto,
     // 날짜
     fmtMD: fmtMD, dow: dow, tripLength: tripLength, ddayText: ddayText, daysBetween: daysBetween,
     catByKey: function (k) { return CATS.filter(function (c) { return c.key === k; })[0] || CATS[6]; }

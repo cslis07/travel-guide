@@ -25,6 +25,7 @@
   .fchip.on{background:var(--primary);color:#fff;border-color:var(--primary)}
   .tcard{border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);background:#fff;cursor:pointer;transition:transform .12s,box-shadow .12s;margin-bottom:16px}
   .tcard:active{transform:scale(.99)}
+  .tcover.ph{height:170px;background-size:cover;background-position:center}
   .tcover{height:130px;position:relative;padding:14px;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
   .cov-blue{background:linear-gradient(135deg,#1B4FD8,#0ea5e9)} .cov-osaka{background:linear-gradient(135deg,#f97316,#e5484d)}
   .cov-purple{background:linear-gradient(135deg,#7c3aed,#1B4FD8)} .cov-green{background:linear-gradient(135deg,#039855,#22c55e)}
@@ -165,8 +166,10 @@ function card(t){
   if((t.members||[]).length>3) mem += '<span style="background:#98A2B3">+'+((t.members.length)-3)+'</span>';
   var budgetLbl = T.budgetTotal(t) ? (pct+'% 사용') : '예산 설정 중';
   var places = (t.days||[]).reduce(function(s,d){return s+((d.items||[]).length);},0);
+  var ph = T.cityPhoto ? T.cityPhoto(t.city) : '';   // 도시 사진(가이드 커버) — 없으면 색 그라데이션
+  var cst = (ph ? 'background-image:linear-gradient(180deg,rgba(0,0,0,.08) 30%,rgba(0,0,0,.62)),url(\''+ph+'\');' : '') + (done ? 'filter:grayscale(.25)' : '');
   return '<div class="tcard" onclick="location.href=\'/trip?id='+t.id+'\'">'
-    + '<div class="tcover cov-'+esc(t.cover)+'"'+(done?' style="filter:grayscale(.25)"':'')+'>'
+    + '<div class="tcover cov-'+esc(t.cover)+(ph?' ph':'')+'"'+(cst?' style="'+cst+'"':'')+'>'
     +   '<button class="tdel" title="여행 삭제" onclick="event.stopPropagation();delTrip(\''+t.id+'\')">🗑</button>'
     +   '<span class="dday"'+(done?' style="background:rgba(0,0,0,.28)"':'')+'>'+T.ddayText(t)+'</span>'
     +   '<div><h3>'+esc(t.city)+'</h3><div class="dt">'+T.fmtMD(t.start)+' – '+T.fmtMD(t.end)+' · '+T.tripLength(t)+'일 · '+(t.members||[]).length+'명</div></div>'
@@ -206,7 +209,7 @@ function createTrip(){
   if(!enc) return;
   try{
     if(enc.length>600000) throw 0;
-    var obj = JSON.parse(decodeURIComponent(escape(atob(enc))));
+    var obj = JSON.parse(decodeURIComponent(escape(atob(enc.replace(/ /g,'+')))));   // 옛 링크: + 가 공백으로 바뀐 것 복구
     if(!obj || !obj.city || !obj.start || !obj.end) throw 0;
     var nt = T.create({ city:obj.city, cover:obj.cover||'blue', start:obj.start, end:obj.end,
       members:(obj.members&&obj.members.length)?obj.members:[{name:'나',color:T.MEMBER_COLORS[0]}],
@@ -217,6 +220,42 @@ function createTrip(){
     history.replaceState({},'', '/trips');
     location.href='/trip?id='+nt.id; return;
   }catch(e){ history.replaceState({},'', '/trips'); }
+})();
+/* ── 지출 합치기 링크(?x=)로 받은 동행 지출을 같은 여행에 합치기 — 같은 id는 건너뛰고, 없는 사람은 추가 ── */
+(function mergeShared(){
+  var enc = new URLSearchParams(location.search).get('x');
+  if(!enc) return;
+  history.replaceState({},'', '/trips');
+  var obj;
+  try{ if(enc.length>600000) throw 0; obj = JSON.parse(decodeURIComponent(escape(atob(enc.replace(/ /g,'+'))))); }catch(e){ alert('지출 링크를 읽지 못했어요.'); return; }
+  if(!obj || !obj.city || !Array.isArray(obj.expenses)) { alert('지출 링크 형식이 올바르지 않아요.'); return; }
+  var str = function(v,n){ return String(v==null?'':v).slice(0,n); };
+  var num = function(v){ v=+v; return isFinite(v)&&v>=0?v:0; };
+  var incoming = obj.expenses.filter(function(e){ return e && e.id && num(e.krw)>0; }).map(function(e){
+    return { id:str(e.id,40), date:str(e.date,10), amount:num(e.amount), currency:str(e.currency||'KRW',3), krw:Math.round(num(e.krw)),
+      category:str(e.category||'etc',20), method:e.method==='cash'?'cash':'card', paidBy:str(e.paidBy,30),
+      paidFor:Array.isArray(e.paidFor)?e.paidFor.map(function(n){return str(n,30);}).filter(Boolean):[], memo:str(e.memo,120) };
+  });
+  var cands = T.all().filter(function(t){ return t.city===obj.city; });
+  var t = cands.filter(function(c){ return c.start===obj.start; })[0] || cands[0];
+  if(!t){
+    if(!confirm('“'+obj.city+'” 여행이 이 기기에 없어요. 받은 지출로 새 여행을 만들까요?')) return;
+    t = T.create({ city:str(obj.city,40), start:obj.start, end:obj.end || obj.start, members:[{name:'나',color:T.MEMBER_COLORS[0]}] });
+  }
+  var have = {}; (t.expenses||[]).forEach(function(e){ have[e.id]=1; });
+  var add = incoming.filter(function(e){ return !have[e.id]; });
+  if(!add.length){ alert('합칠 새 지출이 없어요 — 이미 모두 들어 있어요.'); location.href='/trip?id='+t.id+'&tab=budget'; return; }
+  if(!confirm('“'+t.city+'” 여행에 동행 지출 '+add.length+'건을 합칠까요?'+(incoming.length>add.length?'\n(이미 있는 '+(incoming.length-add.length)+'건은 건너뜀)':''))) return;
+  // 지출에 나오는 사람 중 내 여행에 없는 사람은 멤버로 추가(색은 받은 링크 → 기본 팔레트 순)
+  t.members = t.members || [];
+  var names = {}; t.members.forEach(function(m){ names[m.name]=1; });
+  var colorOf = {}; (obj.members||[]).forEach(function(m){ if(m&&m.name) colorOf[str(m.name,30)] = /^#[0-9a-fA-F]{6}$/.test(m.color)?m.color:''; });
+  add.forEach(function(e){ [e.paidBy].concat(e.paidFor).forEach(function(n){
+    if(n && !names[n]){ names[n]=1; t.members.push({ name:n, color: colorOf[n] || T.MEMBER_COLORS[t.members.length % T.MEMBER_COLORS.length] }); }
+  }); });
+  t.expenses = add.concat(t.expenses||[]);
+  T.upsert(t);
+  location.href='/trip?id='+t.id+'&tab=budget';
 })();
 render();
 </script>

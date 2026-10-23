@@ -522,6 +522,8 @@ function render(){
   $('r-cap').textContent = d.label + ' · ' + c.nights + '박 ' + c.days + '일 · 성인 ' + c.adults +
     (c.child ? '명 아동 ' + c.child : '') + '명';
   $('r-total').innerHTML = manwon(c.lo) + ' ~ ' + manwon(c.hi) + '<small>만원</small>';
+  var ab = $('attachBudgetBtn');
+  if (ab) ab.textContent = '🧳 ₩' + Math.round(c.total).toLocaleString('ko-KR') + '을 내 여행 예산으로';
   $('r-per').textContent = '중앙 ' + won(c.total) + ' · 1인당 ' + won(c.total / c.people) +
     ' · 하루 ' + won(c.total / c.days);
 
@@ -835,7 +837,8 @@ function restoreFromHash(){
 function attachBudget(){
   var sel = document.getElementById('f-dest');
   var city = sel && sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : '';
-  var total = parseInt((document.getElementById('r-total').textContent||'').replace(/[^0-9]/g,'')) || 0;
+  // 화면 총액은 '115 ~ 140만원' 범위 표기라 숫자만 뽑으면 115140원이 됨 → 계산값(중앙 추정)을 그대로 쓴다
+  var total = (state.computed && Math.round(state.computed.total)) || 0;
   if(total<=0){ alert('먼저 예산을 계산해 주세요.'); return; }
   var start = (document.getElementById('f-out')||{}).value || '';
   var end   = (document.getElementById('f-back')||{}).value || '';

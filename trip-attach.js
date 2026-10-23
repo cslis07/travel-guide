@@ -62,6 +62,7 @@
     if (p.budget) bits.push('예산 ₩' + p.budget.toLocaleString('ko-KR'));
     if (p.checklist && p.checklist.length) bits.push('준비물 ' + p.checklist.length + '개');
     if (p.itinerary && p.itinerary.length) bits.push('일정 ' + p.itinerary.length + '개');
+    if (p.days && p.days.length) bits.push(p.days.length + '일 코스 · 일정 ' + p.days.reduce(function (n, d) { return n + d.length; }, 0) + '개');
     if (p.reservations && p.reservations.length) bits.push('예약 ' + p.reservations.length + '개');
     if (p.flight) bits.push('항공편');
     return bits.join(' · ') || '이 여행에 담기';
@@ -83,7 +84,8 @@
     }).join('');
 
     var d1 = payload.start || new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10);
-    var d2 = payload.end || new Date(Date.now() + 33 * 864e5).toISOString().slice(0, 10);
+    var span = payload.days && payload.days.length ? payload.days.length - 1 : 3;   // 코스 일수에 맞춘 기본 도착일
+    var d2 = payload.end || new Date(Date.parse(d1) + span * 864e5).toISOString().slice(0, 10);
     var covers = ['osaka', 'blue', 'purple', 'green', 'pink'];
 
     document.getElementById('ta-body').innerHTML =
@@ -126,6 +128,13 @@
       window.TripStore.ensureDays(t);
       t.days[0].items = t.days[0].items || [];
       p.itinerary.forEach(function (it) { t.days[0].items.push({ id: 'i' + Math.random().toString(36).slice(2, 8), time: it.time || '', type: it.type || 'sight', title: it.title, memo: it.memo || '' }); });
+    }
+    if (p.days && p.days.length) {   // 일차별 코스: n일차 → t.days[n] (여행이 더 짧으면 마지막 날에 이어 붙임)
+      window.TripStore.ensureDays(t);
+      p.days.forEach(function (items, i) {
+        var d = t.days[Math.min(i, t.days.length - 1)]; d.items = d.items || [];
+        items.forEach(function (it) { d.items.push({ id: 'i' + Math.random().toString(36).slice(2, 8), time: it.time || '', type: it.type || 'sight', title: it.title, memo: it.memo || '' }); });
+      });
     }
     if (p.reservations && p.reservations.length) {
       t.reservations = t.reservations || [];
