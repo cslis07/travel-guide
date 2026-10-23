@@ -107,6 +107,19 @@
   .lv-chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px;font-size:12px;color:var(--gray-500)}.lv-chain span{background:var(--gray-100);color:var(--gray-800);font-weight:700;padding:5px 8px;border-radius:8px}
   .lv-sub{font-size:11.5px;color:var(--gray-500);margin-top:8px}
   .lv-note{font-size:12px;color:var(--gray-600);margin-top:8px}
+  .lv-today{font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:5px;background:rgba(0,0,0,.18)}
+  .fl-fav{display:block;margin-top:8px;font-size:11.5px;font-weight:700;color:#fff;opacity:.92;text-decoration:none}
+  .lst{padding:2px 7px;border-radius:6px;background:rgba(255,255,255,.22)}.lst.late{background:#FEF0C7;color:#93370D}.lst.bad{background:#FEE4E2;color:#B42318}
+  .bestgate{display:flex;gap:10px;align-items:flex-start;background:#ECFDF3;border-radius:14px;padding:12px 14px;margin-bottom:10px}
+  .bestgate .bg-ic{font-size:20px;line-height:1}.bestgate b{display:block;font-size:14px;color:#05603A;font-weight:800}.bestgate small{display:block;font-size:12px;color:#067647;margin-top:2px}
+  .lv-crowd{font-size:12px;color:var(--gray-700);background:var(--gray-50);border-radius:9px;padding:7px 9px;margin-top:8px}.lv-crowd.up{background:#FFFAEB;color:#93370D}
+  .backcard{background:#fff;border-radius:14px;padding:14px;margin-top:12px;box-shadow:var(--shadow)}.backcard.home{margin:0 0 12px;border:2px solid var(--primary)}
+  .bc-badge{display:inline-block;font-size:11.5px;font-weight:800;color:#fff;background:var(--primary);padding:3px 9px;border-radius:999px;margin-bottom:8px}
+  .bc-top{display:flex;justify-content:space-between;align-items:baseline}.bc-top b{font-size:16px;font-weight:800}.bc-top span{font-size:12px;color:var(--gray-500);font-weight:700}
+  .bc-route{font-size:12.5px;color:var(--gray-600);margin-top:2px}
+  .bc-live{font-size:13px;color:var(--gray-800);margin-top:8px;line-height:1.6}.bc-live .lst{background:var(--gray-100)}
+  .bc-entry{font-size:12.5px;color:var(--gray-700);background:var(--gray-50);border-radius:9px;padding:7px 9px;margin-top:8px}
+  .bc-links{display:flex;gap:8px;margin-top:10px}.bc-links a{flex:1;text-align:center;font-size:12.5px;font-weight:800;color:var(--primary);background:var(--primary-lt);border-radius:10px;padding:10px 6px;text-decoration:none}
   .rc-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.rc-prev{width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid var(--gray-200);cursor:zoom-in}
   .rc-pick{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border:1.5px dashed var(--gray-300);border-radius:11px;font-size:13px;font-weight:700;color:var(--primary);cursor:pointer;background:#fff}
   .rc-del{min-height:44px;padding:0 12px;border:none;border-radius:11px;background:var(--gray-100);color:var(--danger);font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit}
@@ -275,7 +288,7 @@ function renderPane(){
   else if(curTab==='budget'){ p.innerHTML=paneBudget(); drawDonut(); fillReceipts(p); }
   else if(curTab==='resv') p.innerHTML=paneResv();
   else if(curTab==='pack') p.innerHTML=panePack();
-  else { p.innerHTML=paneAir(); loadAirCong(); }
+  else { p.innerHTML=paneAir(); loadAirCong(); loadFlightLive(); loadCrowd(); syncFavs(); }
   updateFab();
 }
 
@@ -648,11 +661,16 @@ function paneAir(){
   var fcard = f ? '<div class="flight"><div class="top"><span>'+esc(f.no)+' · '+esc(f.airline||'')+'</span><span>'+T.fmtMD(f.date)+' '+T.dow(f.date)+'</span></div>'
     +'<div class="route"><div class="ap">'+esc(f.from)+'</div><div class="ln">'+svg('ic-plane')+'</div><div class="ap">'+esc(f.to)+'</div></div>'
     +'<div style="display:flex;justify-content:space-between;font-size:11px;opacity:.85"><span>'+esc(f.dep||'')+' 출발</span><span>'+esc(f.arr||'')+' 도착</span></div>'
-    +'<div class="status">정시 · 탑승구 '+esc(f.terminal||'미정')+'</div></div>'
+    +'<div class="status" id="fltLive">'+liveHint(f)+'</div>'
+    +(flightNo(f.no)?'<a class="fl-fav" href="/airport#tab=fav">⭐ 공항 \'내 편명\'에 자동 등록됨 — 지연·게이트 변경 알림 ›</a>':'')+'</div>'
     : '<div class="card" style="text-align:center;padding:24px"><div style="font-size:36px">✈️</div><h4 style="margin:8px 0 4px;font-size:15px">항공편을 등록하세요</h4><p style="color:var(--gray-500);font-size:12.5px">편명을 넣으면 실시간 상태·탑승구를 여기서 확인해요.</p><button class="save" style="max-width:220px;margin:14px auto 0" onclick="openFlightSheet()">항공편 등록</button></div>';
-  return fcard
-    + leaveCard()
+  var homeMode = trip.flightBack && T.daysBetween(todayISO(), trip.end) <= 1 && T.daysBetween(todayISO(), trip.end) >= -1;
+  return (homeMode ? backCard(true) : '')
+    + fcard
+    + leaveCard(0,'')
+    + (homeMode ? '' : backCard(false))
     + '<div class="sech">지금 인천공항 (실시간)</div>'
+    + '<div id="bestGate"></div>'
     + '<div id="airCong"><div class="card" style="color:var(--gray-500);font-size:12.5px;text-align:center;padding:14px">⏳ 출국장 혼잡도 불러오는 중…</div></div>'
     + '<a class="biglink" href="/airport">🛫 인천공항 실시간 상세 (혼잡도·주차·항공편·라운지) '+svg('ic-arrow')+'</a>'
     + '<a class="biglink" href="/prepare">✅ 출발 전 체크리스트 열기 '+svg('ic-arrow')+'</a>';
@@ -672,6 +690,7 @@ function loadAirCong(){
       var maxWait=0,total=0;
       list.forEach(function(g){ var wt=parseInt(g.waitTime||0)||0, wl=parseInt(g.waitLength||0)||0; if(wt>maxWait)maxWait=wt; total+=wl; });
       var lv = maxWait<15?['원활','var(--success)',35] : maxWait<30?['보통','var(--accent)',65] : ['혼잡','var(--danger)',90];
+      renderBestGate(list, termLbl);
       var ln=document.getElementById('leaveNote'); if(ln&&maxWait>=30) ln.innerHTML='⚠️ 지금 출국장이 혼잡해요(최대 약 '+maxWait+'분) — <b>20분 더 일찍</b> 나가는 걸 권해요';
       box.innerHTML='<div class="gauge">'
         +'<div class="g"><div class="lv" style="color:'+lv[1]+'">'+lv[0]+'</div><div class="meter"><i style="width:'+lv[2]+'%;background:'+lv[1]+'"></i></div><div class="lb">'+termLbl+' 출국장</div></div>'
@@ -901,18 +920,133 @@ function guideCard(){
 /* ═══ ⑥ 공항 가는 시간 역산 — 국제선 2시간 30분 전·국내선 1시간 전 도착 + 집→공항 이동시간 ═══ */
 var DOM_AP=/^(GMP|CJU|PUS|TAE|CJJ|KWJ|RSU|USN|MWX|YNY|KUV|WJU|HIN|KPO)$/i;
 function hm(min){ min=((min%1440)+1440)%1440; return pad(Math.floor(min/60))+':'+pad(min%60); }
-function leaveCard(){
+function leaveCard(extra, crowdNote){
   var f=trip.flight, m=f&&/^(\d{1,2}):(\d{2})/.exec(f.dep||''); if(!m) return '';
   var dep=(+m[1])*60+(+m[2]), domestic=DOM_AP.test(f.from||'')&&DOM_AP.test(f.to||'');
-  var buf=domestic?60:150, mv=trip.airportMins||60, arrive=dep-buf, leave=arrive-mv;
+  var buf=(domestic?60:150)+(extra||0), mv=trip.airportMins||60, arrive=dep-buf, leave=arrive-mv;
   var dayNote=leave<0?' (전날)':'';
   var opts=[30,60,90,120].map(function(v){ return '<span class="seg'+(v===mv?' on':'')+'" onclick="setAirportMins('+v+')">'+(v<60?v+'분':Math.floor(v/60)+'시간'+(v%60?' '+(v%60)+'분':''))+'</span>'; }).join('');
-  return '<div class="leave"><div class="lv-h">🚗 집에서 <b>'+hm(leave)+dayNote+'</b>에 나가세요</div>'
+  return '<div class="leave" id="leaveBox"><div class="lv-h">🚗 집에서 <b>'+hm(leave)+dayNote+'</b>에 나가세요</div>'
     +'<div class="lv-chain"><span>'+hm(leave)+' 출발</span>→<span>'+hm(arrive)+' 공항 도착</span>→<span>'+hm(dep)+' 비행기</span></div>'
-    +'<div class="lv-sub">'+(domestic?'국내선 1시간':'국제선 2시간 30분')+' 전 공항 도착 기준 · 집→공항</div><div class="segrow" style="margin:6px 0 0">'+opts+'</div>'
+    +(crowdNote?'<div class="lv-crowd'+(extra?' up':'')+'">'+crowdNote+'</div>':'')
+    +'<div class="lv-sub">'+(domestic?'국내선 1시간':'국제선 2시간 30분')+(extra?' + 혼잡 '+extra+'분':'')+' 전 공항 도착 기준 · 집→공항</div><div class="segrow" style="margin:6px 0 0">'+opts+'</div>'
     +'<div class="lv-note" id="leaveNote">출국장이 혼잡하면 20분 더 일찍 나가세요</div></div>';
 }
 function setAirportMins(v){ trip.airportMins=v; T.upsert(trip); reget(); renderPane(); }
+
+/* ═══ 공항 실시간 연결 — 편명으로 인천공항 운항정보(오늘±1일 범위)에서 상태·탑승구·카운터·터미널 ═══ */
+var TERM_LBL={P01:'T1',P02:'T2',P03:'탑승동'};
+function flightNo(v){ v=String(v||'').toUpperCase().replace(/\s+/g,''); return /^[A-Z0-9]{2,8}$/.test(v)?v:''; }   // '내 편명'·onclick에 들어가므로 영숫자만
+function liveWindow(date){ var d=T.daysBetween(todayISO(),date); return d>=-1&&d<=1; }
+function liveHint(f){
+  if(!flightNo(f.no)) return '편명을 넣으면 실시간 상태·탑승구가 보여요';
+  return liveWindow(f.date)?'⏳ 실시간 운항 정보 확인 중…':'실시간 상태·탑승구는 출발 하루 전부터 보여요';
+}
+function flightDir(f){ return /^ICN$/i.test(f.from||'')?'dep':/^ICN$/i.test(f.to||'')?'arr':''; }
+function hhmm(v){ v=String(v||''); var m=/(\d{2})(\d{2})$/.exec(v); return m?m[1]+':'+m[2]:''; }
+var _odp={};
+function odp(dir){
+  if(!_odp[dir]) _odp[dir]=fetch('/api/proxy?path='+encodeURIComponent('StatusOfPassengerFlightsOdp/getPassenger'+(dir==='dep'?'Departures':'Arrivals')+'Odp')+'&numOfRows=500')
+    .then(function(r){ return r.ok?r.json():null; }).then(function(d){ return itemsOf(d); }).catch(function(){ _odp[dir]=null; return []; });
+  return _odp[dir];
+}
+function findFlight(list,no){ return list.filter(function(x){ return String(x.flightId||'').toUpperCase()===no || String(x.masterflightid||'').toUpperCase()===no; })[0]||null; }
+function liveHtml(x,dir){
+  var sch=hhmm(x.scheduleDateTime), est=hhmm(x.estimatedDateTime), rmk=String(x.remark||''), bad=/결항|취소|cancel/i.test(rmk), late=est&&est!==sch&&!bad;
+  var bits=[];
+  bits.push('<b class="lst'+(bad?' bad':late?' late':'')+'">'+esc(rmk||'예정')+'</b>');
+  bits.push('예정 '+esc(sch)+(late?' → <b>'+esc(est)+'</b>':''));
+  if(x.terminalId) bits.push(esc(TERM_LBL[x.terminalId]||x.terminalId));
+  if(dir==='dep'){ if(x.chkinrange) bits.push('체크인 '+esc(x.chkinrange)); if(x.gatenumber) bits.push('탑승구 <b>'+esc(x.gatenumber)+'</b>'); }
+  else { if(x.carousel) bits.push('수하물 벨트 <b>'+esc(x.carousel)+'</b>'); if(x.exitnumber) bits.push('출구 '+esc(x.exitnumber)); }
+  return bits.join(' · ');
+}
+function loadFlightLive(){
+  [['flight','fltLive'],['flightBack','backLive']].forEach(function(k){
+    var f=trip[k[0]], box=document.getElementById(k[1]), no=f&&flightNo(f.no), dir=f&&flightDir(f);
+    if(!box||!no||!dir||!liveWindow(f.date)) return;
+    odp(dir).then(function(list){
+      var x=findFlight(list||[],no);
+      if(!x){ box.innerHTML='오늘 인천공항 운항표에서 '+esc(no)+'편을 찾지 못했어요(편명·날짜 확인)'; return; }
+      box.innerHTML=(f.date!==todayISO()?'<small class="lv-today">오늘 같은 편 기준</small> ':'')+liveHtml(x,dir);   // 운항표엔 날짜가 없어 오늘 운항분과 맞춰 봄
+      var term=TERM_LBL[x.terminalId];   // 터미널을 알게 되면 저장 → 혼잡도·출국장 안내가 그 터미널 기준으로
+      if(k[0]==='flight'&&term&&f.terminal!==term){ trip.flight.terminal=term; T.upsert(trip); loadAirCong(); loadCrowd(); }
+      if(k[0]==='flightBack') loadEntryInfo(no);
+    });
+  });
+}
+/* 내 여행 항공편을 /airport '내 편명'(icn_fav_flights)에 자동 등록 → 거기서 지연·게이트 변경 알림 */
+function syncFavs(){
+  var favs; try{ favs=JSON.parse(localStorage.getItem('icn_fav_flights')||'[]'); }catch(e){ favs=[]; }
+  if(!Array.isArray(favs)) favs=[];
+  var n0=favs.length;
+  [trip.flight,trip.flightBack].forEach(function(f){
+    var no=f&&flightNo(f.no), dir=f&&flightDir(f); if(!no||!dir) return;
+    if(!favs.some(function(x){ return x.flightId===no&&x.dir===dir; })) favs.push({flightId:no,dir:dir,added:Date.now(),trip:trip.id});
+  });
+  if(favs.length!==n0) try{ localStorage.setItem('icn_fav_flights',JSON.stringify(favs)); }catch(e){}
+}
+
+/* ═══ 지금 가장 빠른 출국장 — 운영시간 밖(닫힌) 출국장은 빼고 대기시간 → 대기인원 순 ═══ */
+function gateOpen(g){
+  var m=/(\d{1,2}):(\d{2})\s*~\s*(\d{1,2}):(\d{2})/.exec(g.operatingTime||''); if(!m) return true;
+  var d=new Date(), now=d.getHours()*60+d.getMinutes(), a=(+m[1])*60+(+m[2]), b=(+m[3])*60+(+m[4]);
+  return a<=b ? (now>=a&&now<=b) : (now>=a||now<=b);
+}
+function gateName(g){ var m=/DG(\d+)_([EW])/.exec(g.gateId||''); return m?m[1]+'번 출국장 '+(m[2]==='E'?'동편':'서편'):(g.gateId||'출국장'); }
+function bestGates(list){
+  var open=list.filter(function(g){ return /DG\d+_[EW]/.test(g.gateId||'')&&gateOpen(g); });
+  var by=function(a,b){ return (+a.waitTime||0)-(+b.waitTime||0) || (+a.waitLength||0)-(+b.waitLength||0); };
+  open.sort(by);
+  return { best:open[0]||null, worst:open[open.length-1]||null, n:open.length };
+}
+function renderBestGate(list,termLbl){
+  var box=document.getElementById('bestGate'); if(!box) return;
+  var r=bestGates(list); if(!r.best){ box.innerHTML=''; return; }
+  var bw=+r.best.waitTime||0, ww=r.worst?(+r.worst.waitTime||0):bw;
+  box.innerHTML='<div class="bestgate"><span class="bg-ic">🚶</span><div><b>'+esc(termLbl)+' 지금은 '+esc(gateName(r.best))+'이 가장 빨라요</b>'
+    +'<small>대기 약 '+bw+'분 · '+(+r.best.waitLength||0)+'명'+(r.worst&&ww>bw?' — 가장 붐비는 '+esc(gateName(r.worst))+'은 약 '+ww+'분':'')+' · 운영 중 '+r.n+'곳 기준</small></div></div>';
+}
+
+/* ═══ 내 비행기 시간대 혼잡 예측 — 인천공항 시간대별 예상 출국 승객(오늘·내일)으로 도착 시각 앞당기기 ═══ */
+function loadCrowd(){
+  var f=trip.flight, m=f&&/^(\d{1,2}):(\d{2})/.exec(f.dep||''), box=document.getElementById('leaveBox');
+  if(!box||!m||flightDir(f)!=='dep') return;
+  var dd=T.daysBetween(todayISO(),f.date); if(dd<0||dd>1) return;   // 예보는 오늘·내일만 제공
+  fetch('/api/proxy?path='+encodeURIComponent('passgrAnncmt/getPassgrAnncmt')+'&selectdate='+dd+'&numOfRows=30')
+    .then(function(r){ return r.ok?r.json():null; }).then(function(d){
+      var t2=/2/.test(f.terminal||''), rows=itemsOf(d).filter(function(x){ return /^\d{2}_\d{2}$/.test(x.atime||''); });
+      if(!rows.length) return;
+      var val=function(x){ return parseFloat(t2?x.t2dgsum2:x.t1dgsum1)||0; };
+      var peak=Math.max.apply(null,rows.map(val)); if(!peak) return;
+      var dep=(+m[1])*60+(+m[2]), h=Math.floor(Math.max(0,dep-150)/60);   // 보안검색을 지날 시간대(도착 직후 1시간)
+      var at=rows.filter(function(x){ return +x.atime.slice(0,2)===h; })[0]; if(!at) return;
+      var ratio=val(at)/peak, extra=ratio>=0.8?30:ratio>=0.6?15:0;
+      var note=(t2?'T2':'T1')+' '+at.atime.replace('_',':00~')+':00 예상 출국 '+Math.round(val(at)).toLocaleString('ko-KR')+'명 — '
+        +(extra?'붐비는 시간대라 <b>'+extra+'분 더 일찍</b> 잡았어요':'붐비지 않는 시간대예요');
+      var nb=document.getElementById('leaveBox'); if(nb) nb.outerHTML=leaveCard(extra,note);
+    }).catch(function(){});
+}
+
+/* ═══ 귀국 모드 — 돌아오는 편 도착 정보(수하물 벨트·출구·입국장)와 집 가는 길 ═══ */
+function backCard(home){
+  var b=trip.flightBack; if(!b) return '';
+  return '<div class="backcard'+(home?' home':'')+'">'
+    +(home?'<div class="bc-badge">🏠 귀국 모드</div>':'')
+    +'<div class="bc-top"><b>🛬 '+esc(b.no||'귀국편')+'</b><span>'+T.fmtMD(b.date)+' '+T.dow(b.date)+'</span></div>'
+    +'<div class="bc-route">'+esc(b.from||'')+' → '+esc(b.to||'ICN')+(b.arr?' · '+esc(b.arr)+' 도착 예정':'')+'</div>'
+    +'<div class="bc-live" id="backLive">'+liveHint(b)+'</div>'
+    +'<div id="entryInfo"></div>'
+    +'<div class="bc-links"><a href="/airport#tab=transport">🚆 집 가는 공항철도·버스</a><a href="/airport#tab=parking">🅿 주차 요금·자리</a></div></div>';
+}
+function loadEntryInfo(no){
+  var box=document.getElementById('entryInfo'); if(!box) return;
+  fetch('/api/proxy?path='+encodeURIComponent('StatusOfArrivals/getArrivalsCongestion')+'&numOfRows=300')
+    .then(function(r){ return r.ok?r.json():null; }).then(function(d){
+      var x=itemsOf(d).filter(function(i){ return String(i.flightid||'').toUpperCase()===no; })[0]; if(!x) return;
+      box.innerHTML='<div class="bc-entry">🛂 '+esc(x.terno||'')+' 입국장 <b>'+esc(x.entrygate||'-')+'</b> · 같은 편 입국 예상 내국인 '+Math.round(+x.korean||0)+'명 · 외국인 '+Math.round(+x.foreigner||0)+'명</div>';
+    }).catch(function(){});
+}
 
 /* ═══ 영수증 사진 — IndexedDB 'tc-receipts'에 지출 id로 저장(이 기기 전용, 공유 링크엔 안 실림).
    CSP img-src가 blob:을 막아서 JPEG data URL로 보관. 긴 변 1280px·품질 0.72로 줄여 장당 ~150KB ═══ */
@@ -1068,15 +1202,21 @@ function addCustomPack(){
 
 /* 항공편 등록 */
 function openFlightSheet(){
-  var f=trip.flight||{};
+  var f=trip.flight||{}, fb=trip.flightBack||{};
   openSheet('<h3>항공편 등록</h3>'
     +'<div class="row2"><div><label class="fl" for="fl-no">편명</label><input class="in" id="fl-no" placeholder="예: KE723" value="'+esc(f.no||'')+'"></div><div><label class="fl" for="fl-air">항공사</label><input class="in" id="fl-air" placeholder="예: 대한항공" value="'+esc(f.airline||'')+'"></div></div>'
     +'<div class="row2"><div><label class="fl" for="fl-from">출발</label><input class="in" id="fl-from" placeholder="ICN" value="'+esc(f.from||'ICN')+'"></div><div><label class="fl" for="fl-to">도착</label><input class="in" id="fl-to" placeholder="KIX" value="'+esc(f.to||'')+'"></div></div>'
     +'<div class="row2"><div><label class="fl" for="fl-dep">출발시각</label><input class="in" id="fl-dep" placeholder="08:05" value="'+esc(f.dep||'')+'"></div><div><label class="fl" for="fl-arr">도착시각</label><input class="in" id="fl-arr" placeholder="10:35" value="'+esc(f.arr||'')+'"></div></div>'
+    +'<div class="sech" style="margin-top:16px">돌아오는 편 (선택) · '+T.fmtMD(trip.end)+'</div>'
+    +'<div class="row2"><div><label class="fl" for="fb-no">편명</label><input class="in" id="fb-no" placeholder="예: KE724" value="'+esc(fb.no||'')+'"></div><div><label class="fl" for="fb-from">출발 공항</label><input class="in" id="fb-from" placeholder="KIX" value="'+esc(fb.from||f.to||'')+'"></div></div>'
+    +'<div class="row2"><div><label class="fl" for="fb-dep">출발시각(현지)</label><input class="in" id="fb-dep" placeholder="12:20" value="'+esc(fb.dep||'')+'"></div><div><label class="fl" for="fb-arr">인천 도착시각</label><input class="in" id="fb-arr" placeholder="14:10" value="'+esc(fb.arr||'')+'"></div></div>'
     +'<button class="save" onclick="saveFlight()">저장</button>');
 }
 function saveFlight(){
-  trip.flight={no:document.getElementById('fl-no').value.trim(),airline:document.getElementById('fl-air').value.trim(),from:document.getElementById('fl-from').value.trim()||'ICN',to:document.getElementById('fl-to').value.trim(),dep:document.getElementById('fl-dep').value.trim(),arr:document.getElementById('fl-arr').value.trim(),date:trip.start,terminal:'미정'};
+  trip.flight={no:document.getElementById('fl-no').value.trim(),airline:document.getElementById('fl-air').value.trim(),from:document.getElementById('fl-from').value.trim()||'ICN',to:document.getElementById('fl-to').value.trim(),dep:document.getElementById('fl-dep').value.trim(),arr:document.getElementById('fl-arr').value.trim(),date:trip.start,terminal:(trip.flight&&trip.flight.terminal)||'미정'};
+  var bno=document.getElementById('fb-no').value.trim(), barr=document.getElementById('fb-arr').value.trim();
+  if(bno||barr) trip.flightBack={no:bno,from:document.getElementById('fb-from').value.trim(),to:'ICN',dep:document.getElementById('fb-dep').value.trim(),arr:barr,date:trip.end};
+  else delete trip.flightBack;
   T.upsert(trip); reget(); closeSheet(); renderShell();
 }
 

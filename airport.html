@@ -715,6 +715,17 @@ tr:hover td{background:var(--a-hover)}
   height:100%;background:linear-gradient(90deg,var(--accent),var(--g));
   width:0%;transition:width .25s;
 }
+.best-gate{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.35);color:var(--text);border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:.8rem}
+.best-gate b{color:var(--g)}.best-gate span{color:var(--muted);font-size:.72rem}
+.park-calc{margin-top:10px}.pc-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.pc-row label{flex:1;min-width:140px;display:flex;flex-direction:column;gap:4px;font-size:.7rem;color:var(--text2);font-weight:600}
+.pc-row input,.pc-row select{background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:9px;font:inherit;font-size:.8rem;min-height:40px}
+.pc-dur{font-size:.75rem;color:var(--text2);margin-bottom:6px}.pc-cards{display:flex;gap:8px}
+.pc-c{flex:1;background:var(--card2);border:1px solid var(--border);border-radius:11px;padding:10px;text-align:center}.pc-c small{display:block;font-size:.68rem;color:var(--muted)}.pc-c b{font-size:1.05rem}
+.pc-c.win{border-color:var(--g)}.pc-c.win b{color:var(--g)}.pc-tip{font-size:.75rem;margin-top:8px;color:var(--text2)}
+.pc-note{font-size:.62rem;color:var(--muted);margin-top:10px;line-height:1.5}.pc-note a{color:var(--accent)}
+.trip-link{background:var(--a-dim);border-radius:12px;padding:10px 12px;font-size:.76rem;line-height:1.5;margin-bottom:10px;color:var(--text)}.trip-link a{color:var(--accent);font-weight:700;white-space:nowrap}
+.trip-import{width:100%;margin-top:10px;min-height:44px}
 #check-progress-lbl{font-size:.72rem;color:var(--text2);font-weight:600;white-space:nowrap}
 .check-reset-btn{
   background:none;border:1px solid var(--border);color:var(--muted);
@@ -1352,6 +1363,13 @@ button,select,input,a{touch-action:manipulation}
     <div class="hi-w" style="font-size:.82rem;margin-bottom:8px">T1 주차면 현황 <small style="font-size:.65rem;color:var(--muted);font-weight:400">(실시간·T1 전용)</small> <span id="spot-upd" style="font-size:.6rem;color:var(--muted);float:right"></span></div>
     <div id="spot-area"><div class="loading">로딩 중...</div></div>
   </div>
+  <div class="card park-calc" id="park-calc">
+    <div class="hi-w" style="font-size:.85rem;margin-bottom:8px">🧮 주차 요금 계산기 <small style="font-size:.65rem;color:var(--muted);font-weight:400">소형차 · 공식 요금표 기준</small></div>
+    <div class="pc-row"><label>입차<input type="datetime-local" id="pc-in" onchange="calcPark()"></label><label>출차<input type="datetime-local" id="pc-out" onchange="calcPark()"></label></div>
+    <div class="pc-row"><label>감면<select id="pc-dc" onchange="calcPark()"><option value="0">없음</option><option value="50">50% — 경차·저공해 1·2종·다자녀·장애인 등</option><option value="20">20% — 저공해 3종</option></select></label></div>
+    <div id="pc-out-area"></div>
+    <div class="pc-note">인천공항 공식 주차요금(소형) 기준 · 2026-10-23 확인 · 단기: 최초 10분 무료, 30분 1,200원 + 15분당 600원, 1일 최대 24,000원 · 장기: 최초 10분 무료, 시간당 1,000원, 1일 최대 9,000원 · 대형·예약주차장·요금 변경은 <a href="https://www.airport.kr/ap_ko/969/subview.do" target="_blank" rel="noopener">공식 안내</a> 확인</div>
+  </div>
 </div>
 
 <!-- ③ 셔틀·철도 -->
@@ -1956,6 +1974,7 @@ button,select,input,a{touch-action:manipulation}
   <div>© 2026 트래블코스트 · 정보는 실시간 변동될 수 있으며 참고용입니다</div>
 </footer>
 
+<script src="/trips.js"></script>
 <script>
 // ════════════════════════════════
 //  CORE
@@ -2216,6 +2235,7 @@ async function loadEntry() {
 //  ② 주차장 현황
 // ════════════════════════════════
 async function loadParking() {
+  initParkCalc();
   spin('park-area');
   try {
     const data=await api('StatusOfParking/getTrackingParking',{numOfRows:200});
@@ -2532,7 +2552,12 @@ function renderDepCong(list,areaId,label,isT2) {
   // Summary
   const totLen=list.reduce((a,g)=>a+parseInt(g.waitLength||0),0);
   const maxG=list.length?list.reduce((a,g)=>parseInt(g.waitLength||0)>parseInt(a.waitLength||0)?g:a,list[0]):null;
-  const minG=list.length?list.reduce((a,g)=>parseInt(g.waitLength||0)<parseInt(a.waitLength||0)?g:a,list[0]):null;
+  // '가장 여유'는 지금 운영 중인 출국장만(닫힌 곳은 대기 0이라 1등으로 뽑히던 문제) — 대기시간, 같으면 대기인원 순
+  const openNow=g=>{const m=/(\d{1,2}):(\d{2})\s*~\s*(\d{1,2}):(\d{2})/.exec(g.operatingTime||'');if(!m)return true;
+    const d=new Date(),n=d.getHours()*60+d.getMinutes(),a=+m[1]*60+ +m[2],b=+m[3]*60+ +m[4];return a<=b?(n>=a&&n<=b):(n>=a||n<=b);};
+  const openList=list.filter(g=>/DG\d+_[EW]/.test(g.gateId||'')&&openNow(g))
+    .sort((a,b)=>(+a.waitTime||0)-(+b.waitTime||0)||(+a.waitLength||0)-(+b.waitLength||0));
+  const minG=openList[0]||null;
 
   const statHtml=`<div class="cong-stat-strip">
     <div class="cong-stat-card">
@@ -2545,12 +2570,14 @@ function renderDepCong(list,areaId,label,isT2) {
       ${maxG?`<div class="cong-stat-sub">${maxG.waitLength||0}명 약 ${maxG.waitTime||0}분</div>`:''}
     </div>
     <div class="cong-stat-card">
-      <div class="cong-stat-lbl">가장 여유</div>
+      <div class="cong-stat-lbl">가장 빠름(운영 중)</div>
       <div class="cong-stat-val" style="color:var(--g)">${minG?gateLabel(minG):'-'}</div>
       ${minG?`<div class="cong-stat-sub">${minG.waitLength||0}명 약 ${minG.waitTime||0}분</div>`:''}
     </div>
   </div>`;
 
+  const worstOpen=openList[openList.length-1];
+  const bestHtml=minG?`<div class="best-gate">🚶 <b>지금은 ${gateLabel(minG)} 출국장이 가장 빨라요</b> · 약 ${minG.waitTime||0}분${worstOpen&&+worstOpen.waitTime>+minG.waitTime?` <span>(가장 붐비는 ${gateLabel(worstOpen)} 약 ${worstOpen.waitTime}분)</span>`:''}</div>`:'';
   const rowsHtml=gates.map(g=>{
     const cell=(side,lbl)=>{
       if(!side) return `<td style="color:var(--muted)">-</td>`;
@@ -2568,7 +2595,7 @@ function renderDepCong(list,areaId,label,isT2) {
 
   html(areaId,`<div class="cong-section">
     <div class="cong-sec-hdr"><h3>${label}</h3><span class="cong-sec-badge">출국장 ${gates.length||'-'}개</span></div>
-    ${statHtml}
+    ${bestHtml}${statHtml}
     <div class="tbl-wrap"><table>
       <thead><tr><th>출국장</th><th>동편</th><th>서편</th><th>운영시간</th></tr></thead>
       <tbody>${rowsHtml||`<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:12px">데이터 없음</td></tr>`}</tbody>
@@ -3905,9 +3932,77 @@ function resetChecklist(){
   setCheckState({});
   renderChecklist();
 }
+
+/* ═══ 체크리스트 하나로 — 다가오는(또는 여행 중) 여행이 있으면 그 여행 '준비물'(TripStore)을 여기서 같이 체크 ═══ */
+function escT(v){ return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function nearTrip(){
+  const T=window.TripStore; if(!T) return null;
+  const d=new Date(), today=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  return T.all().filter(t=>t.end>=today).sort((a,b)=>a.start<b.start?-1:1)[0]||null;
+}
+function renderTripChecklist(area, tr){
+  const T=window.TripStore, cl=tr.checklist||[];
+  const groups={}; cl.forEach(c=>{ (groups[c.group||'기타']=groups[c.group||'기타']||[]).push(c); });
+  const done=cl.filter(c=>c.done).length;
+  const head=`<div class="trip-link">🧳 <b>${escT(tr.city)} 여행(${escT(T.ddayText(tr))}) 준비물</b>과 같은 목록이에요 — 여기서 체크하면 내 여행에도 반영돼요 <a href="/trip?id=${encodeURIComponent(tr.id)}&tab=pack">내 여행에서 열기 ›</a></div>`;
+  const body=Object.keys(groups).map(g=>`<div class="check-group"><div class="check-group-title">${escT(g)}</div><div class="check-items">`
+    +groups[g].map(c=>`<div class="check-item${c.done?' done':''}" data-cid="${escT(c.id)}" onclick="toggleTripCheck(this.dataset.cid)"><div class="check-box">${c.done?'✓':''}</div><div class="check-label">${escT(c.text)}${c.when?` <small style="color:var(--muted)">${escT(c.when)}</small>`:''}</div></div>`).join('')
+    +`</div></div>`).join('');
+  const missing=CHECK_GROUPS.reduce((n,g)=>n+g.items.filter(it=>!cl.some(c=>c.text===it)).length,0);
+  area.innerHTML=head+(body||'<div class="fav-empty">이 여행엔 아직 준비물이 없어요.</div>')
+    +(missing?`<button class="check-add-btn trip-import" onclick="importAirportChecklist()">✚ 공항 기본 체크리스트에서 없는 ${missing}개 추가</button>`:'');
+  const lbl=el('check-progress-lbl'), fill=el('check-fill');
+  if(lbl) lbl.textContent=`${done} / ${cl.length} 완료`;
+  if(fill) fill.style.width=cl.length?(done*100/cl.length)+'%':'0%';
+}
+function toggleTripCheck(cid){ const tr=nearTrip(); if(!tr) return; window.TripStore.toggleChecklist(tr.id,cid); renderChecklist(); }
+function importAirportChecklist(){
+  const tr=nearTrip(); if(!tr) return; const T=window.TripStore, t=T.get(tr.id), st=getCheckState();
+  t.checklist=t.checklist||[];
+  CHECK_GROUPS.forEach((g,gi)=>g.items.forEach((it,ii)=>{
+    if(!t.checklist.some(c=>c.text===it)) t.checklist.push({id:'a'+Math.random().toString(36).slice(2,9),group:g.title.replace(/^\S+\s/,''),text:it,when:'',done:!!st['d'+gi+'_'+ii]});
+  }));
+  getCustomItems().forEach(c=>{ if(!t.checklist.some(x=>x.text===c.text)) t.checklist.push({id:'a'+Math.random().toString(36).slice(2,9),group:'나만의 준비물',text:c.text,when:'',done:!!st[c.id]}); });
+  T.upsert(t); renderChecklist();
+}
+
+/* ═══ 주차 요금 계산기 — 소형차 공식 요금(2026-10-23 airport.kr 확인). 24시간 단위로 1일 최대 적용 ═══ */
+function parkFee(min, kind){
+  if(min<=10) return 0;
+  const full=Math.floor(min/1440), rem=min%1440;
+  if(kind==='short'){
+    const day=m=> m<=0?0:Math.min(24000, 1200+Math.ceil(Math.max(0,m-30)/15)*600);
+    return full*24000 + (rem? (full? Math.min(24000,Math.ceil(rem/15)*600) : day(rem)) : 0);
+  }
+  return full*9000 + (rem? Math.min(9000, Math.ceil(rem/60)*1000) : 0);
+}
+function initParkCalc(){
+  const i=el('pc-in'), o=el('pc-out'); if(!i||!o||i.value) { calcPark(); return; }
+  const pad=n=>String(n).padStart(2,'0'), fmt=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+  const tr=nearTrip(); let a,b;
+  if(tr){   // 다가오는 여행이 있으면 출발일 아침 ~ 귀국일 저녁으로 미리 채움
+    const dep=(tr.flight&&/^\d{1,2}:\d{2}/.test(tr.flight.dep||''))?tr.flight.dep:'09:00', arr=(tr.flightBack&&/^\d{1,2}:\d{2}/.test(tr.flightBack.arr||''))?tr.flightBack.arr:'20:00';
+    a=new Date(tr.start+'T'+dep.padStart(5,'0')); a.setMinutes(a.getMinutes()-150);
+    b=new Date(tr.end+'T'+arr.padStart(5,'0')); b.setMinutes(b.getMinutes()+60);
+  } else { a=new Date(); a.setMinutes(0,0,0); b=new Date(a.getTime()+3*864e5); }
+  i.value=fmt(a); o.value=fmt(b); calcPark();
+}
+function calcPark(){
+  const out=el('pc-out-area'), i=el('pc-in'), o=el('pc-out'); if(!out||!i||!o) return;
+  const a=new Date(i.value), b=new Date(o.value), min=Math.round((b-a)/60000);
+  if(!(min>0)){ out.innerHTML='<div class="pc-res" style="color:var(--muted)">출차가 입차보다 늦어야 해요</div>'; return; }
+  const dc=+(el('pc-dc')?.value||0), k=v=>Math.round(v*(100-dc)/100/10)*10, won=v=>v.toLocaleString('ko-KR')+'원';
+  const sh=k(parkFee(min,'short')), lo=k(parkFee(min,'long')), d=Math.floor(min/1440), h=Math.floor(min%1440/60), mm=min%60;
+  out.innerHTML=`<div class="pc-res"><div class="pc-dur">주차 ${d?d+'일 ':''}${h?h+'시간 ':''}${mm?mm+'분':''}</div>
+    <div class="pc-cards"><div class="pc-c${lo<=sh?' win':''}"><small>장기주차장</small><b>${won(lo)}</b></div><div class="pc-c${sh<lo?' win':''}"><small>단기주차장</small><b>${won(sh)}</b></div></div>
+    ${sh>lo?`<div class="pc-tip">💡 장기주차장이 <b>${won(sh-lo)}</b> 저렴해요 (셔틀로 터미널 이동)</div>`:''}</div>`;
+}
+
 function renderChecklist(){
   const area = el('check-area');
   if(!area) return;
+  const tr = nearTrip();
+  if(tr){ renderTripChecklist(area, tr); return; }
   const state = getCheckState();
   let total = 0, done = 0;
   // 기본 그룹 — 안정적 키(d그룹_항목, 텍스트와 무관)
