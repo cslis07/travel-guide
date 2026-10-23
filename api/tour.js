@@ -1,8 +1,8 @@
-// Vercel Edge Function — TourAPI (한국관광공사) 프록시
+// Vercel Function (Node.js, 서울 icn1 — vercel.json "regions") — TourAPI (한국관광공사) 프록시
 //
 // 역할:
 //  1) 서비스 키 숨김 (브라우저에 노출 X)
-//  2) Edge Cache (s-maxage) 로 동일 검색 5분 캐싱
+//  2) CDN 캐시 (s-maxage) 로 동일 검색 5분 캐싱
 //  3) Vercel KV 가 설정돼 있으면 한 번 더 캐싱
 //  4) CORS 처리
 //
@@ -14,7 +14,6 @@
 //   TOUR_API_KEY  — data.go.kr 발급 Decoded 키 (필수)
 //   KV_URL, KV_REST_API_TOKEN — Vercel KV (선택, 있으면 사용)
 
-export const config = { runtime: 'edge' };
 
 const BASE = 'https://apis.data.go.kr/B551011/KorService2';
 const FALLBACK_KEY = '9ae1336587e873e0ff6a0524e0b0cc0333868f67f9fb4180c0be654fb7794615';
@@ -36,7 +35,7 @@ const CACHE_TTL = {
   areaCode2:       86400,   // 24시간 — 지역/시군구 코드표(행정구역은 거의 안 바뀜)
 };
 
-export default async function handler(req) {
+async function handler(req) {
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 200, headers: CORS });
   }
@@ -71,8 +70,6 @@ export default async function handler(req) {
   try {
     const upstream = await fetch(target, {
       headers: { 'User-Agent': 'TravelGuide/1.0' },
-      // Vercel Edge 가 자체적으로 캐싱하도록 next의 revalidate hint
-      cf: { cacheTtl: ttl },
     });
 
     if (!upstream.ok) {
@@ -86,7 +83,7 @@ export default async function handler(req) {
       headers: {
         ...CORS,
         'Content-Type':  'application/json; charset=utf-8',
-        // 핵심: 같은 검색에 대해 Edge / CDN 캐시 적중
+        // 핵심: 같은 검색에 대해 CDN 캐시 적중
         'Cache-Control': `public, s-maxage=${ttl}, stale-while-revalidate=${ttl * 2}`,
         'X-Tour-Cache-TTL': String(ttl),
       },
@@ -105,3 +102,6 @@ function jsonError(message, status) {
     }
   );
 }
+
+// Node.js 런타임의 Web 표준 핸들러(Request → Response) — Edge 때처럼 모든 메서드를 같은 핸들러로
+export { handler as GET, handler as POST, handler as OPTIONS };

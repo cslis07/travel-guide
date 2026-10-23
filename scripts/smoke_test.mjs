@@ -53,7 +53,8 @@ const checks = [
    호텔 그레이서리 신주쿠, 30일 뒤 1박 — 요금 목록이 비어도 "ok":true 면 통과 */
 const _d = n => new Date(Date.now() + n * 864e5).toISOString().slice(0, 10);
 const apiChecks = [
-  ['GET', '/api/tour?path=areaBasedList2&numOfRows=1&pageNo=1&areaCode=39', null, 'response'],
+  ['GET', '/api/tour?path=areaBasedList2&numOfRows=1&pageNo=1&areaCode=39', null, '"resultCode":"0000"'],   // 'response'만 보면 오류 응답(responseTime)도 통과했음
+  ['GET', '/api/hotelidx?loc=g298566', null, '"ok":true'],
   ['POST', '/api/mrt', { tool: 'getCurrentTime', arguments: {} }, 'ok'],
   ['GET', `/api/hotelprice?key=g298184-d6987624&cur=JPY&ci=${_d(30)}&co=${_d(31)}&ad=2`, null, '"ok":true'],
 ];

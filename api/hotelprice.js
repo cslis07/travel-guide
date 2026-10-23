@@ -1,4 +1,4 @@
-// Vercel Edge Function — 숙소 플랫폼별 가격 비교 (구글 호텔 "모든 옵션" 방식)
+// Vercel Function (Node.js, 서울 icn1 — vercel.json "regions") — 숙소 플랫폼별 가격 비교 (구글 호텔 "모든 옵션" 방식)
 //
 // 두 단계로 나눈다. ⚠️ 마이리얼트립 MCP 는 호출 제한이 빡빡하다(실측: 수십 회에 429, 60초 대기).
 // 카드마다 상세를 부르면 본 검색까지 막히므로, 날짜와 무관한 "어느 호텔인가"는 30일 캐시한다.
@@ -14,7 +14,6 @@
 //   Xotelo rates(무료·무인증)로 Trip.com·Booking·Agoda 등 1박 요금을 받아 원화로 환산. MRT 호출 없음.
 //   → { ok, rates:[{code,name,amount,cur,krw}], cur, fx }
 
-export const config = { runtime: 'edge' };
 
 const MCP = 'https://mcp-servers.myrealtrip.com/mcp';
 const XO_RATES = 'https://data.xotelo.com/api/rates';
@@ -45,7 +44,7 @@ const IDX_VER = 2;   // 2: 색인 정렬 popularity(누락 수정). 색인 형�
    v=4: 촉음 받침(롯폰기↔Roppongi)·덩어리 걷어내기 양방식(APA 롯폰기 에키히가시 누락 수정) */
 const CURS = new Set(['JPY', 'THB', 'USD', 'HKD', 'CNY', 'EUR', 'GBP']);
 
-export default async function handler(req) {
+async function handler(req) {
   const q = new URL(req.url).searchParams;
   if (q.has('key')) return rates(q);
   return match(req, q.get('gid') || '');
@@ -245,3 +244,6 @@ function out(obj, status, sMaxAge) {
     },
   });
 }
+
+// Node.js 런타임의 Web 표준 핸들러(Request → Response) — Edge 때처럼 모든 메서드를 같은 핸들러로
+export { handler as GET, handler as POST, handler as OPTIONS };

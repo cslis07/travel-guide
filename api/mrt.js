@@ -1,4 +1,4 @@
-// Vercel Edge Function — 마이리얼트립 MCP 프록시
+// Vercel Function (Node.js, 서울 icn1 — vercel.json "regions") — 마이리얼트립 MCP 프록시
 //
 // 브라우저는 MCP 프로토콜/CORS 때문에 MCP 서버를 직접 못 부른다.
 // 이 함수가 서버측에서 JSON-RPC(tools/call)를 대신 호출한다.
@@ -7,7 +7,6 @@
 //   POST /api/mrt   { "tool": "searchTnas", "arguments": { ... } }
 //   → { ok, tool, copyText, text, data }
 
-export const config = { runtime: 'edge' };
 
 const MCP = 'https://mcp-servers.myrealtrip.com/mcp';
 
@@ -31,7 +30,7 @@ const CORS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
-export default async function handler(req) {
+async function handler(req) {
   if (req.method === 'OPTIONS') return new Response(null, { status: 200, headers: CORS });
   if (req.method !== 'POST') return err('POST only', 405);
 
@@ -106,3 +105,6 @@ function err(message, status) {
     headers: { ...CORS, 'Content-Type': 'application/json; charset=utf-8' },
   });
 }
+
+// Node.js 런타임의 Web 표준 핸들러(Request → Response) — Edge 때처럼 모든 메서드를 같은 핸들러로
+export { handler as GET, handler as POST, handler as OPTIONS };

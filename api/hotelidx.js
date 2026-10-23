@@ -1,4 +1,4 @@
-// Vercel Edge Function — 도시별 호텔 색인 (트립어드바이저 호텔 키 ↔ 좌표)
+// Vercel Function (Node.js, 서울 icn1 — vercel.json "regions") — 도시별 호텔 색인 (트립어드바이저 호텔 키 ↔ 좌표)
 //
 // 플랫폼별 가격(Xotelo rates)은 트립어드바이저 hotel_key 로만 조회된다.
 // 그런데 Xotelo 의 이름 검색은 유료(RapidAPI)라, 무료인 도시 목록(list)을
@@ -8,13 +8,12 @@
 //   GET /api/hotelidx?loc=g298184
 //   → { ok, loc, n, list:[[name, key, lat, lng, taPath], ...] }
 
-export const config = { runtime: 'edge' };
 
 const XO = 'https://data.xotelo.com/api/list';
 const PAGE = 100;
 const MAX_PAGES = 60;   // 상하이처럼 1만 곳 넘는 도시는 인기순 상위 6,000곳만
 
-export default async function handler(req) {
+async function handler(req) {
   const loc = new URL(req.url).searchParams.get('loc') || '';
   // 트립어드바이저 지역 코드 형식만 허용 (임의 URL 조립 방지)
   if (!/^g\d{2,9}$/.test(loc)) return out({ ok: false, error: 'invalid loc' }, 400, 0);
@@ -72,3 +71,6 @@ function out(obj, status, sMaxAge) {
     },
   });
 }
+
+// Node.js 런타임의 Web 표준 핸들러(Request → Response) — Edge 때처럼 모든 메서드를 같은 핸들러로
+export { handler as GET, handler as POST, handler as OPTIONS };
