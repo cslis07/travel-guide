@@ -72,7 +72,7 @@ async function handler(req) {
     // 순수 텍스트 응답 (getCurrentTime 등)
   }
 
-  return json({ ok: true, tool, copyText, text: copyText || (data ? null : textBlock), data });
+  return json({ ok: true, tool, copyText, text: copyText || (data ? null : textBlock), data }, 200, CORS);
 }
 
 // JSON-RPC 응답이 application/json 또는 text/event-stream(SSE)일 수 있어 둘 다 처리
@@ -88,7 +88,7 @@ function parseRpc(raw) {
   return null;
 }
 
-function json(obj, status = 200) {
+function json(obj, status = 200, CORS = {}) {
   return new Response(JSON.stringify(obj), {
     status,
     headers: {
