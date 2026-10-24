@@ -22,12 +22,12 @@
   .cov-purple{background:linear-gradient(135deg,#7c3aed,#1B4FD8)}.cov-green{background:linear-gradient(135deg,#039855,#22c55e)}.cov-pink{background:linear-gradient(135deg,#db2777,#f97316)}
   .back{position:absolute;top:18px;left:14px;width:34px;height:34px;border-radius:11px;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);display:grid;place-items:center;cursor:pointer;color:#fff}
   .share{position:absolute;top:18px;right:14px;width:34px;height:34px;border-radius:11px;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);display:grid;place-items:center;cursor:pointer;color:#fff}
-  .tl-map{display:inline-flex;align-items:center;gap:4px;margin-top:7px;font-size:11px;font-weight:700;color:var(--primary);text-decoration:none}
+  .tl-map{display:inline-flex;align-items:center;min-height:24px;gap:4px;margin-top:7px;font-size:11px;font-weight:700;color:var(--primary);text-decoration:none}
   .tl-map svg{width:13px;height:13px}
   #tc-toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);background:#101828;color:#fff;font-size:13px;font-weight:600;padding:11px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:3000;pointer-events:none;max-width:88vw;text-align:center}
   #tc-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
   .cover .dday{align-self:flex-start;background:rgba(255,255,255,.24);backdrop-filter:blur(6px);padding:4px 11px;border-radius:999px;font-size:12px;font-weight:800}
-  .cover .cv-credit{position:absolute;right:10px;bottom:6px;font-size:10px;color:rgba(255,255,255,.75);text-decoration:none}
+  .cover .cv-credit{position:absolute;right:12px;top:58px;min-height:24px;display:flex;align-items:center;padding:0 2px;font-size:10px;color:rgba(255,255,255,.75);text-decoration:none}
   .cover h1{font-size:27px;font-weight:800;text-shadow:0 1px 12px rgba(0,0,0,.22)}
   .cover .dt{font-size:13px;font-weight:600;opacity:.96}
   /* 요약 */
@@ -408,9 +408,12 @@ function loadWeather(){
       .then(function(d){ var g=d&&d.results&&d.results[0]; if(!g) return null; var o={lat:g.latitude,lon:g.longitude}; try{localStorage.setItem('tc_geo_'+city,JSON.stringify(o));}catch(e){} return o; })
   ).then(function(g){
     if(!g) return null;
+    // 예보는 오늘부터 16일까지만 — 범위 밖 날짜를 물으면 400이라 잘라서 묻고, 전부 밖이면 묻지 않는다
+    var last=T.iso(new Date(Date.now()+15*864e5)), en=trip.end<last?trip.end:last;
+    if(trip.start>en) return null;
     var url='https://api.open-meteo.com/v1/forecast?latitude='+g.lat+'&longitude='+g.lon
       +'&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max'
-      +'&timezone=auto&start_date='+trip.start+'&end_date='+trip.end;
+      +'&timezone=auto&start_date='+trip.start+'&end_date='+en;
     return fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.ok?r.json():null;});
   }).then(function(w){
     if(!w || !w.daily || !w.daily.time){ return; }

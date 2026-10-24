@@ -135,6 +135,7 @@ const KEY = process.env.ICN_API_KEY || '(폴백 키)';
 | `/api/tour` TourAPI | 3분~24시간 | 검색어·지역당 하루 ≤ 480회 |
 | `/api/hotelidx`·`hotelprice` | 엔드포인트별 s-maxage | — |
 
+- **실호출 계측**: CDN 캐시를 지나 공공 API까지 간 호출은 함수 로그에 `{"upstream":"proxy","api":…,"status":…}` 한 줄씩 남음 → Vercel 대시보드 Logs에서 `upstream` 검색으로 하루 호출 수 확인
 - 인천공항 화면 첫 로드 = API 5회, 가이드 1회, 홈·투어 0회(2026-10-25 실측).
 - 공공데이터포털 개발계정 기본 한도는 API마다 다름(보통 1일 1만 회) — 키 재발급 때 마이페이지에서 실제 한도를 확인해 이 표에 적을 것.
 

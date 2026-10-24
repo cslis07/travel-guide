@@ -2910,3 +2910,10 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
   #sw-from,#sw-to,#sw-dep,#sw-ret,#sw-pax,#f-dest,#f-out,#f-back,#f-adult,#f-child,#f-room,#departDate,input.pk-in{font-size:16px}
 }
 .hx-price .hx-asof{font-size:10px;font-weight:500;color:rgba(255,255,255,.8);margin-left:2px}
+/* 탭 대상 24px 이상(WCAG 2.2 2.5.8) — 2026-10-25 점검에서 21px 안팎이던 것들 */
+.footer-nav a{display:flex;align-items:center;min-height:24px}
+.pr-jump{min-height:24px;line-height:24px}
+.pk-link{min-height:24px;padding:2px 4px}
+.sgg .source-link{display:inline-flex;align-items:center;min-height:24px}
+/* hidden 속성은 늘 숨김 — img{display:block} 같은 규칙이 덮어써 빈 영수증 미리보기가 깨진 그림으로 보이던 것 */
+[hidden]{display:none!important}

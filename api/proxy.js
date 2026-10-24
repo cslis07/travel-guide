@@ -83,6 +83,8 @@ async function handler(req) {
       signal: AbortSignal.timeout(12000),   // 공공 API가 멈추면 12초에 끊고 502로 알림
     });
     const text = await upstream.text();
+    // 호출량 계측 — CDN 캐시를 지나 상류까지 간 호출만 찍힌다(Vercel 로그에서 'upstream' 검색·집계)
+    console.log(JSON.stringify({ upstream: 'proxy', api: path || new URL(targetUrl).hostname, status: upstream.status, key: KEY_STATE }));
 
     return new Response(text, {
       status: upstream.status,

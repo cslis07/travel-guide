@@ -76,6 +76,7 @@ async function handler(req) {
     }
 
     const text = await upstream.text();
+    console.log(JSON.stringify({ upstream: 'tour', api: path, status: upstream.status, key: KEY_STATE }));   // 호출량 계측(Vercel 로그)
 
     return new Response(text, {
       status: 200,
