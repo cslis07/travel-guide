@@ -75,7 +75,7 @@
 
 .todo{display:flex;gap:11px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--gray-100)}
 .todo:last-child{border-bottom:none}
-.todo input[type=checkbox]{width:19px;height:19px;flex-shrink:0;margin-top:1px;accent-color:var(--success);cursor:pointer}
+.todo input[type=checkbox]{width:24px;height:24px;flex-shrink:0;margin-top:1px;accent-color:var(--success);cursor:pointer}
 .todo-main{flex:1;min-width:0}
 .todo-name{font-size:.89rem;font-weight:650;color:var(--gray-800);line-height:1.45}
 .todo.done .todo-name{text-decoration:line-through;color:var(--gray-500)}
@@ -124,6 +124,7 @@
     <button class="menu-btn" id="menuBtn" aria-label="메뉴">☰</button>
   </div>
 </header>
+<main id="main">
 
 <div class="pr-wrap">
 
@@ -557,5 +558,6 @@ function renderEntry(){
 <script src="/icons.js" defer></script>
 <script src="/nav.js" defer></script>
 <script src="/bizfooter.js" defer></script>
+</main>
 </body>
 </html>

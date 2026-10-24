@@ -24,23 +24,22 @@ const ALLOWED = new Set([
   'getTnaOptions',
 ]);
 
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST,OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
+import { cors, foreignOrigin, rateLimited, tooMany } from './_guard.js';
 
 async function handler(req) {
+  const CORS = cors(req, 'POST,OPTIONS', { 'Access-Control-Allow-Headers': 'Content-Type' });
+  if (foreignOrigin(req)) return err('origin not allowed', 403, CORS);
+  if (rateLimited(req, 60)) return tooMany(CORS);
   if (req.method === 'OPTIONS') return new Response(null, { status: 200, headers: CORS });
-  if (req.method !== 'POST') return err('POST only', 405);
+  if (req.method !== 'POST') return err('POST only', 405, CORS);
 
   let body;
   try { body = await req.json(); }
-  catch { return err('invalid JSON body', 400); }
+  catch { return err('invalid JSON body', 400, CORS); }
 
   const tool = body?.tool;
   const args = body?.arguments || {};
-  if (!tool || !ALLOWED.has(tool)) return err('unknown or missing tool', 400);
+  if (!tool || !ALLOWED.has(tool)) return err('unknown or missing tool', 400, CORS);
 
   const rpc = { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: tool, arguments: args } };
 
@@ -57,11 +56,11 @@ async function handler(req) {
     });
     raw = await up.text();
   } catch (e) {
-    return err('MCP 연결 실패: ' + (e.message || e), 502);
+    return err('MCP 연결 실패: ' + (e.message || e), 502, CORS);
   }
 
   const rpcRes = parseRpc(raw);
-  if (rpcRes?.error) return err('MCP 오류: ' + (rpcRes.error.message || 'unknown'), 502);
+  if (rpcRes?.error) return err('MCP 오류: ' + (rpcRes.error.message || 'unknown'), 502, CORS);
 
   const textBlock = rpcRes?.result?.content?.[0]?.text ?? '';
   let data = null, copyText = null;
@@ -99,7 +98,7 @@ function json(obj, status = 200) {
     },
   });
 }
-function err(message, status) {
+function err(message, status, CORS = {}) {
   return new Response(JSON.stringify({ ok: false, error: message }), {
     status,
     headers: { ...CORS, 'Content-Type': 'application/json; charset=utf-8' },

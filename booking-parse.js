@@ -30,7 +30,12 @@
   function airports(t) {
     var out = [], m, re = new RegExp('\\b(' + IATA.join('|') + ')\\b', 'g');
     while ((m = re.exec(t))) out.push({ i: m.index, v: m[1] });
-    if (out.length < 2) for (var k in KO_AP) { var i = t.indexOf(k); if (i > -1) out.push({ i: i, v: KO_AP[k] }); }
+    if (out.length < 2) for (var k in KO_AP) {   // '제주항공'·'에어부산'처럼 항공사 이름 속 지명은 공항이 아님
+      for (var i = t.indexOf(k); i > -1; i = t.indexOf(k, i + 1)) {
+        if (t.substr(i + k.length, 2) === '항공' || t.substr(Math.max(0, i - 2), 2) === '에어') continue;
+        out.push({ i: i, v: KO_AP[k] }); break;
+      }
+    }
     out.sort(function (a, b) { return a.i - b.i; });
     var r = []; out.forEach(function (x) { if (!r.length || r[r.length - 1] !== x.v) r.push(x.v); }); return r;
   }
@@ -61,7 +66,7 @@
     });
     // 숙소: 체크인/아웃 날짜 + 이름
     var ci = after(t, /(체크인|입실|Check[\s-]?in)/i, yHint), co = after(t, /(체크아웃|퇴실|Check[\s-]?out)/i, yHint);
-    var nm = '', nre = /(?:숙소\s*명|호텔\s*명|숙소|호텔|Hotel\s*name|Property(?:\s*name)?|Accommodation)\s*[:：]\s*([^\n]{2,60})/i.exec(t);
+    var nm = '', nre = /(?:숙소\s*명|호텔\s*명|숙소|호텔|Hotel(?:\s*name)?|Property(?:\s*name)?|Accommodation)\s*[:：]\s*([^\n]{2,60})/i.exec(t);
     if (nre) nm = nre[1].trim();
     else { var line = t.split('\n').map(function (s) { return s.trim(); }).filter(function (s) { return s.length >= 4 && s.length <= 60 && /(Hotel|호텔|Resort|리조트|Inn\b|Hostel|호스텔|료칸|Ryokan|Residence|레지던스|Suites)/i.test(s) && !/(예약|확인|안내|Booking|confirmation)/i.test(s); })[0]; if (line) nm = line; }
     if (ci || co || nm) res.hotels.push({ name: nm, checkin: ci, checkout: co });

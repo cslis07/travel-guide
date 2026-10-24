@@ -17,12 +17,8 @@
 
 const BASE = 'https://apis.data.go.kr/B551011/KorService2';
 const FALLBACK_KEY = '9ae1336587e873e0ff6a0524e0b0cc0333868f67f9fb4180c0be654fb7794615';
-
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET,OPTIONS',
-  'Access-Control-Expose-Headers': 'Cache-Control, X-Tour-Cache-TTL',
-};
+import { cors, foreignOrigin, rateLimited, tooMany, keyState } from './_guard.js';
+const KEY_STATE = keyState(process.env.TOUR_API_KEY);
 
 // 엔드포인트별 캐시 TTL (초)
 const CACHE_TTL = {
@@ -36,6 +32,9 @@ const CACHE_TTL = {
 };
 
 async function handler(req) {
+  const CORS = cors(req, 'GET,OPTIONS', { 'Access-Control-Expose-Headers': 'Cache-Control, X-Tour-Cache-TTL', 'X-Key-State': KEY_STATE });
+  if (foreignOrigin(req)) return jsonError('origin not allowed', 403, CORS);
+  if (rateLimited(req)) return tooMany(CORS);
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 200, headers: CORS });
   }
@@ -43,12 +42,12 @@ async function handler(req) {
   const url  = new URL(req.url);
   const path = url.searchParams.get('path');
   if (!path) {
-    return jsonError('path required', 400);
+    return jsonError('path required', 400, CORS);
   }
 
   // path 안전성 검증 — 허용된 엔드포인트만
   if (!Object.prototype.hasOwnProperty.call(CACHE_TTL, path)) {
-    return jsonError('invalid path', 400);
+    return jsonError('invalid path', 400, CORS);
   }
 
   // 키는 환경변수 우선, 없으면 폴백
@@ -73,7 +72,7 @@ async function handler(req) {
     });
 
     if (!upstream.ok) {
-      return jsonError(`upstream ${upstream.status}`, 502);
+      return jsonError(`upstream ${upstream.status}`, 502, CORS);
     }
 
     const text = await upstream.text();
@@ -89,11 +88,11 @@ async function handler(req) {
       },
     });
   } catch (err) {
-    return jsonError(err.message || 'upstream error', 502);
+    return jsonError(err.message || 'upstream error', 502, CORS);
   }
 }
 
-function jsonError(message, status) {
+function jsonError(message, status, CORS) {
   return new Response(
     JSON.stringify({ error: message, ts: Date.now() }),
     {

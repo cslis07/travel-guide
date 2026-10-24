@@ -2904,3 +2904,9 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
   body:not(.gx-product) .fx-bar { background: #141a2b; border-color: rgba(255,255,255,.06); }
   body:not(.gx-product) .fx-calc-bar { background: #2a2312; }
 }
+
+/* iOS는 16px 미만 입력칸에 포커스하면 화면을 확대한다 — 모바일에서 16px로 고정 */
+@media (max-width:900px){
+  #sw-from,#sw-to,#sw-dep,#sw-ret,#sw-pax,#f-dest,#f-out,#f-back,#f-adult,#f-child,#f-room,#departDate,input.pk-in{font-size:16px}
+}
+.hx-price .hx-asof{font-size:10px;font-weight:500;color:rgba(255,255,255,.8);margin-left:2px}

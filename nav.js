@@ -147,9 +147,41 @@
     document.body.appendChild(nav);
   }
 
+  /* 클릭되는 div·span 접근성 — 키보드(Tab·Enter·Space)와 화면낭독기에 '버튼'으로 알린다.
+     화면이 바뀌며 새로 그려지는 요소도 잡도록 MutationObserver로 따라간다.
+     배경 닫기(if(event.target===this)…)는 버튼이 아니므로 건너뜀. */
+  var CLICKABLE = 'div[onclick],span[onclick],li[onclick],img[onclick],i[onclick]';
+  function markClickable(root) {
+    var list = root.querySelectorAll ? root.querySelectorAll(CLICKABLE) : [];
+    for (var i = 0; i < list.length; i++) {
+      var el = list[i];
+      if (el.getAttribute('role') || /^\s*if\s*\(\s*event\.target/.test(el.getAttribute('onclick'))) continue;
+      el.setAttribute('role', 'button');
+      if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+    }
+  }
+  function a11yClicks() {
+    markClickable(document);
+    var queued = false;
+    new MutationObserver(function () {
+      if (queued) return; queued = true;
+      (window.requestAnimationFrame || setTimeout)(function () { queued = false; markClickable(document); });
+    }).observe(document.body, { childList: true, subtree: true });
+    document.addEventListener('keydown', function (e) {
+      var el = e.target;
+      if ((e.key !== 'Enter' && e.key !== ' ') || !el || !el.getAttribute) return;
+      if (el.getAttribute('role') !== 'button' || /^(BUTTON|A|INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) return;
+      e.preventDefault(); el.click();
+    });
+    var st = document.createElement('style');
+    st.textContent = '[role=button][tabindex]:focus-visible,[role=checkbox][tabindex]:focus-visible{outline:2px solid #1B4FD8;outline-offset:2px}';
+    document.head.appendChild(st);
+  }
+
   function build() {
     buildHeader();
     buildTabbar();
+    a11yClicks();
   }
 
   if (document.readyState === 'loading') {

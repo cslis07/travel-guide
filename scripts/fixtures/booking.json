@@ -1,0 +1,22 @@
+[
+  { "name": "대한항공 한글 메일(왕복+호텔)",
+    "text": "[대한항공] 예약 완료\n예약번호: 8XK2QF\n2026년 11월 14일 KE723 인천(ICN) 09:05 → 오사카/간사이(KIX) 10:55\n2026년 11월 17일 KE724 오사카/간사이(KIX) 12:20 → 인천(ICN) 14:10\n\n숙소명: 난바 오리엔탈 호텔\n체크인: 2026년 11월 14일\n체크아웃: 2026년 11월 17일",
+    "expect": { "flights": [ { "no": "KE723", "date": "2026-11-14", "dep": "09:05", "arr": "10:55", "from": "ICN", "to": "KIX" }, { "no": "KE724", "date": "2026-11-17", "from": "KIX", "to": "ICN" } ], "hotels": [ { "name": "난바 오리엔탈 호텔", "checkin": "2026-11-14", "checkout": "2026-11-17" } ], "refs": ["8XK2QF"] } },
+  { "name": "영문 e-티켓(일월 표기)",
+    "text": "E-TICKET ITINERARY\nBooking reference: QWE7RT\nFlight OZ 742  21NOV2026  ICN 08:40  BKK 12:35\nFlight OZ 741  25NOV2026  BKK 23:50  ICN 07:10",
+    "expect": { "flights": [ { "no": "OZ742", "date": "2026-11-21", "from": "ICN", "to": "BKK" }, { "no": "OZ741", "date": "2026-11-25", "from": "BKK", "to": "ICN" } ], "refs": ["QWE7RT"] } },
+  { "name": "아고다 영문 숙소",
+    "text": "Agoda booking confirmation\nBooking ID: 1234567890\nHotel: Hotel Nikko Saigon\nCheck-in: Dec 3, 2026\nCheck-out: Dec 6, 2026",
+    "expect": { "hotels": [ { "name": "Hotel Nikko Saigon", "checkin": "2026-12-03", "checkout": "2026-12-06" } ], "refs": ["1234567890"] } },
+  { "name": "문자(월/일만)",
+    "year": 2026,
+    "text": "[제주항공] 7C1301 11/14 인천 07:30 출발 후쿠오카 09:00 도착 예약번호 ABC123",
+    "expect": { "flights": [ { "no": "7C1301", "date": "2026-11-14", "from": "ICN", "to": "FUK", "dep": "07:30", "arr": "09:00" } ], "refs": ["ABC123"] } },
+  { "name": "에어부산 문자(항공사 이름 속 지명)",
+    "year": 2026,
+    "text": "[에어부산] BX142 12/20 김해 10:05 출발 → 후쿠오카 11:00 도착",
+    "expect": { "flights": [ { "no": "BX142", "date": "2026-12-20", "from": "PUS", "to": "FUK" } ] } },
+  { "name": "관계없는 글(0건이어야 함)",
+    "text": "안녕하세요. 다음 주 회의는 3층 회의실에서 진행합니다. 참석 부탁드립니다.",
+    "expect": { "flights": [], "hotels": [] } }
+]

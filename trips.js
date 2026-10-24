@@ -16,8 +16,9 @@
 
   /* 원/외화 1단위 환율 — 입력 보조용 근사치. 지출 저장 시 KRW로 확정 저장하므로
      이후 환율이 변해도 기록값은 유지된다. JPY/USD/EUR/VND/THB/CNY는 2026-09-30 네이버 기준,
-     TWD/HKD/SGD는 미검증 근사치. (홈 위젯 open.er-api.com이 실시간 표기 담당) */
-  var RATES = { KRW: 1, JPY: 8.663, USD: 1358.7, EUR: 1538.46, VND: 0.0523, THB: 40.49, CNY: 202.55, TWD: 42, HKD: 171, SGD: 995 };
+     TWD/HKD/SGD/IDR/PHP/MYR는 근사치(USD 교차환율). 실시간 환율이 오면 덮어쓴다. */
+  var RATES = { KRW: 1, JPY: 8.663, USD: 1358.7, EUR: 1538.46, VND: 0.0523, THB: 40.49, CNY: 202.55, TWD: 42, HKD: 171, SGD: 995, IDR: 0.0833, PHP: 23.8, MYR: 323 };
+  var CURS = ['KRW', 'JPY', 'USD', 'EUR', 'CNY', 'TWD', 'HKD', 'THB', 'VND', 'IDR', 'SGD', 'PHP', 'MYR'];
   var FX = { ts: 0, live: false };   // 실시간 환율 상태
 
   /* 실시간 환율 로드 — open.er-api.com(무료·무키, CSP 허용). 6시간 캐시(localStorage),
@@ -35,7 +36,7 @@
       .then(function (d) {
         if (!d || d.result !== 'success' || !d.rates) { if (cb) cb(false); return; }
         var out = { KRW: 1 };
-        ['JPY', 'USD', 'EUR', 'VND', 'THB', 'CNY', 'TWD', 'HKD', 'SGD'].forEach(function (c) {
+        CURS.forEach(function (c) {
           if (d.rates[c] > 0) out[c] = Math.round((1 / d.rates[c]) * 10000) / 10000;
         });
         applyRates(out);
@@ -87,6 +88,9 @@
     '상하이':'cn','장가계':'cn','장자제':'cn','계림':'cn','구이린':'cn','백두산':'cn','창바이산':'cn','방콕':'th','다낭':'vn','나트랑':'vn',
     '발리':'id','싱가포르':'sg','세부':'ph','코타키나발루':'my','파리':'fr' };
   function countryOf(city) { city = String(city || ''); for (var k in CITY_CC) if (city.indexOf(k) > -1) return CITY_CC[k]; return ''; }
+  /* 나라 → 현지 통화(국내·모르는 도시는 KRW) */
+  var CC_CUR = { jp: 'JPY', tw: 'TWD', hk: 'HKD', cn: 'CNY', th: 'THB', vn: 'VND', id: 'IDR', sg: 'SGD', ph: 'PHP', my: 'MYR', fr: 'EUR' };
+  function curOf(city) { return CC_CUR[countryOf(city)] || 'KRW'; }
   function cityTz(name) {
     var c = (name || '').trim(), k = c.replace(/\s*(여행|시|특별시|광역시|도)$/, '').trim();
     if (CITY_TZ[c]) return CITY_TZ[c];
@@ -104,8 +108,30 @@
   }
 
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-  function load() { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } }
-  function save(list) { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
+  /* 저장값이 깨졌으면 [] 로 시작하되, 원문은 덮어쓰기 전에 따로 보관(나중에 복구 가능) */
+  function load() {
+    var raw = null;
+    try { raw = localStorage.getItem(KEY); var v = JSON.parse(raw || '[]'); return Array.isArray(v) ? v : []; }
+    catch (e) {
+      try { if (raw && localStorage.getItem(KEY + '_bad') !== raw) localStorage.setItem(KEY + '_bad', raw); } catch (e2) {}
+      return [];
+    }
+  }
+  /* 저장 실패(대개 용량 초과)는 조용히 넘기지 않고 화면에 알린다 */
+  var lastWarn = 0;
+  function warnSave() {
+    var now = Date.now(); if (now - lastWarn < 8000 || !document.body) return; lastWarn = now;
+    var el = document.createElement('div');
+    el.setAttribute('role', 'alert');
+    el.style.cssText = 'position:fixed;left:16px;right:16px;bottom:88px;z-index:9999;max-width:480px;margin:0 auto;background:#B42318;color:#fff;padding:12px 14px;border-radius:12px;font-size:14px;line-height:1.45;box-shadow:0 6px 20px rgba(0,0,0,.25)';
+    el.textContent = '저장 공간이 꽉 차서 방금 바꾼 내용이 저장되지 않았어요. 내 여행에서 백업을 받은 뒤 지난 여행을 지워 공간을 비워 주세요.';
+    document.body.appendChild(el);
+    setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 7000);
+  }
+  function save(list) {
+    try { localStorage.setItem(KEY, JSON.stringify(list)); return true; }
+    catch (e) { warnSave(); return false; }
+  }
 
   /* ── 날짜 유틸 ── */
   function parseD(s) { var p = (s || '').split('-'); return new Date(+p[0], (+p[1] || 1) - 1, +p[2] || 1); }
@@ -345,6 +371,11 @@
     "강릉": 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/%EA%B2%BD%ED%8F%AC%ED%95%B4%EB%B3%80.jpg/500px-%EA%B2%BD%ED%8F%AC%ED%95%B4%EB%B3%80.jpg',
     "파리": 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Tour_Eiffel_Wikimedia_Commons_%28cropped%29.jpg/500px-Tour_Eiffel_Wikimedia_Commons_%28cropped%29.jpg'
   };
+  /* 위키미디어 썸네일 주소 → 커먼즈 파일 페이지(작가·라이선스 확인용 출처 링크) */
+  function photoSource(url) {
+    var m = /\/commons\/(?:thumb\/)?[0-9a-f]\/[0-9a-f]{2}\/([^\/?#]+)/.exec(url || '');
+    return m ? 'https://commons.wikimedia.org/wiki/File:' + m[1] : '';
+  }
   function cityPhoto(city) {
     city = String(city || '');
     if (CITY_PHOTO[city]) return CITY_PHOTO[city];
@@ -366,7 +397,7 @@
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,
     dailyAllowance: dailyAllowance, remainingDays: remainingDays, byCategory: byCategory,
     settlements: settlements, balances: balances, toKRW: toKRW,
-    refreshRates: refreshRates, fxState: fxState, cityGeo: cityGeo, cityPhoto: cityPhoto, cityTz: cityTz, countryOf: countryOf,
+    refreshRates: refreshRates, fxState: fxState, cityGeo: cityGeo, cityPhoto: cityPhoto, photoSource: photoSource, cityTz: cityTz, countryOf: countryOf, curOf: curOf, CURS: CURS,
     // 날짜
     fmtMD: fmtMD, iso: iso, dow: dow, tripLength: tripLength, ddayText: ddayText, daysBetween: daysBetween,
     catByKey: function (k) { return CATS.filter(function (c) { return c.key === k; })[0] || CATS[6]; }

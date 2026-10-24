@@ -83,7 +83,7 @@ def transform(slug, card):
     label, _, amount = card.get("price", "").partition(" ")
     if amount.endswith("원~"):
         price = ('<div class="gx-price"><span class="gx-plabel">%s 참고가</span><b>%s</b>'
-                 '<small>시기·노선별로 달라요 — 예약 전 확인</small></div>' % (label, amount))
+                 '<small>2026년 5월 기준 · 시기·노선별로 달라요 — 예약 전 확인</small></div>' % (label, amount))
     elif card.get("price"):
         price = '<div class="gx-price gx-pnote">🚆 %s</div>' % card["price"]
 

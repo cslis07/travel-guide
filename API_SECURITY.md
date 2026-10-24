@@ -22,8 +22,8 @@
 2. **Settings → Environment Variables**
 3. 추가:
    - **Name**: `TOUR_API_KEY`
-   - **Value**: `9ae1336587e873e0ff6a0524e0b0cc0333868f67f9fb4180c0be654fb7794615`
-     (현재 main.js 하드코딩 값을 그대로 사용 — 임시. 활용신청 후 새 키로 교체 권장)
+   - **Value**: 공공데이터포털에서 **새로 발급한** 키(Decoding 값)
+     (예전 키는 공개 저장소에 올라간 적이 있어 재발급 대상 — 옛 키를 그대로 넣지 말 것)
    - **Environments**: Production / Preview / Development 모두 체크
 4. **Save** → Vercel이 자동 재배포
 
@@ -106,15 +106,37 @@ await kv.set(cacheKey, json, { ex: ttl }).catch(() => {});
 
 ```js
 // 변경 전
-const KEY = '9ae133...';
+const KEY = '(하드코딩 키)';
 
 // 변경 후
-const KEY = process.env.ICN_API_KEY || '9ae133...';
+const KEY = process.env.ICN_API_KEY || '(폴백 키)';
 ```
 
 환경변수 `ICN_API_KEY` 도 같은 방식으로 등록 + GitHub Public이라 폴백 키는 결국 노출이라 **활용신청 후 새 키 발급 → 폴백 키 제거** 권장.
 
 ---
+
+## 🔐 2026-10-25 보강 — 키 상태 확인·호출 보호
+
+- **키 상태 확인**: `/api/proxy`·`/api/tour` 응답 헤더 `X-Key-State`
+  - `env-new` = 새 키가 환경변수로 등록됨(정상) · `env-old` = 환경변수는 있으나 공개됐던 옛 키 그대로 · `fallback` = 환경변수 없음
+  - 키 값은 내보내지 않음(옛 키 sha256 앞 16자와만 비교, `api/_guard.js`)
+  - 확인: `curl -sI "https://travelcost.co.kr/api/proxy?path=passgrAnncmt/getPassgrAnncmt&numOfRows=1" | grep -i x-key-state`
+- **남의 사이트 차단**: 브라우저 `Origin`이 travelcost.co.kr·*.vercel.app·로컬이 아니면 403 (`api/_guard.js` `foreignOrigin`)
+- **호출 제한**: IP당 1분 120회(proxy·tour), 60회(mrt) 넘으면 429. CDN 캐시 적중은 함수까지 안 오므로 세지 않음
+- **키 교체 순서**: ① 공공데이터포털 마이페이지 → 인증키 재발급 ② Vercel → Settings → Environment Variables에 `ICN_API_KEY`·`TOUR_API_KEY` 등록(Production·Preview) ③ Redeploy ④ 위 헤더가 `env-new`인지 확인 ⑤ `api/proxy.js`·`api/tour.js`의 폴백 키 줄 삭제
+
+## 📈 호출량 상한(쿼터) 계산
+
+| 함수 | CDN 캐시 | 같은 요청의 상류 호출 최대 |
+|---|---|---|
+| `/api/proxy` 인천공항 실시간 | 30초(+60초 재검증) | 요청 종류당 하루 ≤ 2,880회 |
+| `/api/proxy` Open-Meteo | 30초 | 도시·종류당 하루 ≤ 2,880회 (Open-Meteo 무료 1만/일) |
+| `/api/tour` TourAPI | 3분~24시간 | 검색어·지역당 하루 ≤ 480회 |
+| `/api/hotelidx`·`hotelprice` | 엔드포인트별 s-maxage | — |
+
+- 인천공항 화면 첫 로드 = API 5회, 가이드 1회, 홈·투어 0회(2026-10-25 실측).
+- 공공데이터포털 개발계정 기본 한도는 API마다 다름(보통 1일 1만 회) — 키 재발급 때 마이페이지에서 실제 한도를 확인해 이 표에 적을 것.
 
 ## 📊 트래픽 단계별 점검 체크리스트
 

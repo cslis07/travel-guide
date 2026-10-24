@@ -52,7 +52,7 @@ def card_html(c, g):
     price = ""
     if c["price"]:
         label, _, amt = c["price"].partition(" ")
-        price = ('<div class="hx-price">%s <b>%s</b></div>' % (label, amt)) if amt.endswith("원~") \
+        price = ('<div class="hx-price">%s <b>%s</b> <small class="hx-asof">5월 기준</small></div>' % (label, amt)) if amt.endswith("원~") \
             else '<div class="hx-price">%s</div>' % c["price"]
     return ('<a class="hx-card" href="%s.html"><div class="hx-ph"><img src="%s" alt="%s" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">'
             '<span class="hx-badge">%s</span><div class="hx-txt"><h3>%s <small>%s</small></h3>%s<div class="hx-tags">%s</div></div></div>'
