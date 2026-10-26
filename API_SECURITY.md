@@ -125,6 +125,7 @@ const KEY = process.env.ICN_API_KEY || '(폴백 키)';
 - **남의 사이트 차단**: 브라우저 `Origin`이 travelcost.co.kr·*.vercel.app·로컬이 아니면 403 (`api/_guard.js` `foreignOrigin`)
 - **호출 제한**: IP당 1분 120회(proxy·tour), 60회(mrt) 넘으면 429. CDN 캐시 적중은 함수까지 안 오므로 세지 않음
 - **키 교체 순서**: ① 공공데이터포털 마이페이지 → 인증키 재발급 ② Vercel → Settings → Environment Variables에 `ICN_API_KEY`·`TOUR_API_KEY` 등록(Production·Preview) ③ Redeploy ④ 위 헤더가 `env-new`인지 확인 ⑤ `api/proxy.js`·`api/tour.js`의 폴백 키 줄 삭제
+- **2026-10-26**: Vercel Production에 `ICN_API_KEY`·`TOUR_API_KEY` 등록, 코드의 폴백 키 삭제(`b3301c7`). 현재 `X-Key-State: env-old`(등록값이 공개됐던 예전 키) → 재발급 후 `npx vercel env rm` + `npx vercel env add`로 새 값 교체, 재배포
 
 ## 📈 호출량 상한(쿼터) 계산
 
