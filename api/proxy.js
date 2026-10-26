@@ -8,9 +8,9 @@
 //   /api/proxy?_url=<full-external-url>                  — Any external URL (Open-Meteo etc.)
 
 
-// 인천공항 공공데이터 키 — 환경변수 우선, 없으면 폴백 (환경변수 등록 후 폴백 제거 권장)
+// 인천공항 공공데이터 키 — Vercel 환경변수 ICN_API_KEY만 사용(2026-10-26 폴백 키 삭제)
 import { cors, foreignOrigin, rateLimited, tooMany, keyState } from './_guard.js';
-const KEY  = process.env.ICN_API_KEY || '9ae1336587e873e0ff6a0524e0b0cc0333868f67f9fb4180c0be654fb7794615';
+const KEY  = process.env.ICN_API_KEY || '';   // Vercel 환경변수만 사용(코드에 키 없음)
 const KEY_STATE = keyState(process.env.ICN_API_KEY);
 // 어느 배포가 응답하는지(공개 저장소의 커밋 해시라 비밀 아님) — 환경변수 반영 여부 확인용
 const DEPLOY = (process.env.VERCEL_GIT_COMMIT_SHA || 'local').slice(0, 7) + '/' + (process.env.VERCEL_ENV || '-');
@@ -67,6 +67,9 @@ async function handler(req) {
         status: 400,
         headers: { ...CORS, 'Content-Type': 'application/json' },
       });
+    }
+    if (!KEY) {
+      return new Response(JSON.stringify({ error: 'ICN_API_KEY not configured' }), { status: 500, headers: { ...CORS, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
     }
     incoming.searchParams.delete('path');
     incoming.searchParams.set('serviceKey', KEY);

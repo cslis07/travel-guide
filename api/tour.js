@@ -16,7 +16,6 @@
 
 
 const BASE = 'https://apis.data.go.kr/B551011/KorService2';
-const FALLBACK_KEY = '9ae1336587e873e0ff6a0524e0b0cc0333868f67f9fb4180c0be654fb7794615';
 import { cors, foreignOrigin, rateLimited, tooMany, keyState } from './_guard.js';
 const KEY_STATE = keyState(process.env.TOUR_API_KEY);
 
@@ -50,8 +49,9 @@ async function handler(req) {
     return jsonError('invalid path', 400, CORS);
   }
 
-  // 키는 환경변수 우선, 없으면 폴백
-  const key = process.env.TOUR_API_KEY || FALLBACK_KEY;
+  // 키는 Vercel 환경변수 TOUR_API_KEY만 사용(2026-10-26 폴백 키 삭제)
+  const key = process.env.TOUR_API_KEY;   // Vercel 환경변수만 사용(코드에 키 없음)
+  if (!key) return jsonError('TOUR_API_KEY not configured', 500, CORS);
 
   // 공통 파라미터 + 사용자 파라미터 머지
   const params = new URLSearchParams();
