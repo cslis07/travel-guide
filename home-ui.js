@@ -164,3 +164,28 @@ function hxFx() {
     });
   }, { passive: true });
 })();
+
+/* 홈 '지금 많이 찾는 여행지'·'따뜻한 휴양지' 레일 → 마키(자동 흐름). 동작 줄이기 설정이면 그대로 스크롤 레일 */
+(function () {
+  'use strict';
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.hx-rail').forEach(function (rail) {
+    var cards = [].slice.call(rail.children);
+    if (cards.length < 3) return;
+    var track = document.createElement('div');
+    track.className = 'hx-track';
+    cards.forEach(function (c) { track.appendChild(c); });
+    cards.forEach(function (c) {   // 이음새용 복제 — 화면낭독기·탭 이동에선 빼기
+      var k = c.cloneNode(true); k.setAttribute('aria-hidden', 'true'); k.setAttribute('tabindex', '-1');
+      track.appendChild(k);
+    });
+    track.style.setProperty('--hx-dur', (cards.length * 5) + 's');   // 카드 1장당 5초
+    rail.appendChild(track);
+    rail.classList.add('hx-marquee');
+    // 손가락으로 누르고 있는 동안 멈춤(휴대폰엔 hover가 없음)
+    var hold = function (on) { return function () { rail.classList.toggle('hx-hold', on); }; };
+    rail.addEventListener('touchstart', hold(true), { passive: true });
+    rail.addEventListener('touchend', hold(false));
+    rail.addEventListener('touchcancel', hold(false));
+  });
+})();

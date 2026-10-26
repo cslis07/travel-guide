@@ -2789,7 +2789,7 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 .hx-live{font-size:10px;font-weight:800;color:#fff;background:var(--danger);padding:1px 5px;border-radius:4px}
 .hx-sec{padding:22px 0 6px}
 .hx-h{font-size:19px;font-weight:800;letter-spacing:-.03em;color:var(--gray-900);margin:0 0 12px}
-.hx-rail{--hx-pad:max(16px,calc((100% - 1200px)/2 + 24px));display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 var(--hx-pad) 4px;scroll-padding-inline:var(--hx-pad)}
+.hx-rail{--hx-pad:max(20px,calc((100% - 1120px)/2 + 20px));display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:0 var(--hx-pad) 4px;scroll-padding-inline:var(--hx-pad)}
 .hx-rail::-webkit-scrollbar{display:none}
 .hx-card{flex:0 0 240px;scroll-snap-align:start;border-radius:14px;overflow:hidden;text-decoration:none;background:var(--gray-800);box-shadow:var(--shadow)}
 .hx-ph{position:relative;height:300px;background:linear-gradient(135deg,#1d2939,#475467)}
@@ -2924,3 +2924,13 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 .sgg .source-link{display:inline-flex;align-items:center;min-height:24px}
 /* hidden 속성은 늘 숨김 — img{display:block} 같은 규칙이 덮어써 빈 영수증 미리보기가 깨진 그림으로 보이던 것 */
 [hidden]{display:none!important}
+
+/* 홈 가로 레일 — 마키(자동으로 천천히 흐름). home-ui.js가 카드를 한 벌 복제해 .hx-track에 넣고 -50%까지 흘려 이음새 없이 반복.
+   컨테이너 폭(1120−40)에 맞춰 가운데 정렬, 양끝은 살짝 흐리게. 마우스·손가락을 올리면 멈춤, '동작 줄이기' 설정이면 마키 없이 스크롤 레일 */
+.hx-rail.hx-marquee{display:block;overflow:hidden;max-width:1080px;width:calc(100% - 40px);margin:0 auto;padding:0 0 4px;scroll-snap-type:none;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.hx-track{display:flex;gap:10px;width:max-content;animation:hx-marquee var(--hx-dur,60s) linear infinite}
+.hx-marquee:hover .hx-track,.hx-marquee:focus-within .hx-track,.hx-marquee.hx-hold .hx-track{animation-play-state:paused}
+@keyframes hx-marquee{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 5px))}}
+@media (max-width:768px){.hx-rail.hx-marquee{width:calc(100% - 32px)}.hx-track .hx-card{flex-basis:220px}}
+@media (prefers-reduced-motion:reduce){.hx-track{animation:none}}
