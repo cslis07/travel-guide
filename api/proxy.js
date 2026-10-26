@@ -13,8 +13,6 @@ import { cors, foreignOrigin, rateLimited, tooMany, keyState } from './_guard.js
 const KEY  = process.env.ICN_API_KEY || '9ae1336587e873e0ff6a0524e0b0cc0333868f67f9fb4180c0be654fb7794615';
 const KEY_STATE = keyState(process.env.ICN_API_KEY);
 // 어느 배포가 응답하는지(공개 저장소의 커밋 해시라 비밀 아님) — 환경변수 반영 여부 확인용
-// 임시 진단: 시스템 변수가 아닌 환경변수의 '이름:값 길이'만(값은 내보내지 않음) — 확인 후 삭제
-const ENV_DIAG = encodeURIComponent(Object.keys(process.env).filter(k => !/^(VERCEL|AWS_|NODE|LAMBDA|_|PATH$|PWD$|HOME$|LANG$|TZ$|SHLVL$|LD_|NOW_REGION$|HOSTNAME$|TMPDIR$|USER$)/.test(k)).map(k => k + ':' + String(process.env[k] || '').length).join(',') || 'none');
 const DEPLOY = (process.env.VERCEL_GIT_COMMIT_SHA || 'local').slice(0, 7) + '/' + (process.env.VERCEL_ENV || '-');
 const BASE = 'https://apis.data.go.kr/B551177';
 
@@ -39,7 +37,7 @@ function isAllowedUrl(raw) {
 }
 
 async function handler(req) {
-  const CORS = cors(req, 'GET,OPTIONS', { 'Access-Control-Expose-Headers': 'Cache-Control', 'X-Key-State': KEY_STATE, 'X-Deploy': DEPLOY, 'X-Env-Diag': ENV_DIAG });
+  const CORS = cors(req, 'GET,OPTIONS', { 'Access-Control-Expose-Headers': 'Cache-Control', 'X-Key-State': KEY_STATE, 'X-Deploy': DEPLOY });
   if (foreignOrigin(req)) {
     return new Response(JSON.stringify({ error: 'origin not allowed' }), { status: 403, headers: { ...CORS, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
   }
