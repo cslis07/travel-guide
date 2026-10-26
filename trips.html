@@ -68,6 +68,8 @@
   .covpick i.on{border-color:var(--gray-800);transform:scale(1.08)}
   .save{width:100%;padding:14px;border:none;border-radius:14px;background:var(--primary);color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:18px}
   svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .tw-tools{display:flex;gap:8px;margin-top:16px}
+  .tw-tools a{flex:1;min-height:44px;display:flex;align-items:center;justify-content:center;border:1px solid var(--gray-200);border-radius:12px;background:var(--surface,#fff);color:var(--gray-800);font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -84,6 +86,10 @@
     <span class="fchip" data-f="all" onclick="setF(this)">전체</span>
   </div>
   <div id="list"></div>
+  <!-- 하단 탭에 없는 도구 바로가기(홈을 거치지 않고) -->
+  <nav class="tw-tools" aria-label="여행 도구">
+    <a href="/estimate">🧮 경비 계산</a><a href="/tours">🎟 투어·티켓</a><a href="/airport#tab=fav">⭐ 내 편명</a>
+  </nav>
   <p style="margin:14px 2px 0;font-size:11px;color:var(--gray-500)">카드 사진: Wikimedia Commons 기여자 (각 사진의 라이선스를 따름)</p>
 </div>
 

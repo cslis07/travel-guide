@@ -33,8 +33,9 @@
       .sort(function (a, b) { return b.n - a.n; })[0];
     head = T.ddayText(t) + ' · ' + T.tripLength(t) + '일';
     line = todo ? '할 일: ' + esc(todo.c.text) + (todo.n >= 0 ? ' <em>' + (todo.n >= dday ? '지금' : 'D-' + todo.n + '까지') + '</em>' : '')
-      : (T.budgetTotal(t) ? '예산 ' + won(T.budgetTotal(t)) + ' · 준비물 다 챙겼어요' : '예산과 준비물을 정해 보세요');
-    cta = todo ? '준비물' : '열기'; tab = todo ? 'pack' : '';
+      : !(t.checklist || []).length ? (T.budgetTotal(t) ? '예산 ' + won(T.budgetTotal(t)) + ' · 준비물을 정해 보세요' : '예산과 준비물을 정해 보세요')   // 0개를 '다 챙김'으로 보지 않음
+      : (T.budgetTotal(t) ? '예산 ' + won(T.budgetTotal(t)) + ' · 준비물 다 챙겼어요' : '준비물 다 챙겼어요 · 예산을 정해 보세요');
+    cta = todo ? '준비물' : '열기'; tab = todo || !(t.checklist || []).length ? 'pack' : '';
   } else {
     var s = T.settlements(t);
     head = '다녀온 여행 · 정산 남음';

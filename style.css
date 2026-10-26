@@ -2765,9 +2765,16 @@ body.gx-product .sgg #compare .section-title p{margin:10px auto 0}
 .gx-btn{flex:1;min-height:48px;display:flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--gray-300);border-radius:12px;background:var(--surface,#fff);color:var(--gray-800);font-size:14px;font-weight:800;text-decoration:none;white-space:nowrap;padding:0 10px}
 .gx-home{flex:0 0 48px;padding:0;color:var(--gray-700)}
 .gx-primary{flex:1.5;background:var(--primary);border-color:var(--primary);color:#fff}
-body.gx-product .tabbar{display:none!important}
 body.gx-product{padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))!important}
 body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important}
+/* 모바일: 하단 공통 탭(56px)을 유지하고 버튼 바를 그 위에 — 가이드에서도 내 여행·인천공항·출국 준비로 한 번에 */
+@media(max-width:900px){
+  .gx-cta{bottom:calc(56px + env(safe-area-inset-bottom,0px));padding:8px 12px}
+  .gx-btn{min-height:44px}
+  .gx-home{display:none}   /* 홈은 하단 탭에 있음 */
+  body.gx-product{padding-bottom:calc(126px + env(safe-area-inset-bottom,0px))!important}
+  body.gx-product #pwa-install-btn{bottom:calc(140px + env(safe-area-inset-bottom,0px))!important}
+}
 @media(min-width:900px){.gx-cta{max-width:760px;margin:0 auto;border:1px solid var(--gray-200);border-bottom:none;border-radius:16px 16px 0 0}.gx-slide{flex-basis:62%}.gx-count{left:calc(16px + (100% - 32px) * .62 - 54px)}}
 
 /* ══ 홈 '여행핫딜'형 (.hx-*) — 네이버 여행 이벤트 페이지 구조 참고(광고 요소 제외), 색은 트래블코스트 토큰 ══ */

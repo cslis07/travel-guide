@@ -1247,7 +1247,7 @@ button,select,input,a{touch-action:manipulation}
 
 <!-- TOP BAR -->
 <div id="topbar">
-  <h1 style="margin:0;font:inherit;display:flex"><a href="index.html" id="logo">ICN Airport NOW<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap"> — 인천공항 실시간 출국장 혼잡·항공편</span></a></h1>
+  <h1 style="margin:0;font:inherit;display:flex"><a href="index.html" id="logo">인천공항 실시간<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap"> — 출국장 혼잡·항공편·주차</span></a></h1>
   <div id="topbar-right">
     <span id="hdr-time">--:--</span>
     <span id="hdr-date"></span>
@@ -1335,20 +1335,21 @@ button,select,input,a{touch-action:manipulation}
 <div class="notice-bar"><span class="notice-inner" id="notice-text">인천국제공항 실시간 정보 서비스</span></div>
 
 <nav id="tabs">
-  <button class="tab-btn active" onclick="showTab('entry',this)">진출입 현황</button>
-  <button class="tab-btn" onclick="showTab('parking',this)">주차장 현황</button>
-  <button class="tab-btn" onclick="showTab('transport',this)">셔틀·철도 시간표</button>
-  <button class="tab-btn" onclick="showTab('congestion',this)">출·입국장 현황</button>
-  <button class="tab-btn" onclick="showTab('flights',this)">항공편 현황</button>
-  <button class="tab-btn" onclick="showTab('facilities',this)">시설정보</button>
+  <!-- 2026-10-26: 출국하는 사람이 먼저 찾는 순서로(혼잡→내 편명→항공편→공항 안내), 이름은 짧게 -->
+  <button class="tab-btn active" onclick="showTab('congestion',this)">출국장 혼잡</button>
   <button class="tab-btn" onclick="showTab('fav',this)">⭐ 내 편명</button>
-  <button class="tab-btn" onclick="showTab('prep',this)">🛫 출국 준비</button>
+  <button class="tab-btn" onclick="showTab('flights',this)">항공편</button>
+  <button class="tab-btn" onclick="showTab('prep',this)">공항 안내</button>
+  <button class="tab-btn" onclick="showTab('parking',this)">주차</button>
+  <button class="tab-btn" onclick="showTab('transport',this)">버스·철도</button>
+  <button class="tab-btn" onclick="showTab('entry',this)">진출입</button>
+  <button class="tab-btn" onclick="showTab('facilities',this)">시설</button>
 </nav>
 
 <div id="content">
 
 <!-- ① 진출입 현황 -->
-<div id="tab-entry" class="tab-panel active">
+<div id="tab-entry" class="tab-panel">
   <div class="sub-tabs">
     <button class="sub-btn active" onclick="setEntryDir('arr',this)">도착편</button>
     <button class="sub-btn" onclick="setEntryDir('dep',this)">출발편</button>
@@ -1400,7 +1401,7 @@ button,select,input,a{touch-action:manipulation}
 </div>
 
 <!-- ④ 출·입국장 -->
-<div id="tab-congestion" class="tab-panel">
+<div id="tab-congestion" class="tab-panel active">
   <div id="cong-dep1-area"><div class="loading">로딩 중...</div></div>
   <div id="cong-arr1-area"><div class="loading">로딩 중...</div></div>
   <div id="cong-dep2-area"><div class="loading">로딩 중...</div></div>
@@ -2021,7 +2022,7 @@ function prBar(r) {
 }
 
 // State
-let _tab='entry', _entryDir='arr', _fltDir='dep', _fltCache=[];
+let _tab='congestion', _entryDir='arr', _fltDir='dep', _fltCache=[];
 let _fltTermView='all', _fltSec={P01:'all',P02:'all',P03:'all'};
 let _transTab='shuttle', _shuttleMode='time', _arexData=[], _arexStnList=[], _arexSelIdx=0, _arexDir='to';
 let _congTab='dep';
@@ -2971,7 +2972,12 @@ function refreshAll() {
 
 loadWeather();
 loadNotice();
-loadEntry();
+/* 첫 탭: 저장한 편명이 있으면 '내 편명', 없으면 '출국장 혼잡'(주소에 #tab=…가 있으면 그쪽이 이김) */
+(function(){
+  let favs=[]; try{ favs=JSON.parse(localStorage.getItem('icn_fav_flights')||'[]'); }catch(e){}
+  const first = favs.length ? 'fav' : 'congestion';
+  showTab(first, [...document.querySelectorAll('#tabs .tab-btn')].find(b => b.getAttribute('onclick')?.includes(`'${first}'`)));
+})();
 // 차트는 패널이 열릴 때 로드 (초기에는 데이터만 조회해 헤더 수치 채움)
 loadPaxChart();
 setInterval(refreshAll, 60000);
@@ -3008,11 +3014,11 @@ const QS_STATIC = [
   { type:'탭', icon:'📊', title:'진출입 현황', sub:'도착편/출발편 실시간', go:()=>showTab('entry',_qsTabBtn('entry')) },
   { type:'탭', icon:'🅿', title:'주차장 현황', sub:'T1·T2 주차면 실시간', go:()=>showTab('parking',_qsTabBtn('parking')) },
   { type:'탭', icon:'🚌', title:'셔틀·철도 시간표', sub:'공항버스/AREX/택시', go:()=>showTab('transport',_qsTabBtn('transport')) },
-  { type:'탭', icon:'👥', title:'출·입국장 현황', sub:'터미널별 혼잡도', go:()=>showTab('congestion',_qsTabBtn('congestion')) },
+  { type:'탭', icon:'👥', title:'출국장 혼잡', sub:'터미널별 출·입국장 혼잡도', go:()=>showTab('congestion',_qsTabBtn('congestion')) },
   { type:'탭', icon:'✈', title:'항공편 현황', sub:'출발/도착/수하물/운항마감', go:()=>showTab('flights',_qsTabBtn('flights')) },
   { type:'탭', icon:'🏢', title:'시설정보', sub:'상업시설/항공사', go:()=>showTab('facilities',_qsTabBtn('facilities')) },
   { type:'탭', icon:'⭐', title:'내 편명', sub:'즐겨찾기 항공편 추적', go:()=>showTab('fav',_qsTabBtn('fav')) },
-  { type:'탭', icon:'🛫', title:'출국 준비', sub:'체크리스트·수하물·면세·라운지', go:()=>showTab('prep',_qsTabBtn('prep')) },
+  { type:'탭', icon:'🛫', title:'공항 안내', sub:'출국 진행·수하물·면세·라운지', go:()=>showTab('prep',_qsTabBtn('prep')) },
   // 빠른 액션
   { type:'액션', icon:'✅', title:'출국 체크리스트', sub:'34개 준비물 체크', go:()=>{showTab('prep',_qsTabBtn('prep'));setPrepTab('check',_qsSubBtn('check'));} },
   { type:'액션', icon:'🚗', title:'공항 가는 길', sub:'리무진/철도/택시 비교', go:()=>{showTab('prep',_qsTabBtn('prep'));setPrepTab('route',_qsSubBtn('route'));} },
