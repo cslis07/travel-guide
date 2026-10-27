@@ -22,8 +22,28 @@
   .cov-purple{background:linear-gradient(135deg,#7c3aed,#1B4FD8)}.cov-green{background:linear-gradient(135deg,#039855,#22c55e)}.cov-pink{background:linear-gradient(135deg,#db2777,#f97316)}
   .back{position:absolute;top:18px;left:14px;width:34px;height:34px;border-radius:11px;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);display:grid;place-items:center;cursor:pointer;color:#fff}
   .share{position:absolute;top:18px;right:14px;width:34px;height:34px;border-radius:11px;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);display:grid;place-items:center;cursor:pointer;color:#fff}
+  .fontb{position:absolute;top:18px;right:56px;min-width:34px;height:34px;padding:0 6px;border:none;border-radius:11px;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);color:#fff;font:inherit;font-size:15px;font-weight:800;cursor:pointer}.fontb small{font-size:11px;font-weight:900}
   .tl-map{display:inline-flex;align-items:center;min-height:24px;gap:4px;margin-top:7px;font-size:11px;font-weight:700;color:var(--primary);text-decoration:none}
   .tl-map svg{width:13px;height:13px}
+  .tl-links{display:flex;flex-wrap:wrap;gap:4px 14px}.tl-go{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+  .tl-addr{font-size:11.5px!important;color:var(--gray-500)!important;word-break:break-all}
+  .td-go{flex:0 0 auto;padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.22);color:inherit;font-size:12px;font-weight:800;text-decoration:none}
+  .rv-addr{margin-top:3px;word-break:break-all}
+  .lo{border-radius:14px;padding:12px 13px;margin-bottom:12px;background:var(--accent-lt,#fff4e0);border:1px solid var(--gray-200)}
+  .lo-t{font-size:13.5px;font-weight:700;line-height:1.45}.lo-t span{color:var(--gray-500);font-weight:600;font-size:12px}.lo small{display:block;font-size:12px;color:var(--gray-600,#555);margin-top:4px;line-height:1.5}
+  .lo-b{display:flex;gap:8px;margin-top:10px}.lo-b button{flex:1;min-height:38px;border:1px solid var(--gray-200);border-radius:10px;background:var(--surface,#fff);color:inherit;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
+  .lo-b button.on{background:var(--primary);border-color:var(--primary);color:#fff}
+  .pp{border-radius:14px;padding:12px 13px;margin-bottom:12px;background:var(--gray-50,#f6f7f9);border:1px solid var(--gray-200)}
+  .pp-t{font-size:13px;font-weight:800;line-height:1.45}.pp small{display:block;font-size:11px;color:var(--gray-500);margin-top:6px}
+  .pp-in{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;font-weight:700}.pp-in .in{flex:1;margin:0}
+  .pp-bad{background:#fde7e9;border-color:#f5b5bc}.pp-bad .pp-t{color:var(--danger)}
+  .pp-warn{background:#fff4e0;border-color:#f3d39b}.pp-warn .pp-t{color:#a15c00}
+  .pp-ok{background:#e7f7ef;border-color:#b6e3c9}.pp-ok .pp-t{color:var(--success)}
+  .taxi-b{margin-top:8px;padding:7px 12px;min-height:32px;border:none;border-radius:999px;background:var(--primary-lt);color:var(--primary);font:inherit;font-size:12.5px;font-weight:800;cursor:pointer}
+  .taxi{text-align:center;padding:14px 0 0}.taxi small{display:block;font-size:20px;font-weight:700;color:var(--gray-700)}
+  .taxi-a{display:block;margin:14px 0 8px;font-size:30px;line-height:1.3;font-weight:800;color:var(--gray-900);word-break:break-all}
+  .taxi-n{display:block;font-size:14px;color:var(--gray-500)}.taxi-k{font-size:12.5px;color:var(--gray-500);margin:12px 0 14px}
+  .taxi-btns{display:flex;gap:8px}.taxi-btns .save{flex:1;margin:0;text-decoration:none;display:flex;align-items:center;justify-content:center}
   #tc-toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);background:#101828;color:#fff;font-size:13px;font-weight:600;padding:11px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:3000;pointer-events:none;max-width:88vw;text-align:center}
   #tc-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
   .cover .dday{align-self:flex-start;background:rgba(255,255,255,.24);backdrop-filter:blur(6px);padding:4px 11px;border-radius:999px;font-size:12px;font-weight:800}
@@ -131,7 +151,7 @@
   .td-h button{margin-left:auto;border:none;background:rgba(255,255,255,.2);color:#fff;font:inherit;font-size:12px;font-weight:800;padding:6px 10px;border-radius:9px;cursor:pointer}
   .td-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.td-g div{background:rgba(255,255,255,.14);border-radius:11px;padding:8px}
   .td-g small{display:block;font-size:11px;opacity:.85}.td-g b{font-size:16px;font-weight:800}
-  .td-next{font-size:13px;margin-top:10px;opacity:.96}.td-next b{font-weight:800}
+  .td-next{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;margin-top:10px;opacity:.96}.td-next b{font-weight:800}
   .pwx{background:#F0F9FF;border:1px solid #B9E6FE;border-radius:14px;padding:12px 14px;margin-bottom:12px;font-size:13px;color:#0B4A6F}.pwx b{display:block;margin-bottom:6px}
   .pwx-off{background:var(--gray-50);border-color:var(--gray-200);color:var(--gray-600)}
   .pwx-r{display:flex;align-items:center;gap:8px;min-height:40px;border-top:1px solid #E0F2FE}.pwx-r span{flex:1;font-weight:700}.pwx-r small{font-weight:500;color:#026AA2;margin-left:4px}
@@ -146,7 +166,7 @@
   .ps-row{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--gray-100);font-size:13.5px;cursor:pointer}.ps-row input{margin-top:3px;width:18px;height:18px}
   .ps-row small{display:block;font-size:11.5px;color:var(--primary);font-weight:700;margin-top:2px}.ps-warn{font-style:normal;color:var(--danger);font-size:11.5px;font-weight:700}
   .ps-none{font-size:13px;color:var(--gray-600);background:var(--gray-50);border-radius:10px;padding:12px;margin-top:10px}
-  .tools{display:flex;gap:8px;margin-bottom:12px}.tools button{flex:1;display:flex;align-items:center;gap:8px;min-height:56px;padding:8px 10px;border:1px solid var(--gray-200);border-radius:14px;background:var(--surface,#fff);font:inherit;font-size:20px;cursor:pointer;text-align:left}
+  .tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.tools.t4 button{flex:1 1 calc(50% - 4px)}.tools button{flex:1;display:flex;align-items:center;gap:8px;min-height:56px;padding:8px 10px;border:1px solid var(--gray-200);border-radius:14px;background:var(--surface,#fff);font:inherit;font-size:20px;cursor:pointer;text-align:left}
   .tools span{font-size:11.5px;font-weight:800;color:var(--gray-700);line-height:1.3}
   .phr{display:flex;align-items:center;gap:8px;border-top:1px solid var(--gray-100);padding:8px 0}.phr-t{flex:1;cursor:pointer}
   .phr-t small{display:block;font-size:11.5px;color:var(--gray-500)}.phr-t b{display:block;font-size:17px;font-weight:800;color:var(--gray-900)}.phr-t span{font-size:12px;color:var(--primary);font-weight:600}
@@ -321,6 +341,7 @@ function renderShell(){
     '<div class="cover cov-'+esc(trip.cover)+'"'+coverStyle()+'>'
     + '<div class="back" onclick="location.href=\'/trips\'">'+svg('ic-back')+'</div>'
     + '<div class="share" onclick="shareTrip()" title="동행과 공유">'+svg('ic-share')+'</div>'
+    + '<button type="button" class="fontb" onclick="window.TCFont&&TCFont.cycle(this)" aria-label="글자 크기">가'+(function(){ var n=0; try{ n=+localStorage.getItem('tc_font')||0; }catch(e){} return n>0&&n<3?'<small>'+(n===1?'+':'++')+'</small>':''; })()+'</button>'
     + '<span class="dday">'+T.ddayText(trip)+' · '+T.tripLength(trip)+'일</span>'
     + '<h1>'+esc(trip.city)+'</h1>'
     + (T.photoSource&&T.cityPhoto&&T.cityPhoto(trip.city)?'<a class="cv-credit" href="'+T.photoSource(T.cityPhoto(trip.city))+'" target="_blank" rel="noopener">사진 Wikimedia Commons</a>':'')
@@ -373,7 +394,9 @@ function panePlan(){
       +'<div class="tl-body"><div class="tl-time">'+esc(it.time||'')+'</div><div class="tl-card">'
       +'<div class="tl-cardhead"><h4>'+esc(it.title)+'</h4><div style="display:flex;gap:4px;flex:0 0 auto">'+up+dn+'<button class="tl-edit" title="수정" onclick="editItem('+curDay+',\''+it.id+'\')">✎</button></div></div>'
       +(it.memo?'<p>'+esc(it.memo)+'</p>':'')
-      +'<a class="tl-map" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((trip.city||'')+' '+it.title)+'">'+svg('ic-map')+' 지도에서 보기</a>'
+      +(it.addr?'<p class="tl-addr">📍 '+esc(it.addr)+'</p>':'')
+      +'<div class="tl-links"><a class="tl-map" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(placeQ(it))+'">'+svg('ic-map')+' 지도</a>'
+      +'<a class="tl-map tl-go" target="_blank" rel="noopener" href="'+dirUrl(placeQ(it),i>0?placeQ(items[i-1]):'')+'">🧭 '+(i>0?esc(items[i-1].title)+'에서 길찾기':'여기까지 길찾기')+'</a></div>'
       +'</div></div></div>';
   });
   var mapBtn = items.length>=2 ? '<button class="seg" style="width:100%;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="dayRouteMap()">'+svg('ic-map')+' 하루 동선 지도로 보기</button>' : '';
@@ -392,7 +415,7 @@ function setDay(i){ curDay=i; renderPane(); }
 function moveItem(dayIdx,id,dir){ T.moveDayItem(tid,dayIdx,id,dir); reget(); renderShell(); }
 function dayRouteMap(){
   var items=((trip.days||[])[curDay]||{}).items||[]; if(items.length<2) return;
-  var url='https://www.google.com/maps/dir/'+items.map(function(it){ return encodeURIComponent((trip.city||'')+' '+it.title); }).join('/');
+  var url='https://www.google.com/maps/dir/'+items.map(function(it){ return encodeURIComponent(placeQ(it)); }).join('/');
   window.open(url,'_blank','noopener');
 }
 
@@ -505,9 +528,56 @@ function expPart(){
   return '<div class="sech">지출 내역</div>'+expList()
     + ((trip.expenses||[]).length ? '<button class="seg" style="width:100%;margin-top:8px" onclick="exportCSV()">지출 CSV 내보내기</button>' : '');
 }
+/* 💴 남은 외화 — 귀국 무렵 기록 → 같은 통화 여행 예산 탭에서 '가져가기' (trips.js leftovers) */
+function loBox(t,sub,btns){ return '<div class="lo"><div class="lo-t">'+t+'</div>'+(sub?'<small>'+sub+'</small>':'')+(btns?'<div class="lo-b">'+btns+'</div>':'')+'</div>'; }
+function loAmt(a,c){ return (+a||0).toLocaleString('ko-KR')+' '+c; }
+function loCard(){
+  var cur=T.curOf(trip.city); if(cur==='KRW') return '';
+  var lo=T.leftovers()[cur], ended=T.daysBetween(todayISO(),trip.end)<=0;   // 마지막 날부터 기록 칸
+  var ci=trip.carryIn;
+  if(ci&&ci.cur===cur){
+    var k=T.toKRW(ci.amt,cur), tot=T.budgetTotal(trip);
+    return loBox('💴 가져가는 외화 <b>'+loAmt(ci.amt,cur)+'</b> <span>(≈ '+won(k)+')</span>',
+      (ci.from?'지난 '+esc(ci.from)+' 여행에서 남은 돈 · ':'')+(tot?'예산 '+won(tot)+' 중 이만큼은 이미 있어요 → 더 준비할 돈 약 <b>'+won(Math.max(0,tot-k))+'</b>':'예산을 정하면 더 준비할 돈을 계산해 드려요'),
+      '<button onclick="dropCarry()">가져가기 취소</button>');
+  }
+  if(lo&&lo.tid!==trip.id&&!ended)
+    return loBox('💴 지난 '+esc(lo.from||'')+' 여행에서 남은 <b>'+loAmt(lo.amt,cur)+'</b> <span>(≈ '+won(T.toKRW(lo.amt,cur))+')</span> 있어요',
+      '환전할 때 이만큼 빼면 돼요',
+      '<button class="on" onclick="takeLo()">이번 여행에 가져가기</button><button onclick="clearLo()">다 썼어요</button>');
+  if(ended){
+    var mine=lo&&lo.tid===trip.id;
+    return loBox(mine?'💴 남은 <b>'+loAmt(lo.amt,cur)+'</b> 기록했어요':'💴 지갑에 남은 '+cur+' 있나요?',
+      mine?'다음에 '+cur+' 쓰는 여행을 만들면 예산 탭에서 알려 드려요':'적어 두면 다음에 같은 통화 나라로 갈 때 알려 드려요',
+      '<button class="on" onclick="openLoSheet()">'+(mine?'수정':'남은 돈 적기')+'</button>');
+  }
+  return '';
+}
+function openLoSheet(){
+  var cur=T.curOf(trip.city), lo=T.leftovers()[cur];
+  openSheet('<h3>💴 남은 외화</h3><p class="ps-p">지갑에 남은 현지 돈을 적어 두면, 다음에 같은 통화를 쓰는 여행에서 예산 탭에 알려 드려요. 0을 넣으면 지워요.</p>'
+    +'<div class="row2"><div><label class="fl" for="lo-amt">금액</label><input class="in" id="lo-amt" inputmode="decimal" placeholder="예: 3200" value="'+(lo&&lo.tid===trip.id?lo.amt:'')+'" onkeydown="if(event.key===\'Enter\')saveLo()"></div>'
+    +'<div><label class="fl" for="lo-cur">통화</label><select class="in" id="lo-cur">'+T.CURS.filter(function(c){ return c!=='KRW'; }).map(function(c){ return '<option'+(c===cur?' selected':'')+'>'+c+'</option>'; }).join('')+'</select></div></div>'
+    +'<button class="save" onclick="saveLo()">저장</button>');
+  setTimeout(function(){ var a=document.getElementById('lo-amt'); if(a) a.focus(); },60);
+}
+function saveLo(){
+  var a=parseFloat(String(document.getElementById('lo-amt').value).replace(/[^\d.]/g,''))||0, c=document.getElementById('lo-cur').value;
+  T.setLeftover(c,a,{city:trip.city,id:trip.id}); closeSheet(); renderShell(); toast(a>0?'남은 '+loAmt(a,c)+' 기록했어요':'남은 외화를 지웠어요');
+}
+function takeLo(){
+  var cur=T.curOf(trip.city), lo=T.leftovers()[cur]; if(!lo) return;
+  var t=T.get(tid); t.carryIn={cur:cur,amt:lo.amt,from:lo.from,tid:lo.tid}; T.upsert(t); T.setLeftover(cur,0); reget(); renderShell();
+}
+function clearLo(){ if(!confirm('남은 외화 기록을 지울까요?')) return; T.setLeftover(T.curOf(trip.city),0); renderShell(); }
+function dropCarry(){
+  var t=T.get(tid), ci=t.carryIn; if(!ci) return;
+  T.setLeftover(ci.cur,ci.amt,{city:ci.from,id:ci.tid}); delete t.carryIn; T.upsert(t); reget(); renderShell();
+}
 function budgetMain(){
+  var lo=loCard();
   if(!T.budgetTotal(trip)){
-    return '<div class="card" style="text-align:center;padding:26px"><div style="font-size:38px">💰</div><h4 style="margin:8px 0 4px;font-size:15px">총예산을 정해볼까요?</h4><p style="color:var(--gray-500);font-size:12.5px">예산을 넣으면 하루 쓸 수 있는 돈을 자동으로 계산해 드려요.</p><button class="save" style="max-width:220px;margin:14px auto 0" onclick="openBudgetSheet()">예산 설정</button></div>'
+    return lo+'<div class="card" style="text-align:center;padding:26px"><div style="font-size:38px">💰</div><h4 style="margin:8px 0 4px;font-size:15px">총예산을 정해볼까요?</h4><p style="color:var(--gray-500);font-size:12.5px">예산을 넣으면 하루 쓸 수 있는 돈을 자동으로 계산해 드려요.</p><button class="save" style="max-width:220px;margin:14px auto 0" onclick="openBudgetSheet()">예산 설정</button></div>'
       + reportBtn();
   }
   var cats=T.byCategory(trip);
@@ -521,7 +591,7 @@ function budgetMain(){
     return '<div class="catbar"><div class="ic" style="background:'+x.cat.color+'22;color:'+x.cat.color+'">'+x.cat.emoji+'</div><div class="nm">'+x.cat.label+badge+'</div><div class="tr"><i style="width:'+pct+'%;background:'+bar+'"></i></div><div class="amt" style="display:flex;flex-direction:column;align-items:flex-end">'+won(x.amt)+limTxt+'</div></div>';
   }).join(''):'<div style="color:var(--gray-500);font-size:12.5px;text-align:center;padding:8px">아직 지출이 없어요.</div>';
   var ended = T.daysBetween(todayISO(), trip.end) < 0;
-  return (ended?reportBtn():'')
+  return lo+(ended?reportBtn():'')
     + '<div class="card"><div class="donut" id="donut"></div><div style="text-align:center;font-size:12.5px;color:var(--gray-500);font-weight:600">총예산 '+won(T.budgetTotal(trip))+' · 사용 '+won(T.spent(trip))+'</div>'
     + '<div style="text-align:center;margin-top:8px"><button class="seg" onclick="openBudgetSheet()">예산 수정</button></div></div>'
     + '<div class="daily">'+svg('ic-wallet','')+'<div><div class="lbl">오늘 이후 하루 쓸 수 있는 돈</div><div class="big">'+won(T.dailyAllowance(trip))+'</div><div class="fm">(총예산 − 누적지출) ÷ 남은 '+T.remainingDays(trip)+'일</div></div></div>'
@@ -693,7 +763,8 @@ function paneResv(){
   var paste='<button class="ps-btn" onclick="openPasteSheet()">📋 예약 확인 메일·문자 붙여넣어 자동 등록 <small>편명·시간·숙소·예약번호를 찾아 채워요</small></button>';
   var body=rs.length?rs.map(function(r){var m=RESV[r.type]||RESV.etc;
     var tag=r.status==='confirmed'?'<span class="tag" style="background:#e7f7ef;color:var(--success)">확정</span>':'<span class="tag" style="background:var(--accent-lt);color:var(--accent)">예정</span>';
-    return '<div class="resv" style="cursor:pointer" onclick="openResvSheet(\''+r.id+'\')"><div class="ic" style="background:'+m[0]+'">'+svg(m[1])+'</div><div style="flex:1"><h4>'+esc(r.title)+'</h4><div class="rt">'+esc(r.detail||'').replace(/\n/g,'<br>')+'</div></div>'+tag+'</div>';
+    return '<div class="resv" style="cursor:pointer" onclick="openResvSheet(\''+r.id+'\')"><div class="ic" style="background:'+m[0]+'">'+svg(m[1])+'</div><div style="flex:1;min-width:0"><h4>'+esc(r.title)+'</h4><div class="rt">'+esc(r.detail||'').replace(/\n/g,'<br>')+'</div>'
+      +(r.addr?'<div class="rt rv-addr">📍 '+esc(r.addr)+'</div><button type="button" class="taxi-b" onclick="event.stopPropagation();showAddr(\''+r.id+'\')">🚕 택시 카드 · 길찾기</button>':'')+'</div>'+tag+'</div>';
   }).join(''):'<div class="card" style="color:var(--gray-500);font-size:12.5px;text-align:center;margin-bottom:10px">항공·숙소·투어 예약을 추가해 흐름에 연결하세요.</div>';
   var af=affLink('tours','🎟️ 투어·티켓 최저가 비교 (마이리얼트립·클룩·trip.com)');
   return paste+body+af;
@@ -705,8 +776,19 @@ function affLink(kind,label){
 }
 
 /* ── 준비물 ── */
+/* 🛂 여권 만료일 — 귀국일 기준 6개월 (trips.js passportCheck) */
+function ppCard(){
+  var c=T.passportCheck(trip); if(!c) return '';
+  return '<div class="pp pp-'+c.level+'"><div class="pp-t">🛂 '+esc(c.text)+'</div>'
+    +'<label class="pp-in"><span>여권 만료일</span><input type="date" class="in" id="ppExp" value="'+esc(T.passportExp())+'" onchange="setPP(this.value)"></label>'
+    +'<small>만료일만 이 기기에 저장돼요 · 여권 번호는 받지 않아요</small></div>';
+}
+function setPP(v){ T.setPassportExp(v); renderShell(); }
 function panePack(){
   var cl=trip.checklist||[];
+  return ppCard()+panePackList(cl);
+}
+function panePackList(cl){
   if(!cl.length) return '<div class="card" style="text-align:center;padding:26px"><div style="font-size:38px">🎒</div><h4 style="margin:8px 0 4px;font-size:15px">준비물 체크리스트</h4><p style="color:var(--gray-500);font-size:12.5px">여권·비자·짐 등 챙길 것을 추가하고 체크하세요.</p><button class="save" style="max-width:220px;margin:14px auto 0" onclick="openPackSheet()">항목 추가</button></div>';
   var groups={}; cl.forEach(function(c){ (groups[c.group||'기타']=groups[c.group||'기타']||[]).push(c); });
   var out='';
@@ -1196,7 +1278,7 @@ function todayInner(i){
     +'<div><small>'+(tz&&tz!=='Asia/Seoul'?'현지 시각':'지금')+'</small><b id="tdClock">'+now+'</b></div>'
     +'<div><small>날씨</small><b>'+(w?wm[0]+' '+w.tmax+'°':'—')+'</b></div>'
     +'<div><small>오늘 쓴 돈</small><b>'+won(daySum(todayISO()))+'</b></div></div>'
-    +'<div class="td-next">'+(nx?'▶ 다음 <b>'+esc(nx.time)+'</b> '+esc(nx.title):items.length?'오늘 일정을 모두 마쳤어요 🎉':'오늘 일정이 비어 있어요')+'</div>';
+    +'<div class="td-next">'+(nx?'<span>▶ 다음 <b>'+esc(nx.time)+'</b> '+esc(nx.title)+'</span><a class="td-go" href="'+dirUrl(placeQ(nx))+'" target="_blank" rel="noopener">🧭 길찾기</a>':items.length?'오늘 일정을 모두 마쳤어요 🎉':'오늘 일정이 비어 있어요')+'</div>';
 }
 function renderToday(){ var el=document.getElementById('todayCard'), i=todayIdx(); if(el&&i>=0) el.innerHTML=todayInner(i); }
 
@@ -1294,13 +1376,40 @@ function applyPaste(){
 /* ═══ 여행 도구 줄 — 현지어 한마디 · 비상 연락 · 현지 정보 (나라를 알 때만) ═══ */
 function ccOf(){ return T.countryOf?T.countryOf(trip.city):''; }
 function toolsRow(){
-  var cc=ccOf(); if(!cc) return '';
-  var ph=window.PHRASES&&PHRASES.BY[cc], li=window.LOCAL_INFO&&LOCAL_INFO[cc];
-  return '<div class="tools">'
+  var cc=ccOf(), st=stayResv();
+  var ph=cc&&window.PHRASES&&PHRASES.BY[cc], li=cc&&window.LOCAL_INFO&&LOCAL_INFO[cc];
+  var b=(st?'<button onclick="showAddr(\''+st.id+'\')">🚕<span>숙소 주소<br>택시 카드</span></button>':'')
     +(ph?'<button onclick="openPhrases()">🗣<span>'+esc(ph.name)+'<br>한마디</span></button>':'')
     +(li&&li.sos?'<button onclick="openSOS()">🆘<span>비상·분실<br>연락처</span></button>':'')
-    +(li&&li.plug?'<button onclick="openLocalInfo()">🔌<span>콘센트·팁<br>수돗물</span></button>':'')
-    +'</div>';
+    +(li&&li.plug?'<button onclick="openLocalInfo()">🔌<span>콘센트·팁<br>수돗물</span></button>':'');
+  var n=(b.match(/<button/g)||[]).length;
+  return b?'<div class="tools'+(n===4?' t4':'')+'">'+b+'</div>':'';   // 4칸이면 2×2
+}
+
+/* ═══ 🚕 숙소 주소 택시 카드 + 🧭 길찾기 ═══ */
+function stayResv(){ return (trip.reservations||[]).filter(function(r){ return r.addr&&r.type==='hotel'; })[0]||(trip.reservations||[]).filter(function(r){ return r.addr; })[0]||null; }
+function placeQ(it){   // 길찾기 목적지: 일정에 적은 주소 → 숙소 일정이면 숙소 예약 주소 → 도시+제목
+  if(it.addr) return it.addr;
+  if(it.type==='lodging'){ var st=stayResv(); if(st) return st.addr; }
+  return (trip.city||'')+' '+it.title;
+}
+function dirUrl(dest,origin){ return 'https://www.google.com/maps/dir/?api=1'+(origin?'&origin='+encodeURIComponent(origin):'')+'&destination='+encodeURIComponent(dest); }
+function showAddr(rid){
+  var r=(trip.reservations||[]).filter(function(x){ return x.id===rid; })[0]; if(!r||!r.addr) return;
+  var cc=ccOf(), P=window.PHRASES, tx=(P&&P.TAXI&&(P.TAXI[cc]||(tzOf()==='Asia/Seoul'?null:P.TAXI.en)))||['이 주소로 가 주세요',''];
+  var lang=(P&&P.BY[cc]&&P.BY[cc].lang)||(tx[1]?'en-US':'ko-KR');
+  window._taxiSay=tx[0]+' '+r.addr; window._taxiLang=lang;
+  openSheet('<div class="taxi"><small lang="'+esc(lang)+'">'+esc(tx[0])+'</small><b class="taxi-a">'+esc(r.addr)+'</b><span class="taxi-n">'+esc(r.title)+'</span>'
+    +'<p class="taxi-k">'+(tx[1]?'“'+esc(tx[1])+'” — ':'')+'이 화면을 기사님께 보여 주세요</p>'
+    +'<div class="taxi-btns"><a class="save" href="'+dirUrl(r.addr)+'" target="_blank" rel="noopener">🧭 길찾기</a>'
+    +'<button class="save" onclick="copyAddr()">📋 주소 복사</button></div>'
+    +'<button class="save" style="background:var(--gray-100);color:var(--gray-700);margin-top:8px" onclick="speak(window._taxiSay,window._taxiLang)">🔊 읽어주기</button></div>');
+  window._taxiAddr=r.addr;
+}
+function copyAddr(){
+  var a=window._taxiAddr||'';
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(a).then(function(){ toast('주소를 복사했어요 — 택시·지도 앱에 붙여 넣으세요'); },function(){ toast('복사가 막혔어요 — 주소를 길게 눌러 복사하세요'); });
+  else toast('주소를 길게 눌러 복사하세요');
 }
 /* 현지어 카드 + 읽어주기(speechSynthesis — 기기에 목소리가 없으면 가까운 목소리, 그래도 없으면 글자만) */
 function speak(text,lang){
@@ -1454,10 +1563,10 @@ function saveBudget(){ var v=parseInt(document.getElementById('bg-total').value)
 var itType='sight', editCtx=null;
 function openItemSheet(dayIdx, itemId){
   editCtx=null;
-  var pre={time:'',type:'sight',title:'',memo:''};
+  var pre={time:'',type:'sight',title:'',memo:'',addr:''};
   if(itemId!=null){
     var day=(trip.days||[])[dayIdx]||{}, it=((day.items||[]).filter(function(x){return x.id===itemId;}))[0];
-    if(it){ pre={time:it.time||'',type:it.type||'sight',title:it.title||'',memo:it.memo||''}; editCtx={dayIdx:dayIdx,itemId:itemId}; }
+    if(it){ pre={time:it.time||'',type:it.type||'sight',title:it.title||'',memo:it.memo||'',addr:it.addr||''}; editCtx={dayIdx:dayIdx,itemId:itemId}; }
   }
   itType=pre.type;
   var types=[['sight','관광'],['food','식사'],['lodging','숙소'],['move','이동'],['flight','항공'],['note','메모']];
@@ -1465,6 +1574,7 @@ function openItemSheet(dayIdx, itemId){
     +'<div class="segrow" id="it-type">'+types.map(function(t){return '<span class="seg'+(t[0]===pre.type?' on':'')+'" data-t="'+t[0]+'" onclick="pickType(this)">'+t[1]+'</span>';}).join('')+'</div>'
     +'<div class="row2"><div><label class="fl" for="it-time">시간</label><input class="in" id="it-time" placeholder="예: 13:00" value="'+esc(pre.time)+'"></div><div><label class="fl" for="it-title">장소·제목</label><input class="in" id="it-title" placeholder="예: 도톤보리" value="'+esc(pre.title)+'"></div></div>'
     +'<label class="fl" for="it-memo">메모 (선택)</label><input class="in" id="it-memo" placeholder="예: 다코야키·리버크루즈" value="'+esc(pre.memo)+'">'
+    +'<label class="fl" for="it-addr">주소 (선택 · 길찾기가 정확해져요)</label><input class="in" id="it-addr" placeholder="비우면 장소 이름으로 찾아요" value="'+esc(pre.addr)+'">'
     +(editCtx?'<label class="fl" for="it-day">날짜 (다른 날로 옮기기)</label><select class="in" id="it-day">'+(trip.days||[]).map(function(d,i){ return '<option value="'+i+'"'+(i===editCtx.dayIdx?' selected':'')+'>'+(i+1)+'일차 · '+T.fmtMD(d.date)+' '+T.dow(d.date)+'</option>'; }).join('')+'</select>':'')
     +suggestBox()
     +'<button class="save" onclick="saveItem()">'+(editCtx?'저장':'추가')+'</button>'
@@ -1474,7 +1584,7 @@ function editItem(dayIdx,itemId){ openItemSheet(dayIdx,itemId); }
 function pickType(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); itType=el.dataset.t; }
 function saveItem(){
   var title=document.getElementById('it-title').value.trim(); if(!title){alert('장소·제목을 입력하세요.');return;}
-  var patch={time:document.getElementById('it-time').value.trim(),type:itType,title:title,memo:document.getElementById('it-memo').value.trim()};
+  var patch={time:document.getElementById('it-time').value.trim(),type:itType,title:title,memo:document.getElementById('it-memo').value.trim(),addr:document.getElementById('it-addr').value.trim()};
   var dsel=document.getElementById('it-day'), nd=dsel?+dsel.value:null;
   if(editCtx && nd!=null && nd!==editCtx.dayIdx){   // 다른 날로 옮기기 → 그 날 맨 끝에
     T.removeDayItem(tid,editCtx.dayIdx,editCtx.itemId); T.addDayItem(tid,nd,patch); curDay=nd;
@@ -1501,15 +1611,17 @@ function openResvSheet(resId){
     +'<div class="segrow" id="rv-type">'+types.map(function(t){return '<span class="seg'+(t[0]===rvType?' on':'')+'" data-t="'+t[0]+'" onclick="pickRv(this)">'+t[1]+'</span>';}).join('')+'</div>'
     +'<label class="fl" for="rv-title">제목</label><input class="in" id="rv-title" placeholder="예: 대한항공 KE723" value="'+(r?esc(r.title||''):'')+'">'
     +'<label class="fl" for="rv-detail">상세 (선택)</label><input class="in" id="rv-detail" placeholder="예: ICN 08:05 → KIX 10:35 · 2인" value="'+(r?esc(r.detail||''):'')+'">'
+    +'<div id="rv-addr-w"'+(rvType==='flight'?' hidden':'')+'><label class="fl" for="rv-addr">주소 (선택 · 현지어 그대로)</label><input class="in" id="rv-addr" placeholder="예: 大阪府大阪市中央区難波1-2-3" value="'+(r?esc(r.addr||''):'')+'">'
+    +'<p class="ps-p" style="margin:6px 0 0">넣어 두면 🚕 택시 카드로 크게 보여 주고 길찾기를 바로 열어요. 예약 확인 메일의 주소를 복사해 붙여 넣으세요.</p></div>'
     +'<div class="segrow" style="margin-top:12px"><span class="seg'+(rvStatus==='confirmed'?' on':'')+'" data-st="confirmed" onclick="pickSt(this)">확정</span><span class="seg'+(rvStatus==='planned'?' on':'')+'" data-st="planned" onclick="pickSt(this)">예정</span></div>'
     +'<button class="save" onclick="saveResv()">'+(editResv?'저장':'추가')+'</button>'
     +(editResv?'<button class="save" style="background:var(--gray-100);color:var(--danger);margin-top:8px" onclick="deleteResv()">삭제</button>':''));
 }
-function pickRv(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); rvType=el.dataset.t; }
+function pickRv(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); rvType=el.dataset.t; var w=document.getElementById('rv-addr-w'); if(w) w.hidden=(rvType==='flight'); }
 function pickSt(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); rvStatus=el.dataset.st; }
 function saveResv(){
   var title=document.getElementById('rv-title').value.trim(); if(!title){alert('제목을 입력하세요.');return;}
-  var data={type:rvType,title:title,detail:document.getElementById('rv-detail').value.trim(),status:rvStatus};
+  var data={type:rvType,title:title,detail:document.getElementById('rv-detail').value.trim(),status:rvStatus,addr:rvType==='flight'?'':document.getElementById('rv-addr').value.trim()};
   if(editResv){ T.updateReservation(tid,editResv,data); }
   else { data.when=''; T.addReservation(tid,data); }
   reget(); closeSheet(); renderShell();

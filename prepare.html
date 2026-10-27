@@ -53,6 +53,12 @@
 .pr-dday{font-size:1.05rem;font-weight:800;color:var(--primary);white-space:nowrap;padding:0 4px}
 
 .pr-jumps{display:flex;gap:8px;margin:-10px 0 14px}
+.pp{border-radius:14px;padding:11px 13px;margin:0 0 14px;background:var(--gray-50,#f6f7f9);border:1px solid var(--gray-200)}
+.pp:empty{display:none}.pp-t{font-size:13px;font-weight:800;line-height:1.45}.pp small{display:block;font-size:11px;color:var(--gray-500);margin-top:6px}
+.pp-in{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;font-weight:700}.pp-in input{flex:1;min-width:0;padding:9px 10px;border:1px solid var(--gray-200);border-radius:10px;font:inherit;font-size:16px;background:var(--surface,#fff);color:inherit}
+.pp-bad{background:#fde7e9;border-color:#f5b5bc}.pp-bad .pp-t{color:#c62828}
+.pp-warn{background:#fff4e0;border-color:#f3d39b}.pp-warn .pp-t{color:#a15c00}
+.pp-ok{background:#e7f7ef;border-color:#b6e3c9}.pp-ok .pp-t{color:#1b7f4b}
 .pr-jump2{flex:1;min-height:44px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--gray-200);border-radius:12px;background:var(--surface,#fff);color:var(--gray-800);font-size:13.5px;font-weight:800;text-decoration:none;white-space:nowrap}
 .pr-jump2.now{background:var(--primary);border-color:var(--primary);color:#fff}
 .stage,.pk-sec,.en-sec{scroll-margin-top:72px}
@@ -146,6 +152,8 @@
       <span class="pr-dday" id="dday">D-—</span>
     </div>
   </div>
+
+  <div class="pp" id="passport"></div>
 
   <div class="pr-prog">
     <span id="progText">0 / 0 완료</span>
@@ -512,6 +520,19 @@ function renderEntry(){
     +'<p class="en-foot">한국 일반여권·관광 기준 · '+ENTRY_CHECKED+' 공식 사이트 확인 · 규정이 자주 바뀌니 <b>출발 전 공식 페이지에서 다시 확인</b>하세요. 무비자 일수: <a href="https://0404.go.kr/bbs/contsPst/MST0000000000113/13/detail" target="_blank" rel="noopener">외교부 해외안전여행</a><br>⚠ 수수료를 받는 대행·사칭 사이트가 많아요 — 위 공식 주소만 이용하세요.</p>';
 }
 
+/* 🛂 여권 만료일 — 내 여행이 있으면 그 귀국일, 없으면 출발일+3일을 귀국일로 보고 6개월 규칙 확인 */
+function renderPP(){
+  var box=$('passport'); if(!box||!TripStore.passportCheck) return;
+  var dep=$('departDate').value, t=TRIP||(dep?{city:'',end:TripStore.iso(new Date(new Date(dep+'T00:00:00').getTime()+3*864e5))}:null);
+  var c=t?TripStore.passportCheck(t):{level:'none',text:'여권 만료일을 넣으면 6개월 규칙을 확인해 드려요'};
+  if(!c){ box.innerHTML=''; box.className='pp'; return; }
+  box.className='pp pp-'+c.level;
+  box.innerHTML='<div class="pp-t">🛂 '+esc(c.text)+'</div>'
+    +'<label class="pp-in"><span>여권 만료일</span><input type="date" id="ppExp" value="'+esc(TripStore.passportExp())+'"></label>'
+    +'<small>대부분 나라가 입국 시 6개월 이상 남은 여권을 요구하거나 권장해요 · 만료일만 이 기기에 저장(여권 번호는 받지 않음)</small>';
+  $('ppExp').addEventListener('change',function(){ TripStore.setPassportExp(this.value); renderPP(); });
+}
+
 (function init(){
   var saved = '';
   try { saved = localStorage.getItem(KEY_DATE) || ''; } catch(e){}
@@ -528,11 +549,12 @@ function renderEntry(){
   $('departDate').addEventListener('change', function(){
     try { localStorage.setItem(KEY_DATE, $('departDate').value); } catch(e){}
     window._prScrolled = false;
-    render();
+    render(); renderPP();
   });
 
   render();
   renderEntry();
+  renderPP();
   if (window.PackList) PackList.mount($('packList'), function(d, n){
     $('pkProgText').textContent = d + ' / ' + n + ' 챙김';
     $('pkProgBar').style.width = (n ? d / n * 100 : 0) + '%';

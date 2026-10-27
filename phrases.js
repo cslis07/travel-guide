@@ -51,5 +51,14 @@
   };
   /* 기기에 그 언어 목소리가 없는 경우가 많은 것 → 가까운 목소리로(없으면 글자만) */
   var VOICE_FALLBACK = { 'fil-PH': 'en-US', 'ms-MY': 'id-ID', 'en-SG': 'en-GB' };
-  window.PHRASES = { KO: KO, BY: P, FALLBACK: VOICE_FALLBACK };
+  /* 택시 카드 — "이 주소로 가 주세요" (2026-10-27 작성) · 목록에 없는 나라는 영어 */
+  var TAXI = {
+    jp: ['この住所までお願いします', '고노 주쇼 마데 오네가이시마스'], tw: ['請帶我到這個地址', '칭 다이 워 다오 저거 디즈'],
+    hk: ['唔該去呢個地址', '음꺼이 호이 니 고 데이지'], cn: ['请带我去这个地址', '칭 다이 워 취 저거 디즈'],
+    th: ['ไปที่อยู่นี้ครับ', '빠이 티유 니 크랍'], vn: ['Cho tôi đến địa chỉ này', '쪼 또이 덴 디아 찌 나이'],
+    id: ['Tolong antar ke alamat ini', '똘롱 안따르 끄 알라맛 이니'], sg: ['Please take me to this address', '플리즈 테이크 미 투 디스 어드레스'],
+    ph: ['Pakihatid po ako sa address na ito', '파키하띧 포 아코 사 어드레스 나 이또'], my: ['Tolong hantar saya ke alamat ini', '똘롱 한따르 사야 끄 알라맛 이니'],
+    fr: ["À cette adresse, s'il vous plaît", '아 쎄뜨 아드레스 씰부쁠레'], en: ['Please take me to this address', '플리즈 테이크 미 투 디스 어드레스']
+  };
+  window.PHRASES = { KO: KO, BY: P, FALLBACK: VOICE_FALLBACK, TAXI: TAXI };
 })();

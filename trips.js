@@ -174,6 +174,32 @@
   }
   function toKRW(amount, cur) { return Math.round(amount * (RATES[cur] || 1)); }
 
+  /* ── 여권 만료일 — 만료일만, 이 기기에만(여권 번호는 받지 않음). 귀국일 기준 6개월 미만이면 경고 ── */
+  var PP_KEY = 'tc_passport_exp';
+  function passportExp() { try { return localStorage.getItem(PP_KEY) || ''; } catch (e) { return ''; } }
+  function setPassportExp(d) { try { if (d) localStorage.setItem(PP_KEY, d); else localStorage.removeItem(PP_KEY); } catch (e) {} }
+  function passportCheck(t) {
+    var exp = passportExp(); if (!t || !t.end || cityTz(t.city) === 'Asia/Seoul') return null;   // 국내 여행은 여권 불필요
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(exp)) return { level: 'none', text: '여권 만료일을 넣으면 6개월 규칙을 확인해 드려요' };
+    var e = new Date(exp + 'T00:00:00'), back = new Date(t.end + 'T00:00:00'), six = new Date(back), dot = exp.replace(/-/g, '.');
+    six.setMonth(six.getMonth() + 6);
+    if (e < back) return { level: 'bad', text: '여권이 ' + dot + '에 만료돼 이 여행에 쓸 수 없어요 — 재발급하세요', short: '여권이 여행 전·중에 만료돼요 — 재발급' };
+    if (e < six) {
+      var m = Math.floor((e - back) / (30.44 * 864e5));
+      return { level: 'warn', text: '여권이 귀국 후 ' + (m ? m + '개월 뒤' : '한 달 안에') + ' 만료(' + dot + ') — 6개월 미만이면 입국을 거절하는 나라가 있어요', short: '여권 유효기간 6개월 미만' };
+    }
+    return { level: 'ok', text: '여권 유효기간 충분해요 (' + dot + '까지)' };
+  }
+
+  /* ── 남은 외화 — 귀국할 때 지갑에 남은 돈을 통화별로 적어 두고, 같은 통화 여행에서 꺼내 쓰기 ── */
+  var LO_KEY = 'tc_leftover';
+  function leftovers() { try { return JSON.parse(localStorage.getItem(LO_KEY) || '{}') || {}; } catch (e) { return {}; } }
+  function setLeftover(cur, amt, src) {
+    var m = leftovers();
+    if (amt > 0) m[cur] = { amt: amt, from: (src && src.city) || '', tid: (src && src.id) || '', at: iso(new Date()) }; else delete m[cur];
+    try { localStorage.setItem(LO_KEY, JSON.stringify(m)); } catch (e) {}
+  }
+
   /* ── 그룹 정산: 순채무 최소 전송 계산 ── */
   function settlements(t) {
     var members = (t.members || []).map(function (m) { return m.name; });
@@ -397,6 +423,8 @@
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,
     dailyAllowance: dailyAllowance, remainingDays: remainingDays, byCategory: byCategory,
     settlements: settlements, balances: balances, toKRW: toKRW,
+    passportExp: passportExp, setPassportExp: setPassportExp, passportCheck: passportCheck,
+    leftovers: leftovers, setLeftover: setLeftover,
     refreshRates: refreshRates, fxState: fxState, cityGeo: cityGeo, cityPhoto: cityPhoto, photoSource: photoSource, cityTz: cityTz, countryOf: countryOf, curOf: curOf, CURS: CURS,
     // 날짜
     fmtMD: fmtMD, iso: iso, dow: dow, tripLength: tripLength, ddayText: ddayText, daysBetween: daysBetween,

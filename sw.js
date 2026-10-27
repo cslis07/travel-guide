@@ -4,7 +4,7 @@
 //  - HTML / API : 네트워크 우선 (항상 최신). 실패 시 캐시 → 최후에 오프라인 폴백
 //  - 정적 자산  : 캐시 우선 + 백그라운드 갱신 (stale-while-revalidate)
 
-const CACHE = 'travelcost-v39';
+const CACHE = 'travelcost-v40';
 
 // 설치 시 미리 담아둘 최소 셸 (오프라인 폴백용)
 // 페이지는 깨끗한 주소로(cleanUrls라 '/x.html'은 리다이렉트 응답이 캐시돼 오프라인 내비게이션에 못 씀)

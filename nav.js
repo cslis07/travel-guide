@@ -21,6 +21,13 @@
 (function () {
   'use strict';
 
+  /* 큰 글씨 모드 — 보통·크게·아주 크게 3단계, 이 기기에 기억(tc_font).
+     사이트 글자 크기가 대부분 px라 rem 배율이 안 먹어서 화면 배율(zoom)로 키운다. 헤더 그리기 전에 바로 적용. */
+  var FONT_STEPS = [1, 1.1, 1.2], FONT_NAMES = ['보통', '크게', '아주 크게'];
+  function fontStep() { var n = 0; try { n = +localStorage.getItem('tc_font') || 0; } catch (e) {} return FONT_STEPS[n] ? n : 0; }
+  function applyFont(n) { document.documentElement.style.zoom = n ? String(FONT_STEPS[n]) : ''; document.documentElement.setAttribute('data-font', String(n)); }
+  applyFont(fontStep());
+
   /* ── 브랜드 강조색 (핵심 도구 2개만) ── */
   var C_BUDGET = '#1B4FD8';  // 경비 계산
   var C_PREP   = '#039855';  // 출국 준비
@@ -224,7 +231,12 @@
   function escH(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   var SEARCH_CSS = '.tc-sbtn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border:none;border-radius:12px;background:transparent;color:inherit;font-size:18px;cursor:pointer;flex-shrink:0;margin-left:auto}' +
     '.tc-sbtn:hover{background:rgba(16,24,40,.06)}' +
-    '@media(max-width:900px){.header-inner{position:relative}.header-inner .tc-sbtn{position:absolute;right:8px;top:50%;transform:translateY(-50%);margin:0}}' +
+    '@media(max-width:900px){.header-inner{position:relative}.header-inner .tc-sbtn{position:absolute;right:8px;top:50%;transform:translateY(-50%);margin:0}.header-inner .tc-fbtn{right:50px}.header-inner .tc-fbtn:last-child{right:8px}}' +
+    '.tc-fbtn-icn{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:30px;padding:0 7px;border:1px solid rgba(127,127,127,.35);border-radius:8px;background:transparent;color:inherit;font-size:14px!important;cursor:pointer}' +
+    '@media(max-width:480px){html[data-font="1"] #share-btn,html[data-font="2"] #share-btn{display:none}}' +   /* 인천공항 상단 줄: 큰 글씨일 땐 공유 버튼을 빼서 제목 자리 확보 */
+    '.tc-fbtn{font-size:17px;font-weight:800}.tc-fbtn small{font-size:12px;font-weight:900;margin-left:1px}.tc-fbtn+.tc-sbtn{margin-left:0}' +
+    '.tc-ftoast{position:fixed;left:50%;top:70px;transform:translate(-50%,-8px);z-index:2100;padding:9px 16px;border-radius:999px;background:rgba(16,24,40,.88);color:#fff;font-size:14px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}' +
+    '.tc-ftoast.on{opacity:1;transform:translate(-50%,0)}' +
     '.tc-sov{position:fixed;inset:0;z-index:2000;background:rgba(16,24,40,.45);display:flex;align-items:flex-start;justify-content:center;padding:max(10vh,16px) 16px 16px}' +
     '.tc-sbox{width:100%;max-width:560px;background:var(--surface,#fff);border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.25);overflow:hidden;color:var(--gray-900,#101828)}' +
     '.tc-sin{width:100%;border:none;border-bottom:1px solid var(--gray-200,#E4E7EC);padding:16px 18px;font-size:17px;font-family:inherit;outline:none;background:transparent;color:inherit}' +
@@ -277,9 +289,43 @@
     } catch (e) {}
   }
 
+  function fontToast(msg) {
+    var t = document.querySelector('.tc-ftoast');
+    if (!t) { t = document.createElement('div'); t.className = 'tc-ftoast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+    t.textContent = msg; t.classList.add('on'); clearTimeout(fontToast._t);
+    fontToast._t = setTimeout(function () { t.classList.remove('on'); }, 1400);
+  }
+
+  function searchCss() {
+    if (document.getElementById('tc-search-css')) return;
+    var st = document.createElement('style'); st.id = 'tc-search-css'; st.textContent = SEARCH_CSS; document.head.appendChild(st);
+  }
+  function fontLabel(el) {
+    var n = fontStep(), a = '글자 크기: ' + FONT_NAMES[n] + ' (누르면 ' + FONT_NAMES[(n + 1) % 3] + ')';
+    el.setAttribute('aria-label', a); el.title = a; el.innerHTML = '가<small>' + (n ? new Array(n + 1).join('+') : '') + '</small>';
+  }
+  function fontCycle(el) {
+    var n = (fontStep() + 1) % FONT_STEPS.length;
+    try { localStorage.setItem('tc_font', String(n)); } catch (e) {}
+    applyFont(n); if (el) fontLabel(el); fontToast('글자 크기: ' + FONT_NAMES[n]);
+  }
+  /* 내 여행 화면은 커버를 다시 그려서 버튼을 직접 두고 이걸 부른다 */
+  window.TCFont = { cycle: fontCycle, label: fontLabel };
+  function buildFont() {
+    searchCss();
+    var host = document.querySelector('.header-inner') || document.querySelector('.tw-head'), icn = document.getElementById('topbar-right');
+    if (!host && !icn) return;
+    var f = document.createElement('button');
+    f.type = 'button'; f.className = host ? 'tc-sbtn tc-fbtn' : 'tc-fbtn tc-fbtn-icn';
+    fontLabel(f);
+    f.addEventListener('click', function () { fontCycle(f); });
+    if (host) { var sb = host.querySelector('.tc-sbtn'); host.insertBefore(f, sb || null); }
+    else icn.insertBefore(f, document.getElementById('quick-search-btn') || icn.firstChild);
+  }
+
   function buildSearch() {
     if (/\/airport(\.html)?$/.test(location.pathname)) return;   // 인천공항은 자체 빠른 검색
-    var st = document.createElement('style'); st.textContent = SEARCH_CSS; document.head.appendChild(st);
+    searchCss();
     var host = document.querySelector('.header-inner') || document.querySelector('.tw-head');
     if (host) {
       var b = document.createElement('button');
@@ -300,6 +346,7 @@
     buildTabbar();
     a11yClicks();
     buildSearch();
+    buildFont();
     recordRecent();
   }
 
