@@ -401,6 +401,12 @@ render();
 </script>
 <script src="/icons.js" defer></script>
 <script src="/nav.js" defer></script>
+<script>
+/* 검색·앱 바로가기에서 온 경우: ?new=1 새 여행 창, ?backup=1 백업 창 */
+(function(){ var q=new URLSearchParams(location.search);
+  if(q.get('new')&&typeof openNew==='function') openNew();
+  else if(q.get('backup')&&typeof openBackup==='function') openBackup(); })();
+</script>
 </main>
 </body>
 </html>

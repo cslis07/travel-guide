@@ -178,10 +178,129 @@
     document.head.appendChild(st);
   }
 
+  /* ── 어디서나 검색(🔍 · Ctrl+K · /) — 여행지·기능·내 여행·내 편명을 한 칸에서 ──
+     인천공항 화면은 자체 빠른 검색(Ctrl+K)이 있어 건너뜀. 검색은 이 기기 안에서만(서버 전송 없음). */
+  var DEST_NAMES = { osaka: '오사카', fukuoka: '후쿠오카', tokyo: '도쿄', kyoto: '교토', sapporo: '삿포로', okinawa: '오키나와 나하',
+    zhangjiajie: '장자제 장가계', guilin: '구이린 계림', shanghai: '상하이', changbaishan: '창바이산 백두산', taipei: '타이베이 대만', hongkong: '홍콩',
+    bangkok: '방콕 태국', danang: '다낭 베트남', bali: '발리 인도네시아', singapore: '싱가포르', nhatrang: '나트랑 베트남', cebu: '세부 필리핀',
+    kotakinabalu: '코타키나발루 말레이시아', jeju: '제주', busan: '부산', gangneung: '강릉', paris: '파리 프랑스' };
+  var FEATURES = [
+    ['🧳', '내 여행', '일정 예산 지출 정산 여행 목록', '/trips'],
+    ['➕', '새 여행 만들기', '여행 추가 만들기', '/trips?new=1'],
+    ['💸', '지출 추가', '돈 쓴 것 기록 가계부', '/trip?quick=expense'],
+    ['🧮', '경비 계산', '예산 견적 총예산 비용', '/estimate'],
+    ['✅', '출국 준비', '할 일 체크리스트 준비물 타임라인', '/prepare'],
+    ['🛂', '입국 준비', '비자 입국 서류 eta', '/prepare#entry'],
+    ['📋', '챙길 물건', '짐 준비물 체크리스트', '/prepare#items'],
+    ['✈', '인천공항 실시간', '공항 icn', '/airport'],
+    ['⭐', '내 편명', '항공편 탑승구 즐겨찾기 편명', '/airport#tab=fav'],
+    ['👥', '출국장 혼잡', '대기 혼잡도 출국장', '/airport#tab=congestion'],
+    ['🅿', '공항 주차', '주차장 주차 요금', '/airport#tab=parking'],
+    ['🚌', '공항 버스·철도', '리무진 공항철도 셔틀', '/airport#tab=transport'],
+    ['🎟', '투어·티켓', '입장권 액티비티 숙소 호텔', '/tours'],
+    ['🗺', '여행지 가이드', '여행지 목록 추천 비교', '/destinations'],
+    ['💱', '환율 계산기', '환율 엔화 달러 바트', '/?open=fx'],
+    ['🔔', '환율 알림', '환율 목표', '/?open=fxalert'],
+    ['📦', '백업·복원', '백업 복원 옮기기', '/trips?backup=1'],
+    ['🔒', '개인정보처리방침', '개인정보', '/privacy']
+  ];
+  function norm(t) { return String(t || '').toLowerCase().replace(/\s+/g, ''); }
+  function searchIndex() {
+    var out = [];
+    try {
+      (JSON.parse(localStorage.getItem('tc_trips_v1') || '[]') || []).forEach(function (t) {
+        if (t && t.id) out.push({ ic: '🧳', t: (t.city || '여행') + ' 여행', sub: (t.start || '') + ' ~ ' + (t.end || ''), k: (t.city || '') + ' 내여행', u: '/trip?id=' + encodeURIComponent(t.id), mine: 1 });
+      });
+    } catch (e) {}
+    try {
+      (JSON.parse(localStorage.getItem('icn_fav_flights') || '[]') || []).forEach(function (f) {
+        var no = f.flightId || f.flightNum || ''; if (no) out.push({ ic: '⭐', t: no, sub: '내 편명', k: no + ' 편명', u: '/airport#tab=fav', mine: 1 });
+      });
+    } catch (e) {}
+    Object.keys(DEST_NAMES).forEach(function (k) { out.push({ ic: '📍', t: DEST_NAMES[k].split(' ')[0] + ' 가이드', sub: '여행지', k: DEST_NAMES[k] + ' ' + k, u: '/' + k }); });
+    FEATURES.forEach(function (f) { out.push({ ic: f[0], t: f[1], sub: '바로가기', k: f[1] + ' ' + f[2], u: f[3] }); });
+    return out;
+  }
+  function escH(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  var SEARCH_CSS = '.tc-sbtn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border:none;border-radius:12px;background:transparent;color:inherit;font-size:18px;cursor:pointer;flex-shrink:0;margin-left:auto}' +
+    '.tc-sbtn:hover{background:rgba(16,24,40,.06)}' +
+    '@media(max-width:900px){.header-inner{position:relative}.header-inner .tc-sbtn{position:absolute;right:8px;top:50%;transform:translateY(-50%);margin:0}}' +
+    '.tc-sov{position:fixed;inset:0;z-index:2000;background:rgba(16,24,40,.45);display:flex;align-items:flex-start;justify-content:center;padding:max(10vh,16px) 16px 16px}' +
+    '.tc-sbox{width:100%;max-width:560px;background:var(--surface,#fff);border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.25);overflow:hidden;color:var(--gray-900,#101828)}' +
+    '.tc-sin{width:100%;border:none;border-bottom:1px solid var(--gray-200,#E4E7EC);padding:16px 18px;font-size:17px;font-family:inherit;outline:none;background:transparent;color:inherit}' +
+    '.tc-sres{max-height:60vh;overflow:auto;padding:6px}' +
+    '.tc-sres a{display:flex;align-items:center;gap:10px;min-height:46px;padding:8px 12px;border-radius:10px;text-decoration:none;color:inherit}' +
+    '.tc-sres a.on,.tc-sres a:hover{background:var(--primary-lt,#EEF4FF)}' +
+    '.tc-sres b{font-weight:700;font-size:15px}.tc-sres small{display:block;color:var(--gray-500,#667085);font-size:12px}' +
+    '.tc-sres .ic{width:26px;text-align:center;font-size:18px}.tc-sempty{padding:18px;color:var(--gray-500,#667085);font-size:14px}';
+  function openSearch() {
+    if (document.querySelector('.tc-sov')) return;
+    var idx = searchIndex(), cur = 0, list = [];
+    var ov = document.createElement('div');
+    ov.className = 'tc-sov';
+    ov.innerHTML = '<div class="tc-sbox" role="dialog" aria-modal="true" aria-label="검색">' +
+      '<input class="tc-sin" type="search" placeholder="여행지·기능·내 여행 검색 (예: 오사카, 환율, 주차)" aria-label="검색어" autocomplete="off">' +
+      '<div class="tc-sres" role="listbox"></div></div>';
+    document.body.appendChild(ov);
+    var inp = ov.querySelector('.tc-sin'), res = ov.querySelector('.tc-sres'), prevFocus = document.activeElement;
+    function close() { if (ov.parentNode) ov.parentNode.removeChild(ov); if (prevFocus && prevFocus.focus) prevFocus.focus(); }
+    function render() {
+      var q = norm(inp.value);
+      list = q ? idx.filter(function (x) { return norm(x.t + ' ' + x.k).indexOf(q) > -1; }).slice(0, 12)
+               : idx.filter(function (x) { return x.mine; }).concat(idx.filter(function (x) { return x.sub === '바로가기'; })).slice(0, 8);
+      cur = 0;
+      res.innerHTML = list.length ? list.map(function (x, i) {
+        return '<a href="' + escH(x.u) + '" role="option"' + (i === 0 ? ' class="on"' : '') + '><span class="ic">' + x.ic + '</span><span><b>' + escH(x.t) + '</b><small>' + escH(x.sub) + '</small></span></a>';
+      }).join('') : '<div class="tc-sempty">찾는 결과가 없어요. 도시 이름이나 기능(환율·주차·지출)으로 찾아보세요.</div>';
+    }
+    function mark() { [].forEach.call(res.querySelectorAll('a'), function (a, i) { a.classList.toggle('on', i === cur); if (i === cur) a.scrollIntoView({ block: 'nearest' }); }); }
+    inp.addEventListener('input', render);
+    inp.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown') { cur = Math.min(cur + 1, list.length - 1); mark(); e.preventDefault(); }
+      else if (e.key === 'ArrowUp') { cur = Math.max(cur - 1, 0); mark(); e.preventDefault(); }
+      else if (e.key === 'Enter' && list[cur]) { e.preventDefault(); var u = list[cur].u; close(); location.href = u; }
+    });
+    ov.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    ov.addEventListener('click', function (e) { if (e.target === ov) close(); else if (e.target.closest && e.target.closest('a')) setTimeout(close, 0); });
+    render(); inp.focus();
+  }
+  window.tcSearch = openSearch;
+
+  /* 최근 본 가이드 — 홈 '최근 본 것' 칩용(이 기기에만, 최대 5개) */
+  function recordRecent() {
+    var last = location.pathname.replace(/\/+$/, '').replace(/\.html$/, '').split('/').pop();
+    if (!DEST_NAMES[last]) return;
+    try {
+      var r = JSON.parse(localStorage.getItem('tc_recent') || '[]').filter(function (x) { return x && x.s !== last; });
+      r.unshift({ s: last, n: DEST_NAMES[last].split(' ')[0], t: Date.now() });
+      localStorage.setItem('tc_recent', JSON.stringify(r.slice(0, 5)));
+    } catch (e) {}
+  }
+
+  function buildSearch() {
+    if (/\/airport(\.html)?$/.test(location.pathname)) return;   // 인천공항은 자체 빠른 검색
+    var st = document.createElement('style'); st.textContent = SEARCH_CSS; document.head.appendChild(st);
+    var host = document.querySelector('.header-inner') || document.querySelector('.tw-head');
+    if (host) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'tc-sbtn'; b.setAttribute('aria-label', '검색 (Ctrl+K)'); b.title = '검색 (Ctrl+K)';
+      b.textContent = '🔍'; b.addEventListener('click', openSearch);
+      host.appendChild(b);
+    }
+    document.addEventListener('keydown', function (e) {
+      var tag = (e.target && e.target.tagName) || '';
+      if (((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) || (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test(tag) && !e.target.isContentEditable)) {
+        e.preventDefault(); openSearch();
+      }
+    });
+  }
+
   function build() {
     buildHeader();
     buildTabbar();
     a11yClicks();
+    buildSearch();
+    recordRecent();
   }
 
   if (document.readyState === 'loading') {

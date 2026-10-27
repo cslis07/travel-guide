@@ -230,6 +230,7 @@
   .amtin .krw{font-size:12px;color:var(--gray-500);font-weight:600}
   .segrow{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px;justify-content:center}
   .seg{font-family:inherit;padding:8px 12px;border-radius:11px;border:1px solid var(--gray-200);background:var(--surface,#fff);font-size:12.5px;font-weight:700;color:var(--gray-600);cursor:pointer}
+  .memochips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 0 10px;padding-bottom:2px}.memochips::-webkit-scrollbar{display:none}.memochips .seg{white-space:nowrap;flex-shrink:0}
   .seg.cur-more{font-size:16px;padding:5px 8px}
   #sheetBody input:not([type=checkbox]):not([type=radio]):not([type=file]):not(.val),#sheetBody select,#sheetBody textarea{font-size:16px}   /* iOS 입력 확대 방지 */
   .seg.on{background:var(--primary);color:#fff;border-color:var(--primary)}
@@ -287,7 +288,12 @@
 var T = window.TripStore; T.seedIfEmpty(); T.refreshRates();
 var tid = new URLSearchParams(location.search).get('id');
 var trip = T.get(tid);
-if(!trip){ var a=T.all(); if(a.length){ location.replace('/trip?id='+a[0].id); } else { location.replace('/trips'); } }
+if(!trip){
+  var a=T.all(), _td=todayISO(), _q=new URLSearchParams(location.search).get('quick');
+  var _pick=a.filter(function(t){return t.start<=_td&&_td<=t.end;})[0]
+    || a.filter(function(t){return t.start>_td;}).sort(function(x,y){return x.start<y.start?-1:1;})[0] || a[0];
+  if(_pick){ location.replace('/trip?id='+_pick.id+(_q?'&quick='+encodeURIComponent(_q):'')); } else { location.replace('/trips'+(_q?'?new=1':'')); }
+}
 var curTab = (function(t){ return ['plan','budget','resv','pack','air'].indexOf(t)>-1 ? t : 'plan'; })(new URLSearchParams(location.search).get('tab')), curDay = 0;
 if(trip){ var _ti=T.daysBetween(trip.start,todayISO()); if(_ti>=0&&_ti<T.tripLength(trip)) curDay=_ti; }   // 여행 중이면 오늘 일차를 먼저
 function sv(){ return '/svg'; }
@@ -795,7 +801,6 @@ function openExpenseSheet(expId){
     editExp=e.id;
     exState={cur:e.currency||'KRW',cat:e.category||'etc',method:e.method||'card',paidBy:e.paidBy||members[0]||'나',paidFor:(e.paidFor&&e.paidFor.length?e.paidFor.slice():members.slice())};
   } else {
-    if(!T.budgetTotal(trip)){ openBudgetSheet(); return; }
     var last=(trip.expenses||[]).slice(-1)[0];
     exState={cur:(last&&last.currency)||T.curOf(trip.city),cat:'food',method:'card',paidBy:members[0]||'나',paidFor:members.slice()};
   }
@@ -813,12 +818,13 @@ function openExpenseSheet(expId){
       +'</div>';
   }
   openSheet('<h3>'+(editExp?'지출 수정':'지출 추가')+'</h3>'
-    +'<div class="amtin"><input class="val" id="ex-amt" type="number" inputmode="decimal" placeholder="0" value="'+(e?(e.amount||''):'')+'" oninput="updKRW()"><div class="krw" id="ex-krw">≈ '+won(e?e.krw:0)+'</div><div id="ex-fxnote" style="font-size:10px;color:var(--gray-500);margin-top:2px"></div></div>'
+    +'<div class="amtin"><input class="val" id="ex-amt" type="number" inputmode="decimal" enterkeyhint="done" placeholder="0" value="'+(e?(e.amount||''):'')+'" oninput="updKRW()" onkeydown="if(event.key===\'Enter\'){event.preventDefault();saveExpense();}"><div class="krw" id="ex-krw">≈ '+won(e?e.krw:0)+'</div><div id="ex-fxnote" style="font-size:10px;color:var(--gray-500);margin-top:2px"></div></div>'
     +'<div class="segrow" id="ex-cur">'+curs.map(function(c){return '<button type="button" class="seg'+(c===exState.cur?' on':'')+'" data-cur="'+c+'" onclick="pickCur(this)">'+c+'</button>';}).join('')
     +'<select class="seg cur-more" aria-label="다른 통화" onchange="pickCurMore(this)"><option value="">다른 통화</option>'+more.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></div>'
     +'<div class="catgrid">'+catg+'</div>'
     +'<div class="segrow"><span class="seg'+(exState.method==='card'?' on':'')+'" data-m="card" onclick="pickM(this)">💳 카드</span><span class="seg'+(exState.method==='cash'?' on':'')+'" data-m="cash" onclick="pickM(this)">💵 현금</span></div>'
     +people
+    +memoChips()
     +'<div class="row2"><div><label class="fl" for="ex-memo">메모 (선택)</label><input class="in" id="ex-memo" placeholder="예: 이치란 라멘" value="'+(e?esc(e.memo||''):'')+'"></div>'
     +'<div style="flex:0 0 150px"><label class="fl" for="ex-date">날짜</label><input class="in" id="ex-date" type="date" value="'+esc((e&&e.date)||defaultExpDate())+'"></div></div>'
     +'<label class="fl">🧾 영수증 사진 (선택)</label><div class="rc-row"><img id="ex-rc-prev" class="rc-prev" alt="영수증 미리보기" hidden onclick="if(this.src)viewReceiptSrc(this.src)">'
@@ -828,6 +834,7 @@ function openExpenseSheet(expId){
     +(editExp?'<button class="save" style="background:var(--gray-100);color:var(--danger);margin-top:8px" onclick="deleteExpense()">삭제</button>':''));
   rcState={data:null,remove:false};
   if(e&&e.hasReceipt) rcGet(e.id,function(d){ if(d) showRcPrev(d); });
+  if(!e) setTimeout(function(){ var a=document.getElementById('ex-amt'); if(a) a.focus(); },60);   // 새 지출: 바로 숫자 입력
   setFxNote();
   T.refreshRates(function(ok){ if(ok){ updKRW(); setFxNote(); } });
 }
@@ -839,6 +846,18 @@ function setFxNote(){
   var fx=T.fxState&&T.fxState();
   var src=(fx&&fx.live)?'실시간 환율':'기준 환율(근사)';
   el.textContent=(per? unit.toLocaleString()+' '+exState.cur+' ≈ '+Math.round(per*unit).toLocaleString()+'원 · ' : '')+src;
+}
+/* 빠른 입력: 최근 메모 6개(같은 메모는 한 번) — 누르면 메모와 그때의 분류를 채움 */
+function memoChips(){
+  var seen={}, out=[];
+  (trip.expenses||[]).slice().reverse().forEach(function(x){ var m=(x.memo||'').trim(); if(m&&!seen[m]&&out.length<6){ seen[m]=1; out.push(x); } });
+  if(!out.length) return '';
+  return '<div class="memochips" aria-label="최근 메모">'+out.map(function(x){ return '<button type="button" class="seg" data-memo="'+esc(x.memo)+'" data-cat="'+esc(x.category||'')+'" onclick="pickMemo(this)">'+esc(x.memo)+'</button>'; }).join('')+'</div>';
+}
+function pickMemo(b){
+  var m=document.getElementById('ex-memo'); if(m) m.value=b.dataset.memo;
+  var c=b.dataset.cat&&document.querySelector('.catpick[data-cat="'+b.dataset.cat+'"]'); if(c) pickCat(c);
+  var a=document.getElementById('ex-amt'); if(a) a.focus();
 }
 function pickCur(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cur=el.dataset.cur; updKRW(); }
 function pickCurMore(sel){
@@ -1623,7 +1642,9 @@ function shareSettlement(){
   }catch(e){ prompt('복사해 공유하세요', text); }
 }
 
-if(trip){ renderShell(); renderClock(); }
+if(trip){ renderShell(); renderClock();
+  if(new URLSearchParams(location.search).get('quick')==='expense'){ setTab('budget'); openExpenseSheet(); }   // 앱 바로가기·검색 '지출 추가'
+}
 function offlineNote(){ if(!navigator.onLine) toast('오프라인이에요 — 이 폰에 저장된 내용으로 보여요'); }
 window.addEventListener('offline',offlineNote); setTimeout(offlineNote,800);
 

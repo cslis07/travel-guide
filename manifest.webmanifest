@@ -6,13 +6,20 @@
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#1B4FD8",
   "lang": "ko-KR",
   "dir": "ltr",
-  "categories": ["travel", "navigation", "utilities"],
+  "categories": [
+    "travel",
+    "navigation",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "/icons/icon-192.png",
@@ -35,18 +42,56 @@
   ],
   "shortcuts": [
     {
-      "name": "인천공항 실시간",
-      "short_name": "인천공항",
-      "description": "혼잡도·주차·항공편 실시간 조회",
-      "url": "/airport?source=pwa-shortcut",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "name": "내 여행",
+      "short_name": "내 여행",
+      "description": "일정·예산·준비물",
+      "url": "/trips?source=pwa-shortcut",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     },
     {
-      "name": "투어·숙소 검색",
-      "short_name": "투어검색",
-      "description": "투어·티켓·숙소·항공권 메타서치",
-      "url": "/tours?source=pwa-shortcut",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "name": "지출 추가",
+      "short_name": "지출 추가",
+      "description": "지금 여행에 쓴 돈 바로 기록",
+      "url": "/trip?quick=expense&source=pwa-shortcut",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "인천공항 실시간",
+      "short_name": "인천공항",
+      "description": "출국장 혼잡·내 편명·주차",
+      "url": "/airport?source=pwa-shortcut",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "출국 준비",
+      "short_name": "출국 준비",
+      "description": "지금 할 일·챙길 물건",
+      "url": "/prepare?source=pwa-shortcut",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }

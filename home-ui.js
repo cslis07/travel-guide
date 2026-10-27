@@ -16,9 +16,34 @@
   var owed = trips.filter(function (t) { return t.end < today && T.daysBetween(t.end, today) <= 30 && T.settlements(t).length; })
     .sort(function (a, b) { return a.end > b.end ? -1 : 1; })[0];
   var t = going || next || owed;
-  if (!t) return;
+  if (!t) {
+    /* 처음 방문 안내 3단계 — 여행이 하나도 없고, 닫은 적 없을 때만 */
+    var seen = false; try { seen = !!localStorage.getItem('tc_onboard_done'); } catch (e) {}
+    if (trips.length || seen) return;
+    box.innerHTML = '<div class="hx-onb" role="region" aria-label="처음 방문 안내"><div class="hx-onb-h"><b>처음이세요? 3단계면 준비 끝</b>'
+      + '<button type="button" class="hx-onb-x" aria-label="안내 닫기">✕</button></div><ol>'
+      + '<li><a href="/trips?new=1"><span>①</span><b>여행 만들기</b><small>도시·날짜만 넣으면 일정·예산·준비물 칸이 생겨요</small></a></li>'
+      + '<li><a href="/prepare"><span>②</span><b>출국 준비</b><small>출발일 기준으로 언제 뭘 할지 알려 줘요</small></a></li>'
+      + '<li><a href="/airport"><span>③</span><b>공항 가는 날</b><small>출국장 혼잡·내 편명 탑승구를 실시간으로</small></a></li></ol></div>';
+    box.querySelector('.hx-onb-x').addEventListener('click', function () { try { localStorage.setItem('tc_onboard_done', '1'); } catch (e) {} box.innerHTML = ''; });
+    return;
+  }
 
   var head, line, cta, tab = '';
+  var fm = t === going && T.daysBetween(t.start, today) === 0 && t.flight && /^(\d{1,2}):(\d{2})/.exec(t.flight.dep || '');
+  if (fm && (+fm[1]) * 60 + (+fm[2]) > now.getHours() * 60 + now.getMinutes()) {
+    /* 출국 당일(비행기 뜨기 전): 편명·출발 시각·집에서 나갈 시각 + 공항 바로가기 — 내 여행 공항 탭과 같은 계산 */
+    var f = t.flight, dep = (+fm[1]) * 60 + (+fm[2]);
+    var dom = /^(GMP|CJU|PUS|TAE|CJJ|KWJ|RSU|USN|MWX|YNY|KUV|WJU|HIN|KPO)$/i;
+    var leave = dep - ((dom.test(f.from || '') && dom.test(f.to || '')) ? 60 : 150) - (t.airportMins || 60);
+    var hmS = function (m) { m = (m + 1440) % 1440; return pad(Math.floor(m / 60)) + ':' + pad(m % 60); };
+    box.innerHTML = '<div class="hx-dep" role="region" aria-label="오늘 출국">'
+      + '<div class="hx-dep-h"><small>오늘 출국 ✈ ' + esc(t.city) + '</small><strong>' + esc(f.no || '') + ' ' + hmS(dep) + ' 출발</strong>'
+      + '<span>🚗 집에서 <b>' + hmS(leave) + '</b>에 나가세요 · 국제선 2시간 30분 전 공항 도착 기준</span></div>'
+      + '<div class="hx-dep-b"><a href="/trip?id=' + encodeURIComponent(t.id) + '&tab=air">탑승구·카운터</a><a href="/airport#tab=congestion">출국장 혼잡</a>'
+      + (f.no ? '<a href="/airport#tab=fav">내 편명</a>' : '') + '</div></div>';
+    return;
+  }
   if (t === going) {
     var di = T.daysBetween(t.start, today), items = ((t.days && t.days[di] && t.days[di].items) || []).slice()
       .sort(function (a, b) { return (a.time || '99') < (b.time || '99') ? -1 : 1; });
@@ -188,4 +213,27 @@ function hxFx() {
     rail.addEventListener('touchend', hold(false));
     rail.addEventListener('touchcancel', hold(false));
   });
+})();
+
+/* 검색에서 온 경우: /?open=fx 환율 계산기, /?open=fxalert 환율 알림 */
+(function () {
+  var o = new URLSearchParams(location.search).get('open');
+  if (o === 'fx' && typeof hxFx === 'function') hxFx();
+  else if (o === 'fxalert' && typeof hxFxAlert === 'function') hxFxAlert();
+})();
+
+/* 최근 본 것 이어보기 — 최근 본 가이드 2곳 + 내 편명 1개를 칩으로(이 기기 기록만) */
+(function () {
+  'use strict';
+  var chips = document.querySelector('.hx-chips'); if (!chips) return;
+  var items = [];
+  try { (JSON.parse(localStorage.getItem('tc_recent') || '[]') || []).slice(0, 2).forEach(function (r) { if (r && /^[a-z]+$/.test(r.s)) items.push(['📍', r.n, '/' + r.s]); }); } catch (e) {}
+  try { var f = (JSON.parse(localStorage.getItem('icn_fav_flights') || '[]') || [])[0]; var no = f && (f.flightId || f.flightNum); if (no && /^[A-Z0-9]{2,8}$/i.test(no)) items.push(['⭐', no, '/airport#tab=fav']); } catch (e) {}
+  if (!items.length) return;
+  var row = document.createElement('div');
+  row.className = 'container hx-recent'; row.setAttribute('aria-label', '최근 본 것');
+  row.innerHTML = '<span class="hx-recent-l">최근 본</span>' + items.map(function (x) {
+    return '<a href="' + x[2] + '">' + x[0] + ' ' + String(x[1]).replace(/[&<>"]/g, '') + '</a>';
+  }).join('');
+  chips.parentNode.insertBefore(row, chips);
 })();

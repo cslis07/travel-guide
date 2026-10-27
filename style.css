@@ -2934,3 +2934,25 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 @keyframes hx-marquee{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 5px))}}
 @media (max-width:768px){.hx-rail.hx-marquee{width:calc(100% - 32px)}.hx-track .hx-card{flex-basis:220px}}
 @media (prefers-reduced-motion:reduce){.hx-track{animation:none}}
+
+/* 홈: 최근 본 것 · 출국 당일 카드 · 처음 방문 안내 */
+.hx-recent{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 auto 10px}
+.hx-recent-l{font-size:12px;font-weight:700;color:var(--gray-500);margin-right:2px}
+.hx-recent a{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border-radius:999px;background:var(--surface,#fff);border:1px solid var(--gray-200);font-size:13px;font-weight:700;color:var(--gray-800);text-decoration:none}
+.hx-dep{background:linear-gradient(135deg,#1B4FD8,#0ea5e9);color:#fff;border-radius:14px;padding:14px 16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(27,79,216,.25)}
+.hx-dep-h{display:flex;flex-direction:column;gap:2px}
+.hx-dep-h small{font-size:12px;font-weight:700;opacity:.9}
+.hx-dep-h strong{font-size:20px;font-weight:850;letter-spacing:-.02em}
+.hx-dep-h span{font-size:13px;opacity:.95}.hx-dep-h b{font-size:15px}
+.hx-dep-b{display:flex;gap:8px;margin-top:10px}
+.hx-dep-b a{flex:1;min-height:40px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(255,255,255,.18);color:#fff;font-size:13px;font-weight:800;text-decoration:none}
+.hx-onb{background:var(--surface,#fff);border-radius:14px;padding:14px 16px;margin-bottom:12px;box-shadow:0 2px 10px rgba(16,24,40,.06)}
+.hx-onb-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.hx-onb-h b{font-size:15px;color:var(--gray-900)}
+.hx-onb-x{width:32px;height:32px;border:none;background:none;color:var(--gray-500);font-size:16px;cursor:pointer;border-radius:8px}
+.hx-onb ol{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.hx-onb ol{grid-template-columns:repeat(3,1fr)}
+@media(max-width:759px){.hx-onb{padding:8px 10px}.hx-onb-h{margin-bottom:4px}.hx-onb-h b{font-size:13.5px}.hx-onb-x{width:28px;height:28px}.hx-onb small{display:none}.hx-onb a{display:flex;justify-content:center;gap:4px;padding:0 4px;min-height:38px}.hx-onb a span{font-size:13px}.hx-onb a b{font-size:12.5px;white-space:nowrap}}
+.hx-onb a{display:grid;grid-template-columns:28px 1fr;align-items:center;gap:0 8px;padding:10px;border-radius:10px;background:var(--gray-50);text-decoration:none;color:inherit;min-height:48px}
+.hx-onb a span{grid-row:span 2;font-size:18px;font-weight:850;color:var(--primary);text-align:center}
+.hx-onb a b{font-size:14px;color:var(--gray-900)}.hx-onb a small{font-size:12px;color:var(--gray-600)}

@@ -14,6 +14,32 @@
   <style>
     .dest-page{padding:24px 0 40px}
     .dest-page .section-header{margin-bottom:16px}
+    .dest-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:-4px 0 14px}
+    .dt-month{min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid var(--gray-200);background:var(--surface,#fff);font:inherit;font-size:13.5px;font-weight:700;color:var(--gray-700);cursor:pointer}
+    .dt-month.on{background:#039855;border-color:#039855;color:#fff}
+    .dt-sort{min-height:40px;padding:0 10px;border-radius:10px;border:1.5px solid var(--gray-200);background:var(--surface,#fff);font:inherit;font-size:16px;color:var(--gray-800);margin-left:auto}
+    .dm-meta{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;color:var(--gray-600);margin:6px 0 2px}
+    .dm-meta .good{color:#039855;font-weight:800}
+    .dm-cmp{min-height:36px;padding:0 12px;border-radius:999px;border:1.5px solid var(--gray-300);background:var(--surface,#fff);font:inherit;font-size:12.5px;font-weight:700;color:var(--gray-700);cursor:pointer;margin-right:6px}
+    .dm-cmp[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:#fff}
+    .cmp-bar{position:fixed;left:0;right:0;bottom:0;z-index:960;display:flex;align-items:center;gap:8px;max-width:760px;margin:0 auto;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(255,255,255,.97);border-top:1px solid var(--gray-200);box-shadow:0 -4px 16px rgba(16,24,40,.08)}
+    @media(max-width:900px){.cmp-bar{bottom:calc(56px + env(safe-area-inset-bottom,0px));padding:8px 12px}}
+    .cmp-bar span{flex:1;font-size:13.5px;font-weight:700;color:var(--gray-800)}
+    .cmp-bar button{min-height:44px;padding:0 14px;border-radius:12px;border:1.5px solid var(--gray-300);background:var(--surface,#fff);font:inherit;font-size:14px;font-weight:800;cursor:pointer}
+    .cmp-bar .go{background:var(--primary);border-color:var(--primary);color:#fff}
+    .cmp-bar .go:disabled{opacity:.45;cursor:default}
+    .cmp-ov{position:fixed;inset:0;z-index:2000;background:rgba(16,24,40,.45);display:flex;align-items:flex-end;justify-content:center}
+    @media(min-width:760px){.cmp-ov{align-items:center}}
+    .cmp-box{width:100%;max-width:760px;max-height:88vh;overflow:auto;background:var(--surface,#fff);border-radius:18px 18px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
+    @media(min-width:760px){.cmp-box{border-radius:18px}}
+    .cmp-box h2{font-size:18px;margin:0 0 4px}.cmp-box .note{font-size:12px;color:var(--gray-500);margin:0 0 12px}
+    .cmp-t{width:100%;border-collapse:collapse;font-size:13.5px;table-layout:fixed}
+    .cmp-t th,.cmp-t td{border-bottom:1px solid var(--gray-100,#F2F4F7);padding:10px 6px;text-align:center;vertical-align:top}
+    .cmp-t th[scope=row]{text-align:left;color:var(--gray-500);font-weight:700;width:76px;font-size:12.5px}
+    .cmp-t thead th{font-size:15px;font-weight:850;color:var(--gray-900)}
+    .cmp-t .best{color:#039855;font-weight:800}
+    .cmp-t a{display:inline-flex;min-height:36px;align-items:center;padding:0 12px;border-radius:10px;background:var(--primary);color:#fff;font-weight:800;text-decoration:none;font-size:13px}
+    .cmp-x{float:right;width:40px;height:40px;border:none;background:none;font-size:18px;cursor:pointer;color:var(--gray-500)}
   </style>
 </head>
 <body>
@@ -48,6 +74,11 @@
         <button class="filter-btn" data-cat="유럽" onclick="filterDest('유럽')">🏰 유럽 <span class="fc">1</span></button>
       </div>
 
+      <div class="dest-tools">
+        <button type="button" class="dt-month" id="dtMonth" aria-pressed="false">🌤 이번 달 추천</button>
+        <label class="sr-only" for="dtSort" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">정렬</label>
+        <select class="dt-sort" id="dtSort"><option value="">추천순</option><option value="price">교통비 낮은순</option><option value="flight">이동 시간 짧은순</option></select>
+      </div>
       <div class="dest-grid" id="destGrid">
 
         <!-- 일본 -->
@@ -404,6 +435,117 @@ function filterDest(cat){
   document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.cat === cat); });
   document.querySelectorAll('#destGrid .dest-card').forEach(function(c){ c.style.display = (cat === '전체' || c.dataset.cat === cat) ? '' : 'none'; });
 }
+</script>
+<script src="/trips.js"></script>
+<script src="/local-info.js"></script>
+<script>
+/* 여행지 고르기: 이번 달 추천 · 정렬 · 2~3곳 비교
+   이동 시간은 인천(국내는 김포·서울역) 출발 직항 기준 대략값, 추천 시기는 날씨·성수기로 흔히 꼽히는 달(참고용). */
+var DM = {
+  '오사카':[1.7,'약 1시간 40분',[3,4,5,10,11]], '후쿠오카':[1.3,'약 1시간 20분',[3,4,5,10,11]], '도쿄':[2.3,'약 2시간 20분',[3,4,5,10,11]],
+  '교토':[1.7,'간사이까지 약 1시간 40분',[3,4,10,11]], '삿포로':[2.8,'약 2시간 50분',[1,2,6,7,8]], '오키나와':[2.3,'약 2시간 20분',[4,5,6,10,11]],
+  '장가계':[3.5,'약 3시간 30분',[4,5,9,10]], '계림':[4,'약 4시간',[4,5,9,10]], '상하이':[2,'약 2시간',[3,4,5,9,10,11]],
+  '백두산':[2.2,'옌지까지 약 2시간 + 차량',[6,7,8,9]], '타이베이':[2.5,'약 2시간 30분',[3,4,10,11,12]], '홍콩':[3.8,'약 3시간 50분',[10,11,12,1]],
+  '방콕':[6,'약 6시간',[11,12,1,2]], '다낭':[4.7,'약 4시간 40분',[2,3,4,5,6,7,8]], '발리':[7,'약 7시간',[4,5,6,7,8,9,10]],
+  '싱가포르':[6.3,'약 6시간 20분',[2,3,4,6,7,8]], '나트랑':[5,'약 5시간',[1,2,3,4,5,6,7,8]], '세부':[4.7,'약 4시간 40분',[12,1,2,3,4,5]],
+  '코타키나발루':[5.2,'약 5시간 10분',[3,4,5,6,7,8,9]], '제주도':[1.2,'김포 약 1시간 10분',[4,5,6,9,10]], '부산':[2.5,'KTX 약 2시간 30분',[4,5,6,9,10,11]],
+  '강릉':[1.8,'KTX 약 1시간 50분',[5,6,7,8,9,10]], '파리':[14,'약 14시간',[4,5,6,9,10]]
+};
+var MON = new Date().getMonth() + 1, grid = document.getElementById('destGrid');
+var cards = [].slice.call(grid.querySelectorAll('.dest-card'));
+cards.forEach(function (c, i) { c.dataset.order = i; });
+function monthsText(m) {   // [3,4,5,10,11] → '3~5·10~11월'
+  var out = [], st = m[0], pv = m[0];
+  for (var i = 1; i <= m.length; i++) { if (m[i] === pv + 1) { pv = m[i]; continue; } out.push(st === pv ? st : st + '~' + pv); st = pv = m[i]; }
+  return out.join('·') + '월';
+}
+function priceOf(c) { var t = (c.querySelector('.dest-price') || {}).textContent || ''; var m = /([\d,]+)원/.exec(t); return m ? +m[1].replace(/,/g, '') : Infinity; }
+function tzDiff(city) {
+  var tz = window.TripStore && TripStore.cityTz ? TripStore.cityTz(city) : '';
+  if (!tz) return '한국과 같아요';
+  var now = new Date(), f = function (z) { var d = new Date(now.toLocaleString('en-US', { timeZone: z })); return d.getTime(); };
+  var h = Math.round((f(tz) - f('Asia/Seoul')) / 36e5);
+  return h === 0 ? '한국과 같아요' : '한국보다 ' + Math.abs(h) + '시간 ' + (h < 0 ? '느림' : '빠름');
+}
+function plugOf(city) {
+  var cc = window.TripStore && TripStore.countryOf ? TripStore.countryOf(city) : '';
+  var li = cc && window.LOCAL_INFO && LOCAL_INFO[cc];
+  return li ? [li.volt + ' · ' + li.plug, li.adapter ? '멀티어댑터 필요' : '한국 플러그 대부분 사용'] : ['220V · 한국과 같아요', '필요 없어요'];
+}
+var picked = [];
+cards.forEach(function (c) {
+  var n = c.dataset.name, d = DM[n]; if (!d) return;
+  var good = d[2].indexOf(MON) > -1;
+  c.dataset.good = good ? '1' : '';
+  var meta = document.createElement('div');
+  meta.className = 'dm-meta';
+  meta.innerHTML = '<span>✈ ' + d[1] + '</span><span' + (good ? ' class="good"' : '') + '>🌤 ' + monthsText(d[2]) + (good ? ' · 지금 좋아요' : '') + '</span>';
+  var p = c.querySelector('.dest-body p'); if (p) p.parentNode.insertBefore(meta, p.nextSibling);
+  var b = document.createElement('button');
+  b.type = 'button'; b.className = 'dm-cmp'; b.setAttribute('aria-pressed', 'false'); b.textContent = '＋ 비교';
+  b.addEventListener('click', function () { toggleCmp(n, b); });
+  var row = c.querySelector('.dest-price-row'); if (row) row.insertBefore(b, row.querySelector('.dest-btn'));
+});
+function apply() {
+  var only = document.getElementById('dtMonth').getAttribute('aria-pressed') === 'true', sort = document.getElementById('dtSort').value;
+  var cat = (document.querySelector('.filter-btn.active') || {}).dataset; cat = cat ? cat.cat : '전체';
+  cards.slice().sort(function (a, b) {
+    if (sort === 'price') return priceOf(a) - priceOf(b);
+    if (sort === 'flight') return (DM[a.dataset.name] || [99])[0] - (DM[b.dataset.name] || [99])[0];
+    return a.dataset.order - b.dataset.order;
+  }).forEach(function (c) {
+    grid.appendChild(c);
+    c.style.display = ((cat === '전체' || c.dataset.cat === cat) && (!only || c.dataset.good)) ? '' : 'none';
+  });
+}
+filterDest = function (cat) { document.querySelectorAll('.filter-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.cat === cat); }); apply(); };
+document.getElementById('dtMonth').textContent = '🌤 ' + MON + '월에 가기 좋은 곳';
+document.getElementById('dtMonth').addEventListener('click', function () { this.setAttribute('aria-pressed', this.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); this.classList.toggle('on'); apply(); });
+document.getElementById('dtSort').addEventListener('change', apply);
+
+/* 비교: 최대 3곳 */
+var bar = document.createElement('div');
+bar.className = 'cmp-bar'; bar.hidden = true;
+bar.innerHTML = '<span id="cmpTxt"></span><button type="button" id="cmpClear">지우기</button><button type="button" class="go" id="cmpGo">비교하기</button>';
+document.body.appendChild(bar);
+function refreshBar() {
+  bar.hidden = !picked.length;
+  document.getElementById('cmpTxt').textContent = picked.join(' · ') + (picked.length < 2 ? ' — 1곳 더 고르세요' : '');
+  document.getElementById('cmpGo').disabled = picked.length < 2;
+  document.body.style.paddingBottom = picked.length ? 'calc(130px + env(safe-area-inset-bottom,0px))' : '';
+}
+function toggleCmp(n, b) {
+  var i = picked.indexOf(n);
+  if (i > -1) picked.splice(i, 1);
+  else { if (picked.length >= 3) { alert('비교는 3곳까지 할 수 있어요'); return; } picked.push(n); }
+  document.querySelectorAll('.dest-card').forEach(function (c) { var x = c.querySelector('.dm-cmp'); if (x) { var on = picked.indexOf(c.dataset.name) > -1; x.setAttribute('aria-pressed', on); x.textContent = on ? '✓ 비교' : '＋ 비교'; } });
+  refreshBar();
+}
+document.getElementById('cmpClear').addEventListener('click', function () { picked = []; refreshBar(); document.querySelectorAll('.dm-cmp').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); x.textContent = '＋ 비교'; }); });
+document.getElementById('cmpGo').addEventListener('click', function () {
+  var cs = picked.map(function (n) { return cards.filter(function (c) { return c.dataset.name === n; })[0]; });
+  var prices = cs.map(priceOf), flights = picked.map(function (n) { return DM[n][0]; });
+  var minP = Math.min.apply(null, prices), minF = Math.min.apply(null, flights);
+  var row = function (label, f) { return '<tr><th scope="row">' + label + '</th>' + picked.map(f).join('') + '</tr>'; };
+  var html = '<button type="button" class="cmp-x" aria-label="닫기">✕</button><h2>여행지 비교</h2><p class="note">항공권은 2026년 5월 기준 참고가, 이동 시간·추천 시기는 대략값이에요.</p>'
+    + '<table class="cmp-t"><thead><tr><th scope="row"></th>' + picked.map(function (n) { return '<th scope="col">' + n + '</th>'; }).join('') + '</tr></thead><tbody>'
+    + row('항공권', function (n, i) { var t = (cs[i].querySelector('.dest-price') || {}).textContent || '—'; return '<td' + (prices[i] === minP && isFinite(minP) ? ' class="best"' : '') + '>' + t.replace('항공권 ', '') + '</td>'; })
+    + row('이동 시간', function (n, i) { return '<td' + (flights[i] === minF ? ' class="best"' : '') + '>' + DM[n][1] + '</td>'; })
+    + row('시차', function (n) { return '<td>' + tzDiff(n) + '</td>'; })
+    + row('전압·플러그', function (n) { return '<td>' + plugOf(n)[0] + '</td>'; })
+    + row('어댑터', function (n) { return '<td>' + plugOf(n)[1] + '</td>'; })
+    + row('가기 좋은 달', function (n) { var g = DM[n][2].indexOf(MON) > -1; return '<td' + (g ? ' class="best"' : '') + '>' + monthsText(DM[n][2]) + (g ? '<br>(지금 좋아요)' : '') + '</td>'; })
+    + row('', function (n, i) { var a = cs[i].querySelector('.dest-btn'); return '<td><a href="' + a.getAttribute('href') + '">가이드</a></td>'; })
+    + '</tbody></table>';
+  var ov = document.createElement('div');
+  ov.className = 'cmp-ov';
+  ov.innerHTML = '<div class="cmp-box" role="dialog" aria-modal="true" aria-label="여행지 비교">' + html + '</div>';
+  document.body.appendChild(ov);
+  var close = function () { ov.remove(); };
+  ov.addEventListener('click', function (e) { if (e.target === ov || e.target.closest('.cmp-x')) close(); });
+  document.addEventListener('keydown', function k(e) { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', k); } });
+  ov.querySelector('.cmp-x').focus();
+});
 </script>
 <script src="/affiliates.js"></script>
 <script src="/pwa-install.js" defer></script>
