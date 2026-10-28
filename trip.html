@@ -29,11 +29,17 @@
   .tl-addr{font-size:11.5px!important;color:var(--gray-500)!important;word-break:break-all}
   .td-go{flex:0 0 auto;padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.22);color:inherit;font-size:12px;font-weight:800;text-decoration:none}
   .rv-addr{margin-top:3px;word-break:break-all}
-  .lo{border-radius:14px;padding:12px 13px;margin-bottom:12px;background:var(--accent-lt,#fff4e0);border:1px solid var(--gray-200)}
+  .cx-chip{display:inline-block;margin-top:5px;padding:3px 9px;border-radius:999px;background:var(--gray-100);color:var(--gray-700);font-size:11.5px;font-weight:800}
+  .cx-chip.soon{background:#fff4e0;color:#a15c00}.cx-chip.today{background:#fde7e9;color:var(--danger)}.cx-chip.past{opacity:.6;text-decoration:line-through}
+  .cx-ban{border-radius:12px;color:#1d2939;padding:11px 13px;margin-bottom:12px;background:#fff4e0;border:1px solid #f3d39b;color:#7a4500;font-size:13px;line-height:1.45}
+  .wal{border-radius:14px;color:#1d2939;padding:12px 13px;margin-bottom:12px;background:#e7f7ef;border:1px solid #b6e3c9}.wal.low{background:#fff4e0;border-color:#f3d39b}.wal.neg{background:#fde7e9;border-color:#f5b5bc}
+  .wal-t{font-size:13.5px;font-weight:700;line-height:1.45}.wal-t span{color:var(--gray-500);font-weight:600;font-size:12px}.wal small{display:block;font-size:12px;color:var(--gray-600,#555);margin-top:4px;line-height:1.5}
+  .ex-wal{font-size:12.5px;font-weight:800;color:var(--success);margin-top:6px}.ex-wal:empty{display:none}
+  .lo{border-radius:14px;color:#1d2939;padding:12px 13px;margin-bottom:12px;background:var(--accent-lt,#fff4e0);border:1px solid var(--gray-200)}
   .lo-t{font-size:13.5px;font-weight:700;line-height:1.45}.lo-t span{color:var(--gray-500);font-weight:600;font-size:12px}.lo small{display:block;font-size:12px;color:var(--gray-600,#555);margin-top:4px;line-height:1.5}
   .lo-b{display:flex;gap:8px;margin-top:10px}.lo-b button{flex:1;min-height:38px;border:1px solid var(--gray-200);border-radius:10px;background:var(--surface,#fff);color:inherit;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
   .lo-b button.on{background:var(--primary);border-color:var(--primary);color:#fff}
-  .pp{border-radius:14px;padding:12px 13px;margin-bottom:12px;background:var(--gray-50,#f6f7f9);border:1px solid var(--gray-200)}
+  .pp{border-radius:14px;color:#1d2939;padding:12px 13px;margin-bottom:12px;background:var(--gray-50,#f6f7f9);border:1px solid var(--gray-200)}
   .pp-t{font-size:13px;font-weight:800;line-height:1.45}.pp small{display:block;font-size:11px;color:var(--gray-500);margin-top:6px}
   .pp-in{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;font-weight:700}.pp-in .in{flex:1;margin:0}
   .pp-bad{background:#fde7e9;border-color:#f5b5bc}.pp-bad .pp-t{color:var(--danger)}
@@ -166,7 +172,21 @@
   .ps-row{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--gray-100);font-size:13.5px;cursor:pointer}.ps-row input{margin-top:3px;width:18px;height:18px}
   .ps-row small{display:block;font-size:11.5px;color:var(--primary);font-weight:700;margin-top:2px}.ps-warn{font-style:normal;color:var(--danger);font-size:11.5px;font-weight:700}
   .ps-none{font-size:13px;color:var(--gray-600);background:var(--gray-50);border-radius:10px;padding:12px;margin-top:10px}
-  .tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.tools.t4 button{flex:1 1 calc(50% - 4px)}.tools button{flex:1;display:flex;align-items:center;gap:8px;min-height:56px;padding:8px 10px;border:1px solid var(--gray-200);border-radius:14px;background:var(--surface,#fff);font:inherit;font-size:20px;cursor:pointer;text-align:left}
+  .tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.tools.t4 button{flex:1 1 calc(50% - 4px)}
+  #printBox{display:none}
+  @media print{
+    body.printing>*:not(#printBox){display:none!important} body.printing #printBox{display:block!important}
+    body.printing{background:#fff!important;color:#111!important;zoom:1} html{zoom:1!important}
+    @page{size:A4;margin:12mm}
+    #printBox{font-size:11pt;line-height:1.45;color:#111}
+    #printBox .pt-h h1{font-size:20pt;margin:0}#printBox .pt-h p{margin:2px 0 8px;color:#444}
+    #printBox h2{font-size:12.5pt;margin:12px 0 4px;padding-bottom:2px;border-bottom:1.5px solid #222;break-after:avoid}
+    #printBox table{width:100%;border-collapse:collapse}#printBox th,#printBox td{text-align:left;vertical-align:top;padding:4px 6px;border-bottom:1px solid #ccc}
+    #printBox th{width:28%;font-weight:700}#printBox tr{break-inside:avoid}#printBox small{color:#555}
+    #printBox .pt-addr{border:2px solid #111;border-radius:8px;padding:8px 12px}#printBox .pt-addr small{display:block;font-size:12pt;color:#111}
+    #printBox .pt-addr b{display:block;font-size:18pt;line-height:1.3;margin:2px 0}#printBox .pt-addr span{font-size:10pt;color:#444}
+    #printBox .pt-f{margin-top:14px;font-size:8.5pt;color:#666}
+  }.tools button{flex:1;display:flex;align-items:center;gap:8px;min-height:56px;padding:8px 10px;border:1px solid var(--gray-200);border-radius:14px;background:var(--surface,#fff);font:inherit;font-size:20px;cursor:pointer;text-align:left}
   .tools span{font-size:11.5px;font-weight:800;color:var(--gray-700);line-height:1.3}
   .phr{display:flex;align-items:center;gap:8px;border-top:1px solid var(--gray-100);padding:8px 0}.phr-t{flex:1;cursor:pointer}
   .phr-t small{display:block;font-size:11.5px;color:var(--gray-500)}.phr-t b{display:block;font-size:17px;font-weight:800;color:var(--gray-900)}.phr-t span{font-size:12px;color:var(--primary);font-weight:600}
@@ -409,7 +429,8 @@ function panePlan(){
     + '<div class="addrow" onclick="openItemSheet()">＋ 장소·메모·예약 추가</div>'
     + journalCard()
     + mapBtn
-    + '<button class="seg" style="width:100%;margin-top:8px" onclick="exportICS()">📅 캘린더(.ics)로 내보내기 <small style="color:var(--gray-500)">일정·예약·준비물 마감</small></button>';
+    + '<button class="seg" style="width:100%;margin-top:8px" onclick="exportICS()">📅 캘린더(.ics)로 내보내기 <small style="color:var(--gray-500)">일정·예약·준비물 마감</small></button>'
+    + '<button class="seg" style="width:100%;margin-top:8px" onclick="printTrip()">🖨 한 장으로 출력·PDF 저장 <small style="color:var(--gray-500)">배터리·데이터 대비 · 부모님께</small></button>';
 }
 function setDay(i){ curDay=i; renderPane(); }
 function moveItem(dayIdx,id,dir){ T.moveDayItem(tid,dayIdx,id,dir); reget(); renderShell(); }
@@ -502,6 +523,14 @@ function exportICS(mode){
     n++; L.push('BEGIN:VEVENT'); L.push('UID:tc-'+trip.id+'-'+r.id+'@travelcost.co.kr'); L.push('DTSTAMP:'+dtstamp);
     L.push('DTSTART;VALUE=DATE:'+dateCompact(trip.start)); L.push('DTEND;VALUE=DATE:'+nextDay(trip.end));
     L.push('SUMMARY:'+icsEsc('🎫 '+r.title)); if(r.detail) L.push('DESCRIPTION:'+icsEsc(r.detail)); L.push('END:VEVENT');
+    if(r.cancelBy && r.cancelBy>=todayISO()){   // 무료 취소 마감: 전날 하루 일정 + 아침 9시 알림
+      var cd=new Date(r.cancelBy+'T00:00:00'); cd.setDate(cd.getDate()-1); var cs=cd.getFullYear()+'-'+pad(cd.getMonth()+1)+'-'+pad(cd.getDate());
+      n++; L.push('BEGIN:VEVENT'); L.push('UID:tc-'+trip.id+'-'+r.id+'-cancel@travelcost.co.kr'); L.push('DTSTAMP:'+dtstamp);
+      L.push('DTSTART;VALUE=DATE:'+dateCompact(cs)); L.push('DTEND;VALUE=DATE:'+nextDay(cs));
+      L.push('SUMMARY:'+icsEsc('⏰ 내일 무료 취소 마감: '+r.title)); L.push('DESCRIPTION:'+icsEsc('마감 '+r.cancelBy+' · 트래블코스트'));
+      L.push('BEGIN:VALARM'); L.push('ACTION:DISPLAY'); L.push('DESCRIPTION:'+icsEsc('무료 취소 마감 내일: '+r.title)); L.push('TRIGGER;RELATED=START:PT9H'); L.push('END:VALARM');
+      L.push('END:VEVENT');
+    }
   });
   L.push('END:VCALENDAR');
   if(!n){ alert(onlyPack?'마감일(D-7 같은 "언제")이 있는 남은 준비물이 없어요.':'내보낼 일정·예약이 없어요.'); return; }
@@ -556,7 +585,7 @@ function loCard(){
 function openLoSheet(){
   var cur=T.curOf(trip.city), lo=T.leftovers()[cur];
   openSheet('<h3>💴 남은 외화</h3><p class="ps-p">지갑에 남은 현지 돈을 적어 두면, 다음에 같은 통화를 쓰는 여행에서 예산 탭에 알려 드려요. 0을 넣으면 지워요.</p>'
-    +'<div class="row2"><div><label class="fl" for="lo-amt">금액</label><input class="in" id="lo-amt" inputmode="decimal" placeholder="예: 3200" value="'+(lo&&lo.tid===trip.id?lo.amt:'')+'" onkeydown="if(event.key===\'Enter\')saveLo()"></div>'
+    +'<div class="row2"><div><label class="fl" for="lo-amt">금액</label><input class="in" id="lo-amt" inputmode="decimal" placeholder="예: 3200" value="'+(lo&&lo.tid===trip.id?lo.amt:(function(){ var w=T.cashBalance(trip,cur); return w&&w.left>0?w.left:''; })())+'" onkeydown="if(event.key===\'Enter\')saveLo()"></div>'
     +'<div><label class="fl" for="lo-cur">통화</label><select class="in" id="lo-cur">'+T.CURS.filter(function(c){ return c!=='KRW'; }).map(function(c){ return '<option'+(c===cur?' selected':'')+'>'+c+'</option>'; }).join('')+'</select></div></div>'
     +'<button class="save" onclick="saveLo()">저장</button>');
   setTimeout(function(){ var a=document.getElementById('lo-amt'); if(a) a.focus(); },60);
@@ -574,8 +603,40 @@ function dropCarry(){
   var t=T.get(tid), ci=t.carryIn; if(!ci) return;
   T.setLeftover(ci.cur,ci.amt,{city:ci.from,id:ci.tid}); delete t.carryIn; T.upsert(t); reget(); renderShell();
 }
+/* 💵 현금 지갑 — 환전 금액(+가져간 외화) − 현금 지출 (trips.js cashBalance) */
+function walletCard(){
+  var cur=T.curOf(trip.city); if(cur==='KRW') return '';
+  var w=T.cashBalance(trip,cur);
+  if(!w) return '<div class="wal"><div class="wal-t">💵 현금 지갑</div><small>환전한 현금을 넣어 두면 💵현금 지출을 기록할 때마다 빼서 남은 돈을 보여 드려요</small><div class="lo-b"><button class="on" onclick="openCashSheet()">환전 금액 넣기</button></div></div>';
+  var low=w.left<w.total*0.15, neg=w.left<0;
+  return '<div class="wal'+(neg?' neg':low?' low':'')+'"><div class="wal-t">💵 지갑에 <b>'+loAmt(w.left,cur)+'</b> 남음 <span>(≈ '+won(T.toKRW(Math.max(0,w.left),cur))+')</span></div>'
+    +'<small>넣은 현금 '+loAmt(w.total,cur)+' · 현금 지출 '+loAmt(w.used,cur)+(neg?' — 기록보다 더 썼어요. 환전 추가나 지출을 확인하세요':low?' — 얼마 안 남았어요':'')+'</small>'
+    +'<div class="lo-b"><button onclick="openCashSheet()">＋ 환전 추가·수정</button></div></div>';
+}
+function openCashSheet(){
+  var cur=T.curOf(trip.city), ins=trip.cashIn||[];
+  openSheet('<h3>💵 현금 지갑</h3><p class="ps-p">환전한(또는 ATM에서 뽑은) 현금을 넣으세요. 💵현금으로 기록한 지출이 자동으로 빠져요.</p>'
+    +(ins.length?ins.map(function(c,i){ return '<div class="sos-r"><span>'+esc(c.date||'')+' 환전</span><b>'+loAmt(c.amt,c.cur)+'</b><button class="tl-edit" aria-label="이 환전 기록 지우기" onclick="delCash('+i+')">✕</button></div>'; }).join(''):'')
+    +(trip.carryIn&&trip.carryIn.cur===cur?'<div class="sos-r"><span>지난 여행에서 가져감</span><b>'+loAmt(trip.carryIn.amt,cur)+'</b></div>':'')
+    +'<div class="row2" style="margin-top:10px"><div><label class="fl" for="ca-amt">환전 금액</label><input class="in" id="ca-amt" inputmode="decimal" placeholder="예: 30000" onkeydown="if(event.key===\'Enter\')saveCash()"></div>'
+    +'<div><label class="fl" for="ca-cur">통화</label><select class="in" id="ca-cur">'+T.CURS.filter(function(c){ return c!=='KRW'; }).map(function(c){ return '<option'+(c===cur?' selected':'')+'>'+c+'</option>'; }).join('')+'</select></div></div>'
+    +'<button class="save" onclick="saveCash()">추가</button>');
+  setTimeout(function(){ var a=document.getElementById('ca-amt'); if(a) a.focus(); },60);
+}
+function saveCash(){
+  var a=parseFloat(String(document.getElementById('ca-amt').value).replace(/[^\d.]/g,''))||0, c=document.getElementById('ca-cur').value;
+  if(a<=0){ alert('환전 금액을 넣으세요.'); return; }
+  var t=T.get(tid); t.cashIn=t.cashIn||[]; t.cashIn.push({cur:c,amt:a,date:todayISO()}); T.upsert(t); reget(); closeSheet(); renderShell();
+  toast('지갑에 '+loAmt(a,c)+' 넣었어요');
+}
+function delCash(i){ if(!confirm('이 환전 기록을 지울까요?')) return; var t=T.get(tid); (t.cashIn||[]).splice(i,1); T.upsert(t); reget(); openCashSheet(); renderShell(); }
+function walletNote(){   // 지출 창: 현금 고르면 지갑 남은 돈
+  var el=document.getElementById('ex-wal'); if(!el) return;
+  var w=exState.method==='cash'&&T.cashBalance(trip,exState.cur);
+  el.innerHTML=w?'💵 지갑에 '+loAmt(w.left,exState.cur)+' 남음':'';
+}
 function budgetMain(){
-  var lo=loCard();
+  var lo=walletCard()+loCard();
   if(!T.budgetTotal(trip)){
     return lo+'<div class="card" style="text-align:center;padding:26px"><div style="font-size:38px">💰</div><h4 style="margin:8px 0 4px;font-size:15px">총예산을 정해볼까요?</h4><p style="color:var(--gray-500);font-size:12.5px">예산을 넣으면 하루 쓸 수 있는 돈을 자동으로 계산해 드려요.</p><button class="save" style="max-width:220px;margin:14px auto 0" onclick="openBudgetSheet()">예산 설정</button></div>'
       + reportBtn();
@@ -764,10 +825,23 @@ function paneResv(){
   var body=rs.length?rs.map(function(r){var m=RESV[r.type]||RESV.etc;
     var tag=r.status==='confirmed'?'<span class="tag" style="background:#e7f7ef;color:var(--success)">확정</span>':'<span class="tag" style="background:var(--accent-lt);color:var(--accent)">예정</span>';
     return '<div class="resv" style="cursor:pointer" onclick="openResvSheet(\''+r.id+'\')"><div class="ic" style="background:'+m[0]+'">'+svg(m[1])+'</div><div style="flex:1;min-width:0"><h4>'+esc(r.title)+'</h4><div class="rt">'+esc(r.detail||'').replace(/\n/g,'<br>')+'</div>'
+      +cancelChip(r)
       +(r.addr?'<div class="rt rv-addr">📍 '+esc(r.addr)+'</div><button type="button" class="taxi-b" onclick="event.stopPropagation();showAddr(\''+r.id+'\')">🚕 택시 카드 · 길찾기</button>':'')+'</div>'+tag+'</div>';
   }).join(''):'<div class="card" style="color:var(--gray-500);font-size:12.5px;text-align:center;margin-bottom:10px">항공·숙소·투어 예약을 추가해 흐름에 연결하세요.</div>';
   var af=affLink('tours','🎟️ 투어·티켓 최저가 비교 (마이리얼트립·클룩·trip.com)');
-  return paste+body+af;
+  return cancelBanner()+paste+body+af;
+}
+/* ⏰ 무료 취소 마감 칩 — 3일 이내 주황, 오늘 빨강, 지나면 회색 */
+function cancelChip(r){
+  if(!r.cancelBy) return '';
+  var left=T.daysBetween(todayISO(),r.cancelBy), d=T.fmtMD(r.cancelBy)+' '+T.dow(r.cancelBy);
+  var cls=left<0?'past':left===0?'today':left<=3?'soon':'';
+  var txt=left<0?'무료 취소 마감 지남 ('+d+')':left===0?'오늘 무료 취소 마감!':'무료 취소 '+d+'까지 · D-'+left;
+  return '<div class="cx-chip '+cls+'">⏰ '+txt+'</div>';
+}
+function cancelBanner(){
+  var c=T.cancelSoon(trip); if(!c.length) return '';
+  return '<div class="cx-ban">⏰ <b>'+esc(c[0].r.title)+'</b> 무료 취소 '+(c[0].left?'D-'+c[0].left:'오늘 마감')+(c.length>1?' 외 '+(c.length-1)+'건':'')+' — 취소할지 지금 정하세요</div>';
 }
 function affLink(kind,label){
   var url='/tours';
@@ -904,7 +978,7 @@ function openExpenseSheet(expId){
     +'<div class="segrow" id="ex-cur">'+curs.map(function(c){return '<button type="button" class="seg'+(c===exState.cur?' on':'')+'" data-cur="'+c+'" onclick="pickCur(this)">'+c+'</button>';}).join('')
     +'<select class="seg cur-more" aria-label="다른 통화" onchange="pickCurMore(this)"><option value="">다른 통화</option>'+more.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></div>'
     +'<div class="catgrid">'+catg+'</div>'
-    +'<div class="segrow"><span class="seg'+(exState.method==='card'?' on':'')+'" data-m="card" onclick="pickM(this)">💳 카드</span><span class="seg'+(exState.method==='cash'?' on':'')+'" data-m="cash" onclick="pickM(this)">💵 현금</span></div>'
+    +'<div class="segrow"><span class="seg'+(exState.method==='card'?' on':'')+'" data-m="card" onclick="pickM(this)">💳 카드</span><span class="seg'+(exState.method==='cash'?' on':'')+'" data-m="cash" onclick="pickM(this)">💵 현금</span></div><div class="ex-wal" id="ex-wal"></div>'
     +people
     +memoChips()
     +'<div class="row2"><div><label class="fl" for="ex-memo">메모 (선택)</label><input class="in" id="ex-memo" placeholder="예: 이치란 라멘" value="'+(e?esc(e.memo||''):'')+'"></div>'
@@ -916,6 +990,7 @@ function openExpenseSheet(expId){
     +(editExp?'<button class="save" style="background:var(--gray-100);color:var(--danger);margin-top:8px" onclick="deleteExpense()">삭제</button>':''));
   rcState={data:null,remove:false};
   if(e&&e.hasReceipt) rcGet(e.id,function(d){ if(d) showRcPrev(d); });
+  walletNote();
   if(!e) setTimeout(function(){ var a=document.getElementById('ex-amt'); if(a) a.focus(); },60);   // 새 지출: 바로 숫자 입력
   setFxNote();
   T.refreshRates(function(ok){ if(ok){ updKRW(); setFxNote(); } });
@@ -941,7 +1016,7 @@ function pickMemo(b){
   var c=b.dataset.cat&&document.querySelector('.catpick[data-cat="'+b.dataset.cat+'"]'); if(c) pickCat(c);
   var a=document.getElementById('ex-amt'); if(a) a.focus();
 }
-function pickCur(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cur=el.dataset.cur; updKRW(); }
+function pickCur(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cur=el.dataset.cur; updKRW(); walletNote(); }
 function pickCurMore(sel){
   var c=sel.value; if(!c) return;
   var b=document.createElement('button'); b.type='button'; b.className='seg'; b.dataset.cur=c; b.textContent=c; b.setAttribute('onclick','pickCur(this)');
@@ -949,7 +1024,7 @@ function pickCurMore(sel){
   pickCur(b);
 }
 function pickCat(el){ document.querySelectorAll('.catpick').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cat=el.dataset.cat; }
-function pickM(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.method=el.dataset.m; }
+function pickM(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.method=el.dataset.m; walletNote(); }
 function pickPayer(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.paidBy=el.dataset.p; }
 function toggleFor(el){
   var n=el.dataset.f, i=exState.paidFor.indexOf(n);
@@ -987,6 +1062,7 @@ function saveExpense(){
   // 하루 목표(총예산÷여행일수)를 넘긴 날이면 알려 주기
   var tgt=dayTarget(), sum=daySum(data.date);
   if(tgt&&data.date>=trip.start&&data.date<=trip.end&&sum>tgt) toast(dayLabel(data.date)+' 지출 '+won(sum)+' — 하루 목표보다 '+won(sum-tgt)+' 많아요');
+  else if(data.method==='cash'){ var w=T.cashBalance(trip,data.currency); if(w) toast('💵 지갑에 '+loAmt(w.left,data.currency)+' 남았어요'); }
 }
 /* 새 지출 기본 날짜: 여행 중이면 오늘, 아니면 출발일 */
 function defaultExpDate(){ var t=todayISO(); return (t>=trip.start&&t<=trip.end)?t:trip.start; }
@@ -1380,11 +1456,53 @@ function toolsRow(){
   var ph=cc&&window.PHRASES&&PHRASES.BY[cc], li=cc&&window.LOCAL_INFO&&LOCAL_INFO[cc];
   var b=(st?'<button onclick="showAddr(\''+st.id+'\')">🚕<span>숙소 주소<br>택시 카드</span></button>':'')
     +(ph?'<button onclick="openPhrases()">🗣<span>'+esc(ph.name)+'<br>한마디</span></button>':'')
+    +(ph?'<button onclick="window.open(menuUrl(),\'_blank\',\'noopener\')">📷<span>메뉴판·간판<br>사진 번역</span></button>':'')
     +(li&&li.sos?'<button onclick="openSOS()">🆘<span>비상·분실<br>연락처</span></button>':'')
     +(li&&li.plug?'<button onclick="openLocalInfo()">🔌<span>콘센트·팁<br>수돗물</span></button>':'');
   var n=(b.match(/<button/g)||[]).length;
-  return b?'<div class="tools'+(n===4?' t4':'')+'">'+b+'</div>':'';   // 4칸이면 2×2
+  return b?'<div class="tools'+(n>=4?' t4':'')+'">'+b+'</div>':'';   // 4칸 이상이면 2열(홀수면 마지막이 한 줄)
 }
+
+/* ═══ 🖨 여행 계획 한 장 — 일정·항공·예약·숙소 주소(현지어)·비상 연락처. 인쇄 창에서 'PDF로 저장'도 됨 ═══ */
+function printTrip(){
+  var cc=ccOf(), li=cc&&window.LOCAL_INFO&&LOCAL_INFO[cc], M=window.LOCAL_INFO_META||{}, P=window.PHRASES;
+  var dot=function(d){ return String(d||'').replace(/-/g,'.'); }, f=trip.flight, b=trip.flightBack, st=stayResv();
+  var mem=(trip.members||[]).map(function(m){ return m.name; }).join('·');
+  var tx=st&&P&&P.TAXI&&(P.TAXI[cc]||(tzOf()==='Asia/Seoul'?null:P.TAXI.en));
+  var h='<div class="pt-h"><h1>'+esc(trip.city)+' 여행</h1><p>'+dot(trip.start)+' – '+dot(trip.end)+' · '+T.tripLength(trip)+'일'+(mem?' · '+esc(mem):'')+'</p></div>';
+  if((f&&(f.no||f.dep))||(b&&(b.no||b.arr))){
+    h+='<h2>✈ 항공</h2><table>';
+    if(f&&(f.no||f.dep)) h+='<tr><th>가는 편</th><td>'+dot(trip.start)+' '+esc(f.no||'')+' '+esc(f.from||'ICN')+' '+esc(f.dep||'')+' → '+esc(f.to||'')+' '+esc(f.arr||'')+'</td></tr>';
+    if(b&&(b.no||b.arr)) h+='<tr><th>오는 편</th><td>'+dot(b.date)+' '+esc(b.no||'')+' '+esc(b.from||'')+' '+esc(b.dep||'')+' → ICN '+esc(b.arr||'')+'</td></tr>';
+    h+='</table>';
+  }
+  if(st) h+='<h2>🏨 숙소 주소</h2><div class="pt-addr">'+(tx?'<small>'+esc(tx[0])+'</small>':'')+'<b>'+esc(st.addr)+'</b><span>'+esc(st.title)+'</span></div>';
+  var rs=(trip.reservations||[]).filter(function(r){ return r.type!=='flight'||!f; });
+  if(rs.length){
+    h+='<h2>🎫 예약</h2><table>'+rs.map(function(r){ return '<tr><th>'+esc(r.title)+(r.status==='planned'?' <i>(예정)</i>':'')+'</th><td>'+[r.detail?esc(r.detail):'',r.addr?'📍 '+esc(r.addr):'',r.cancelBy&&r.cancelBy>=todayISO()?'⏰ 무료 취소 '+dot(r.cancelBy)+'까지':''].filter(Boolean).join('<br>')+'</td></tr>'; }).join('')+'</table>';
+  }
+  var days=(trip.days||[]).filter(function(d){ return (d.items||[]).length; });
+  if(days.length){
+    h+='<h2>🗓 일정</h2><table class="pt-days">'+days.map(function(d){
+      var i=(trip.days||[]).indexOf(d);
+      return '<tr><th>'+(i+1)+'일차<br><small>'+T.fmtMD(d.date)+' '+T.dow(d.date)+'</small></th><td>'+(d.items||[]).map(function(it){ return '<div>'+(it.time?'<b>'+esc(it.time)+'</b> ':'')+esc(it.title)+(it.addr?' <small>📍 '+esc(it.addr)+'</small>':'')+(it.memo?' <small>— '+esc(it.memo)+'</small>':'')+'</div>'; }).join('')+'</td></tr>';
+    }).join('')+'</table>';
+  }
+  if(M.call||(li&&li.sos)){
+    h+='<h2>🆘 비상 연락처</h2><table>'+(M.call?'<tr><th>영사안전콜센터 (24시간)</th><td>'+esc(M.call)+'</td></tr>':'')
+      +((li&&li.sos)||[]).map(function(x){ return '<tr><th>'+esc(x[0])+'</th><td>'+esc(x[1])+'</td></tr>'; }).join('')+'</table>';
+  }
+  h+='<p class="pt-f">트래블코스트(travelcost.co.kr)에서 만든 여행 계획 · '+dot(todayISO())+' 출력 · 예약 내용은 예약처 확인 메일이 기준이에요</p>';
+  var box=document.getElementById('printBox'); if(!box){ box=document.createElement('div'); box.id='printBox'; document.body.appendChild(box); }
+  box.innerHTML=h; document.body.classList.add('printing');
+  var done=function(){ document.body.classList.remove('printing'); window.removeEventListener('afterprint',done); };
+  window.addEventListener('afterprint',done);
+  try{ window.print(); }catch(e){ done(); toast('이 기기는 인쇄를 지원하지 않아요'); }
+}
+
+/* ═══ 📷 메뉴판·간판 번역 — 구글 번역 사진 번역(현지어 → 한국어) ═══ */
+var LENS_SL={'ja-JP':'ja','zh-TW':'zh-TW','zh-HK':'zh-TW','zh-CN':'zh-CN','th-TH':'th','vi-VN':'vi','id-ID':'id','en-SG':'en','fil-PH':'tl','ms-MY':'ms','fr-FR':'fr'};
+function menuUrl(){ var ph=window.PHRASES&&PHRASES.BY[ccOf()]; return 'https://translate.google.com/?sl='+((ph&&LENS_SL[ph.lang])||'auto')+'&tl=ko&op=images'; }
 
 /* ═══ 🚕 숙소 주소 택시 카드 + 🧭 길찾기 ═══ */
 function stayResv(){ return (trip.reservations||[]).filter(function(r){ return r.addr&&r.type==='hotel'; })[0]||(trip.reservations||[]).filter(function(r){ return r.addr; })[0]||null; }
@@ -1613,6 +1731,8 @@ function openResvSheet(resId){
     +'<label class="fl" for="rv-detail">상세 (선택)</label><input class="in" id="rv-detail" placeholder="예: ICN 08:05 → KIX 10:35 · 2인" value="'+(r?esc(r.detail||''):'')+'">'
     +'<div id="rv-addr-w"'+(rvType==='flight'?' hidden':'')+'><label class="fl" for="rv-addr">주소 (선택 · 현지어 그대로)</label><input class="in" id="rv-addr" placeholder="예: 大阪府大阪市中央区難波1-2-3" value="'+(r?esc(r.addr||''):'')+'">'
     +'<p class="ps-p" style="margin:6px 0 0">넣어 두면 🚕 택시 카드로 크게 보여 주고 길찾기를 바로 열어요. 예약 확인 메일의 주소를 복사해 붙여 넣으세요.</p></div>'
+    +'<label class="fl" for="rv-cancel">무료 취소 마감일 (선택)</label><input class="in" type="date" id="rv-cancel" value="'+(r?esc(r.cancelBy||''):'')+'">'
+    +'<p class="ps-p" style="margin:6px 0 0">마감 3일 전부터 홈·예약 탭에 알려 드려요 · 캘린더(.ics)로 내보내면 전날 아침 9시 알림</p>'
     +'<div class="segrow" style="margin-top:12px"><span class="seg'+(rvStatus==='confirmed'?' on':'')+'" data-st="confirmed" onclick="pickSt(this)">확정</span><span class="seg'+(rvStatus==='planned'?' on':'')+'" data-st="planned" onclick="pickSt(this)">예정</span></div>'
     +'<button class="save" onclick="saveResv()">'+(editResv?'저장':'추가')+'</button>'
     +(editResv?'<button class="save" style="background:var(--gray-100);color:var(--danger);margin-top:8px" onclick="deleteResv()">삭제</button>':''));
@@ -1621,7 +1741,7 @@ function pickRv(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){
 function pickSt(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); rvStatus=el.dataset.st; }
 function saveResv(){
   var title=document.getElementById('rv-title').value.trim(); if(!title){alert('제목을 입력하세요.');return;}
-  var data={type:rvType,title:title,detail:document.getElementById('rv-detail').value.trim(),status:rvStatus,addr:rvType==='flight'?'':document.getElementById('rv-addr').value.trim()};
+  var data={type:rvType,title:title,detail:document.getElementById('rv-detail').value.trim(),status:rvStatus,addr:rvType==='flight'?'':document.getElementById('rv-addr').value.trim(),cancelBy:document.getElementById('rv-cancel').value||''};
   if(editResv){ T.updateReservation(tid,editResv,data); }
   else { data.when=''; T.addReservation(tid,data); }
   reget(); closeSheet(); renderShell();

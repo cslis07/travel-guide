@@ -191,7 +191,30 @@
     return { level: 'ok', text: '여권 유효기간 충분해요 (' + dot + '까지)' };
   }
 
-  /* ── 남은 외화 — 귀국할 때 지갑에 남은 돈을 통화별로 적어 두고, 같은 통화 여행에서 꺼내 쓰기 ── */
+  /* ── 예약 무료 취소 마감 — 오늘~within일 남은 것(지난 것 제외), 가까운 순 ── */
+  function cancelSoon(t, within) {
+    var today = iso(new Date()), w = within == null ? 3 : within;
+    return ((t && t.reservations) || []).filter(function (r) { return r.cancelBy && /^\d{4}-\d{2}-\d{2}$/.test(r.cancelBy); })
+      .map(function (r) { return { r: r, left: daysBetween(today, r.cancelBy) }; })
+      .filter(function (x) { return x.left >= 0 && x.left <= w; })
+      .sort(function (a, b) { return a.left - b.left; });
+  }
+
+  /* ── 현금 지갑 — 환전해 넣은 현금(+가져간 외화) − 내가 현금으로 낸 지출, 통화별 ── */
+  function cashBalance(t, cur) {
+    if (!t) return null;
+    var ins = (t.cashIn || []).filter(function (c) { return c.cur === cur; });
+    var carry = t.carryIn && t.carryIn.cur === cur ? +t.carryIn.amt || 0 : 0;
+    if (!ins.length && !carry) return null;
+    var me = ((t.members || [])[0] || {}).name || '나';
+    var total = ins.reduce(function (s, c) { return s + (+c.amt || 0); }, 0) + carry;
+    var used = (t.expenses || []).filter(function (e) {
+      return e.method === 'cash' && (e.currency || 'KRW') === cur && (!e.paidBy || e.paidBy === me || (t.members || []).length < 2);
+    }).reduce(function (s, e) { return s + (+e.amount || 0); }, 0);
+    return { cur: cur, total: total, used: used, left: Math.round((total - used) * 100) / 100 };
+  }
+
+  /* ── 남은 외화 —귀국할 때 지갑에 남은 돈을 통화별로 적어 두고, 같은 통화 여행에서 꺼내 쓰기 ── */
   var LO_KEY = 'tc_leftover';
   function leftovers() { try { return JSON.parse(localStorage.getItem(LO_KEY) || '{}') || {}; } catch (e) { return {}; } }
   function setLeftover(cur, amt, src) {
@@ -424,7 +447,7 @@
     dailyAllowance: dailyAllowance, remainingDays: remainingDays, byCategory: byCategory,
     settlements: settlements, balances: balances, toKRW: toKRW,
     passportExp: passportExp, setPassportExp: setPassportExp, passportCheck: passportCheck,
-    leftovers: leftovers, setLeftover: setLeftover,
+    leftovers: leftovers, setLeftover: setLeftover, cancelSoon: cancelSoon, cashBalance: cashBalance,
     refreshRates: refreshRates, fxState: fxState, cityGeo: cityGeo, cityPhoto: cityPhoto, photoSource: photoSource, cityTz: cityTz, countryOf: countryOf, curOf: curOf, CURS: CURS,
     // 날짜
     fmtMD: fmtMD, iso: iso, dow: dow, tripLength: tripLength, ddayText: ddayText, daysBetween: daysBetween,

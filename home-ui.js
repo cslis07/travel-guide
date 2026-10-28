@@ -61,8 +61,10 @@
       : !(t.checklist || []).length ? (T.budgetTotal(t) ? '예산 ' + won(T.budgetTotal(t)) + ' · 준비물을 정해 보세요' : '예산과 준비물을 정해 보세요')   // 0개를 '다 챙김'으로 보지 않음
       : (T.budgetTotal(t) ? '예산 ' + won(T.budgetTotal(t)) + ' · 준비물 다 챙겼어요' : '준비물 다 챙겼어요 · 예산을 정해 보세요');
     cta = todo ? '준비물' : '열기'; tab = todo || !(t.checklist || []).length ? 'pack' : '';
-    var pp = T.passportCheck && T.passportCheck(t);   // 여권이 모자라면 할 일보다 먼저
-    if (pp && (pp.level === 'bad' || pp.level === 'warn')) { line = '<em>⚠ ' + esc(pp.short) + '</em>'; cta = '확인'; tab = 'pack'; }
+    var pp = T.passportCheck && T.passportCheck(t), cx = T.cancelSoon ? T.cancelSoon(t) : [];   // 여권 만료 > 무료 취소 마감 > 여권 6개월 > 할 일
+    if (pp && pp.level === 'bad') { line = '<em>⚠ ' + esc(pp.short) + '</em>'; cta = '확인'; tab = 'pack'; }
+    else if (cx.length) { line = '<em>⏰ ' + esc(cx[0].r.title) + ' 무료 취소 ' + (cx[0].left ? 'D-' + cx[0].left : '오늘 마감') + '</em>'; cta = '예약'; tab = 'resv'; }
+    else if (pp && pp.level === 'warn') { line = '<em>⚠ ' + esc(pp.short) + '</em>'; cta = '확인'; tab = 'pack'; }
   } else {
     var s = T.settlements(t);
     head = '다녀온 여행 · 정산 남음';
