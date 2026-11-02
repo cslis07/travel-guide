@@ -17,15 +17,12 @@
     .sort(function (a, b) { return a.end > b.end ? -1 : 1; })[0];
   var t = going || next || owed;
   if (!t) {
-    /* 처음 방문 안내 3단계 — 여행이 하나도 없고, 닫은 적 없을 때만 */
+    /* 처음 방문 안내 3단계 — 여행이 하나도 없고, 닫은 적 없을 때만.
+       화면 밀림(CLS)을 막으려고 index.html 이 #hxNext 바로 뒤 인라인 스크립트로 먼저 그려 둔다 — 여기선 닫기만 연결 */
     var seen = false; try { seen = !!localStorage.getItem('tc_onboard_done'); } catch (e) {}
-    if (trips.length || seen) return;
-    box.innerHTML = '<div class="hx-onb" role="region" aria-label="처음 방문 안내"><div class="hx-onb-h"><b>처음이세요? 3단계면 준비 끝</b>'
-      + '<button type="button" class="hx-onb-x" aria-label="안내 닫기">✕</button></div><ol>'
-      + '<li><a href="/trips?new=1"><span>①</span><b>여행 만들기</b><small>도시·날짜만 넣으면 일정·예산·준비물 칸이 생겨요</small></a></li>'
-      + '<li><a href="/prepare"><span>②</span><b>출국 준비</b><small>출발일 기준으로 언제 뭘 할지 알려 줘요</small></a></li>'
-      + '<li><a href="/airport"><span>③</span><b>공항 가는 날</b><small>출국장 혼잡·내 편명 탑승구를 실시간으로</small></a></li></ol></div>';
-    box.querySelector('.hx-onb-x').addEventListener('click', function () { try { localStorage.setItem('tc_onboard_done', '1'); } catch (e) {} box.innerHTML = ''; });
+    var onb = box.querySelector('.hx-onb');
+    if (trips.length || seen) { if (onb) box.innerHTML = ''; return; }
+    if (onb) onb.querySelector('.hx-onb-x').addEventListener('click', function () { try { localStorage.setItem('tc_onboard_done', '1'); } catch (e) {} box.innerHTML = ''; });
     return;
   }
 
