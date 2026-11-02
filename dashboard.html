@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="트래블코스트 여행 대시보드 — 내 여행 준비 현황, 예상 여행비와 실제 지출, 저장한 항공편의 인천공항 실시간 정보를 한 화면에서 확인하세요.">
+  <title>여행 대시보드 | 트래블코스트</title>
+  <link rel="canonical" href="https://travelcost.co.kr/dashboard">
+  <meta name="robots" content="noindex,follow">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/dashboard.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#1B4FD8">
+  <meta name="mobile-web-app-capable" content="yes">
+</head>
+<body class="db-body">
+<a class="db-skip" href="#main">본문 바로가기</a>
+<header class="header" id="header">
+  <div class="container header-inner">
+    <a href="/" class="logo" aria-label="트래블코스트 홈"><i data-icon="plane" data-size="19"></i> 트래블코스트</a>
+    <nav class="nav" id="nav" aria-label="주 메뉴">
+      <a href="/destinations">여행지</a>
+      <a href="/estimate">경비 계산</a>
+      <a href="/prepare">출국 준비</a>
+      <a href="/tours">투어·티켓</a>
+      <a href="/airport">인천공항</a>
+      <a href="/dashboard" aria-current="page">여행 대시보드</a>
+      <a href="/trips">내 여행</a>
+    </nav>
+  </div>
+</header>
+
+<main class="db-main" id="main">
+  <!-- 히어로: 여행 선택 -->
+  <section class="db-hero" aria-labelledby="db-title">
+    <div class="db-hero-copy">
+      <p class="db-eyebrow"><span aria-hidden="true">✦</span> MY TRAVEL STUDIO</p>
+      <h1 id="db-title">여행의 모든 순간을,<br><span>한눈에.</span></h1>
+      <p class="db-hero-sub">여행 준비 현황부터 예상 경비, 공항 정보까지 한 화면에서 확인하세요.</p>
+      <div class="db-hero-actions">
+        <div class="db-field">
+          <label for="db-trip-select">보고 있는 여행</label>
+          <select id="db-trip-select" disabled><option value="">여행 불러오는 중…</option></select>
+        </div>
+        <a class="db-btn db-btn-light" href="/trips?new=1"><i data-icon="plus" data-size="18"></i> 새 여행</a>
+      </div>
+    </div>
+    <div class="db-hero-art" id="db-hero-art" aria-hidden="true">
+      <span class="db-hero-stamp">MY NEXT<br>DESTINATION <b>↗</b></span>
+    </div>
+  </section>
+
+  <div class="db-section-head">
+    <div><p class="db-overline">TRAVEL OVERVIEW</p><h2>내 여행 한눈에 보기</h2></div>
+    <a class="db-text-link" href="/trips">모든 여행 보기 <span aria-hidden="true">›</span></a>
+  </div>
+
+  <div class="db-cards">
+    <!-- ① 내 여행 -->
+    <section class="db-card" aria-labelledby="db-c1">
+      <div class="db-card-head">
+        <h3 id="db-c1"><span class="db-card-icon db-ic-blue"><i data-icon="briefcase" data-size="18"></i></span>내 여행</h3>
+        <a id="db-trip-more" class="db-head-link" href="/trips">상세 보기 <span aria-hidden="true">›</span></a>
+      </div>
+      <div class="db-card-body" id="db-trip" aria-busy="true">
+        <div class="db-skel db-skel-row"><span class="db-skel-img"></span><span class="db-skel-lines"><i></i><i></i><i></i></span></div>
+        <div class="db-skel"><i></i><i></i><i></i><i></i></div>
+      </div>
+    </section>
+
+    <!-- ② 예상 여행비 -->
+    <section class="db-card" aria-labelledby="db-c2">
+      <div class="db-card-head">
+        <h3 id="db-c2"><span class="db-card-icon db-ic-teal"><i data-icon="pie-chart" data-size="18"></i></span>예상 여행비</h3>
+        <a id="db-budget-more" class="db-head-link" href="/estimate">상세 보기 <span aria-hidden="true">›</span></a>
+      </div>
+      <div class="db-card-body" id="db-budget" aria-busy="true">
+        <div class="db-skel db-skel-center"><i></i><i></i></div>
+        <div class="db-skel db-skel-donut"><span></span><span class="db-skel-lines"><i></i><i></i><i></i><i></i></span></div>
+      </div>
+    </section>
+
+    <!-- ③ 공항 실시간 -->
+    <section class="db-card" aria-labelledby="db-c3">
+      <div class="db-card-head">
+        <h3 id="db-c3"><span class="db-card-icon db-ic-sky"><i data-icon="plane" data-size="18"></i></span>공항 실시간</h3>
+        <a class="db-head-link" href="/airport">전체 보기 <span aria-hidden="true">›</span></a>
+      </div>
+      <div class="db-card-body" id="db-air" aria-busy="true">
+        <div class="db-skel"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+      <a class="db-air-banner" href="/airport">
+        <span><b>출국 전 공항 정보가 궁금하다면?</b><small>혼잡도 · 항공편 · 주차 · 교통</small></span>
+        <span class="db-air-banner-go" aria-hidden="true">↗</span>
+      </a>
+    </section>
+  </div>
+
+  <section class="db-dest" aria-labelledby="db-dest-title">
+    <div class="db-section-head">
+      <div><p class="db-overline">EXPLORE MORE</p><h2 id="db-dest-title">인기 여행지</h2></div>
+      <a class="db-text-link" href="/destinations">전체 보기 <span aria-hidden="true">›</span></a>
+    </div>
+    <div class="db-dest-grid" id="db-dest"></div>
+  </section>
+  <p class="db-credit">사진: Wikimedia Commons 기여자 (각 사진의 라이선스를 따름) · 실시간 운항 정보: 인천국제공항공사 공공데이터</p>
+  <p class="db-sr" id="db-live" aria-live="polite"></p>
+</main>
+
+<script src="/trips.js"></script>
+<script src="/icons.js" defer></script>
+<script src="/dashboard.js" defer></script>
+<script src="/pwa-install.js" defer></script>
+<script src="/nav.js" defer></script>
+<script src="/bizfooter.js" defer></script>
+</body>
+</html>

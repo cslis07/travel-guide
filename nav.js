@@ -40,18 +40,32 @@
     { href: '/prepare',       key: '/prepare',  icon: 'check-circle', label: '출국 준비', color: C_PREP,   bold: true },
     { href: '/tours',         key: '/tours',    icon: 'ticket',       label: '투어·티켓' },
     { href: '/airport',       key: '/airport',  icon: 'plane',        label: '인천공항' },
+    { href: '/dashboard',     key: '/dashboard', icon: 'layout-dashboard', label: '여행 대시보드' },
     { href: '/trips',         key: '/trips',    icon: 'briefcase',    label: '내 여행' }
   ];
 
-  /* ── 하단 탭(모바일): 자주 여는 곳 5개 (HIG 권장) ──
+  /* ── 하단 탭(모바일): 자주 여는 곳 4개 + 전체 메뉴 (HIG 권장 5개) ──
      2026-10-23: '예산 견적'(여행 전 한 번 쓰는 도구) 대신 방문 2위인 '인천공항'을 탭에 올림.
-     경비 계산은 상단 헤더·홈 바로가기 칩·새 여행 만들기 창에서 연다. */
+     2026-11-02: 여행 대시보드 신설. 개인 여행 관리의 입구를 대시보드 탭 하나로 모으고
+     (내 여행·여행 상세에서도 이 탭이 켜짐), 탭에 못 올린 메뉴는 '전체' 시트에서 연다. */
   var TABS = [
-    { href: '/',              key: '/',         icon: 'home',        label: '홈' },
-    { href: '/trips',         key: '/trips',    icon: 'briefcase',   label: '내 여행' },
-    { href: '/destinations',  key: 'dest',      icon: 'map-pin',     label: '여행지' },
-    { href: '/airport',       key: '/airport',  icon: 'plane',       label: '인천공항' },
-    { href: '/prepare',       key: '/prepare',  icon: 'check-circle', label: '출국 준비' }
+    { href: '/',              key: '/',          icon: 'home',             label: '홈' },
+    { href: '/destinations',  key: 'dest',       icon: 'map-pin',          label: '여행지' },
+    { href: '/dashboard',     key: '/dashboard', icon: 'layout-dashboard', label: '대시보드', alt: ['/trips'] },
+    { href: '/airport',       key: '/airport',   icon: 'plane',            label: '인천공항' },
+    { href: '#menu',          key: 'menu',       icon: 'grid',             label: '전체', sheet: true }
+  ];
+
+  /* 전체 메뉴 시트(모바일) — 데스크톱 헤더와 같은 순서 */
+  var SHEET_LINKS = [
+    { href: '/',             icon: 'home',             label: '홈',            sub: '여행지 탐색·바로가기' },
+    { href: '/destinations', icon: 'map-pin',          label: '여행지',        sub: '23개 도시 가이드' },
+    { href: '/estimate',     icon: 'coins',            label: '경비 계산',     sub: '여행 총예산 견적' },
+    { href: '/prepare',      icon: 'check-circle',     label: '출국 준비',     sub: '언제 뭘 준비할지' },
+    { href: '/tours',        icon: 'ticket',           label: '투어·티켓',     sub: '입장권·액티비티' },
+    { href: '/airport',      icon: 'plane',            label: '인천공항',      sub: '실시간 운항·혼잡도' },
+    { href: '/dashboard',    icon: 'layout-dashboard', label: '여행 대시보드', sub: '준비·예산·항공편 한눈에' },
+    { href: '/trips',        icon: 'briefcase',        label: '내 여행',       sub: '여행 목록·새 여행' }
   ];
 
   // 목적지 가이드 23곳 — 활성 표시용(전용 탭 없이 '여행지'가 대표)
@@ -75,6 +89,31 @@
     '.tab.active{color:#1B4FD8}',
     '.tab.active svg{stroke-width:2.1}',
     '.tab:active{opacity:.55}',
+    'button.tab{border:0;background:none;font-family:inherit;cursor:pointer;padding:0}',
+    '.tab:focus-visible{outline:2px solid #1B4FD8;outline-offset:-4px;border-radius:10px}',
+    /* 전체 메뉴 시트 */
+    '.tc-msheet{position:fixed;inset:0;z-index:9500;background:rgba(16,24,40,.45);display:flex;align-items:flex-end;justify-content:center}',
+    '.tc-msbox{width:100%;max-width:560px;background:var(--surface,#fff);color:var(--gray-900,#101828);border-radius:22px 22px 0 0;',
+    '  padding:8px 16px calc(18px + env(safe-area-inset-bottom,0px));max-height:85vh;overflow:auto;animation:tcMsUp .22s cubic-bezier(.2,.9,.3,1)}',
+    '@keyframes tcMsUp{from{transform:translateY(100%)}to{transform:none}}',
+    '@media(prefers-reduced-motion:reduce){.tc-msbox{animation:none}}',
+    /* 헤더 메뉴 7개(여행 대시보드 추가) — 좁은 데스크톱에서 글자가 두 줄로 꺾이지 않게 아이콘·간격부터 줄인다 */
+    '.nav a{white-space:nowrap}',
+    '@media(min-width:901px) and (max-width:1280px){.nav{gap:16px}.nav a .ico{display:none}}',
+    '@media(min-width:901px) and (max-width:1060px){.nav{gap:12px}.nav a{font-size:.84rem}}',
+    '.tc-mshead{display:flex;align-items:center;justify-content:space-between;padding:8px 2px 10px}',
+    '.tc-mshead h2{font-size:17px;font-weight:800;margin:0}',
+    '.tc-msclose{width:44px;height:44px;border:0;border-radius:12px;background:transparent;color:inherit;display:grid;place-items:center;cursor:pointer}',
+    '.tc-msgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}',
+    '.tc-msgrid a{display:flex;align-items:center;gap:10px;min-height:60px;padding:10px 12px;border:1px solid var(--gray-200,#E4E7EC);',
+    '  border-radius:14px;text-decoration:none;color:inherit;min-width:0}',
+    '.tc-msgrid a.on{border-color:#1B4FD8;background:var(--primary-lt,#EEF3FF)}',
+    '.tc-msgrid a:focus-visible,.tc-msclose:focus-visible{outline:2px solid #1B4FD8;outline-offset:2px}',
+    '.tc-msgrid .ic{width:36px;height:36px;flex:0 0 36px;border-radius:10px;background:var(--primary-lt,#EEF3FF);color:#1B4FD8;display:grid;place-items:center}',
+    '.tc-msgrid b{display:block;font-size:14.5px;font-weight:800}',
+    '.tc-msgrid small{display:block;font-size:12px;color:var(--gray-600,#475467);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
+    '.tc-msgrid a>span:last-child{min-width:0}',
+    '@media(max-width:340px){.tc-msgrid{grid-template-columns:1fr}}',
     /* 상단 헤더 활성 표시(밑줄 바) — 색 위계를 해치지 않게 currentColor 사용 */
     '.nav a.nav-active{position:relative}',
     '.nav a.nav-active::after{content:"";position:absolute;left:0;right:0;bottom:-6px;',
@@ -144,7 +183,12 @@
     var html = '<div class="tabbar-inner">';
     for (var i = 0; i < TABS.length; i++) {
       var t = TABS[i];
-      var on = (t.key === cur);
+      if (t.sheet) {
+        html += '<button type="button" class="tab tab-sheet" aria-haspopup="dialog" aria-expanded="false">' +
+          iconSvg(t.icon, 22) + '<span>' + t.label + '</span></button>';
+        continue;
+      }
+      var on = (t.key === cur) || !!(t.alt && t.alt.indexOf(cur) > -1);
       html += '<a class="tab' + (on ? ' active' : '') + '" href="' + t.href + '"' +
         (on ? ' aria-current="page"' : '') + '>' + iconSvg(t.icon, 22) +
         '<span>' + t.label + '</span></a>';
@@ -152,6 +196,45 @@
     html += '</div>';
     nav.innerHTML = html;
     document.body.appendChild(nav);
+    var sb = nav.querySelector('.tab-sheet');
+    if (sb) sb.addEventListener('click', function () { openSheet(sb); });
+  }
+
+  /* 전체 메뉴 시트 — 하단에서 올라오는 대화상자. ESC·바깥 클릭·닫기 버튼으로 닫고, 포커스를 가둔다 */
+  function openSheet(opener) {
+    if (document.querySelector('.tc-msheet')) return;
+    var cur = currentKey();
+    var ov = document.createElement('div');
+    ov.className = 'tc-msheet';
+    var links = SHEET_LINKS.map(function (l) {
+      var k = l.href === '/destinations' ? 'dest' : l.href;
+      var on = k === cur;
+      return '<a href="' + l.href + '"' + (on ? ' aria-current="page" class="on"' : '') + '><span class="ic">' + iconSvg(l.icon, 22) +
+        '</span><span><b>' + l.label + '</b><small>' + l.sub + '</small></span></a>';
+    }).join('');
+    ov.innerHTML = '<div class="tc-msbox" role="dialog" aria-modal="true" aria-labelledby="tc-ms-title">' +
+      '<div class="tc-mshead"><h2 id="tc-ms-title">전체 메뉴</h2><button type="button" class="tc-msclose" aria-label="메뉴 닫기">' + (iconSvg('x', 22) || '✕') + '</button></div>' +
+      '<nav class="tc-msgrid" aria-label="전체 메뉴">' + links + '</nav></div>';
+    document.body.appendChild(ov);
+    if (opener) opener.setAttribute('aria-expanded', 'true');
+    var box = ov.querySelector('.tc-msbox');
+    function close() {
+      if (ov.parentNode) ov.parentNode.removeChild(ov);
+      document.removeEventListener('keydown', onKey, true);
+      if (opener) { opener.setAttribute('aria-expanded', 'false'); opener.focus(); }
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+      if (e.key !== 'Tab') return;
+      var f = box.querySelectorAll('a,button'); if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+    document.addEventListener('keydown', onKey, true);
+    ov.addEventListener('click', function (e) { if (e.target === ov) close(); });
+    ov.querySelector('.tc-msclose').addEventListener('click', close);
+    ov.querySelector('.tc-msclose').focus();
   }
 
   /* 클릭되는 div·span 접근성 — 키보드(Tab·Enter·Space)와 화면낭독기에 '버튼'으로 알린다.
@@ -192,6 +275,7 @@
     bangkok: '방콕 태국', danang: '다낭 베트남', bali: '발리 인도네시아', singapore: '싱가포르', nhatrang: '나트랑 베트남', cebu: '세부 필리핀',
     kotakinabalu: '코타키나발루 말레이시아', jeju: '제주', busan: '부산', gangneung: '강릉', paris: '파리 프랑스' };
   var FEATURES = [
+    ['📊', '여행 대시보드', '내 여행 준비 진행률 예상 여행비 공항 실시간 한눈에', '/dashboard'],
     ['🧳', '내 여행', '일정 예산 지출 정산 여행 목록', '/trips'],
     ['➕', '새 여행 만들기', '여행 추가 만들기', '/trips?new=1'],
     ['💸', '지출 추가', '돈 쓴 것 기록 가계부', '/trip?quick=expense'],

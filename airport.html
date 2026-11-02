@@ -1420,8 +1420,8 @@ button,select,input,a{touch-action:manipulation}
     <div class="flt-term-tabs" id="flt-term-tabs">
       <button class="flt-term-btn active" onclick="setFltTerm('all',this)">전체</button>
       <button class="flt-term-btn" onclick="setFltTerm('P01',this)">T1</button>
-      <button class="flt-term-btn" onclick="setFltTerm('P03',this)">탑승동</button>
-      <button class="flt-term-btn" onclick="setFltTerm('P02',this)">T2</button>
+      <button class="flt-term-btn" onclick="setFltTerm('P02',this)">탑승동</button>
+      <button class="flt-term-btn" onclick="setFltTerm('P03',this)">T2</button>
     </div>
     <input class="flt-search" id="flt-q" placeholder="편명·항공기·도시명 검색" oninput="renderFlights()">
   </div>
@@ -2032,7 +2032,9 @@ let _chartDay=0, _chartMode='all', _paxChart=null;
 const WMO={0:'맑음',1:'대체로 맑음',2:'구름 많음',3:'흐림',45:'안개',51:'이슬비',61:'비',63:'비',65:'강한 비',71:'눈',73:'눈',80:'소나기',95:'뇌우'};
 const STN={'010':'서울역','020':'공덕역','030':'홍대입구역','040':'디지털미디어시티역','050':'김포공항역','060':'계양역','070':'검암역','077':'청라국제도시역','080':'영종역','090':'공항화물청사역','100':'인천공항T1역','110':'인천공항T2역'};
 const STOP={'10000140':'제1터미널','10000141':'제2터미널','10000142':'탑승동','10000143':'교통센터','10000144':'장기주차장'};
-const TERM={P01:'T1',P02:'T2',P03:'탑승동'};
+// 운항정보(StatusOfPassengerFlightsOdp)의 terminalId: P01=T1(탑승구 1~50) · P02=탑승동(101~132) · P03=T2(2xx)
+// 2026-11-02 실데이터로 확인(대한항공·아시아나·델타=P03). 혼잡도 API의 P01/P02(T1/T2)와는 다른 체계다.
+const TERM={P01:'T1',P02:'탑승동',P03:'T2'};
 
 // ════════════════════════════════
 //  THEME
@@ -2755,7 +2757,7 @@ function renderFlights() {
   const isDep=_fltDir==='dep';
   const byTerm={P01:[],P02:[],P03:[]};
   list.forEach(f=>{const t=f.terminalId||'P01';(byTerm[t]||byTerm.P01).push(f);});
-  html('flt-count',`${list.length.toLocaleString()}편 · T1 ${byTerm.P01.length} · 탑승동 ${byTerm.P03.length} · T2 ${byTerm.P02.length}`);
+  html('flt-count',`${list.length.toLocaleString()}편 · T1 ${byTerm.P01.length} · 탑승동 ${byTerm.P02.length} · T2 ${byTerm.P03.length}`);
 
   const isSingle=_fltTermView!=='all';
 
@@ -2766,7 +2768,7 @@ function renderFlights() {
     return /[A-Z]/.test(c)?c:null;
   };
 
-  const termDefs=[{id:'P01',label:'T1'},{id:'P03',label:'탑승동'},{id:'P02',label:'T2'}];
+  const termDefs=[{id:'P01',label:'T1'},{id:'P02',label:'탑승동'},{id:'P03',label:'T2'}];
 
   const colsHtml=termDefs.map(({id,label})=>{
     if(_fltTermView!=='all'&&_fltTermView!==id) return '';
@@ -3743,7 +3745,7 @@ const DEPART_TIPS = [
   '액체류 100ml·노트북·보조배터리는 별도 트레이에 분리. 신발·벨트 검사 가능.',
   '여권+탑승권 준비. 자동출국심사(만 7세 이상, 등록자 무료) 권장.',
   '면세점/라운지 이용. 게이트까지 평균 도보 10분, 탑승동 이동 시 +5분.',
-  '게이트 이동 후 탑승 대기. 탑승동(P03)은 셔틀트레인 5분 추가.',
+  '게이트 이동 후 탑승 대기. 탑승동은 셔틀트레인 5분 추가.',
   '탑승 완료! 좋은 여행 되세요 ✈',
 ];
 function getDepartStep(){

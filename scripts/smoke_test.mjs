@@ -15,6 +15,8 @@ const checks = [
   ['/tours', 200, 'tt-tabs'],
   ['/tours', 200, 'loadPriceCompare'],   // 숙소 플랫폼별 가격 비교
   ['/mytrip', 200, '내 여행'],
+  ['/dashboard', 200, 'db-trip'],
+  ['/dashboard.js', 200, 'TCDashCore'],
   ['/guide', 200, 'sidebar'],
   ['/osaka', 200, '오사카'],
   ['/fukuoka', 200, '하카타'],

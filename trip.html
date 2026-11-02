@@ -1208,7 +1208,7 @@ function leaveCard(extra, crowdNote){
 function setAirportMins(v){ trip.airportMins=v; T.upsert(trip); reget(); renderPane(); }
 
 /* ═══ 공항 실시간 연결 — 편명으로 인천공항 운항정보(오늘±1일 범위)에서 상태·탑승구·카운터·터미널 ═══ */
-var TERM_LBL={P01:'T1',P02:'T2',P03:'탑승동'};
+var TERM_LBL={P01:'T1',P02:'탑승동',P03:'T2'};   // 운항정보 API 기준(P03=T2). 혼잡도 API의 P02(=T2)와 다름
 function flightNo(v){ v=String(v||'').toUpperCase().replace(/\s+/g,''); return /^[A-Z0-9]{2,8}$/.test(v)?v:''; }   // '내 편명'·onclick에 들어가므로 영숫자만
 function liveWindow(date){ var d=T.daysBetween(todayISO(),date); return d>=-1&&d<=1; }
 function liveHint(f){

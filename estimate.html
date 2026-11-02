@@ -843,7 +843,9 @@ function attachBudget(){
   if(total<=0){ alert('먼저 예산을 계산해 주세요.'); return; }
   var start = (document.getElementById('f-out')||{}).value || '';
   var end   = (document.getElementById('f-back')||{}).value || '';
-  window.TripAttach.open({ label:'이 예산으로 여행 담기', city:city, budget:total, start:start, end:end });
+  var amt = (state.computed && state.computed.amt) || {};
+  var plan = { at: new Date().toISOString().slice(0,10), items: ITEMS.map(function(i){ return { key:i.key, label:i.name, color:i.color, amt:Math.round(amt[i.key]||0) }; }) };
+  window.TripAttach.open({ label:'이 예산으로 여행 담기', city:city, budget:total, plan:plan, start:start, end:end });
 }
 </script>
 <script src="/analytics.js"></script>

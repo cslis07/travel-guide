@@ -9,6 +9,7 @@
      label,                      // 시트 제목
      city,                       // 새 여행 기본 도시명
      budget,                     // (선택) 총예산 원
+     plan:{at,items:[{key,label,color,amt}]}, // (선택) 경비 계산 항목별 예상액 → t.budget.plan
      checklist:[{group,text,when}],   // (선택) 준비물
      itinerary:[{time,type,title,memo}], // (선택) 1일차에 담을 일정
      start, end, people          // (선택) 새 여행 기본값
@@ -116,7 +117,19 @@
   }
 
   function applyPayload(t, p) {
-    if (p.budget != null && p.budget > 0) t.budget = { total: p.budget, currency: 'KRW' };
+    if (p.budget != null && p.budget > 0) {
+      // 총예산만 갈아끼우고 여행에서 직접 정한 항목별 한도(catLimits)는 보존한다
+      var prev = t.budget || {};
+      t.budget = { total: p.budget, currency: 'KRW' };
+      if (prev.catLimits) t.budget.catLimits = prev.catLimits;
+      if (prev.plan && !p.plan) t.budget.plan = prev.plan;
+    }
+    // 경비 계산의 항목별 예상액(항공·숙소·식비…) — 대시보드 도넛이 임의 비율 대신 이 견적을 그린다
+    if (p.plan && p.plan.items && p.plan.items.length) {
+      t.budget = t.budget || { total: 0, currency: 'KRW' };
+      t.budget.plan = { source: 'estimate', at: p.plan.at || '', items: p.plan.items.filter(function (x) { return x && x.amt > 0; })
+        .map(function (x) { return { key: String(x.key || ''), label: String(x.label || ''), color: String(x.color || ''), amt: Math.round(x.amt) }; }) };
+    }
     if (p.checklist && p.checklist.length) {
       t.checklist = t.checklist || [];
       var have = {}; t.checklist.forEach(function (c) { have[c.text] = 1; });
