@@ -944,7 +944,7 @@ function loadAirCong(){
 var sheet=document.getElementById('sheet'), sbody=document.getElementById('sheetBody');
 sheet.addEventListener('click',function(e){ if(e.target===sheet) closeSheet(); });
 function closeSheet(){ sheet.classList.remove('on'); }
-function openSheet(html){ sbody.innerHTML='<div class="grip"></div>'+html; sheet.classList.add('on'); }
+function openSheet(html){ sheet.classList.remove('ss'); sbody.innerHTML='<div class="grip"></div>'+html; sheet.classList.add('on'); }
 function fabAction(){ ({plan:openItemSheet,budget:openExpenseSheet,resv:openResvSheet,pack:openPackSheet,air:openFlightSheet}[curTab])(); }
 
 /* 지출 추가·수정·삭제 */
@@ -1850,108 +1850,7 @@ function shareTrip(){
   }catch(e){ alert('공유 링크 생성에 실패했습니다.'); }
 }
 
-/* ── 정산 내역 공유 — 이미지 카드(단톡방에 바로 올리기) + 텍스트(토스 링크 포함) ── */
-function rrect(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
-function drawSettleCard(){
-  var setl=T.settlements(trip), bal=T.balances(trip), mem=trip.members||[];
-  var colOf=function(n){ var m=mem.filter(function(x){ return x.name===n; })[0]; return (m&&m.color)||'#98A2B3'; };
-  var fit=function(s,max){ s=String(s); if(g.measureText(s).width<=max) return s; while(s.length>1&&g.measureText(s+'…').width>max) s=s.slice(0,-1); return s+'…'; };
-  var W=1080, HEAD=330, nS=Math.max(1,setl.length);
-  var H=HEAD+60+(nS*104)+70+72+bal.length*84+210;
-  var c=document.createElement('canvas'); c.width=W; c.height=H;
-  var g=c.getContext('2d'); if(!g) return null;
-  var F='"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif';
-  var col=COVC[trip.cover]||COVC.blue, bg=g.createLinearGradient(0,0,W,H*.6); bg.addColorStop(0,col[0]); bg.addColorStop(1,col[1]);
-  g.fillStyle=bg; g.fillRect(0,0,W,H);
-  g.fillStyle='rgba(255,255,255,.85)'; g.font='700 32px '+F; g.fillText('트래블코스트 · 그룹 정산',64,96);
-  g.fillStyle='#fff'; g.font='800 88px '+F; g.fillText(fit(trip.city+' 여행 정산',W-128),64,200);
-  g.font='600 34px '+F; g.fillText(trip.start.replace(/-/g,'.')+' – '+T.fmtMD(trip.end)+' · '+mem.length+'명 · 총 '+won(T.spent(trip)),64,262);
-  // 흰 패널
-  var px=40, py=HEAD-30, pw=W-80, ph=H-py-90;
-  g.fillStyle='#fff'; rrect(g,px,py,pw,ph,36); g.fill();
-  var L=px+48, R=px+pw-48, y=py+80;
-  g.fillStyle='#101828'; g.font='800 38px '+F; g.fillText('보낼 돈',L,y); y+=30;
-  if(setl.length) setl.forEach(function(s){
-    g.fillStyle='#E7F6EE'; rrect(g,L,y,R-L,88,22); g.fill();
-    g.font='800 38px '+F; var x=L+32;
-    g.fillStyle=colOf(s.from); g.beginPath(); g.arc(x+9,y+44,9,0,7); g.fill(); x+=30;
-    g.fillStyle='#067647'; var t1=fit(s.from,220); g.fillText(t1,x,y+57); x+=g.measureText(t1).width+16;
-    g.fillText('→',x,y+57); x+=g.measureText('→').width+16;
-    g.fillStyle=colOf(s.to); g.beginPath(); g.arc(x+9,y+44,9,0,7); g.fill(); x+=30;
-    g.fillStyle='#067647'; g.fillText(fit(s.to,220),x,y+57);
-    g.textAlign='right'; g.font='800 42px '+F; g.fillText(won(s.amt),R-32,y+59); g.textAlign='left';
-    y+=104;
-  });
-  else { g.fillStyle='#F2F4F7'; rrect(g,L,y,R-L,88,22); g.fill(); g.fillStyle='#475467'; g.font='700 34px '+F; g.fillText('주고받을 돈이 없어요 — 모두 공평',L+32,y+56); y+=104; }
-  y+=40;
-  g.fillStyle='#101828'; g.font='800 38px '+F; g.fillText('개인별',L,y); y+=26;
-  var cx=[L+24, L+430, L+690, R-24];   // 이름(왼쪽) · 낸 돈 · 부담액 · 차액(오른쪽 정렬)
-  g.fillStyle='#F2F4F7'; rrect(g,L,y,R-L,64,14); g.fill();
-  g.fillStyle='#667085'; g.font='700 28px '+F; g.fillText('이름',cx[0],y+42); g.textAlign='right';
-  g.fillText('낸 돈',cx[1],y+42); g.fillText('부담액',cx[2],y+42); g.fillText('차액',cx[3],y+42); g.textAlign='left';
-  y+=72;
-  bal.forEach(function(b,i){
-    g.fillStyle=colOf(b.name); g.beginPath(); g.arc(cx[0]+9,y+40,9,0,7); g.fill();
-    g.fillStyle='#101828'; g.font='800 34px '+F; g.fillText(fit(b.name,280),cx[0]+30,y+52);
-    g.textAlign='right'; g.font='700 32px '+F; g.fillStyle='#344054';
-    g.fillText(won(b.paid),cx[1],y+52); g.fillText(won(b.share),cx[2],y+52);
-    g.font='800 34px '+F; g.fillStyle=b.net<0?'#D92D20':b.net>0?'#067647':'#667085';
-    g.fillText((b.net>0?'+':b.net<0?'−':'')+won(Math.abs(b.net)),cx[3],y+52); g.textAlign='left';
-    if(i<bal.length-1){ g.fillStyle='#EAECF0'; g.fillRect(L,y+83,R-L,2); }
-    y+=84;
-  });
-  g.fillStyle='#667085'; g.font='600 26px '+F; g.fillText('+ 돌려받을 돈 · − 보내야 할 돈',L,y+44);
-  g.fillStyle='rgba(255,255,255,.92)'; g.font='700 30px '+F; g.fillText('travelcost.co.kr',64,H-36);
-  g.textAlign='right'; g.font='600 28px '+F; g.fillText(todayISO().replace(/-/g,'.')+' 기준',W-64,H-36); g.textAlign='left';
-  return c;
-}
-var _setlCard=null;
-function shareSettlement(){
-  var c=drawSettleCard(); if(!c){ shareSettlementText(); return; }
-  _setlCard=c;
-  var canFile=false; try{ canFile=!!(navigator.canShare&&navigator.canShare({files:[new File([''],'x.png',{type:'image/png'})]})); }catch(e){}
-  openSheet('<h3>정산 내역 공유</h3><p class="ps-p">이미지를 단톡방에 올리세요. 토스 송금 링크가 필요하면 텍스트로 보내세요.</p>'
-    +'<img id="setl-img" class="rp-img" alt="정산 내역 이미지" src="'+c.toDataURL('image/png')+'">'
-    +(canFile?'<button class="save" onclick="sendSettleImg(true)">이미지 공유</button>':'')
-    +'<div style="display:flex;gap:8px;margin-top:8px">'
-    +  '<button class="seg" style="flex:1;min-height:46px" onclick="sendSettleImg(false)">이미지 저장</button>'
-    +  '<button class="seg" style="flex:1;min-height:46px" onclick="shareSettlementText()">텍스트로 보내기</button>'
-    +'</div>');
-}
-function sendSettleImg(share){
-  var c=_setlCard||drawSettleCard(); if(!c) return;
-  var name=(trip.city||'여행')+'-정산.png';
-  c.toBlob(function(blob){
-    if(share){ try{
-      var file=new File([blob],name,{type:'image/png'});
-      if(navigator.canShare&&navigator.canShare({files:[file]})){ navigator.share({files:[file],title:trip.city+' 여행 정산'}).catch(function(){}); return; }
-    }catch(e){} }
-    var a=document.createElement('a'); a.href=c.toDataURL('image/png'); a.download=name; document.body.appendChild(a); a.click(); setTimeout(function(){ document.body.removeChild(a); },100);
-    toast('정산 이미지를 저장했어요');
-  },'image/png');
-}
-function shareSettlementText(){
-  var setl=T.settlements(trip), bal=T.balances(trip), L=[];
-  L.push('💰 '+trip.city+' 여행 정산 ('+T.fmtMD(trip.start)+'~'+T.fmtMD(trip.end)+')');
-  L.push('총 지출 '+won(T.spent(trip))+' · '+(trip.members||[]).length+'명');
-  L.push('');
-  if(setl.length){ L.push('💸 보낼 돈'); setl.forEach(function(s){ var u=tossUrl(s.to,s.amt); L.push('· '+s.from+' → '+s.to+' : '+won(s.amt)+(u?'  토스 '+u:'')); }); }
-  else L.push('💸 정산 완료 — 서로 주고받을 금액 없음');
-  L.push('');
-  L.push('👤 개인별 (낸 돈 / 부담)');
-  bal.forEach(function(b){
-    var tail = b.net>0 ? ' → 받을 '+won(b.net) : b.net<0 ? ' → 낼 '+won(-b.net) : ' → 정산됨';
-    L.push('· '+b.name+': '+won(b.paid)+' / '+won(b.share)+tail);
-  });
-  L.push('');
-  L.push('트래블코스트에서 계산 · '+location.origin+'/trips');
-  var text=L.join('\n');
-  try{
-    if(navigator.share){ navigator.share({ title:trip.city+' 여행 정산', text:text }).catch(function(){}); return; }
-    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ toast('정산 내역을 복사했어요 — 단톡방에 붙여넣으세요'); }, function(){ prompt('복사해 공유하세요', text); }); }
-    else prompt('복사해 공유하세요', text);
-  }catch(e){ prompt('복사해 공유하세요', text); }
-}
+/* ── 정산 내역 공유(이미지 카드·텍스트) → /settle-share.js ── */
 
 if(trip){ renderShell(); renderClock();
   if(new URLSearchParams(location.search).get('quick')==='expense'){ setTab('budget'); openExpenseSheet(); }   // 앱 바로가기·검색 '지출 추가'
@@ -1974,6 +1873,7 @@ document.body.classList.add('trip-detail');
   },{passive:true});
 })();
 </script>
+<script src="/settle-share.js" defer></script>
 <script src="/nav.js" defer></script>
 </main>
 </body>
