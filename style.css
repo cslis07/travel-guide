@@ -2951,7 +2951,9 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 .hx-onb-h b{font-size:15px;color:var(--gray-900)}
 .hx-onb-x{width:32px;height:32px;border:none;background:none;color:var(--gray-500);font-size:16px;cursor:pointer;border-radius:8px}
 .hx-onb ol{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.hx-onb ol{grid-template-columns:repeat(3,1fr)}
+.hx-onb ol{grid-template-columns:repeat(3,minmax(0,1fr))}   /* minmax(0,…) — 글자가 칸을 밀어 360px 폰에서 가로로 넘치던 문제(2026-11-02) */
+.hx-onb li{min-width:0}
+@media(max-width:400px){.hx-onb ol{gap:4px}.hx-onb a{gap:0;padding:4px 2px;min-height:44px}.hx-onb a span{font-size:11.5px;line-height:1.1}.hx-onb a b{font-size:12.5px;line-height:1.25;letter-spacing:-.02em}}   /* 좁은 폰(320~400px): 세 칸 글자가 잘리지 않게 간격·크기 축소 */
 @media(max-width:759px){.hx-onb{padding:8px 10px}.hx-onb-h{margin-bottom:4px}.hx-onb-h b{font-size:13.5px}.hx-onb-x{width:28px;height:28px}.hx-onb small{display:none}.hx-onb a{display:flex;justify-content:center;gap:4px;padding:0 4px;min-height:38px}.hx-onb a span{font-size:13px}.hx-onb a b{font-size:12.5px;white-space:nowrap}}
 .hx-onb a{display:grid;grid-template-columns:28px 1fr;align-items:center;gap:0 8px;padding:10px;border-radius:10px;background:var(--gray-50);text-decoration:none;color:inherit;min-height:48px}
 .hx-onb a span{grid-row:span 2;font-size:18px;font-weight:850;color:var(--primary);text-align:center}
