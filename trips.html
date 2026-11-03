@@ -19,6 +19,15 @@
   .tw-head{display:flex;align-items:center;justify-content:space-between;padding:20px 2px 8px}
   .tw-head h1{font-size:24px;font-weight:800;letter-spacing:-.02em}
   .tw-head .sub{font-size:12.5px;color:var(--gray-500);font-weight:600;margin-top:2px}
+  /* 폰: 제목·글자 크기·검색을 윗줄, 백업·새 여행을 아랫줄로 — 한 줄에 다섯 개를 넣으면 부제가 세 줄로 꺾인다 */
+  @media(max-width:480px){
+    .tw-head{flex-wrap:wrap}
+    .tw-head>div:first-child{flex:1 1 0;min-width:0}
+    .tw-head .tc-sbtn{order:1}
+    .tw-head::after{content:"";order:2;flex-basis:100%}
+    .tw-head .bkbtn{order:3;margin:10px 8px 0 0}
+    .tw-head .newbtn{order:4;flex:1;justify-content:center;margin-top:10px}
+  }
   .newbtn{border:none;background:var(--primary);color:#fff;border-radius:14px;padding:11px 15px;font-size:13.5px;font-weight:800;display:flex;align-items:center;gap:6px;cursor:pointer;box-shadow:var(--shadow)}
   .filters{display:flex;gap:7px;margin:6px 0 16px}
   .fchip{padding:7px 13px;border-radius:999px;border:1px solid var(--gray-200);background:var(--surface,#fff);font-size:12.5px;font-weight:700;color:var(--gray-600);cursor:pointer}

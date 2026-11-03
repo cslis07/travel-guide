@@ -2962,3 +2962,5 @@ html.hx-mq .hx-rail:not(.hx-marquee){overflow:hidden;max-width:1080px;width:calc
 .hx-onb a{display:grid;grid-template-columns:28px 1fr;align-items:center;gap:0 8px;padding:10px;border-radius:10px;background:var(--gray-50);text-decoration:none;color:inherit;min-height:48px}
 .hx-onb a span{grid-row:span 2;font-size:18px;font-weight:850;color:var(--primary);text-align:center}
 .hx-onb a b{font-size:14px;color:var(--gray-900)}.hx-onb a small{font-size:12px;color:var(--gray-600)}
+/* 가이드 '한눈에 비교' 표(760px, 옆으로 밀어 봄) — 폰에서 구역 이름 열을 고정해 어느 줄인지 잃지 않게, 칸 여백도 줄인다 */
+@media(max-width:640px){.sgg .compare table{min-width:620px}.sgg .compare th,.sgg .compare td{padding:12px 12px;font-size:13.5px}.sgg .compare th:first-child,.sgg .compare td:first-child{position:sticky;left:0;z-index:1;background:#fff;box-shadow:1px 0 0 var(--sgg-line,#e6e9ee)}.sgg .compare th:first-child{background:#f7f9fb}}

@@ -1207,6 +1207,7 @@ button,select,input,a{touch-action:manipulation}
 @media(max-width:440px){
   #topbar{padding:0 8px}
   #logo{font-size:.74rem}
+  #logo,#hdr-time{white-space:nowrap}   /* '인천공항 실시간'·시각이 두 줄로 꺾이지 않게 */
   #lang-toggle{display:none}
   #share-btn{padding:6px 8px}
   .tab-btn{padding:12px 13px;font-size:.74rem}
@@ -1216,6 +1217,8 @@ button,select,input,a{touch-action:manipulation}
   .fav-card{grid-template-columns:auto 1fr auto}
   .fav-card-actions{flex-direction:column;gap:5px}
 }
+/* 400px 이하 폰은 상단 상태바에 시계가 있으니 머리글 시각은 빼고 버튼 자리를 확보 */
+@media(max-width:400px){#hdr-time{display:none}}
 
 /* iPhone safe area – 가로모드 등 */
 @supports(padding:max(0px)){
