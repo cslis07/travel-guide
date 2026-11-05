@@ -155,6 +155,14 @@
   .df-line.warn{color:#b54708}.df-line.over{color:var(--danger)}
   .df-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--gray-100)}.df-rm{flex:1;min-width:0}.df-rm b{display:block;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.df-rm small{font-size:11.5px;color:var(--gray-500)}
   .df-sel{flex:0 0 auto;width:auto;max-width:46%;font-size:16px;padding:6px 8px}
+  /* 🧾 택스리펀 (tax-refund.js) */
+  .trc{background:var(--surface,#fff);border:1px solid var(--gray-200);border-left:4px solid var(--gray-300);border-radius:14px;padding:12px 13px;margin-top:12px}.trc.ok{border-left-color:var(--primary)}
+  .tr-t{font-size:13.5px;font-weight:800;color:var(--gray-900);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}.tr-t span{font-size:11.5px;font-weight:600;color:var(--gray-500)}
+  .tr-m{font-size:13px;color:var(--gray-700);margin:6px 0 0;line-height:1.5}.tr-m b{color:var(--primary)}
+  .tr-l{list-style:none;margin:8px 0 0;padding:0}.tr-l li{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:6px 0;border-top:1px solid var(--gray-100)}.tr-l li span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--gray-700)}.tr-l li b{flex:0 0 auto;color:var(--gray-900)}
+  .tr-h{font-size:12px;color:var(--gray-600);line-height:1.55;margin:8px 0 0;background:var(--gray-100);border-radius:10px;padding:8px 10px}
+  .tr-s{display:block;font-size:11px;color:var(--gray-500);line-height:1.5;margin-top:8px}.tr-s a{color:var(--primary)}
+  .ex-tr{font-size:12px;color:var(--gray-600);margin:6px 2px 0;line-height:1.45}.ex-tr:empty{display:none}.ex-tr.ok{color:var(--primary);font-weight:700}
   .backcard{background:var(--surface,#fff);border-radius:14px;padding:14px;margin-top:12px;box-shadow:var(--shadow)}.backcard.home{margin:0 0 12px;border:2px solid var(--primary)}
   .bc-badge{display:inline-block;font-size:11.5px;font-weight:800;color:#fff;background:var(--primary);padding:3px 9px;border-radius:999px;margin-bottom:8px}
   .bc-top{display:flex;justify-content:space-between;align-items:baseline}.bc-top b{font-size:16px;font-weight:800}.bc-top span{font-size:12px;color:var(--gray-500);font-weight:700}
@@ -340,6 +348,7 @@
 <script src="/phrases.js"></script>
 <script src="/local-info.js"></script>
 <script src="/duty-free.js"></script>
+<script src="/tax-refund.js"></script>
 <script>
 var T = window.TripStore; T.seedIfEmpty(); T.refreshRates();
 var tid = new URLSearchParams(location.search).get('id');
@@ -655,7 +664,7 @@ function budgetMain(){
   var lo=walletCard()+loCard();
   if(!T.budgetTotal(trip)){
     return lo+'<div class="card" style="text-align:center;padding:26px"><div style="font-size:38px">💰</div><h4 style="margin:8px 0 4px;font-size:15px">총예산을 정해볼까요?</h4><p style="color:var(--gray-500);font-size:12.5px">예산을 넣으면 하루 쓸 수 있는 돈을 자동으로 계산해 드려요.</p><button class="save" style="max-width:220px;margin:14px auto 0" onclick="openBudgetSheet()">예산 설정</button></div>'
-      + dutyCard() + reportBtn();
+      + dutyCard() + trCard() + reportBtn();
   }
   var cats=T.byCategory(trip);
   var limits=(trip.budget&&trip.budget.catLimits)||{};
@@ -674,7 +683,7 @@ function budgetMain(){
     + '<div class="daily">'+svg('ic-wallet','')+'<div><div class="lbl">오늘 이후 하루 쓸 수 있는 돈</div><div class="big">'+won(T.dailyAllowance(trip))+'</div><div class="fm">(총예산 − 누적지출) ÷ 남은 '+T.remainingDays(trip)+'일</div></div></div>'
     + '<div class="sech">카테고리별</div><div class="card">'+catHtml+'</div>'
     + '<button class="seg" style="width:100%;margin-top:6px" onclick="openLimitSheet()">카테고리 한도 설정</button>'
-    + dutyCard()
+    + dutyCard() + trCard()
     + (ended?'':reportBtn());
 }
 /* 갈 사람 + 그룹 정산 — 지출이 바뀔 때마다 다시 그려지므로 항상 자동 계산 상태 */
@@ -994,7 +1003,7 @@ function openExpenseSheet(expId){
     +'<div class="amtin"><input class="val" id="ex-amt" type="number" inputmode="decimal" enterkeyhint="done" placeholder="0" value="'+(e?(e.amount||''):'')+'" oninput="updKRW()" onkeydown="if(event.key===\'Enter\'){event.preventDefault();saveExpense();}"><div class="krw" id="ex-krw">≈ '+won(e?e.krw:0)+'</div><div id="ex-fxnote" style="font-size:10px;color:var(--gray-500);margin-top:2px"></div></div>'
     +'<div class="segrow" id="ex-cur">'+curs.map(function(c){return '<button type="button" class="seg'+(c===exState.cur?' on':'')+'" data-cur="'+c+'" onclick="pickCur(this)">'+c+'</button>';}).join('')
     +'<select class="seg cur-more" aria-label="다른 통화" onchange="pickCurMore(this)"><option value="">다른 통화</option>'+more.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></div>'
-    +'<div class="catgrid">'+catg+'</div>'
+    +'<div class="catgrid">'+catg+'</div><div class="ex-tr" id="ex-tr"></div>'
     +'<div class="segrow"><span class="seg'+(exState.method==='card'?' on':'')+'" data-m="card" onclick="pickM(this)">💳 카드</span><span class="seg'+(exState.method==='cash'?' on':'')+'" data-m="cash" onclick="pickM(this)">💵 현금</span></div><div class="ex-wal" id="ex-wal"></div>'
     +people
     +memoChips()
@@ -1008,6 +1017,7 @@ function openExpenseSheet(expId){
   rcState={data:null,remove:false};
   if(e&&e.hasReceipt) rcGet(e.id,function(d){ if(d) showRcPrev(d); });
   walletNote();
+  trHint();
   if(!e) setTimeout(function(){ var a=document.getElementById('ex-amt'); if(a) a.focus(); },60);   // 새 지출: 바로 숫자 입력
   setFxNote();
   T.refreshRates(function(ok){ if(ok){ updKRW(); setFxNote(); } });
@@ -1040,7 +1050,7 @@ function pickCurMore(sel){
   sel.parentNode.insertBefore(b,sel); sel.querySelector('option[value=""]').selected=true; sel.removeChild([].filter.call(sel.options,function(o){return o.value===c;})[0]);
   pickCur(b);
 }
-function pickCat(el){ document.querySelectorAll('.catpick').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cat=el.dataset.cat; }
+function pickCat(el){ document.querySelectorAll('.catpick').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cat=el.dataset.cat; trHint(); }
 function pickM(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.method=el.dataset.m; walletNote(); }
 function pickPayer(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.paidBy=el.dataset.p; }
 function toggleFor(el){
@@ -1061,7 +1071,7 @@ function exKRW(v){
   if(e&&e.krw!=null&&+e.amount===v&&(e.currency||'KRW')===exState.cur) return e.krw;
   return T.toKRW(v,exState.cur);
 }
-function updKRW(){ var v=parseFloat(document.getElementById('ex-amt').value)||0; document.getElementById('ex-krw').textContent='≈ '+won(exKRW(v)); setFxNote(); }
+function updKRW(){ var v=parseFloat(document.getElementById('ex-amt').value)||0; document.getElementById('ex-krw').textContent='≈ '+won(exKRW(v)); setFxNote(); trHint(); }
 function saveExpense(){
   var v=parseFloat(document.getElementById('ex-amt').value)||0; if(v<=0){alert('금액을 입력하세요.');return;}
   var members=(trip.members||[]).map(function(m){return m.name;});
