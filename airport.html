@@ -588,6 +588,8 @@ tr:hover td{background:var(--a-hover)}
   padding:14px;margin-bottom:10px;box-shadow:var(--sh-sm);
 }
 .loading{text-align:center;padding:32px;color:var(--muted);font-size:.78rem}
+/* 출국장 혼잡 칸은 데이터가 오면 82→160~500px 로 커져 아래가 391px 밀렸다(CLS 0.66) — 폰에서 불러오는 동안 자리를 미리 잡는다(2026-11-06 360px 실측 높이) */
+@media(max-width:700px){#cong-dep1-area>.loading,#cong-dep2-area>.loading{min-height:460px}#cong-arr1-area>.loading{min-height:270px}#cong-arr2-area>.loading{min-height:150px}}
 .err{
   padding:12px;color:var(--r);background:rgba(239,68,68,.08);
   border:1px solid rgba(239,68,68,.2);border-radius:var(--rb);font-size:.75rem;

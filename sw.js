@@ -1,10 +1,12 @@
 // 트래블코스트 Service Worker — PWA 설치 + 오프라인 캐싱
 //
 // 전략
-//  - HTML / API : 네트워크 우선 (항상 최신). 실패 시 캐시 → 최후에 오프라인 폴백
-//  - 정적 자산  : 캐시 우선 + 백그라운드 갱신 (stale-while-revalidate)
+//  - HTML / API : 네트워크 우선 (항상 최신). 실패 시 캐시 → 최후에 오프라인 폴백.
+//                 HTML 은 4초 안에 안 오면 캐시된 셸을 먼저 보여 준다(공항·해외처럼 연결은 잡혔는데 데이터가 안 흐를 때)
+//  - 우리 JS·CSS : 네트워크 우선 + 2.5초 넘으면 캐시 — 배포 직후 새 HTML 이 옛 JS 를 받아 TypeError 나던 것 방지
+//  - 그 밖의 자산 : 캐시 우선 + 백그라운드 갱신 (stale-while-revalidate)
 
-const CACHE = 'travelcost-v53';
+const CACHE = 'travelcost-v54';
 
 // 설치 시 미리 담아둘 최소 셸 (오프라인 폴백용)
 // 페이지는 깨끗한 주소로(cleanUrls라 '/x.html'은 리다이렉트 응답이 캐시돼 오프라인 내비게이션에 못 씀)
@@ -46,6 +48,21 @@ const SHELL = [
 
 const OFFLINE_FALLBACK = '/';
 
+/* 네트워크가 ms 안에 답하면 그 응답, 아니면 캐시(있을 때만). 네트워크는 끝까지 받아 캐시를 갱신한다 */
+function netFirst(req, ms, store) {
+  const net = fetch(req).then(res => {
+    if (store && res.ok) { const clone = res.clone(); caches.open(CACHE).then(c => c.put(req, clone)); }
+    return res;
+  });
+  const fromCache = () => caches.match(req, { ignoreSearch: req.mode === 'navigate' });
+  return Promise.race([
+    // 오프라인(즉시 실패)이면 기다리지 않고 바로 캐시, 캐시도 없으면 실패를 넘긴다(바깥 catch 가 오프라인 폴백)
+    net.catch(() => fromCache().then(c => c || Promise.reject(new Error('offline')))),
+    // ms 안에 안 오면 캐시가 있을 때만 캐시, 없으면 네트워크를 끝까지 기다린다
+    new Promise(resolve => setTimeout(resolve, ms)).then(fromCache).then(c => c || net),
+  ]);
+}
+
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE)
@@ -77,12 +94,9 @@ self.addEventListener('fetch', e => {
   // 1) API·HTML → 네트워크 우선
   if (isApi || isHtml) {
     e.respondWith(
-      fetch(req)
+      (isHtml ? netFirst(req, 4000, true) : fetch(req))
         .then(res => {
-          if (isHtml && res.ok) {
-            const clone = res.clone();
-            caches.open(CACHE).then(c => c.put(req, clone));
-          }
+          if (!res) throw new Error('no response');
           return res;
         })
         .catch(async () => {
@@ -106,7 +120,13 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // 2) 정적 자산 → 캐시 우선 + 백그라운드 갱신
+  // 2) 우리 JS·CSS → 네트워크 우선(2.5초) — HTML 과 버전을 맞춘다
+  if (/\.(js|css)$/.test(url.pathname)) {
+    e.respondWith(netFirst(req, 2500, true).then(res => res || caches.match(req)).catch(() => caches.match(req)));
+    return;
+  }
+
+  // 3) 그 밖의 정적 자산 → 캐시 우선 + 백그라운드 갱신
   e.respondWith(
     caches.match(req).then(cached => {
       const fetched = fetch(req)

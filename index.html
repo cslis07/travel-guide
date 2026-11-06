@@ -99,7 +99,7 @@
 
   <!-- ── HERO ── -->
   <!-- hx:top -->
-  <div class="hx-band" id="hxTop"><div class="container"><div id="hxNext"></div><script>/* 처음 방문 안내를 첫 화면에 바로(늦게 끼어들어 아래가 밀리던 CLS 0.43 방지) — 닫기 연결은 home-ui.js */(function(){try{var t=[];try{t=JSON.parse(localStorage.getItem('tc_trips_v1')||'[]');}catch(e){}if((Array.isArray(t)&&t.length)||localStorage.getItem('tc_onboard_done'))return;document.getElementById('hxNext').innerHTML='<div class="hx-onb" role="region" aria-label="처음 방문 안내"><div class="hx-onb-h"><b>처음이세요? 3단계면 준비 끝</b>'
+  <div class="hx-band" id="hxTop"><div class="container"><div id="hxNext"></div><script>/* 처음 방문 안내를 첫 화면에 바로(늦게 끼어들어 아래가 밀리던 CLS 0.43 방지) — 닫기 연결은 home-ui.js */(function(){try{var t=[];try{t=JSON.parse(localStorage.getItem('tc_trips_v1')||'[]');}catch(e){}if(Array.isArray(t)&&t.length){/* 다가오는·진행 중 여행이 있으면 '내 다음 여행' 카드(약 90px)가 4초 뒤 들어오며 아래를 밀었다(CLS 0.11) — 같은 크기 빈 카드로 자리 미리 */var d=new Date(),td=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);if(t.some(function(x){return x&&x.end>=td;}))document.getElementById('hxNext').innerHTML='<div class="hx-next" aria-hidden="true" style="height:66px;box-sizing:content-box"></div>';return;}if(localStorage.getItem('tc_onboard_done'))return;document.getElementById('hxNext').innerHTML='<div class="hx-onb" role="region" aria-label="처음 방문 안내"><div class="hx-onb-h"><b>처음이세요? 3단계면 준비 끝</b>'
       + '<button type="button" class="hx-onb-x" aria-label="안내 닫기">✕</button></div><ol>'
       + '<li><a href="/trips?new=1"><span>①</span><b>여행 만들기</b><small>도시·날짜만 넣으면 일정·예산·준비물 칸이 생겨요</small></a></li>'
       + '<li><a href="/prepare"><span>②</span><b>출국 준비</b><small>출발일 기준으로 언제 뭘 할지 알려 줘요</small></a></li>'

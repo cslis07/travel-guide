@@ -22,7 +22,7 @@
   /* 폰: 제목·글자 크기·검색을 윗줄, 백업·새 여행을 아랫줄로 — 한 줄에 다섯 개를 넣으면 부제가 세 줄로 꺾인다 */
   @media(max-width:480px){
     .tw-head{flex-wrap:wrap}
-    .tw-head>div:first-child{flex:1 1 0;min-width:0}
+    .tw-head>div:first-child{flex:1 1 0;min-width:60%}   /* 0이면 검색 버튼이 붙기 전(약 2초) 줄바꿈 칸(::after)과 한 줄에 놓여 폭 0 → 제목이 글자마다 꺾여 목록이 300px 밀렸다(CLS 0.29~0.63) */
     .tw-head .tc-sbtn{order:1}
     .tw-head::after{content:"";order:2;flex-basis:100%}
     .tw-head .bkbtn{order:3;margin:10px 8px 0 0}

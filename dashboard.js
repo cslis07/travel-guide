@@ -206,8 +206,11 @@
       if (!url) return;
       var img = document.createElement('img');
       img.alt = ''; img.decoding = 'async'; img.referrerPolicy = 'no-referrer'; img.setAttribute('data-src500', url);
-      img.onerror = function () { if (img.src !== url) img.src = url; else img.remove(); };   // 고해상도가 없으면 500px로
-      img.src = url.replace('/500px-', '/960px-');
+      img.onerror = function () { if (img.currentSrc && img.currentSrc !== url) { img.removeAttribute('srcset'); img.src = url; } else img.remove(); };   // 고해상도가 없으면 500px로
+      // 폰(표시 폭 약 220px)은 500px, 넓은 화면은 960px — 폰에서도 960px(273KB)를 받던 것(2026-11-06 실측)
+      img.srcset = url + ' 500w, ' + url.replace('/500px-', '/960px-') + ' 960w';
+      img.sizes = '(max-width:700px) 166px, 567px';
+      img.src = url;
       art.insertBefore(img, art.firstChild);
     }
 
