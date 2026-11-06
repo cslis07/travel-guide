@@ -79,6 +79,13 @@ async function handler(req) {
     const text = await upstream.text();
     console.log(JSON.stringify({ upstream: 'tour', api: path, status: upstream.status, key: KEY_STATE }));   // 호출량 계측(Vercel 로그)
 
+    // HTTP 200 이어도 공공데이터 오류(XML·resultCode≠0000)일 수 있다 — 그런 응답은 CDN 에 캐시하지 않는다(최대 24시간 오류가 남던 문제)
+    let okBody = false;
+    try { const j = JSON.parse(text); okBody = String(j?.response?.header?.resultCode ?? '') === '0000'; } catch { okBody = false; }
+    if (!okBody) {
+      return new Response(text, { status: 502, headers: { ...CORS, 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
+    }
+
     return new Response(text, {
       status: 200,
       headers: {

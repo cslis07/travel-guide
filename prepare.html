@@ -256,7 +256,7 @@ var STAGES = [
         desc:'전액 환전보다 현금 일부 + 해외결제 카드 조합이 일반적입니다. 주거래 은행 앱의 환전 우대가 공항 환전소보다 유리한 경우가 많습니다.' },
       { id:'parking', name:'공항 주차 예약 (자가용 이용 시)',
         desc:'성수기에는 사전 예약 없이 가면 만차입니다. 단기·장기 주차장 요금 차이가 크므로 일정에 맞춰 고르세요.',
-        links:[{ label:'주차 요금·현황 보기', url:'/airport#tab=access' },
+        links:[{ label:'주차 요금·현황 보기', url:'/airport#tab=parking' },
                { label:'공식 주차요금표 ↗', url:'https://www.airport.kr/ap_ko/969/subview.do', ext:true }] },
       { id:'rent', name:'렌터카 예약', cat:'car',
         desc:'현지 픽업 시간과 반납 조건, 보험 범위를 확인하세요.' },
@@ -284,10 +284,10 @@ var STAGES = [
     todos:[
       { id:'route', name:'공항 가는 교통편 확정',
         desc:'첫차·막차 시간과 소요 시간을 확인하세요. 서울역 도심공항터미널에서 사전 수속이 가능한 항공사도 있습니다.',
-        links:[{ label:'공항 가는 길 보기', url:'/airport#tab=access' }] },
+        links:[{ label:'공항 가는 길 보기', url:'/airport#tab=prep&sub=route' }] },
       { id:'flightno', name:'편명 등록 (게이트·지연 추적)',
         desc:'편명을 등록해두면 출발 카운트다운과 게이트 정보를 한 화면에서 볼 수 있습니다.',
-        links:[{ label:'내 항공편 등록', url:'/airport#tab=myflight' }] },
+        links:[{ label:'내 항공편 등록', url:'/airport#tab=fav' }] },
       { id:'charge', name:'기기 충전 + 보조배터리 확인',
         desc:'보조배터리는 위탁수하물에 넣을 수 없습니다. 반드시 기내로 들고 타세요.' }
     ]
@@ -298,10 +298,10 @@ var STAGES = [
     todos:[
       { id:'arrive', name:'공항 도착 · 터미널 확인',
         desc:'T1과 T2는 이동에 시간이 걸립니다. 항공사별 터미널을 반드시 확인하고 출발하세요. 출국장 혼잡도는 실시간으로 확인할 수 있습니다.',
-        links:[{ label:'실시간 혼잡도·출국장', url:'/airport#tab=depart' }] },
+        links:[{ label:'실시간 혼잡도·출국장', url:'/airport#tab=congestion' }] },
       { id:'lounge', name:'라운지 이용 (해당 시)',
         desc:'보유한 신용카드나 PP카드로 무료 이용이 되는지 확인하세요.',
-        links:[{ label:'라운지 목록 보기', url:'/airport#tab=prep' }] },
+        links:[{ label:'라운지 목록 보기', url:'/airport#tab=prep&sub=lounge' }] },
       { id:'esim-on', name:'eSIM 활성화',
         desc:'현지 도착 후 데이터 로밍을 켜고 eSIM 회선으로 전환하면 됩니다.' }
     ]
@@ -347,11 +347,13 @@ function setDone(map){
   try { localStorage.setItem(KEY_DONE, JSON.stringify(map)); } catch(e){}
 }
 
+/* 'YYYY-MM-DD' → 기기 날짜 0시(new Date('YYYY-MM-DD')는 UTC 0시라 미국 등에서 하루 당겨졌다) */
+function ymd(v){ var p=String(v||'').split('-'); return p.length===3 ? new Date(+p[0], +p[1]-1, +p[2]) : new Date(NaN); }
 /* 출발일 기준 각 단계의 실제 날짜 */
 function stageDate(offset){
   var v = $('departDate').value;
   if (!v) return null;
-  var d = new Date(v);
+  var d = ymd(v);
   if (isNaN(d)) return null;
   d.setDate(d.getDate() - offset);
   return d;
@@ -362,8 +364,8 @@ function fmt(d){
 function daysLeft(){
   var v = $('departDate').value;
   if (!v) return null;
-  var d = new Date(v); if (isNaN(d)) return null;
-  var today = new Date(); today.setHours(0,0,0,0); d.setHours(0,0,0,0);
+  var d = ymd(v); if (isNaN(d)) return null;
+  var today = new Date(); today.setHours(0,0,0,0);
   return Math.round((d - today) / 86400000);
 }
 

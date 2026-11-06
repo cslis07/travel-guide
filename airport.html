@@ -1982,9 +1982,13 @@ async function api(path, params={}) {
   try {
     const r = await fetch(`/api/proxy?path=${encodeURIComponent(path)}&${p}`);
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    return r.json();
+    return await r.json();   // await 가 없으면 JSON 이 아닌 응답(한도 초과 XML 등)의 오류가 catch 를 빠져나가 '조회 중'에서 멈췄다
   } catch(e) { console.warn('[API]', path, e.message); return null; }
 }
+/* 공항 데이터는 모두 한국 시간(KST). 해외에서 귀국편을 볼 때도 한국 기준으로 계산한다.
+   kstDate(): getHours()·getDate() 등이 한국 시각을 돌려주는 Date(표시·비교용 — 실제 시각 계산엔 kstInstant) */
+function kstDate(ms){ const t=ms==null?Date.now():ms; return new Date(t+(540+new Date(t).getTimezoneOffset())*60000); }
+function kstInstant(y,mo,d,h,mi){ return new Date(Date.UTC(y,mo,d,h-9,mi)); }   // 한국 시각 → 실제 시각
 function items(data) {
   const b = data?.response?.body;
   if (!b) return [];
@@ -2056,11 +2060,11 @@ function toggleTheme() {
 //  CLOCK
 // ════════════════════════════════
 function tickClock() {
-  const n=new Date();
+  const n=kstDate();
   const days=['일','월','화','수','목','금','토'];
   const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const dayEn=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  html('hdr-time',n.toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}));
+  html('hdr-time',new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit',timeZone:'Asia/Seoul'}));
   html('hdr-date',`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')} (${dayEn[n.getDay()]})`);
   // update pax-date-lbl with korean date
   const paxLbl=el('pax-date-lbl');
@@ -2079,15 +2083,16 @@ async function loadWeather() {
       fetch(`/api/proxy?_url=${encodeURIComponent(wxUrl)}`).then(r=>r.json()),
       fetch(`/api/proxy?_url=${encodeURIComponent(aqUrl)}`).then(r=>r.json())
     ]);
-    const c=w.current, d=w.daily;
-    html('w-temp',(c.temperature_2m??'--').toFixed(1)+'°C');
+    // 값이 null 이면 '--'.toFixed 가 TypeError 를 내 날씨 카드 전체가 비던 문제 — 숫자일 때만 자릿수 맞춤
+    const c=w?.current||{}, d=w?.daily, f=(v,n)=>typeof v==='number'?v.toFixed(n):'--';
+    html('w-temp',f(c.temperature_2m,1)+'°C');
     html('w-desc',WMO[c.weather_code]||'--');
-    html('w-hi',`${(d?.temperature_2m_min?.[0]??'--').toFixed(0)}° / ${(d?.temperature_2m_max?.[0]??'--').toFixed(0)}°`);
-    html('w-wind',(c.wind_speed_10m??'--').toFixed(1)+'m/s');
+    html('w-hi',`${f(d?.temperature_2m_min?.[0],0)}° / ${f(d?.temperature_2m_max?.[0],0)}°`);
+    html('w-wind',f(c.wind_speed_10m,1)+'m/s');
     html('w-hum',(c.relative_humidity_2m??'--')+'%');
     html('w-prec',c.precipitation>0?(c.precipitation.toFixed(1)+'mm'):'없음');
-    html('w-pm25',(aq?.current?.pm2_5??'--').toFixed(0)+' μg');
-    html('w-pm10',(aq?.current?.pm10??'--').toFixed(0)+' μg');
+    html('w-pm25',f(aq?.current?.pm2_5,0)+' μg');
+    html('w-pm10',f(aq?.current?.pm10,0)+' μg');
   } catch(e){}
 }
 
@@ -2098,11 +2103,11 @@ function fmtD(d){return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'
 
 async function loadPaxChart() {
   try {
-    const data=await api('passgrAnncmt/getPassgrAnncmt',{numOfRows:1000});
+    // 내일 예측은 selectdate=1 로만 온다(오늘 응답에는 내일 행이 없어 '내일'이 늘 비어 있었다)
+    const data=await api('passgrAnncmt/getPassgrAnncmt',_chartDay===0?{numOfRows:1000}:{numOfRows:1000,selectdate:1});
     const list=items(data);
     if(!list.length) return;
-    const base=new Date();
-    const dayStr=_chartDay===0?fmtD(base):fmtD(new Date(base.getTime()+86400000));
+    const dayStr=fmtD(kstDate(Date.now()+_chartDay*86400000));
     const dayLbl=_chartDay===0?'오늘':'내일';
     const t1h=new Array(24).fill(0), t2h=new Array(24).fill(0);
     list.forEach(r=>{
@@ -2125,14 +2130,14 @@ async function loadPaxChart() {
     html('hs-t1-pk',t1pk>0?`피크 ${t1pkH}시 · ${t1pk.toLocaleString()}명`:'');
     html('hs-t2-pk',t2pk>0?`피크 ${t2pkH}시 · ${t2pk.toLocaleString()}명`:'');
     // update date label
-    const n=new Date(); const days=['일','월','화','수','목','금','토'];
+    const n=kstDate(); const days=['일','월','화','수','목','금','토'];
     const paxLbl=el('pax-date-lbl');
     if(paxLbl) paxLbl.textContent=_chartDay===0?`${n.getMonth()+1}월 ${n.getDate()}일 (${days[n.getDay()]}) 오늘`:'내일';
     // 차트 캔버스가 화면에 표시될 때만 렌더 (모바일은 CSS로 숨김 → 라이브러리 로드 생략)
     const canvas=el('paxChart');
     if(!canvas || canvas.offsetParent===null) return;  // 숨김 상태면 차트 스킵
     await window._loadChartJs();                        // Chart.js 지연 로드
-    const nowH=new Date().getHours();
+    const nowH=kstDate().getHours();
     const labels=Array.from({length:24},(_,i)=>i+'시');
     const datasets=[];
     if(_chartMode!=='T2') datasets.push({label:'T1',data:t1h,borderColor:'#00c8ff',backgroundColor:'rgba(0,200,255,.08)',borderWidth:2,tension:.4,fill:true,pointRadius:t1h.map((_,i)=>i===t1pkH?4:i===nowH?3:0),pointBackgroundColor:'#00c8ff'});
@@ -2166,10 +2171,10 @@ function setChartT(m,btn){_chartMode=m;document.querySelectorAll('.ct-btn').forE
 // ════════════════════════════════
 async function loadNotice() {
   try {
-    const data=await api('passgrAnncmt/getPassgrAnncmt',{numOfRows:5});
+    const data=await api('passgrAnncmt/getPassgrAnncmt',{numOfRows:1000});   // 시간대 24줄 + 합계 1줄 — 5줄만 받으면 0~5시만 더해졌다(차트와 같은 요청이라 CDN 캐시 공유)
     const list=items(data);
     const fmtN=d=>`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
-    const today=fmtN(new Date());
+    const today=fmtN(kstDate());
     const todayItems=list.filter(r=>r.adate===today);
     const t1tot=todayItems.reduce((a,r)=>a+parseFloat(r.t1egsum1||0)+parseFloat(r.t1dgsum1||0),0);
     const t2tot=todayItems.reduce((a,r)=>a+parseFloat(r.t2egsum1||0)+parseFloat(r.t2dgsum2||0),0);
@@ -2312,7 +2317,7 @@ async function loadParking() {
 async function loadParkSpots() {
   spin('spot-area');
   try {
-    const data=await api('ParkLocationData/getParkLocationData',{terminalid:'T1',numOfRows:1000});
+    const data=await api('ParkLocationData/getParkLocationData',{terminalid:'T1',numOfRows:6000});   // 전체 4,614면(2026-11 실측) — 압축 후 약 40KB
     const list=items(data);
     if(!list.length){html('spot-area','<div class="loading">주차면 정보 없음 (T1 전용)</div>');return;}
     const zones={};
@@ -2359,12 +2364,16 @@ function loadTransTab(){
 function setShuttleMode(m,btn){_shuttleMode=m;document.querySelectorAll('#trans-shuttle .sub-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadShuttle();}
 function setArexDir(d,btn){_arexDir=d;document.querySelectorAll('#trans-arex .sub-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderArex();}
 
+/* 셔틀 시간표 요일 구분 — 2026-11 실측으로는 dayType 이 '1' 하나뿐이라 거르지 않는다.
+   여러 값이 오기 시작하면 평일(KST)에는 '1'만(주말 값의 뜻은 문서 확인 전이라 주말엔 거르지 않음) */
+function shuttleDayType(list){ const s=new Set(list.map(x=>String(x.dayType))); const wd=kstDate().getDay(); return s.size>1&&s.has('1')&&wd>=1&&wd<=5?'1':null; }
 async function loadShuttle() {
   spin('shuttle-area');
   try {
     if(_shuttleMode==='time') {
-      const data=await api('ShtbusInfo/getShtbTimeInfo',{numOfRows:1000});
-      const list=items(data);
+      const data=await api('ShtbusInfo/getShtbTimeInfo',{numOfRows:6000});   // 전체 4,754건(2026-11 실측) — 1,000건만 받으면 노선 일부가 빠졌다
+      const all=items(data), dt=shuttleDayType(all);
+      const list=dt?all.filter(s=>String(s.dayType)===dt):all;
       if(!list.length){html('shuttle-area','<div class="loading">시간표 없음</div>');return;}
       // Group by routeId then by hour
       const routes={};
@@ -2402,20 +2411,25 @@ async function loadShuttle() {
   } catch(e){err('shuttle-area',e.message);}
 }
 
+/* 공항철도: 전체는 39,668건(7일치·전 역)이라 1,000건만 받으면 정렬 안 된 일부만 와서 역 시간표가 비었다.
+   역별로 받는다(역당 약 2,900건·압축 후 약 25KB). 같은 역은 한 번만 받고, 오늘(KST) 운행만 쓴다 */
+const _arexByStn={};
 async function loadArex() {
+  _arexStnList=Object.keys(STN);
+  if(_arexSelIdx>=_arexStnList.length) _arexSelIdx=0;
+  renderArexMap();
+  await loadArexStn(_arexStnList[_arexSelIdx]);
+}
+async function loadArexStn(cd) {
+  if(_arexByStn[cd]){ _arexData=_arexByStn[cd]; renderArex(); return; }
   spin('arex-area');
   try {
-    const data=await api('AirportRailroadOperationInfo/getAirportRailroad',{numOfRows:1000});
+    const data=await api('AirportRailroadOperationInfo/getAirportRailroad',{stnCd:cd,numOfRows:4000});
     const list=items(data);
     if(!list.length){html('arex-area','<div class="loading">철도 운행 정보 없음</div>');return;}
+    _arexByStn[cd]=list;
+    if(_arexStnList[_arexSelIdx]!==cd) return;   // 그사이 다른 역을 골랐으면 그 역을 기다린다
     _arexData=list;
-    // Build ordered station list from data
-    const stnSet=new Set(list.map(f=>f.stnCd).filter(Boolean));
-    const stnOrder=Object.keys(STN);
-    _arexStnList=stnOrder.filter(cd=>stnSet.has(cd));
-    if(!_arexStnList.length) _arexStnList=[...stnSet];
-    if(_arexSelIdx>=_arexStnList.length) _arexSelIdx=0;
-    renderArexMap();
     renderArex();
   } catch(e){err('arex-area',e.message);}
 }
@@ -2435,18 +2449,20 @@ function renderArexMap() {
 function selectArexStn(idx){
   _arexSelIdx=idx;
   renderArexMap();
-  renderArex();
+  loadArexStn(_arexStnList[idx]);
 }
 
 function renderArex() {
   if(!_arexData.length) return;
   const cd=_arexStnList[_arexSelIdx];
   const stnName=STN[cd]||cd;
-  const nowDt=new Date();
-  const nowH=nowDt.getHours(), nowM=nowDt.getMinutes();
+  const nowDt=kstDate();
+  const nowH=nowDt.getHours(), nowM=nowDt.getMinutes(), today=fmtD(nowDt);
 
-  // Filter by station, sort by departure time
-  let stnTrains=_arexData.filter(f=>f.stnCd===cd && f.planDptrDttm).sort((a,b)=>a.planDptrDttm.localeCompare(b.planDptrDttm));
+  // 이 역·오늘(KST) 출발편만, 방향: 열차번호 홀수=공항행·짝수=서울행(2026-11 실측 — 서울역 출발은 모두 홀수, T2 출발은 모두 짝수)
+  const wantOdd=_arexDir==='to';
+  let stnTrains=_arexData.filter(f=>f.stnCd===cd && f.planDptrDttm && f.drvDt===today && ((parseInt(String(f.trnNo||'').replace(/\D/g,''),10)%2===1)===wantOdd))
+    .sort((a,b)=>a.planDptrDttm.localeCompare(b.planDptrDttm));
 
   // Group by hour
   const hours={};
@@ -2554,7 +2570,7 @@ function renderDepCong(list,areaId,label,isT2) {
   const maxG=list.length?list.reduce((a,g)=>parseInt(g.waitLength||0)>parseInt(a.waitLength||0)?g:a,list[0]):null;
   // '가장 여유'는 지금 운영 중인 출국장만(닫힌 곳은 대기 0이라 1등으로 뽑히던 문제) — 대기시간, 같으면 대기인원 순
   const openNow=g=>{const m=/(\d{1,2}):(\d{2})\s*~\s*(\d{1,2}):(\d{2})/.exec(g.operatingTime||'');if(!m)return true;
-    const d=new Date(),n=d.getHours()*60+d.getMinutes(),a=+m[1]*60+ +m[2],b=+m[3]*60+ +m[4];return a<=b?(n>=a&&n<=b):(n>=a||n<=b);};
+    const d=kstDate(),n=d.getHours()*60+d.getMinutes(),a=+m[1]*60+ +m[2],b=+m[3]*60+ +m[4];return a<=b?(n>=a&&n<=b):(n>=a||n<=b);};
   const openList=list.filter(g=>/DG\d+_[EW]/.test(g.gateId||'')&&openNow(g))
     .sort((a,b)=>(+a.waitTime||0)-(+b.waitTime||0)||(+a.waitLength||0)-(+b.waitLength||0));
   const minG=openList[0]||null;
@@ -2711,10 +2727,10 @@ async function loadFlights() {
       const d=await api('StatusOfPassengerFlightsOdp/getPassengerArrivalsOdp',{numOfRows:500});
       _fltCache=items(d);
     } else if(_fltDir==='bag'){
-      const d=await api('StatusOfBaggageLateral/getDeparturesBaggage',{numOfRows:300});
+      const d=await api('StatusOfBaggageLateral/getDeparturesBaggage',{numOfRows:4000});   // 오늘·내일 2,367건(2026-11 실측) — 300건이면 오전 10시 편까지만 보였다
       _fltCache=items(d);
     } else if(_fltDir==='close'){
-      const d=await api('FlightClosingInfoSpot/getFlightClosingInfoSpot',{numOfRows:300});
+      const d=await api('FlightClosingInfoSpot/getFlightClosingInfoSpot',{numOfRows:4000});   // 하루 2,547건(2026-11 실측) — 300건이면 오전 7시까지만 보였다
       _fltCache=items(d);
     }
     renderFlights();
@@ -3410,12 +3426,12 @@ function _parseFlightTime(dtStr, hhmmStr){
   if(dtStr && dtStr.length >= 12){
     const y=+dtStr.slice(0,4), mo=+dtStr.slice(4,6)-1, d=+dtStr.slice(6,8),
           h=+dtStr.slice(8,10), mi=+dtStr.slice(10,12);
-    return new Date(y, mo, d, h, mi);
+    return kstInstant(y, mo, d, h, mi);
   }
   // scheduleDateTime이 'HHMM' 4자리만 있는 경우 → 오늘 + HHMM
   if(hhmmStr && /^\d{4}$/.test(hhmmStr)){
-    const now = new Date();
-    const t = new Date(now.getFullYear(), now.getMonth(), now.getDate(),
+    const now = new Date(), k = kstDate();
+    const t = kstInstant(k.getFullYear(), k.getMonth(), k.getDate(),
                        +hhmmStr.slice(0,2), +hhmmStr.slice(2,4));
     // 출발편 기준: 시간이 이미 지나갔으면 익일로 (도착편은 그대로)
     if(t.getTime() < now.getTime() - 3*3600*1000) t.setDate(t.getDate()+1);
@@ -3495,7 +3511,7 @@ function _notify(title, body){
   // 권한 있으면 OS 알림도
   if('Notification' in window && Notification.permission === 'granted'){
     try {
-      new Notification(title, { body, icon: '/manifest.webmanifest', tag: 'icn-gate' });
+      new Notification(title, { body, icon: '/icons/icon-192.png', tag: 'icn-gate' });
     } catch(e){ /* ignore */ }
   }
 }
