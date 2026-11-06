@@ -47,21 +47,23 @@ def cards(src):
     return out
 
 
-def card_html(c, g):
+def card_html(c, g, load="loading=\"lazy\""):
+    # 첫 줄 첫 두 장은 첫 화면에 보이므로 lazy 빼고 바로(첫 장은 fetchpriority) — 홈 LCP 가 이 사진이다(2026-11-06)
     tags = "".join("<span>#%s</span>" % z.replace(" ", "") for z in g["zones"][:3])
     price = ""
     if c["price"]:
         label, _, amt = c["price"].partition(" ")
         price = ('<div class="hx-price">%s <b>%s</b> <small class="hx-asof">5월 기준</small></div>' % (label, amt)) if amt.endswith("원~") \
             else '<div class="hx-price">%s</div>' % c["price"]
-    return ('<a class="hx-card" href="%s.html"><div class="hx-ph"><img src="%s" alt="%s" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">'
+    return ('<a class="hx-card" href="%s.html"><div class="hx-ph"><img src="%s" alt="%s" %s referrerpolicy="no-referrer" onerror="this.remove()">'
             '<span class="hx-badge">%s</span><div class="hx-txt"><h3>%s <small>%s</small></h3>%s<div class="hx-tags">%s</div></div></div>'
             '<div class="hx-strip">가이드 보기 →</div></a>') % (
-        c["slug"], g["img"], g["alt"], c["tag"], c["name"], c["dur"], price, tags)
+        c["slug"], g["img"], g["alt"], load, c["tag"], c["name"], c["dur"], price, tags)
 
 
-def rail(title, slugs, by, info):
-    items = "".join(card_html(by[s], info[s]) for s in slugs if s in by)
+def rail(title, slugs, by, info, first=False):
+    eager = ['fetchpriority="high"', 'loading="eager"'] if first else []
+    items = "".join(card_html(by[s], info[s], *(eager[i:i + 1])) for i, s in enumerate([s for s in slugs if s in by]))
     return ('<section class="hx-sec"><div class="container"><h2 class="hx-h">%s</h2></div>'
             '<div class="hx-rail">%s</div>'
             '<div class="container"><a class="hx-more" href="#destinations">여행지 가이드 전체 보기 <span>›</span></a></div></section>') % (title, items)
@@ -92,7 +94,7 @@ def main():
     chips = ('  <div class="hx-band" id="hxTop"><div class="container"><div id="hxNext"></div></div><div class="container hx-chips">'
              '<a href="/trips">🧳 내 여행 만들기</a><a href="estimate.html">🧮 경비 계산</a><a href="tours.html">🎟 투어·티켓</a>'
              '<a href="#" onclick="return hxFx()">💱 환율 계산기</a><a href="#" onclick="return hxFxAlert()">🔔 환율 알림</a></div></div>\n'
-             + rail("🔥 지금 많이 찾는 여행지", PICKS, by, info) + "\n"
+             + rail("🔥 지금 많이 찾는 여행지", PICKS, by, info, first=True) + "\n"
              + rail("🌴 따뜻한 휴양지 가이드", RESORTS, by, info))
 
     src = put(src, "tabs", tabs, "<!-- ── 환율 바 ── -->")
