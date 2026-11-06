@@ -107,7 +107,9 @@ function hxFxOff() { try { localStorage.removeItem('tc_fx_alert'); } catch (e) {
 function fxCheck() {
   var el = document.getElementById('hxFxHit'), a = fxLoad(); if (!el) return;
   if (!a || !window.TripStore) { el.innerHTML = ''; return; }
-  TripStore.refreshRates(function () {
+  TripStore.refreshRates(function (ok) {
+    // 실시간 환율을 못 받았으면(오프라인) 고정 기준값과 비교해 '도달!'을 잘못 띄우지 않는다
+    if (!ok) { el.innerHTML = '<a class="fxhit" href="#" onclick="return hxFxAlert()">🔔 ' + FX_CUR[a.cur][0] + ' 알림 · 지금은 환율을 불러오지 못했어요</a>'; return; }
     var now = fxNow(a.cur), u = fxUnit(a.cur), sym = FX_CUR[a.cur][1] + u.toLocaleString('ko-KR'), hit = now > 0 && now <= a.target;
     el.innerHTML = '<a class="fxhit' + (hit ? ' on' : '') + '" href="#" onclick="return hxFxAlert()">' + (hit ? '🔔 <b>' + FX_CUR[a.cur][0] + ' 목표 환율 도달!</b> ' : '🔔 ' + FX_CUR[a.cur][0] + ' 알림 · ')
       + sym + ' = <b>' + now.toLocaleString('ko-KR') + '원</b> (목표 ' + a.target.toLocaleString('ko-KR') + '원 이하)</a>';

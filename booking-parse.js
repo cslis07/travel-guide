@@ -15,15 +15,22 @@
   var p2 = function (n) { return (n < 10 ? '0' : '') + n; };
 
   function mk(y, m, d) { y = +y; m = +m; d = +d; if (y < 100) y += 2000; if (!(m >= 1 && m <= 12 && d >= 1 && d <= 31 && y >= 2020 && y <= 2100)) return ''; return y + '-' + p2(m) + '-' + p2(d); }
+  /* 연도 없는 날짜('1월 3일'·'03JAN'·'1/3') — 여행 시작일보다 60일 넘게 이르면 다음 해로(연말 출발·연초 귀국 여행)
+     yh 는 연도 숫자 또는 { y, after:'YYYY-MM-DD' } */
+  function ymk(yh, m, d) {
+    var y = yh && typeof yh === 'object' ? yh.y : yh, v = mk(y, m, d);
+    if (v && yh && yh.after && v < yh.after && (Date.parse(yh.after) - Date.parse(v)) / 864e5 > 60) return mk(+y + 1, m, d) || v;
+    return v;
+  }
   /* 텍스트 속 날짜들을 위치와 함께 */
   function dates(t, yHint) {
     var out = [], m, re;
     var add = function (i, v) { if (v) out.push({ i: i, v: v }); };
     re = /(\d{4})\s*[.\-\/년]\s*(\d{1,2})\s*[.\-\/월]\s*(\d{1,2})\s*일?/g; while ((m = re.exec(t))) add(m.index, mk(m[1], m[2], m[3]));
-    re = /(?:^|[^\d.])(\d{1,2})\s*월\s*(\d{1,2})\s*일/g; while ((m = re.exec(t))) add(m.index, mk(yHint, m[1], m[2]));
-    re = /\b(\d{1,2})\s?(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[A-Z]*\.?\s?(\d{4}|\d{2})?\b/gi; while ((m = re.exec(t))) add(m.index, mk(m[3] || yHint, MON[m[2].toUpperCase()], m[1]));
+    re = /(?:^|[^\d.])(\d{1,2})\s*월\s*(\d{1,2})\s*일/g; while ((m = re.exec(t))) add(m.index, ymk(yHint, m[1], m[2]));
+    re = /\b(\d{1,2})\s?(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[A-Z]*\.?\s?(\d{4}|\d{2})?\b/gi; while ((m = re.exec(t))) add(m.index, m[3] ? mk(m[3], MON[m[2].toUpperCase()], m[1]) : ymk(yHint, MON[m[2].toUpperCase()], m[1]));
     re = /\b(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[a-z]*\.?\s+(\d{1,2}),?\s+(\d{4})\b/gi; while ((m = re.exec(t))) add(m.index, mk(m[3], MON[m[1].toUpperCase()], m[2]));
-    if (!out.length) { re = /(?:^|[^\d\/.])(\d{1,2})\/(\d{1,2})(?![\d\/])/g; while ((m = re.exec(t))) add(m.index, mk(yHint, m[1], m[2])); }   // 문자 속 '11/14'(월/일) — 다른 날짜가 없을 때만
+    if (!out.length) { re = /(?:^|[^\d\/.])(\d{1,2})\/(\d{1,2})(?![\d\/])/g; while ((m = re.exec(t))) add(m.index, ymk(yHint, m[1], m[2])); }   // 문자 속 '11/14'(월/일) — 다른 날짜가 없을 때만
     var seen = {}; return out.filter(function (x) { var k = x.i + x.v; if (seen[k]) return false; seen[k] = 1; return true; }).sort(function (a, b) { return a.i - b.i; });
   }
   function times(t) { var out = [], m, re = /(?:^|[^\d])([01]?\d|2[0-3])\s*[:시]\s*([0-5]\d)(?!\d)/g; while ((m = re.exec(t))) out.push(p2(+m[1]) + ':' + m[2]); return out; }
@@ -46,6 +53,7 @@
 
   function parseBooking(text, opt) {
     var t = String(text || '').replace(/\r/g, ''), yHint = (opt && opt.year) || new Date().getFullYear();
+    if (opt && /^\d{4}-\d{2}-\d{2}$/.test(opt.after || '')) yHint = { y: yHint, after: opt.after };
     var res = { flights: [], hotels: [], refs: [] };
     // 예약번호
     var rre = /(예약\s*번호|예약\s*코드|확인\s*번호|확정\s*번호|발권\s*번호|Booking\s*(?:ID|No\.?|number|reference|code)|Confirmation\s*(?:number|code|No\.?|#)|Reservation\s*(?:number|code|No\.?)|PNR|Itinerary\s*(?:number|#|No\.?))\s*[:#：]?\s*([A-Z0-9][A-Z0-9.\-]{4,19})/gi, m;

@@ -411,8 +411,9 @@ var state = {
 
   var t = new Date(); t.setDate(t.getDate() + 30);
   var b = new Date(t); b.setDate(b.getDate() + 3);
-  $('f-out').value  = t.toISOString().slice(0,10);
-  $('f-back').value = b.toISOString().slice(0,10);
+  var loc = function(x){ return x.getFullYear()+'-'+('0'+(x.getMonth()+1)).slice(-2)+'-'+('0'+x.getDate()).slice(-2); }   // 기기 날짜 기준(UTC 아님)
+  $('f-out').value  = loc(t);
+  $('f-back').value = loc(b);
 
   document.querySelectorAll('.style-btn').forEach(function(btn){
     btn.addEventListener('click', function(){

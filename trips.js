@@ -30,6 +30,8 @@
     if (cached && cached.rates && (now - cached.ts) < 6 * 3600 * 1000) {
       applyRates(cached.rates); FX = { ts: cached.ts, live: true }; if (cb) cb(true); return;
     }
+    // 오래된 캐시라도 먼저 적용 — 해외에서 데이터가 끊기면 9월 고정값보다 마지막으로 받은 환율이 훨씬 가깝다
+    if (cached && cached.rates) { applyRates(cached.rates); FX = { ts: cached.ts, live: false, cached: true }; }
     if (typeof fetch !== 'function') { if (cb) cb(false); return; }
     fetch('https://open.er-api.com/v6/latest/KRW')
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -264,11 +266,10 @@
     if (members.length < 2) return [];
     var bal = {}; members.forEach(function (n) { bal[n] = 0; });
     (t.expenses || []).forEach(function (e) {
-      var payer = e.paidBy, fors = (e.paidFor && e.paidFor.length) ? e.paidFor : members;
-      if (bal[payer] == null) return;
-      var share = e.krw / fors.length;
-      bal[payer] += e.krw;
-      fors.forEach(function (f) { if (bal[f] != null) bal[f] -= share; });
+      var fors = splitOf(e, members); if (!fors) return;
+      var share = (e.krw || 0) / fors.length;
+      bal[e.paidBy] += (e.krw || 0);
+      fors.forEach(function (f) { bal[f] -= share; });
     });
     var cred = [], debt = [];
     Object.keys(bal).forEach(function (n) {
@@ -279,23 +280,31 @@
     var res = [], i = 0, j = 0;
     while (i < debt.length && j < cred.length) {
       var pay = Math.min(debt[i].v, cred[j].v);
-      if (pay > 500) res.push({ from: debt[i].n, to: cred[j].n, amt: Math.round(pay) });
+      // 10원 미만은 나눗셈 반올림 찌꺼기 — 그 이상은 송금 목록에 넣는다(예전 500원 기준은 표와 목록이 어긋났다)
+      if (pay >= 10) res.push({ from: debt[i].n, to: cred[j].n, amt: Math.round(pay) });
       debt[i].v -= pay; cred[j].v -= pay;
-      if (debt[i].v <= 500) i++; if (cred[j].v <= 500) j++;
+      if (debt[i].v < 10) i++; if (cred[j].v < 10) j++;
     }
     return res;
   }
 
   /* 개인별 정산: 낸 돈(paid)·부담(share)·차액(net) */
+  /* 지출 하나를 누가 나눠 내는지 — 멤버가 아닌 이름(지운 사람·링크로 들어온 이름)은 빼고 나눈다.
+     남는 사람이 없으면 낸 사람 몫. 낸 사람이 멤버가 아니면 정산에서 뺀다(표·송금 목록이 같은 기준) */
+  function splitOf(e, members) {
+    if (members.indexOf(e.paidBy) < 0) return null;
+    var fors = ((e.paidFor && e.paidFor.length) ? e.paidFor : members).filter(function (f, i, a) { return members.indexOf(f) > -1 && a.indexOf(f) === i; });
+    return fors.length ? fors : [e.paidBy];
+  }
   function balances(t) {
     var members = (t.members || []).map(function (m) { return m.name; });
     var paid = {}, share = {};
     members.forEach(function (n) { paid[n] = 0; share[n] = 0; });
     (t.expenses || []).forEach(function (e) {
-      var fors = (e.paidFor && e.paidFor.length) ? e.paidFor : members;
-      if (paid[e.paidBy] != null) paid[e.paidBy] += (e.krw || 0);
+      var fors = splitOf(e, members); if (!fors) return;
+      paid[e.paidBy] += (e.krw || 0);
       var per = (e.krw || 0) / fors.length;
-      fors.forEach(function (f) { if (share[f] != null) share[f] += per; });
+      fors.forEach(function (f) { share[f] += per; });
     });
     return members.map(function (n) { return { name: n, paid: Math.round(paid[n]), share: Math.round(share[n]), net: Math.round(paid[n] - share[n]) }; });
   }
@@ -393,8 +402,13 @@
   }
 
   /* ── 데모 시드(비어 있을 때 1회) — 오사카 예시로 구조를 보여줌 ── */
+  /* 예시 여행은 처음 한 번만 — 여행을 다 지운 뒤나 저장값이 깨졌을 때 다시 생기면 안 된다 */
   function seedIfEmpty() {
-    if (load().length) return;
+    var SEEDED = KEY + '_seeded', raw = null;
+    try { if (localStorage.getItem(SEEDED)) return; raw = localStorage.getItem(KEY); } catch (e) { return; }
+    var mark = function () { try { localStorage.setItem(SEEDED, '1'); } catch (e) {} };
+    if (raw != null) { mark(); return; }   // 이미 쓰던 사람(여행이 0개여도·깨진 값이어도) — 예시를 넣지 않는다
+    mark();
     var start = iso(new Date(today().getTime() + 24 * 86400000));
     var end = iso(new Date(today().getTime() + 27 * 86400000));
     var t = create({ city: '오사카', cover: 'osaka', start: start, end: end,

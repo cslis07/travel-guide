@@ -444,11 +444,12 @@ function ttSwitch(tab, btn){
 }
 
 // 오늘 날짜(YYYY-MM-DD)
-function todayISO(){ return new Date().toISOString().slice(0,10); }
+const locISO = x => x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');
+function todayISO(){ return locISO(new Date()); }   // 기기 날짜 기준(toISOString 은 UTC 라 한국 0~9시에 어제가 됨)
 
 (function initDates(){
   const d = new Date();
-  const iso = n => new Date(d.getTime() + n*864e5).toISOString().slice(0,10);
+  const iso = n => locISO(new Date(d.getTime() + n*864e5));
   const t = todayISO();
   // 기본값 + 과거 날짜 선택 방지(min)
   [['stay-in',iso(1)],['stay-out',iso(2)],['dom-date',iso(1)],['intl-date',iso(1)],['intl-return',iso(5)]]

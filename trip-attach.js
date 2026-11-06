@@ -84,7 +84,7 @@
         + '<span class="go">담기 →</span></div>';
     }).join('');
 
-    var d1 = payload.start || new Date(Date.now() + 30 * 864e5).toISOString().slice(0, 10);
+    var d30 = new Date(Date.now() + 30 * 864e5), d1 = payload.start || (T && T.iso ? T.iso(d30) : d30.toISOString().slice(0, 10));   // 기기 날짜 기준
     var span = payload.days && payload.days.length ? payload.days.length - 1 : 3;   // 코스 일수에 맞춘 기본 도착일
     var d2 = payload.end || new Date(Date.parse(d1) + span * 864e5).toISOString().slice(0, 10);
     var covers = ['osaka', 'blue', 'purple', 'green', 'pink'];

@@ -7,7 +7,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "node scripts/parse_test.mjs && node scripts/dashboard_test.mjs && node scripts/duty_test.mjs && node scripts/taxrefund_test.mjs && node scripts/security_test.mjs",
+    "test": "node scripts/parse_test.mjs && node scripts/dashboard_test.mjs && node scripts/duty_test.mjs && node scripts/taxrefund_test.mjs && node scripts/security_test.mjs && node scripts/data_test.mjs",
     "smoke": "node scripts/smoke_test.mjs"
   }
 }

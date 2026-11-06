@@ -173,7 +173,7 @@ function legacyBannerHtml(){
 }
 
 /* ═══ 백업·복원 — 서버가 없어 데이터가 이 폰 브라우저에만 있음. 파일로 보관/복원(합치기) ═══ */
-var BK_KEYS=['icn_fav_flights','icn_checklist','icn_checklist_custom','tripguide_prepare_done','tripguide_depart_date'];
+var BK_KEYS=['icn_fav_flights','icn_checklist','icn_checklist_custom','tripguide_prepare_done','tripguide_depart_date','tc_passport_exp','tc_leftover','tc_fx_alert'];
 /* IndexedDB는 연결을 꼭 닫고(안 닫으면 다른 탭·삭제가 막힘), 응답이 없어도 4초 뒤엔 넘어가 백업·복원이 멈추지 않게 */
 function once(cb,v){ var done=false, t=setTimeout(function(){ if(!done){ done=true; cb(v); } },4000); return function(x){ if(!done){ done=true; clearTimeout(t); cb(x); } }; }
 function rcAll(cb){   // 영수증(IndexedDB) 전부 {id:dataUrl}
@@ -233,7 +233,13 @@ function doRestore(inp){
       var cur=mine[t.id];
       if(!cur){ T.upsert(t); added++; return; }
       if(JSON.stringify(cur)===JSON.stringify(t)){ same++; return; }
-      var c=JSON.parse(JSON.stringify(t)); c.id='r'+Math.random().toString(36).slice(2,11); c.city=String(t.city).slice(0,30)+' (복원)'; T.upsert(c); copied++;
+      // 사본은 여행 id 와 지출 id 를 모두 새로 — 같은 id 를 쓰면 사본 지출을 지울 때 원본 영수증 사진까지 지워졌다.
+      // 백업에 사진이 있으면 새 id 로도 복사(영수증 지출 id 키·일기 j:여행id:날짜 키)
+      var c=JSON.parse(JSON.stringify(t)); c.id='r'+Math.random().toString(36).slice(2,11); c.city=String(t.city).slice(0,30)+' (복원)';
+      var rc=data.receipts&&typeof data.receipts==='object'?data.receipts:null;
+      (c.expenses||[]).forEach(function(e,i){ var old=e.id; e.id=c.id.slice(1)+'e'+i; if(rc&&old&&rc[old]) rc[e.id]=rc[old]; });
+      if(rc) Object.keys(rc).forEach(function(k){ if(k.indexOf('j:'+t.id+':')===0) rc['j:'+c.id+':'+k.slice(t.id.length+3)]=rc[k]; });
+      T.upsert(c); copied++;
     });
     Object.keys(data.extra||{}).forEach(function(k){ if(BK_KEYS.indexOf(k)>-1&&localStorage.getItem(k)==null&&typeof data.extra[k]==='string') localStorage.setItem(k,data.extra[k]); });
     rcPutAll(data.receipts,function(n){
@@ -331,8 +337,8 @@ function card(t){
 /* 새 여행 */
 function openNew(){
   var d = new Date(Date.now()+7*864e5), d2 = new Date(Date.now()+9*864e5);
-  document.getElementById('f-start').value = d.toISOString().slice(0,10);
-  document.getElementById('f-end').value = d2.toISOString().slice(0,10);
+  document.getElementById('f-start').value = T.iso(d);   // 기기 날짜 기준(toISOString 은 UTC 라 한국 0~9시에 하루 이름)
+  document.getElementById('f-end').value = T.iso(d2);
   document.getElementById('f-city').value=''; document.getElementById('f-budget').value=''; document.getElementById('f-ppl').value=1;
   document.getElementById('newModal').classList.add('on');
 }
@@ -360,14 +366,35 @@ function createTrip(){
     if(enc.length>600000) throw 0;
     var obj = JSON.parse(decodeURIComponent(escape(atob(enc.replace(/ /g,'+')))));   // 옛 링크: + 가 공백으로 바뀐 것 복구
     if(!obj || !obj.city || !obj.start || !obj.end) throw 0;
-    var nt = T.create({ city:obj.city, cover:obj.cover||'blue', start:obj.start, end:obj.end,
-      members:(obj.members&&obj.members.length)?obj.members:[{name:'나',color:T.MEMBER_COLORS[0]}],
-      budgetTotal:(obj.budget&&obj.budget.total)||0 });
-    if(obj.days) nt.days=obj.days;
-    nt.expenses=obj.expenses||[]; nt.reservations=obj.reservations||[]; nt.checklist=obj.checklist||[]; nt.flight=obj.flight||null;
-    T.upsert(nt);
     history.replaceState({},'', '/trips');
-    location.href='/trip?id='+nt.id; return;
+    var mems = Array.isArray(obj.members) ? obj.members.filter(function(m){ return m && m.name; }) : [];
+    var save = function(me){   // me: 받은 멤버 중 '나'인 사람 이름, '' 이면 목록에 없음 → '나'를 맨 앞에 추가
+      var exps = Array.isArray(obj.expenses) ? obj.expenses : [];
+      if(me){
+        var rn = function(n){ return n===me ? '나' : n; };
+        mems.forEach(function(m){ m.name = rn(m.name); });
+        exps.forEach(function(e){ if(e){ e.paidBy = rn(e.paidBy); if(Array.isArray(e.paidFor)) e.paidFor = e.paidFor.map(rn); } });
+        mems.sort(function(a,b){ return (b.name==='나')-(a.name==='나'); });   // 지출 기본 결제자(첫 사람)가 내가 되게
+      } else if(mems.length && !mems.some(function(m){ return m.name==='나'; })) mems.unshift({ name:'나', color:T.MEMBER_COLORS[0] });
+      var nt = T.create({ city:obj.city, cover:obj.cover||'blue', start:obj.start, end:obj.end,
+        members: mems.length ? mems : [{name:'나',color:T.MEMBER_COLORS[0]}],
+        budgetTotal:(obj.budget&&obj.budget.total)||0 });
+      if(obj.days) nt.days=obj.days;
+      nt.expenses=exps; nt.reservations=obj.reservations||[]; nt.checklist=obj.checklist||[]; nt.flight=obj.flight||null;
+      T.upsert(nt);
+      location.href='/trip?id='+nt.id;
+    };
+    // 보낸 사람은 자기 '나'를 실제 이름으로 바꿔 보낸다 — 받는 사람이 그중 누구인지 골라야 정산·결제자 기본값이 맞다
+    if(mems.length < 2 || mems.some(function(m){ return m.name==='나'; })) return save(null);
+    var w = document.createElement('div'); w.className='mwrap on'; w.id='whoModal';
+    w.innerHTML = '<div class="modal"><div class="grip"></div><h3>이 여행에서 나는 누구인가요?</h3>'
+      + '<p class="bk-p">“'+esc(String(obj.city).slice(0,40))+'” 여행을 받았어요. 내 이름을 고르면 정산과 지출 입력이 나를 기준으로 맞춰져요.</p>'
+      // 보낸 사람은 자기('나'였던 사람)가 맨 앞이라, 받는 사람은 둘째부터일 가능성이 높다 — 둘째를 먼저 골라 둔다
+      + '<select class="in" id="whoSel">'+mems.map(function(m,i){ return '<option value="'+esc(m.name)+'"'+(i===1?' selected':'')+'>'+esc(m.name)+'</option>'; }).join('')+'<option value="">목록에 없어요 — ‘나’로 추가</option></select>'
+      + '<button class="save" id="whoOk">이 여행 담기</button></div>';
+    document.body.appendChild(w);
+    document.getElementById('whoOk').onclick = function(){ var v=document.getElementById('whoSel').value; w.remove(); save(v); };
+    return;
   }catch(e){ history.replaceState({},'', '/trips'); }
 })();
 /* ── 지출 합치기 링크(?x=)로 받은 동행 지출을 같은 여행에 합치기 — 같은 id는 건너뛰고, 없는 사람은 추가 ── */
@@ -394,17 +421,44 @@ function createTrip(){
   var have = {}; (t.expenses||[]).forEach(function(e){ have[e.id]=1; });
   var add = incoming.filter(function(e){ return !have[e.id]; });
   if(!add.length){ alert('합칠 새 지출이 없어요 — 이미 모두 들어 있어요.'); location.href='/trip?id='+t.id+'&tab=budget'; return; }
-  if(!confirm('“'+t.city+'” 여행에 동행 지출 '+add.length+'건을 합칠까요?'+(incoming.length>add.length?'\n(이미 있는 '+(incoming.length-add.length)+'건은 건너뜀)':''))) return;
-  // 지출에 나오는 사람 중 내 여행에 없는 사람은 멤버로 추가(색은 받은 링크 → 기본 팔레트 순)
   t.members = t.members || [];
   var names = {}; t.members.forEach(function(m){ names[m.name]=1; });
   var colorOf = {}; (obj.members||[]).forEach(function(m){ if(m&&m.name) colorOf[str(m.name,30)] = /^#[0-9a-fA-F]{6}$/.test(m.color)?m.color:''; });
-  add.forEach(function(e){ [e.paidBy].concat(e.paidFor).forEach(function(n){
-    if(n && !names[n]){ names[n]=1; t.members.push({ name:n, color: colorOf[n] || T.MEMBER_COLORS[t.members.length % T.MEMBER_COLORS.length] }); }
-  }); });
-  t.expenses = add.concat(t.expenses||[]);
-  T.upsert(t);
-  location.href='/trip?id='+t.id+'&tab=budget';
+  // 받은 지출 속 이름 중 내 여행에 없는 이름 — 보낸 사람 폰에서 나를 '동행1'처럼 부르고 있을 수 있어 누군지 고르게 한다
+  var unknown = [];
+  add.forEach(function(e){ [e.paidBy].concat(e.paidFor).forEach(function(n){ if(n && !names[n] && unknown.indexOf(n)<0) unknown.push(n); }); });
+  var skipped = incoming.length>add.length ? ' (이미 있는 '+(incoming.length-add.length)+'건은 건너뜀)' : '';
+  function finish(map){
+    var rn = function(n){ return map[n]!=null ? map[n] : n; };
+    add.forEach(function(e){
+      e.paidBy = rn(e.paidBy);
+      e.paidFor = e.paidFor.map(rn).filter(function(n,i,a){ return a.indexOf(n)===i; });
+      [e.paidBy].concat(e.paidFor).forEach(function(n){
+        if(n && !names[n]){ names[n]=1; t.members.push({ name:n, color: colorOf[n] || T.MEMBER_COLORS[t.members.length % T.MEMBER_COLORS.length] }); }
+      });
+    });
+    t.expenses = add.concat(t.expenses||[]);
+    T.upsert(t);
+    location.href='/trip?id='+t.id+'&tab=budget';
+  }
+  if(!unknown.length){
+    if(!confirm('“'+t.city+'” 여행에 동행 지출 '+add.length+'건을 합칠까요?'+(skipped?'\n'+skipped.trim():''))) return;
+    return finish({});
+  }
+  var opts = function(n){ return t.members.map(function(m){ return '<option value="m:'+esc(m.name)+'">'+esc(m.name)+(m.name==='나'?' (나)':'')+'</option>'; }).join('')
+    + '<option value="new" selected>새 사람 “'+esc(n)+'”(으)로 추가</option>'; };
+  var w = document.createElement('div'); w.className='mwrap on'; w.id='mgModal';
+  w.innerHTML = '<div class="modal"><div class="grip"></div><h3>받은 지출 합치기</h3>'
+    + '<p class="bk-p">“'+esc(t.city)+'” 여행에 동행 지출 <b>'+add.length+'건</b>을 합쳐요.'+esc(skipped)+'<br>보낸 사람 폰에서 쓰던 이름이 있어요. <b>나를 가리키는 이름은 ‘나’로</b> 골라 주세요 — 안 그러면 정산에서 다른 사람이 낸 것처럼 보여요.</p>'
+    + unknown.map(function(n,i){ return '<label class="fl" for="mg'+i+'" style="display:block;font-size:13px;font-weight:700;margin:12px 0 6px">받은 이름 “'+esc(n)+'”은(는)</label><select class="in" id="mg'+i+'">'+opts(n)+'</select>'; }).join('')
+    + '<button class="save" id="mgOk">합치기</button><button class="save" id="mgNo" style="background:var(--gray-100);color:var(--gray-700);margin-top:8px">취소</button></div>';
+  document.body.appendChild(w);
+  document.getElementById('mgNo').onclick = function(){ w.remove(); };
+  document.getElementById('mgOk').onclick = function(){
+    var map = {};
+    unknown.forEach(function(n,i){ var v=document.getElementById('mg'+i).value; if(v.indexOf('m:')===0) map[n]=v.slice(2); });   // option value 의 &amp; 등은 브라우저가 이미 풀어 준다
+    w.remove(); finish(map);
+  };
 })();
 render();
 </script>
