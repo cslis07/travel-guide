@@ -59,9 +59,12 @@
       var usd = usdOf(e, usdRate), kind = kindOf(t, e);
       var who = (e.paidFor && e.paidFor.length ? e.paidFor : [e.paidBy || members[0]]).filter(Boolean);
       if (!who.length) who = [members[0]];
+      // 금액·비율로 나눈 쇼핑이면 그 비율대로(e.split — 정산과 같은 기준), 아니면 똑같이
+      var sv = e.split && (e.split.mode === 'amt' || e.split.mode === 'ratio') && e.split.v, wt = {}, wsum = 0;
+      if (sv) who.forEach(function (n) { var x = +sv[n]; wt[n] = isFinite(x) && x > 0 ? x : 0; wsum += wt[n]; });
       who.forEach(function (n) {
         if (!by[n]) by[n] = { name: n, gen: 0, alc: 0, perf: 0, tob: 0, out: 0 };
-        by[n][kind] += usd / who.length;
+        by[n][kind] += wsum > 0 ? usd * wt[n] / wsum : usd / who.length;
       });
       items.push({ id: e.id, date: e.date, memo: e.memo || '', usd: round2(usd), krw: e.krw || 0, kind: kind, who: who, guessed: !(t.duty && t.duty.kinds && t.duty.kinds[e.id]) });
     });

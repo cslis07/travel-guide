@@ -140,6 +140,7 @@
       return e;
     });
     t.reservations = cleanList(t.reservations);
+    t.payments = cleanList(t.payments).filter(function (p) { p.krw = Math.round(+p.krw || 0); p.from = String(p.from || ''); p.to = String(p.to || ''); return p.krw > 0 && p.from && p.to; });
     t.checklist = cleanList(t.checklist);
     t.places = Array.isArray(t.places) ? t.places : [];
     t.days = arr(t.days).map(function (d) { d.items = cleanList(d.items); return d; });
@@ -266,10 +267,14 @@
     if (members.length < 2) return [];
     var bal = {}; members.forEach(function (n) { bal[n] = 0; });
     (t.expenses || []).forEach(function (e) {
-      var fors = splitOf(e, members); if (!fors) return;
-      var share = (e.krw || 0) / fors.length;
+      var sh = sharesOf(e, members); if (!sh) return;
       bal[e.paidBy] += (e.krw || 0);
-      fors.forEach(function (f) { bal[f] -= share; });
+      for (var f in sh) bal[f] -= sh[f];
+    });
+    // 이미 주고받은 돈(송금 완료 기록) — 보낸 사람은 갚은 만큼 +, 받은 사람은 받은 만큼 −
+    (t.payments || []).forEach(function (p) {
+      if (bal[p.from] == null || bal[p.to] == null || !(p.krw > 0)) return;
+      bal[p.from] += p.krw; bal[p.to] -= p.krw;
     });
     var cred = [], debt = [];
     Object.keys(bal).forEach(function (n) {
@@ -296,17 +301,62 @@
     var fors = ((e.paidFor && e.paidFor.length) ? e.paidFor : members).filter(function (f, i, a) { return members.indexOf(f) > -1 && a.indexOf(f) === i; });
     return fors.length ? fors : [e.paidBy];
   }
+  /* 사람별 부담(원) — 기본은 똑같이. e.split = { mode:'amt'|'ratio', v:{이름:숫자} } 이면 그 비율로
+     (금액 지정도 '그 금액들의 비율'로 원화를 나눈다 — 환산 반올림이 있어도 합계가 정확히 맞는다).
+     나눌 사람 중 숫자가 없거나 0 이하면 그 사람은 0, 모두 0이면 똑같이 */
+  function sharesOf(e, members) {
+    var fors = splitOf(e, members); if (!fors) return null;
+    var krw = e.krw || 0, out = {}, w = {}, tot = 0;
+    var v = e.split && (e.split.mode === 'amt' || e.split.mode === 'ratio') && e.split.v;
+    if (v && typeof v === 'object') fors.forEach(function (f) { var x = +v[f]; w[f] = isFinite(x) && x > 0 ? x : 0; tot += w[f]; });
+    fors.forEach(function (f) { out[f] = tot > 0 ? krw * w[f] / tot : krw / fors.length; });
+    return out;
+  }
+  /* 여러 날 몫(숙박 3박 등) — e.spanDays 일에 나눠 날짜별 합계·하루 목표에 쓴다(총액·정산은 그대로) */
+  function spreadOf(e) {
+    var n = Math.max(1, Math.min(60, parseInt(e.spanDays, 10) || 1)), krw = e.krw || 0;
+    if (!e.date || n === 1) return [{ date: e.date || '', krw: krw }];
+    var per = Math.floor(krw / n), out = [], d0 = parseD(e.date);
+    for (var i = 0; i < n; i++) { var d = new Date(d0); d.setDate(d.getDate() + i); out.push({ date: iso(d), krw: i === n - 1 ? krw - per * (n - 1) : per }); }
+    return out;
+  }
+  function dayTotals(t) {
+    var m = {};
+    (t.expenses || []).forEach(function (e) { spreadOf(e).forEach(function (x) { if (x.date) m[x.date] = (m[x.date] || 0) + x.krw; }); });
+    return m;
+  }
+  /* 송금 완료 기록 — 정산 목록에서 '보냈어요'를 누르면 남는다. 지출이 아니라 총지출·예산엔 안 들어간다 */
+  function addPayment(id, p) {
+    var t = get(id); if (!t) return;
+    t.payments = t.payments || [];
+    t.payments.push({ id: uid(), from: String(p.from), to: String(p.to), krw: Math.round(+p.krw || 0), date: p.date || iso(new Date()) });
+    upsert(t); return t;
+  }
+  function removePayment(id, pid) {
+    var t = get(id); if (!t) return;
+    t.payments = (t.payments || []).filter(function (p) { return p.id !== pid; }); upsert(t); return t;
+  }
+  /* 정산 상태 — 'none'(2명 미만·지출 없음) · 'open'(보낼 돈 남음) · 'done'(주고받을 게 없고 기록이 있음) */
+  function settleState(t) {
+    if ((t.members || []).length < 2 || !(t.expenses || []).length) return 'none';
+    if (settlements(t).length) return 'open';
+    return (t.payments || []).length ? 'done' : 'even';
+  }
   function balances(t) {
     var members = (t.members || []).map(function (m) { return m.name; });
-    var paid = {}, share = {};
-    members.forEach(function (n) { paid[n] = 0; share[n] = 0; });
+    var paid = {}, share = {}, sent = {}, got = {};
+    members.forEach(function (n) { paid[n] = 0; share[n] = 0; sent[n] = 0; got[n] = 0; });
     (t.expenses || []).forEach(function (e) {
-      var fors = splitOf(e, members); if (!fors) return;
+      var sh = sharesOf(e, members); if (!sh) return;
       paid[e.paidBy] += (e.krw || 0);
-      var per = (e.krw || 0) / fors.length;
-      fors.forEach(function (f) { share[f] += per; });
+      for (var f in sh) share[f] += sh[f];
     });
-    return members.map(function (n) { return { name: n, paid: Math.round(paid[n]), share: Math.round(share[n]), net: Math.round(paid[n] - share[n]) }; });
+    (t.payments || []).forEach(function (p) {
+      if (sent[p.from] == null || got[p.to] == null || !(p.krw > 0)) return;
+      sent[p.from] += p.krw; got[p.to] += p.krw;
+    });
+    // net = 아직 남은 차액(+ 받을 돈 · − 보낼 돈) — 주고받은 기록을 반영한다
+    return members.map(function (n) { return { name: n, paid: Math.round(paid[n]), share: Math.round(share[n]), sent: Math.round(sent[n]), got: Math.round(got[n]), net: Math.round(paid[n] - share[n] + sent[n] - got[n]) }; });
   }
 
   /* ── 일정: 시작~종료로 일차 배열 보장 ── */
@@ -494,7 +544,8 @@
     // 계산
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,
     dailyAllowance: dailyAllowance, remainingDays: remainingDays, byCategory: byCategory,
-    settlements: settlements, balances: balances, toKRW: toKRW,
+    settlements: settlements, balances: balances, toKRW: toKRW, sharesOf: sharesOf, spreadOf: spreadOf, dayTotals: dayTotals,
+    addPayment: addPayment, removePayment: removePayment, settleState: settleState,
     passportExp: passportExp, setPassportExp: setPassportExp, passportCheck: passportCheck,
     leftovers: leftovers, setLeftover: setLeftover, cancelSoon: cancelSoon, cashBalance: cashBalance,
     refreshRates: refreshRates, fxState: fxState, cityGeo: cityGeo, cityPhoto: cityPhoto, photoSource: photoSource, cityTz: cityTz, countryOf: countryOf, curOf: curOf, CURS: CURS,

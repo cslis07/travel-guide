@@ -92,4 +92,10 @@ ok('국내 여행은 안 보이고, 모르는 도시는 외화 지출로 판단'
   assert.equal(D.isAbroad({ city: '어딘가', expenses: [ex('a', 1000, 'x', { currency: 'EUR' })] }), true);
 });
 
+ok('비율로 나눈 쇼핑은 면세 한도도 그 비율대로', () => {
+  const t = { city: '방콕', members: [{ name: '나' }, { name: '민수' }], expenses: [ex('a', 420000, '가방', { paidFor: ['나', '민수'], split: { mode: 'ratio', v: { '나': 2, '민수': 1 } } })] };
+  const d = D.calc(t, R);
+  assert.equal(d.me.gen, 200); assert.equal(d.people.find(x => x.name === '민수').gen, 100);
+});
+
 console.log(`duty_test: ${pass} passed`);

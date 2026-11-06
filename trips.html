@@ -369,18 +369,20 @@ function createTrip(){
     history.replaceState({},'', '/trips');
     var mems = Array.isArray(obj.members) ? obj.members.filter(function(m){ return m && m.name; }) : [];
     var save = function(me){   // me: 받은 멤버 중 '나'인 사람 이름, '' 이면 목록에 없음 → '나'를 맨 앞에 추가
-      var exps = Array.isArray(obj.expenses) ? obj.expenses : [];
+      var exps = Array.isArray(obj.expenses) ? obj.expenses : [], pays = Array.isArray(obj.payments) ? obj.payments : [];
       if(me){
         var rn = function(n){ return n===me ? '나' : n; };
         mems.forEach(function(m){ m.name = rn(m.name); });
-        exps.forEach(function(e){ if(e){ e.paidBy = rn(e.paidBy); if(Array.isArray(e.paidFor)) e.paidFor = e.paidFor.map(rn); } });
+        exps.forEach(function(e){ if(e){ e.paidBy = rn(e.paidBy); if(Array.isArray(e.paidFor)) e.paidFor = e.paidFor.map(rn);
+          if(e.split&&e.split.v&&typeof e.split.v==='object'){ var nv={}; for(var k in e.split.v) nv[rn(k)]=e.split.v[k]; e.split.v=nv; } } });
+        pays.forEach(function(p){ if(p){ p.from = rn(p.from); p.to = rn(p.to); } });
         mems.sort(function(a,b){ return (b.name==='나')-(a.name==='나'); });   // 지출 기본 결제자(첫 사람)가 내가 되게
       } else if(mems.length && !mems.some(function(m){ return m.name==='나'; })) mems.unshift({ name:'나', color:T.MEMBER_COLORS[0] });
       var nt = T.create({ city:obj.city, cover:obj.cover||'blue', start:obj.start, end:obj.end,
         members: mems.length ? mems : [{name:'나',color:T.MEMBER_COLORS[0]}],
         budgetTotal:(obj.budget&&obj.budget.total)||0 });
       if(obj.days) nt.days=obj.days;
-      nt.expenses=exps; nt.reservations=obj.reservations||[]; nt.checklist=obj.checklist||[]; nt.flight=obj.flight||null;
+      nt.expenses=exps; nt.payments=pays; nt.reservations=obj.reservations||[]; nt.checklist=obj.checklist||[]; nt.flight=obj.flight||null;
       T.upsert(nt);
       location.href='/trip?id='+nt.id;
     };
@@ -410,7 +412,9 @@ function createTrip(){
   var incoming = obj.expenses.filter(function(e){ return e && e.id && num(e.krw)>0; }).map(function(e){
     return { id:T.cleanId(str(e.id,40)), date:str(e.date,10), amount:num(e.amount), currency:str(e.currency||'KRW',3), krw:Math.round(num(e.krw)),
       category:str(e.category||'etc',20), method:e.method==='cash'?'cash':'card', paidBy:str(e.paidBy,30),
-      paidFor:Array.isArray(e.paidFor)?e.paidFor.map(function(n){return str(n,30);}).filter(Boolean):[], memo:str(e.memo,120) };
+      paidFor:Array.isArray(e.paidFor)?e.paidFor.map(function(n){return str(n,30);}).filter(Boolean):[], memo:str(e.memo,120),
+      split:(e.split&&(e.split.mode==='amt'||e.split.mode==='ratio')&&e.split.v&&typeof e.split.v==='object')?{mode:e.split.mode,v:Object.keys(e.split.v).slice(0,20).reduce(function(o,k){ o[str(k,30)]=num(e.split.v[k]); return o; },{})}:null,
+      spanDays:Math.min(60,Math.max(1,parseInt(e.spanDays,10)||1))>1?Math.min(60,parseInt(e.spanDays,10)):null };
   });
   var cands = T.all().filter(function(t){ return t.city===obj.city; });
   var t = cands.filter(function(c){ return c.start===obj.start; })[0] || cands[0];
@@ -433,6 +437,7 @@ function createTrip(){
     add.forEach(function(e){
       e.paidBy = rn(e.paidBy);
       e.paidFor = e.paidFor.map(rn).filter(function(n,i,a){ return a.indexOf(n)===i; });
+      if(e.split&&e.split.v){ var nv={}; for(var k in e.split.v) nv[rn(k)]=(nv[rn(k)]||0)+e.split.v[k]; e.split.v=nv; }
       [e.paidBy].concat(e.paidFor).forEach(function(n){
         if(n && !names[n]){ names[n]=1; t.members.push({ name:n, color: colorOf[n] || T.MEMBER_COLORS[t.members.length % T.MEMBER_COLORS.length] }); }
       });

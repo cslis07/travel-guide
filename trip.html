@@ -239,7 +239,17 @@
   .baltbl th{font-size:11px;color:var(--gray-500);font-weight:700;text-align:right;padding:4px 0}.baltbl th:first-child,.baltbl td:first-child{text-align:left}
   .baltbl td{text-align:right;padding:7px 0;border-top:1px solid var(--gray-100);font-weight:600}.baltbl td:first-child{font-weight:800;max-width:6em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .baltbl td:last-child{font-weight:800}.baltbl td.neg{color:var(--danger)}
-  .settle{background:#e7f7ef;border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;color:#065f37;margin-bottom:8px}
+  .settle{background:#e7f7ef;border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700;color:#065f37;margin-bottom:8px;flex-wrap:wrap}
+  .settle .sacts{display:flex;gap:6px;margin-left:auto}.settle .sacts .tossbtn{margin-left:0}
+  .splitbox{background:var(--gray-50);border:1px solid var(--gray-100);border-radius:12px;padding:8px 10px;margin-top:6px}
+  .sp-r{display:flex;align-items:center;gap:10px;margin:4px 0}.sp-r span{flex:0 0 5.5em;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sp-r .in{flex:1;padding:9px 11px}
+  .sp-sum{font-size:12px;color:var(--gray-600);margin-top:4px}
+  .paidbtn{border:1.5px solid #12b76a;background:#fff;color:#067647;font-size:11.5px;font-weight:800;padding:6px 10px;border-radius:8px;cursor:pointer;font-family:inherit;white-space:nowrap;min-height:32px}
+  .settle.done{background:#d1fadf;color:#05603a;justify-content:center;font-size:13.5px}
+  .paylog{padding:10px 12px}.paylog .pl-h{font-size:11.5px;font-weight:800;color:var(--gray-500);margin-bottom:4px}
+  .paylog .pl-r{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--gray-100);font-size:12.5px;font-weight:600}.paylog .pl-r:first-of-type{border-top:0}
+  .paylog .pl-r span{flex:1;min-width:0}.paylog small{color:var(--gray-500);font-weight:600;margin-left:4px}
+  .pl-x{border:none;background:var(--gray-100);color:var(--gray-700);font-size:11px;font-weight:700;padding:6px 9px;border-radius:8px;cursor:pointer;font-family:inherit;min-height:30px}
   /* 예약 */
   .resv{display:flex;gap:11px;padding:13px;border-radius:14px;background:var(--surface,#fff);box-shadow:var(--shadow);margin-bottom:10px}
   .resv .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;flex:0 0 auto;color:#fff}
@@ -706,20 +716,28 @@ function settleSection(){
   if(!(trip.expenses||[]).length){
     return head+'<div class="settle" style="background:var(--gray-100);color:var(--gray-600)">'+svg('ic-swap','')+' 지출을 추가하면 정산이 자동으로 계산돼요</div>';
   }
-  var rows=T.settlements(trip).map(function(s){
+  var setl=T.settlements(trip), st=T.settleState(trip), pays=trip.payments||[];
+  var rows=setl.map(function(s,i){
     var u=tossUrl(s.to,s.amt);
     return '<div class="settle">'+svg('ic-swap','')+' '+esc(s.from)+' → '+esc(s.to)+' <b style="margin-left:auto">'+won(s.amt)+'</b>'
-      +(u?'<a class="tossbtn" href="'+u+'" target="_blank" rel="noopener">토스로 보내기</a>':'')+'</div>';
+      +'<span class="sacts">'+(u?'<a class="tossbtn" href="'+u+'" target="_blank" rel="noopener">토스로 보내기</a>':'')
+      +'<button type="button" class="paidbtn" onclick="markPaid('+i+')">보냈어요 ✓</button></span></div>';
   }).join('');
-  var noToss=T.settlements(trip).some(function(s){return !tossUrl(s.to,s.amt);});
+  if(st==='done') rows='<div class="settle done">✅ 정산 끝 — 모두 주고받았어요</div>';
+  // 주고받은 기록(최근 먼저) — 잘못 눌렀으면 되돌리기
+  var payLog=pays.length?'<div class="card paylog"><div class="pl-h">주고받은 기록</div>'+pays.slice().reverse().map(function(p){
+    return '<div class="pl-r"><span>✓ '+esc(p.from)+' → '+esc(p.to)+' <b>'+won(p.krw)+'</b><small>'+(p.date?T.fmtMD(p.date):'')+'</small></span><button type="button" class="pl-x" onclick="undoPaid(\''+p.id+'\')">되돌리기</button></div>';
+  }).join('')+'</div>':'';
+  var noToss=setl.some(function(s){return !tossUrl(s.to,s.amt);});
   var bal=T.balances(trip).map(function(b){
     var sign=b.net>0?'+':b.net<0?'−':'';
     return '<tr><td>'+esc(b.name)+'</td><td>'+won(b.paid)+'</td><td>'+won(b.share)+'</td><td class="'+(b.net<0?'neg':'')+'">'+sign+won(Math.abs(b.net))+'</td></tr>';
   }).join('');
   return head
     + (rows || '<div class="settle" style="background:var(--gray-100);color:var(--gray-600)">'+svg('ic-swap','')+' 주고받을 금액이 없어요 — 모두 공평</div>')
-    + '<div class="card" style="padding:10px 12px"><table class="baltbl"><thead><tr><th>이름</th><th>낸 돈</th><th>부담액</th><th>차액</th></tr></thead><tbody>'+bal+'</tbody></table>'
-    + '<div style="font-size:11px;color:var(--gray-500);margin-top:6px">+ 돌려받을 돈 · − 보내야 할 돈 · 지출을 추가·수정하면 자동으로 다시 계산돼요</div></div>'
+    + payLog
+    + '<div class="card" style="padding:10px 12px"><table class="baltbl"><thead><tr><th>이름</th><th>낸 돈</th><th>부담액</th><th>'+(pays.length?'남은 차액':'차액')+'</th></tr></thead><tbody>'+bal+'</tbody></table>'
+    + '<div style="font-size:11px;color:var(--gray-500);margin-top:6px">+ 돌려받을 돈 · − 보내야 할 돈'+(pays.length?' · 주고받은 기록을 뺀 금액':'')+' · 지출을 추가·수정하면 자동으로 다시 계산돼요</div></div>'
     + (noToss?'<div style="font-size:11.5px;color:var(--gray-500);margin:-2px 2px 8px">💡 받는 사람의 토스 아이디를 <a href="#" onclick="openMemberSheet();return false;" style="color:var(--primary);font-weight:700">사람 편집</a>에 넣으면 금액이 채워진 송금 버튼이 생겨요</div>':'')
     + '<div style="display:flex;gap:8px;margin-top:8px">'
     +   '<button class="seg" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px" onclick="shareSettlement()">'+svg('ic-share')+' 정산 내역 공유</button>'
@@ -728,6 +746,14 @@ function settleSection(){
     + '<div style="font-size:11px;color:var(--gray-500);margin:6px 2px 0">각자 폰에 적은 지출을 링크로 보내면, 받는 쪽 같은 여행에 합쳐져요(이미 있는 건 건너뜀).</div>';
 }
 
+/* 정산 '보냈어요' — 송금 완료 기록을 남기면 그만큼 빼고 다시 계산한다. 다 주고받으면 '정산 끝'·홈 '정산 남음' 카드도 사라짐 */
+function markPaid(i){
+  var s=T.settlements(trip)[i]; if(!s) return;
+  if(!confirm(s.from+' → '+s.to+' '+won(s.amt)+'\n보낸 걸로 기록할까요?')) return;
+  T.addPayment(tid,{from:s.from,to:s.to,krw:s.amt,date:todayISO()}); reget(); renderShell();
+  toast(T.settleState(trip)==='done'?'정산 끝! 모두 주고받았어요 🎉':'기록했어요 — 남은 정산만 보여요');
+}
+function undoPaid(pid){ if(!confirm('이 기록을 지울까요? (정산이 다시 계산돼요)')) return; T.removePayment(tid,pid); reget(); renderShell(); }
 /* 갈 사람 편집 시트 — 이름이 지출(paidBy/paidFor)의 키라서 저장 시 지출도 함께 갱신 */
 var memDraft=[];
 function openMemberSheet(addNew){
@@ -779,7 +805,11 @@ function saveMembers(){
       var fors=e.paidFor.map(function(n){return ren[n];}).filter(Boolean);
       e.paidFor = fors.length ? fors : [e.paidBy];
     }
+    // 금액·비율 나눔도 이름이 키 — 바꾼 이름으로 옮기고, 지운 사람 몫은 뺀다
+    if(e.split&&e.split.v){ var nv={}; for(var k in e.split.v){ if(ren.hasOwnProperty(k)) nv[ren[k]]=e.split.v[k]; } e.split.v=nv; }
   });
+  // 주고받은 기록도 이름을 따라가고, 지운 사람과의 기록은 지운다
+  trip.payments=(trip.payments||[]).filter(function(p){ return ren.hasOwnProperty(p.from)&&ren.hasOwnProperty(p.to); }).map(function(p){ p.from=ren[p.from]; p.to=ren[p.to]; return p; });
   trip.members=list.map(function(m){var o={name:m.name,color:m.color}; if(m.toss) o.toss=m.toss; return o;});
   T.upsert(trip); reget(); closeSheet(); renderShell();
 }
@@ -825,7 +855,7 @@ function dayLabel(d){
   if(d>trip.end) return '여행 후 · '+md;
   return (i+1)+'일차 · '+md;
 }
-function daySum(d){ return (trip.expenses||[]).filter(function(e){return (e.date||'')===d;}).reduce(function(s,e){return s+(e.krw||0);},0); }
+function daySum(d){ return T.dayTotals(trip)[d]||0; }   // 여러 날 몫(숙박 등)은 그날들에 나눠 더한다
 function expList(){
   var ex=trip.expenses||[];
   if(!ex.length) return '<div class="card" style="color:var(--gray-500);font-size:12.5px;text-align:center">지출을 추가하면 여기에 쌓입니다.</div>';
@@ -841,7 +871,8 @@ function expList(){
 }
 function expRows(ex){
   return '<div class="card">'+ex.map(function(e){var c=T.catByKey(e.category);
-    var split=(e.paidFor&&e.paidFor.length>1)?' <span class="bdg">나눔 '+e.paidFor.length+'명</span>':'';
+    var split=(e.paidFor&&e.paidFor.length>1)?' <span class="bdg">나눔 '+e.paidFor.length+'명'+(e.split&&e.split.mode==='amt'?'·금액':e.split&&e.split.mode==='ratio'?'·비율':'')+'</span>':'';
+    if(e.spanDays>1) split+=' <span class="bdg">'+e.spanDays+'일 몫</span>';
     var curTxt=(e.currency&&e.currency!=='KRW')?e.currency+' '+(e.amount||0).toLocaleString():'';
     return '<div class="exp" style="cursor:pointer" onclick="openExpenseSheet(\''+e.id+'\')"><div class="ic" style="background:'+c.color+'22">'+c.emoji+'</div><div><div class="nm">'+esc(e.memo||c.label)+split+'</div><div class="mt">'+c.label+' · '+(e.method==='cash'?'현금':'카드')+' · '+esc(e.paidBy||'나')+'</div></div><div class="amt"><b>'+won(e.krw)+'</b>'+(curTxt?'<small>'+curTxt+'</small>':'')+' <span style="color:var(--gray-300);font-size:14px">›</span></div>'+(e.hasReceipt?'<img class="rc-thumb" data-rc="'+esc(e.id)+'" alt="영수증" onclick="event.stopPropagation();viewReceipt(this.dataset.rc)">':'')+'</div>';
   }).join('')+'</div>';
@@ -991,10 +1022,11 @@ function openExpenseSheet(expId){
   if(typeof expId==='string'){ e=(trip.expenses||[]).filter(function(x){return x.id===expId;})[0]; }
   if(e){
     editExp=e.id;
-    exState={cur:e.currency||'KRW',cat:e.category||'etc',method:e.method||'card',paidBy:e.paidBy||members[0]||'나',paidFor:(e.paidFor&&e.paidFor.length?e.paidFor.slice():members.slice())};
+    exState={cur:e.currency||'KRW',cat:e.category||'etc',method:e.method||'card',paidBy:e.paidBy||members[0]||'나',paidFor:(e.paidFor&&e.paidFor.length?e.paidFor.slice():members.slice()),
+      split:(e.split&&(e.split.mode==='amt'||e.split.mode==='ratio'))?{mode:e.split.mode,v:Object.assign({},e.split.v||{})}:{mode:'eq',v:{}}, span:Math.max(1,parseInt(e.spanDays,10)||1)};
   } else {
     var last=(trip.expenses||[])[0];   // 새 지출은 맨 앞에 들어간다(addExpense unshift) — [0]이 가장 최근
-    exState={cur:(last&&last.currency)||T.curOf(trip.city),cat:'food',method:'card',paidBy:members[0]||'나',paidFor:members.slice()};
+    exState={cur:(last&&last.currency)||T.curOf(trip.city),cat:'food',method:'card',paidBy:members[0]||'나',paidFor:members.slice(),split:{mode:'eq',v:{}},span:1};
   }
   var loc=T.curOf(trip.city), curs=[loc,'KRW','USD'].concat(exState.cur).filter(function(c,i,a){return a.indexOf(c)===i;});
   var more=T.CURS.filter(function(c){return curs.indexOf(c)<0;});
@@ -1007,13 +1039,13 @@ function openExpenseSheet(expId){
       +'<div class="segrow" id="ex-for">'
       +  '<span class="seg'+(exState.paidFor.length===members.length?' on':'')+'" id="ex-forall" onclick="allPaidFor()">전체</span>'
       +  members.map(function(m){return '<span class="seg'+(exState.paidFor.indexOf(m)>-1?' on':'')+'" data-f="'+esc(m)+'" onclick="toggleFor(this)">'+esc(m)+'</span>';}).join('')
-      +'</div>';
+      +'</div><div id="ex-split"></div>';
   }
   openSheet('<h3>'+(editExp?'지출 수정':'지출 추가')+'</h3>'
     +'<div class="amtin"><input class="val" id="ex-amt" type="number" inputmode="decimal" enterkeyhint="done" placeholder="0" value="'+(e?(e.amount||''):'')+'" oninput="updKRW()" onkeydown="if(event.key===\'Enter\'){event.preventDefault();saveExpense();}"><div class="krw" id="ex-krw">≈ '+won(e?e.krw:0)+'</div><div id="ex-fxnote" style="font-size:10px;color:var(--gray-500);margin-top:2px"></div></div>'
     +'<div class="segrow" id="ex-cur">'+curs.map(function(c){return '<button type="button" class="seg'+(c===exState.cur?' on':'')+'" data-cur="'+c+'" onclick="pickCur(this)">'+c+'</button>';}).join('')
     +'<select class="seg cur-more" aria-label="다른 통화" onchange="pickCurMore(this)"><option value="">다른 통화</option>'+more.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select></div>'
-    +'<div class="catgrid">'+catg+'</div><div class="ex-tr" id="ex-tr"></div>'
+    +'<div class="catgrid">'+catg+'</div><div class="ex-tr" id="ex-tr"></div><div id="ex-span"></div>'
     +'<div class="segrow"><span class="seg'+(exState.method==='card'?' on':'')+'" data-m="card" onclick="pickM(this)">💳 카드</span><span class="seg'+(exState.method==='cash'?' on':'')+'" data-m="cash" onclick="pickM(this)">💵 현금</span></div><div class="ex-wal" id="ex-wal"></div>'
     +people
     +memoChips()
@@ -1028,6 +1060,7 @@ function openExpenseSheet(expId){
   if(e&&e.hasReceipt) rcGet(e.id,function(d){ if(d) showRcPrev(d); });
   walletNote();
   trHint();
+  drawSplit(); drawSpan();
   if(!e) setTimeout(function(){ var a=document.getElementById('ex-amt'); if(a) a.focus(); },60);   // 새 지출: 바로 숫자 입력
   setFxNote();
   T.refreshRates(function(ok){ if(ok){ updKRW(); setFxNote(); } });
@@ -1060,7 +1093,45 @@ function pickCurMore(sel){
   sel.parentNode.insertBefore(b,sel); sel.querySelector('option[value=""]').selected=true; sel.removeChild([].filter.call(sel.options,function(o){return o.value===c;})[0]);
   pickCur(b);
 }
-function pickCat(el){ document.querySelectorAll('.catpick').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cat=el.dataset.cat; trHint(); }
+function pickCat(el){ document.querySelectorAll('.catpick').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.cat=el.dataset.cat; trHint(); drawSpan(); }
+/* 며칠에 나눌까요 — 숙박을 고르거나 이미 나눠 둔 지출일 때만 보인다. 날짜별 합계·하루 목표만 바뀌고 총액·정산은 그대로 */
+function drawSpan(){
+  var box=document.getElementById('ex-span'); if(!box) return;
+  if(exState.cat!=='stay'&&!(exState.span>1)){ box.innerHTML=''; return; }
+  var n=Math.max(2,Math.min(30,T.tripLength(trip))), o='';
+  for(var i=1;i<=n;i++) o+='<option value="'+i+'"'+(i===exState.span?' selected':'')+'>'+(i===1?'하루(이날)':i+'일 (이날부터 '+i+'박)')+'</option>';
+  box.innerHTML='<label class="fl" for="ex-span-sel">며칠 몫인가요? <span style="font-weight:500;color:var(--gray-500)">(숙박 등 — 날짜별 합계·하루 목표에 나눠 반영)</span></label>'
+    +'<select class="in" id="ex-span-sel" onchange="exState.span=+this.value">'+o+'</select>';
+}
+/* 나누는 방법 — 2명 이상 나눌 때: 똑같이 · 금액 지정 · 비율(예: 술 마신 사람 2, 안 마신 사람 1) */
+function splitFmt(x){ return exState.cur==='KRW'?won(Math.round(x)):(Math.round(x*100)/100).toLocaleString()+' '+exState.cur; }
+function drawSplit(){
+  var box=document.getElementById('ex-split'); if(!box) return;
+  var fors=exState.paidFor||[], sp=exState.split||(exState.split={mode:'eq',v:{}});
+  if(fors.length<2){ box.innerHTML=''; return; }
+  var seg=function(m,l){ return '<span class="seg'+(sp.mode===m?' on':'')+'" onclick="setSplitMode(\''+m+'\')">'+l+'</span>'; };
+  var h='<label class="fl">나누는 방법</label><div class="segrow">'+seg('eq','똑같이')+seg('amt','금액 지정')+seg('ratio','비율')+'</div>';
+  if(sp.mode!=='eq'){
+    h+='<div class="splitbox">'+fors.map(function(n,i){ var v=(sp.v||{})[n];
+      return '<label class="sp-r"><span>'+esc(n)+'</span><input class="in" type="number" inputmode="decimal" min="0" step="any" data-i="'+i+'" value="'+(v>0?v:'')+'" placeholder="'+(sp.mode==='amt'?'금액':'예: 1')+'" oninput="setSplitVal(this)"></label>'; }).join('')
+      +'<div class="sp-sum" id="ex-split-sum"></div></div>';
+  }
+  box.innerHTML=h; splitSum();
+}
+function setSplitMode(m){
+  var sp=exState.split; sp.mode=m;
+  if(m==='ratio'&&!Object.keys(sp.v||{}).length){ sp.v={}; exState.paidFor.forEach(function(n){ sp.v[n]=1; }); }
+  if(m==='amt'){ sp.v={}; }   // 금액 지정은 새로 적는다(비율 숫자가 금액으로 남지 않게)
+  drawSplit();
+}
+function setSplitVal(inp){ var n=exState.paidFor[+inp.dataset.i]; if(n==null) return; exState.split.v[n]=parseFloat(inp.value)||0; splitSum(); }
+function splitSum(){
+  var el=document.getElementById('ex-split-sum'); if(!el) return;
+  var sp=exState.split, fors=exState.paidFor, tot=0; fors.forEach(function(n){ tot+=+((sp.v||{})[n])||0; });
+  var amt=parseFloat((document.getElementById('ex-amt')||{}).value)||0, krw=exKRW(amt);
+  if(sp.mode==='amt'){ var left=amt-tot; el.innerHTML='합계 '+splitFmt(tot)+' / 금액 '+splitFmt(amt)+(Math.abs(left)>Math.max(0.01,amt*0.001)?' · <b style="color:var(--danger)">'+(left>0?splitFmt(left)+' 남음':splitFmt(-left)+' 초과')+'</b>':' ✓'); }
+  else el.innerHTML=tot>0?fors.map(function(n){ return esc(n)+' '+won(Math.round(krw*((+sp.v[n])||0)/tot)); }).join(' · '):'비율을 입력하세요';
+}
 function pickM(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.method=el.dataset.m; walletNote(); }
 function pickPayer(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); exState.paidBy=el.dataset.p; }
 function toggleFor(el){
@@ -1069,11 +1140,13 @@ function toggleFor(el){
   else { exState.paidFor.push(n); el.classList.add('on'); }
   var members=(trip.members||[]).map(function(m){return m.name;});
   var all=document.getElementById('ex-forall'); if(all) all.classList.toggle('on', exState.paidFor.length===members.length);
+  drawSplit();
 }
 function allPaidFor(){
   var members=(trip.members||[]).map(function(m){return m.name;});
   exState.paidFor=members.slice();
   var wrap=document.getElementById('ex-for'); if(wrap) wrap.querySelectorAll('.seg').forEach(function(x){ x.classList.add('on'); });
+  drawSplit();
 }
 /* 수정 중 금액·통화를 안 바꿨으면 기록 당시 원화를 유지 — 다시 열어 저장만 해도 오늘 환율로 바뀌던 문제 방지 */
 function exKRW(v){
@@ -1081,13 +1154,22 @@ function exKRW(v){
   if(e&&e.krw!=null&&+e.amount===v&&(e.currency||'KRW')===exState.cur) return e.krw;
   return T.toKRW(v,exState.cur);
 }
-function updKRW(){ var v=parseFloat(document.getElementById('ex-amt').value)||0; document.getElementById('ex-krw').textContent='≈ '+won(exKRW(v)); setFxNote(); trHint(); }
+function updKRW(){ var v=parseFloat(document.getElementById('ex-amt').value)||0; document.getElementById('ex-krw').textContent='≈ '+won(exKRW(v)); setFxNote(); trHint(); splitSum(); }
 function saveExpense(){
   var v=parseFloat(document.getElementById('ex-amt').value)||0; if(v<=0){alert('금액을 입력하세요.');return;}
   var members=(trip.members||[]).map(function(m){return m.name;});
   var paidBy=exState.paidBy||members[0]||'나';
   var paidFor=(exState.paidFor&&exState.paidFor.length)?exState.paidFor.slice():[paidBy];
   var data={amount:v,currency:exState.cur,krw:exKRW(v),category:exState.cat,method:exState.method,paidBy:paidBy,paidFor:paidFor,memo:document.getElementById('ex-memo').value.trim()};
+  // 나눔 방법: 금액 지정은 합계가 금액과 같아야, 비율은 한 명 이상 0보다 커야. 똑같이면 split 을 지운다(null)
+  var sp=exState.split||{mode:'eq'};
+  if(paidFor.length>1&&(sp.mode==='amt'||sp.mode==='ratio')){
+    var sv={}, sum=0; paidFor.forEach(function(n){ var x=+((sp.v||{})[n]); sv[n]=isFinite(x)&&x>0?x:0; sum+=sv[n]; });
+    if(sum<=0){ alert(sp.mode==='amt'?'사람별 금액을 입력하세요.':'사람별 비율을 입력하세요 (예: 2와 1).'); return; }
+    if(sp.mode==='amt'&&Math.abs(sum-v)>Math.max(0.01,v*0.001)){ alert('사람별 금액 합계('+splitFmt(sum)+')가 지출 금액('+splitFmt(v)+')과 달라요.'); return; }
+    data.split={mode:sp.mode,v:sv};
+  } else data.split=null;
+  data.spanDays=exState.span>1?exState.span:null;
   var dv=(document.getElementById('ex-date')||{}).value||''; if(/^\d{4}-\d{2}-\d{2}$/.test(dv)) data.date=dv;
   if(rcState.data) data.hasReceipt=true; else if(rcState.remove) data.hasReceipt=false;
   var eid=editExp;
@@ -1120,7 +1202,7 @@ function reportBtn(){
 function reportData(){
   var ex=trip.expenses||[], total=T.spent(trip), days=T.tripLength(trip), ppl=Math.max(1,(trip.members||[]).length);
   var big=ex.slice().sort(function(a,b){return (b.krw||0)-(a.krw||0);})[0];
-  var byDay={}; ex.forEach(function(e){ if(e.date){ byDay[e.date]=(byDay[e.date]||0)+(e.krw||0); } });
+  var byDay=T.dayTotals(trip);   // 여러 날 몫(숙박 등)은 그날들에 나눠서
   var top=Object.keys(byDay).sort(function(a,b){return byDay[b]-byDay[a];})[0];
   return { total:total, days:days, ppl:ppl, perDay:Math.round(total/days), perPerson:Math.round(total/ppl), count:ex.length,
     cats:T.byCategory(trip), big:big, topDay:top?{d:top,amt:byDay[top]}:null, budget:T.budgetTotal(trip), setl:T.settlements(trip) };
@@ -1862,7 +1944,7 @@ function toast(m){ var t=document.getElementById('tc-toast'); if(!t){ t=document
 function encTrip(t,me){
   // '나'는 기기마다 다른 사람 — 보낼 때 실제 이름으로 바꿔 보내고, 받는 쪽이 자기가 누군지 고른다
   var rn=function(n){ return n==='나'&&me?me:n; };
-  var slim={ city:t.city, cover:t.cover, start:t.start, end:t.end, members:(t.members||[]).map(function(m){ var c={}; for(var k in m) c[k]=m[k]; c.name=rn(m.name); return c; }), budget:t.budget, days:(t.days||[]).map(function(d){ var c={}; for(var k in d) if(k!=='jPhoto') c[k]=d[k]; return c; }), expenses:(t.expenses||[]).map(function(e){ var c={}; for(var k in e) if(k!=='hasReceipt') c[k]=e[k]; c.paidBy=rn(e.paidBy); if(e.paidFor) c.paidFor=e.paidFor.map(rn); return c; }), reservations:t.reservations, checklist:t.checklist, flight:t.flight };
+  var slim={ city:t.city, cover:t.cover, start:t.start, end:t.end, members:(t.members||[]).map(function(m){ var c={}; for(var k in m) c[k]=m[k]; c.name=rn(m.name); return c; }), budget:t.budget, days:(t.days||[]).map(function(d){ var c={}; for(var k in d) if(k!=='jPhoto') c[k]=d[k]; return c; }), expenses:(t.expenses||[]).map(function(e){ var c={}; for(var k in e) if(k!=='hasReceipt') c[k]=e[k]; c.paidBy=rn(e.paidBy); if(e.paidFor) c.paidFor=e.paidFor.map(rn); if(e.split&&e.split.v){ c.split={mode:e.split.mode,v:{}}; for(var n in e.split.v) c.split.v[rn(n)]=e.split.v[n]; } return c; }), payments:(t.payments||[]).map(function(p){ return {id:p.id,from:rn(p.from),to:rn(p.to),krw:p.krw,date:p.date}; }), reservations:t.reservations, checklist:t.checklist, flight:t.flight };
   return encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(slim)))));   // base64의 + / = 가 쿼리에서 깨지지 않게
 }
 /* ── 지출 합치기 링크 — 동행에게 보내면 그쪽 같은 여행에 내 지출이 합쳐짐(같은 id는 건너뜀). 서버 없이 링크로만 ── */
@@ -1879,7 +1961,7 @@ function shareExpenses(){
   var rn=function(n){ return n==='나'&&me?me:n; };
   var slim={ v:1, city:trip.city, start:trip.start, end:trip.end,
     members:mems.map(function(m){ return {name:rn(m.name),color:m.color}; }),
-    expenses:ex.map(function(e){ var c={}; for(var k in e) c[k]=e[k]; delete c.hasReceipt; c.paidBy=rn(e.paidBy); c.paidFor=(e.paidFor||[]).map(rn); return c; }) };
+    expenses:ex.map(function(e){ var c={}; for(var k in e) c[k]=e[k]; delete c.hasReceipt; c.paidBy=rn(e.paidBy); c.paidFor=(e.paidFor||[]).map(rn); if(e.split&&e.split.v){ c.split={mode:e.split.mode,v:{}}; for(var n in e.split.v) c.split.v[rn(n)]=e.split.v[n]; } return c; }) };
   var link=location.origin+'/trips?x='+encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(slim)))));
   var msg=trip.city+' 여행 지출 '+ex.length+'건 — 링크를 열면 같은 여행에 합쳐져요';
   try{

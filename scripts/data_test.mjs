@@ -74,4 +74,42 @@ await ok('예약 붙여넣기: 연말 출발·연초 귀국이면 귀국편은 �
   assert.equal(c.parseBooking('KE724 1월 3일 12:00 KIX ICN', { year: 2026, after: '2026-01-02' }).flights[0].date, '2026-01-03');
 });
 
+await ok('불균등 나눔: 비율 2:1, 금액 지정 — 원화 합계가 정확히 맞는다', () => {
+  const T = boot().TripStore;
+  const r = T.sharesOf({ krw: 90000, paidBy: '나', paidFor: ['나', '민수'], split: { mode: 'ratio', v: { '나': 2, '민수': 1 } } }, ['나', '민수']);
+  assert.equal(Math.round(r['나']), 60000); assert.equal(Math.round(r['민수']), 30000);
+  const a = T.sharesOf({ krw: 10000, amount: 1000, paidBy: '나', paidFor: ['나', '민수'], split: { mode: 'amt', v: { '나': 700, '민수': 300 } } }, ['나', '민수']);
+  assert.equal(Math.round(a['나']), 7000); assert.equal(Math.round(a['민수']), 3000);
+  const z = T.sharesOf({ krw: 9000, paidBy: '나', paidFor: ['나', '민수', '철수'], split: { mode: 'ratio', v: {} } }, ['나', '민수', '철수']);
+  assert.equal(Math.round(z['철수']), 3000);   // 비율이 비어 있으면 똑같이
+  const s = T.settlements({ members: [{ name: '나' }, { name: '민수' }], expenses: [{ krw: 90000, paidBy: '나', paidFor: ['나', '민수'], split: { mode: 'ratio', v: { '나': 2, '민수': 1 } } }] });
+  assert.equal(JSON.stringify(s), JSON.stringify([{ from: '민수', to: '나', amt: 30000 }]));
+});
+
+await ok('송금 완료 기록: 일부 보내면 남은 것만, 다 보내면 정산 끝(done)', () => {
+  const T = boot().TripStore;
+  const t = { members: [{ name: '나' }, { name: '민수' }, { name: '지수' }], expenses: [ex(90000, '나', ['나', '민수', '지수'])], payments: [] };
+  assert.equal(T.settleState(t), 'open'); assert.equal(T.settlements(t).length, 2);
+  t.payments.push({ from: '민수', to: '나', krw: 30000 });
+  assert.equal(JSON.stringify(T.settlements(t)), JSON.stringify([{ from: '지수', to: '나', amt: 30000 }]));
+  assert.equal(T.balances(t).find(b => b.name === '민수').net, 0);
+  t.payments.push({ from: '지수', to: '나', krw: 30000 });
+  assert.equal(T.settlements(t).length, 0); assert.equal(T.settleState(t), 'done');
+  assert.equal(T.settleState({ members: [{ name: '나' }, { name: '민수' }], expenses: [ex(1000, '나', ['나'])] }), 'even');
+});
+
+await ok('여러 날 몫: 숙박 30만 원 3박 → 날짜별 10만 원씩, 총액은 그대로', () => {
+  const T = boot().TripStore;
+  const t = { expenses: [{ krw: 300001, date: '2026-12-29', spanDays: 3 }, { krw: 5000, date: '2026-12-30' }] };
+  const d = T.dayTotals(t);
+  assert.equal(d['2026-12-29'], 100000); assert.equal(d['2026-12-30'], 105000); assert.equal(d['2026-12-31'], 100001);
+  assert.equal(T.spent(t), 305001);
+});
+
+await ok('저장값 정리: 이상한 송금 기록은 버린다', () => {
+  const store = new Map([['tc_trips_v1', JSON.stringify([{ id: 't1', city: '오사카', start: '2026-12-01', end: '2026-12-02', members: [{ name: '나' }], payments: [{ id: 'p1', from: '나', to: '민수', krw: 1000 }, { id: 'p2', from: '', to: 'x', krw: 5 }, { id: 'p3', from: 'a', to: 'b', krw: -3 }, 'x'] }])]]);
+  const T = boot({ store }).TripStore;
+  assert.equal(T.all()[0].payments.length, 1);
+});
+
 console.log(`data_test: ${pass} passed`);
