@@ -540,7 +540,7 @@ function domImgError(img) {
   const icon  = CTYPE_ICON[item?.contenttypeid] || '🗺';
   const name  = item?.title || '';
   thumb.classList.add('dom-thumb--empty');
-  thumb.innerHTML = `<span class="dom-nimg-icon">${icon}</span><span class="dom-nimg-name">${name}</span>`;
+  thumb.innerHTML = `<span class="dom-nimg-icon">${icon}</span><span class="dom-nimg-name">${esc(name)}</span>`;
 }
 
 async function loadMoreDomestic() {
@@ -611,7 +611,7 @@ async function _fetchDomesticPage(append) {
       domShow('domesticError');
       document.getElementById('domesticErrorMsg').innerHTML =
         `<strong>일시적인 문제가 발생했어요.</strong><br>` +
-        `<small>${err.message}<br>한국관광공사 API 응답이 늦거나 점검 중일 수 있습니다.</small><br>` +
+        `<small>${esc(err.message)}<br>한국관광공사 API 응답이 늦거나 점검 중일 수 있습니다.</small><br>` +
         `<button class="retry-btn" onclick="domHide('domesticError');_fetchDomesticPage(false)">🔄 다시 시도</button>`;
     }
   } finally {
@@ -741,7 +741,7 @@ function renderDomestic(items, append = false) {
         <span class="dom-ctype-tag">${icon} ${CTYPE_MAP[item.contenttypeid]||''}</span>
         <h3>${esc(item.title)}</h3>
         ${item.addr1 ? `<p class="dom-addr">📍 ${esc(item.addr1)}</p>` : ''}
-        ${item.tel   ? `<p class="dom-tel">📞 ${item.tel}</p>`    : ''}
+        ${item.tel   ? `<p class="dom-tel">📞 ${esc(item.tel)}</p>`    : ''}
         <p class="dom-more">상세보기 →</p>
       </div>
     </div>`;
@@ -804,7 +804,7 @@ async function openTourDetail(contentId, contentTypeId, mapX, mapY) {
 
     _renderTourModal({ detail, intro, imgArr, nbArr, cached });
   } catch (err) {
-    body.innerHTML = `<div class="tmd-err">⚠️ 오류: ${err.message}</div>`;
+    body.innerHTML = `<div class="tmd-err">⚠️ 오류: ${esc(err.message)}</div>`;
   }
 }
 

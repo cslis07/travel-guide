@@ -108,10 +108,45 @@
   }
 
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+  /* ── 저장값 정리 — 공유 링크(?t= ?x=)·백업 파일은 누구나 만들 수 있다.
+     id 는 화면에서 onclick="fn('id')" 로 들어가므로 영문·숫자·_- 만 남긴다(따옴표·태그로 스크립트 실행 차단).
+     같은 입력은 늘 같은 id 가 되게(영수증 사진 키 유지) 결정적으로 바꾼다. 멤버 색은 #hex 만. 배열 자리에 배열이 아니면 [] ── */
+  var ID_OK = /^[A-Za-z0-9_-]{1,40}$/, HEX = /^#[0-9a-fA-F]{3,8}$/;
+  function isObj(v) { return !!v && typeof v === 'object' && !Array.isArray(v); }
+  function hash36(s) { var h = 5381; for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return (h >>> 0).toString(36); }
+  function cleanId(v) {
+    if (v == null || v === '') return v;
+    var s = String(v); if (ID_OK.test(s)) return s;
+    var c = s.replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
+    return (c || 'x') + '_' + hash36(s);
+  }
+  function arr(v) { return Array.isArray(v) ? v.filter(isObj) : []; }
+  function cleanList(list) { return arr(list).map(function (x) { if (x.id != null) x.id = cleanId(x.id); return x; }); }
+  function clean(t) {
+    t.id = cleanId(t.id) || uid();
+    t.members = arr(t.members).map(function (m, i) {
+      m.name = String(m.name == null ? '' : m.name).slice(0, 30);
+      if (!HEX.test(m.color)) m.color = MEMBER_COLORS[i % MEMBER_COLORS.length];
+      if (m.toss != null) { m.toss = String(m.toss).replace(/[^A-Za-z0-9._-]/g, '').slice(0, 30); if (!m.toss) delete m.toss; }
+      return m;
+    }).filter(function (m) { return m.name; });
+    if (!t.members.length) t.members = [{ name: '나', color: MEMBER_COLORS[0] }];
+    t.expenses = cleanList(t.expenses).map(function (e) {
+      e.paidBy = e.paidBy == null ? e.paidBy : String(e.paidBy);
+      if (e.paidFor != null) e.paidFor = Array.isArray(e.paidFor) ? e.paidFor.map(String) : [];
+      return e;
+    });
+    t.reservations = cleanList(t.reservations);
+    t.checklist = cleanList(t.checklist);
+    t.places = Array.isArray(t.places) ? t.places : [];
+    t.days = arr(t.days).map(function (d) { d.items = cleanList(d.items); return d; });
+    return t;
+  }
   /* 저장값이 깨졌으면 [] 로 시작하되, 원문은 덮어쓰기 전에 따로 보관(나중에 복구 가능) */
   function load() {
     var raw = null;
-    try { raw = localStorage.getItem(KEY); var v = JSON.parse(raw || '[]'); return Array.isArray(v) ? v : []; }
+    try { raw = localStorage.getItem(KEY); var v = JSON.parse(raw || '[]'); return Array.isArray(v) ? v.filter(isObj).map(clean) : []; }
     catch (e) {
       try { if (raw && localStorage.getItem(KEY + '_bad') !== raw) localStorage.setItem(KEY + '_bad', raw); } catch (e2) {}
       return [];
@@ -434,7 +469,7 @@
 
   window.TripStore = {
     KEY: KEY, RATES: RATES, CATS: CATS, MEMBER_COLORS: MEMBER_COLORS,
-    all: all, get: get, create: create, upsert: upsert, remove: remove,
+    all: all, get: get, create: create, upsert: upsert, remove: remove, cleanId: cleanId,
     addExpense: addExpense, updateExpense: updateExpense, removeExpense: removeExpense,
     addReservation: addReservation, updateReservation: updateReservation, removeReservation: removeReservation,
     addChecklistItem: addChecklistItem, updateChecklistItem: updateChecklistItem, removeChecklistItem: removeChecklistItem,

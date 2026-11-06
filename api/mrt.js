@@ -53,6 +53,7 @@ async function handler(req) {
         'User-Agent': 'TravelCost/1.0',
       },
       body: JSON.stringify(rpc),
+      signal: AbortSignal.timeout(15000),   // 상류가 멈추면 15초에 끊는다
     });
     raw = await up.text();
   } catch (e) {

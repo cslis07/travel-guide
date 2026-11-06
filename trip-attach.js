@@ -56,7 +56,7 @@
     wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
   }
   function close() { if (wrap) wrap.classList.remove('on'); }
-  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
   function summaryLine(p) {
     var bits = [];

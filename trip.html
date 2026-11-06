@@ -363,7 +363,7 @@ var curTab = (function(t){ return ['plan','budget','resv','pack','air'].indexOf(
 if(trip){ var _ti=T.daysBetween(trip.start,todayISO()); if(_ti>=0&&_ti<T.tripLength(trip)) curDay=_ti; }   // 여행 중이면 오늘 일차를 먼저
 function sv(){ return '/svg'; }
 function svg(id,cls){ return '<svg class="i '+(cls||'')+'" viewBox="0 0 24 24"><use href="#'+id+'"/></svg>'; }
-function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function won(n){return '₩'+(n||0).toLocaleString('ko-KR');}
 /* 토스 아이디 송금 링크 — toss.me/아이디/금액. 아이디는 영문·숫자·._- 만 허용(공유 링크로 들어온 값 방어) */
 function tossId(v){ v=String(v||'').trim().replace(/^https?:\/\/(www\.)?toss\.me\//i,'').replace(/^toss\.me\//i,'').replace(/\/.*$/,''); return /^[A-Za-z0-9._-]{2,30}$/.test(v)?v:''; }
@@ -794,7 +794,8 @@ function saveLimits(){
 function exportCSV(){
   var ex=trip.expenses||[]; if(!ex.length){ alert('내보낼 지출이 없어요.'); return; }
   var head=['날짜','메모','카테고리','통화','금액','원화','결제','낸사람','나눔대상'];
-  function q(s){ s=String(s==null?'':s); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; }
+  // 엑셀 수식 주입 막기 — 동행 링크로 받은 메모가 =·+·-·@ 로 시작하면 앞에 ' 를 붙여 글자로(숫자는 그대로)
+  function q(s){ s=String(s==null?'':s); if(/^[=+\-@\t\r]/.test(s)&&!/^-?\d+(\.\d+)?$/.test(s)) s="'"+s; return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; }
   var lines=[head.join(',')];
   ex.forEach(function(e){ var c=T.catByKey(e.category);
     lines.push([e.date||'',e.memo||'',c.label,e.currency||'KRW',e.amount||'',e.krw||'',(e.method==='cash'?'현금':'카드'),e.paidBy||'',(e.paidFor||[]).join('·')].map(q).join(','));

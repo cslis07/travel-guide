@@ -3369,7 +3369,11 @@ if('serviceWorker' in navigator){
 // ════════════════════════════════
 const FAV_KEY = 'icn_fav_flights';
 function getFavs(){
-  try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); }
+  // 가져오기 링크(/mytrip#data=)로 들어온 값도 있으므로 편명 형식·방향만 통과(화면 onclick·innerHTML 에 들어감)
+  try {
+    const v = JSON.parse(localStorage.getItem(FAV_KEY) || '[]');
+    return Array.isArray(v) ? v.filter(f => f && /^[A-Z0-9]{2,8}$/.test(String(f.flightId || '')) && (f.dir === 'dep' || f.dir === 'arr')) : [];
+  }
   catch(e){ return []; }
 }
 function setFavs(arr){
@@ -3381,6 +3385,7 @@ function addFavFlight(){
   if(!inp) return;
   const id = (inp.value || '').trim().toUpperCase().replace(/\s+/g,'');
   if(!id){ inp.focus(); return; }
+  if(!/^[A-Z0-9]{2,8}$/.test(id)){ alert('편명은 영문·숫자 2~8자로 입력하세요 (예: KE723, 7C1101)'); inp.focus(); return; }
   const favs = getFavs();
   if(favs.some(f => f.flightId === id && f.dir === dir)){
     inp.value = '';

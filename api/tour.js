@@ -69,6 +69,7 @@ async function handler(req) {
   try {
     const upstream = await fetch(target, {
       headers: { 'User-Agent': 'TravelGuide/1.0' },
+      signal: AbortSignal.timeout(10000),   // 상류가 멈추면 10초에 끊는다
     });
 
     if (!upstream.ok) {

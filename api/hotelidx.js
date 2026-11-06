@@ -9,14 +9,23 @@
 //   → { ok, loc, n, list:[[name, key, lat, lng, taPath], ...] }
 
 
+import { cors, foreignOrigin, rateLimited, tooMany } from './_guard.js';
+
 const XO = 'https://data.xotelo.com/api/list';
 const PAGE = 100;
 const MAX_PAGES = 60;   // 상하이처럼 1만 곳 넘는 도시는 인기순 상위 6,000곳만
 
 async function handler(req) {
-  const loc = new URL(req.url).searchParams.get('loc') || '';
-  // 트립어드바이저 지역 코드 형식만 허용 (임의 URL 조립 방지)
+  // 남의 사이트 차단·IP당 호출 제한 — 요청 1건이 상류를 최대 60번 부르므로 캐시 우회 남용을 끊는다
+  if (foreignOrigin(req)) return out({ ok: false, error: 'origin not allowed' }, 403, 0, cors(req));
+  if (rateLimited(req, 20)) return tooMany(cors(req));
+  const q = new URL(req.url).searchParams;
+  const loc = q.get('loc') || '';
+  // 트립어드바이저 지역 코드 형식만 허용 (임의 URL 조립 방지). 모르는 파라미터는 캐시 우회용이라 거절
   if (!/^g\d{2,9}$/.test(loc)) return out({ ok: false, error: 'invalid loc' }, 400, 0);
+  if ([...q.keys()].some(k => k !== 'loc' && k !== 'v') || (q.has('v') && !/^\d{1,3}$/.test(q.get('v')))) {
+    return out({ ok: false, error: 'invalid params' }, 400, 0);
+  }
 
   try {
     const first = await page(loc, 0);
@@ -54,16 +63,17 @@ async function handler(req) {
 /* ⚠️ sort=best_value 는 페이지를 넘기는 사이 순서가 흔들려 같은 호텔이 반복되고 다른 호텔이 빠진다
    (실측 부산 2,229건 중 고유 1,773). popularity 는 고유 2,229 — 순서가 안정적이다. */
 async function page(loc, offset) {
-  const r = await fetch(`${XO}?location_key=${loc}&limit=${PAGE}&offset=${offset}&sort=popularity`);
+  const r = await fetch(`${XO}?location_key=${loc}&limit=${PAGE}&offset=${offset}&sort=popularity`, { signal: AbortSignal.timeout(8000) });
   const d = await r.json();
   if (d.error || !d.result) throw new Error(d.error?.message || 'no result');
   return d.result;
 }
 
-function out(obj, status, sMaxAge) {
+function out(obj, status, sMaxAge, extra = {}) {
   return new Response(JSON.stringify(obj), {
     status,
     headers: {
+      ...extra,
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': sMaxAge
         ? `public, s-maxage=${sMaxAge}, stale-while-revalidate=86400`

@@ -254,7 +254,7 @@ function toastB(m){ var t=document.getElementById('bk-toast'); if(!t){ t=documen
 function importLegacy(){ localStorage.setItem('tc_legacy_migrated','1'); window.TripAttach.open(window.__legacyPayload); }
 function dismissLegacy(){ localStorage.setItem('tc_legacy_migrated','1'); var b=document.getElementById('legacyBanner'); if(b) b.remove(); }
 
-function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function won(n){return '₩' + (n||0).toLocaleString('ko-KR');}
 
 function classify(t){
@@ -381,7 +381,7 @@ function createTrip(){
   var str = function(v,n){ return String(v==null?'':v).slice(0,n); };
   var num = function(v){ v=+v; return isFinite(v)&&v>=0?v:0; };
   var incoming = obj.expenses.filter(function(e){ return e && e.id && num(e.krw)>0; }).map(function(e){
-    return { id:str(e.id,40), date:str(e.date,10), amount:num(e.amount), currency:str(e.currency||'KRW',3), krw:Math.round(num(e.krw)),
+    return { id:T.cleanId(str(e.id,40)), date:str(e.date,10), amount:num(e.amount), currency:str(e.currency||'KRW',3), krw:Math.round(num(e.krw)),
       category:str(e.category||'etc',20), method:e.method==='cash'?'cash':'card', paidBy:str(e.paidBy,30),
       paidFor:Array.isArray(e.paidFor)?e.paidFor.map(function(n){return str(n,30);}).filter(Boolean):[], memo:str(e.memo,120) };
   });

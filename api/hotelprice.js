@@ -15,6 +15,8 @@
 //   → { ok, rates:[{code,name,amount,cur,krw}], cur, fx }
 
 
+import { cors, foreignOrigin, rateLimited, tooMany } from './_guard.js';
+
 const MCP = 'https://mcp-servers.myrealtrip.com/mcp';
 const XO_RATES = 'https://data.xotelo.com/api/rates';
 
@@ -44,8 +46,17 @@ const IDX_VER = 2;   // 2: 색인 정렬 popularity(누락 수정). 색인 형�
    v=4: 촉음 받침(롯폰기↔Roppongi)·덩어리 걷어내기 양방식(APA 롯폰기 에키히가시 누락 수정) */
 const CURS = new Set(['JPY', 'THB', 'USD', 'HKD', 'CNY', 'EUR', 'GBP']);
 
+const RATE_KEYS = new Set(['key', 'cur', 'ci', 'co', 'ad']), MATCH_KEYS = new Set(['gid', 'v']);
 async function handler(req) {
+  // 남의 사이트 차단·IP당 호출 제한 — 매칭 1건이 마이리얼트립 MCP 를 부르고, MCP 는 수십 회에 막힌다
+  if (foreignOrigin(req)) return out({ ok: false, error: 'origin not allowed' }, 403, 0, cors(req));
+  if (rateLimited(req, 40)) return tooMany(cors(req));
   const q = new URL(req.url).searchParams;
+  // 모르는 파라미터(캐시 우회용)는 거절
+  const allow = q.has('key') ? RATE_KEYS : MATCH_KEYS;
+  if ([...q.keys()].some(k => !allow.has(k)) || (q.has('v') && !/^\d{1,3}$/.test(q.get('v')))) {
+    return out({ ok: false, error: 'invalid params' }, 400, 0);
+  }
   if (q.has('key')) return rates(q);
   return match(req, q.get('gid') || '');
 }
@@ -59,8 +70,8 @@ async function rates(q) {
   }
   try {
     const [rr, fr] = await Promise.all([
-      fetch(`${XO_RATES}?hotel_key=${key}&chk_in=${ci}&chk_out=${co}&currency=${cur}&adults=${ad}`).then(r => r.json()),
-      fetch(`https://open.er-api.com/v6/latest/${cur}`).then(r => r.json()),
+      fetch(`${XO_RATES}?hotel_key=${key}&chk_in=${ci}&chk_out=${co}&currency=${cur}&adults=${ad}`, { signal: AbortSignal.timeout(10000) }).then(r => r.json()),
+      fetch(`https://open.er-api.com/v6/latest/${cur}`, { signal: AbortSignal.timeout(10000) }).then(r => r.json()),
     ]);
     if (rr?.error) throw new Error(rr.error.message || 'rates');
     const fx = Number(fr?.rates?.KRW) || 0;
@@ -93,7 +104,7 @@ async function match(req, gid) {
   const loadIdx = async locs => {
     const parts = await Promise.all(locs.map(loc =>
       // v= 는 색인 방식이 바뀌었을 때 CDN 7일 캐시를 우회하기 위한 값(hotelidx 는 무시)
-      fetch(`${origin}/api/hotelidx?loc=${loc}&v=${IDX_VER}`).then(r => r.json()).catch(() => null)));
+      fetch(`${origin}/api/hotelidx?loc=${loc}&v=${IDX_VER}`, { signal: AbortSignal.timeout(40000) }).then(r => r.json()).catch(() => null)));
     return parts.reduce((a, d) => (d && d.ok ? a.concat(d.list) : a), []);
   };
   const idx = await loadIdx(city[0]);
@@ -218,6 +229,7 @@ async function stayDetail(gid, checkIn, checkOut, adultCount) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json, text/event-stream', 'User-Agent': 'TravelCost/1.0' },
     body: JSON.stringify(rpc),
+    signal: AbortSignal.timeout(15000),
   });
   if (r.status === 429) throw new Error('rate');   // 호출 제한 — 클라이언트가 "잠시 후" 안내
   const raw = (await r.text()).trim();
@@ -235,10 +247,11 @@ async function stayDetail(gid, checkIn, checkOut, adultCount) {
   return d;
 }
 
-function out(obj, status, sMaxAge) {
+function out(obj, status, sMaxAge, extra = {}) {
   return new Response(JSON.stringify(obj), {
     status,
     headers: {
+      ...extra,
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': sMaxAge ? `public, s-maxage=${sMaxAge}, stale-while-revalidate=3600` : 'no-store',
     },

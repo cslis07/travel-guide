@@ -4,7 +4,7 @@
   'use strict';
   var box = document.getElementById('hxNext'), T = window.TripStore;
   if (!box || !T) return;
-  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var won = function (n) { return '₩' + Math.round(n || 0).toLocaleString('ko-KR'); };
   var pad = function (n) { return (n < 10 ? '0' : '') + n; };
   var now = new Date(), today = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()), hm = pad(now.getHours()) + ':' + pad(now.getMinutes());

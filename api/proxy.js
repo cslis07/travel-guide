@@ -100,8 +100,8 @@ async function handler(req) {
       },
     });
   } catch (err) {
-    const safe = targetUrl.replace(KEY, '[KEY]');
-    return new Response(JSON.stringify({ error: err.message, target: safe }), {
+    // 상류 주소는 돌려주지 않는다 — 주소 안의 키는 URL 인코딩돼 있어 문자열 치환으로 가려지지 않는다
+    return new Response(JSON.stringify({ error: err.message }), {
       status: 502,
       headers: { ...CORS, 'Content-Type': 'application/json' },
     });
