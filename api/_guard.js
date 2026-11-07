@@ -6,8 +6,9 @@
 //    대부분 같은 카운터를 쓴다. 완벽한 차단이 아니라 한 곳에서 몰아치는 남용을 끊는 용도).
 //    CDN 캐시에 맞은 요청은 함수까지 오지 않으므로 세지 않는다.
 
-// Vercel 주소는 이 프로젝트(travel-guide) 배포·미리보기만 — 아무 *.vercel.app 이나 허용하면 남의 배포가 이 API를 쓴다
-const ORIGIN_RE = /^https:\/\/((www\.)?travelcost\.co\.kr|travel-guide(-[a-z0-9-]+)?\.vercel\.app)$|^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/;
+// Vercel 주소는 이 프로젝트 배포·미리보기만 — 끝이 우리 팀 이름(-cslis07)이어야 한다.
+// travel-guide.vercel.app 은 남의 사이트이고, travel-guide-아무거나.vercel.app 도 누구나 만들 수 있다(2026-11-07 확인)
+const ORIGIN_RE = /^https:\/\/((www\.)?travelcost\.co\.kr|travel-guide(-[a-z0-9-]+)?-cslis07\.vercel\.app)$|^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/;
 
 export function cors(req, methods = 'GET,OPTIONS', extra = {}) {
   const origin = req.headers.get('origin') || '';

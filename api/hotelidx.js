@@ -12,6 +12,7 @@
 import { cors, foreignOrigin, rateLimited, tooMany } from './_guard.js';
 
 const XO = 'https://data.xotelo.com/api/list';
+const IDX_VER = 2;   // hotelprice.js 의 IDX_VER 와 같게 — 바꿀 때 둘 다
 const PAGE = 100;
 const MAX_PAGES = 60;   // 상하이처럼 1만 곳 넘는 도시는 인기순 상위 6,000곳만
 
@@ -23,7 +24,8 @@ async function handler(req) {
   const loc = q.get('loc') || '';
   // 트립어드바이저 지역 코드 형식만 허용 (임의 URL 조립 방지). 모르는 파라미터는 캐시 우회용이라 거절
   if (!/^g\d{2,9}$/.test(loc)) return out({ ok: false, error: 'invalid loc' }, 400, 0);
-  if ([...q.keys()].some(k => k !== 'loc' && k !== 'v') || (q.has('v') && !/^\d{1,3}$/.test(q.get('v')))) {
+  // v 는 지금 버전(hotelprice.js IDX_VER)만 — 0~999 아무 값이나 받으면 캐시 키가 1000개로 늘어 상류를 우회 호출할 수 있었다
+  if ([...q.keys()].some(k => k !== 'loc' && k !== 'v') || (q.has('v') && q.get('v') !== String(IDX_VER))) {
     return out({ ok: false, error: 'invalid params' }, 400, 0);
   }
 

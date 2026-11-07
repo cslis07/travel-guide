@@ -187,7 +187,7 @@ function rcPutAll(map,cb){
   cb=once(cb,0); var ids=Object.keys(map||{}); if(!ids.length||!window.indexedDB) return cb(0);
   try{ var rq=indexedDB.open('tc-receipts',1); rq.onupgradeneeded=function(){ rq.result.createObjectStore('r'); };
     rq.onsuccess=function(){ var db=rq.result, tx=db.transaction('r','readwrite'), st=tx.objectStore('r'), n=0;
-      ids.forEach(function(id){ var v=map[id]; if(typeof v==='string'&&/^data:image\/jpeg;base64,/.test(v)&&v.length<3e6){ st.put(v,id); n++; } });
+      ids.forEach(function(id){ var v=map[id]; if(typeof v==='string'&&v.length<3e6&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(v)){ st.put(v,id); n++; } });
       tx.oncomplete=function(){ db.close(); cb(n); }; tx.onerror=tx.onabort=function(){ db.close(); cb(0); }; };
     rq.onerror=rq.onblocked=function(){ cb(0); }; }catch(e){ cb(0); }
 }

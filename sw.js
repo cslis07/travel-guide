@@ -6,7 +6,7 @@
 //  - 우리 JS·CSS : 네트워크 우선 + 2.5초 넘으면 캐시 — 배포 직후 새 HTML 이 옛 JS 를 받아 TypeError 나던 것 방지
 //  - 그 밖의 자산 : 캐시 우선 + 백그라운드 갱신 (stale-while-revalidate)
 
-const CACHE = 'travelcost-v56';
+const CACHE = 'travelcost-v57';
 
 // 설치 시 미리 담아둘 최소 셸 (오프라인 폴백용)
 // 페이지는 깨끗한 주소로(cleanUrls라 '/x.html'은 리다이렉트 응답이 캐시돼 오프라인 내비게이션에 못 씀)

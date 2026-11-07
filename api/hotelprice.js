@@ -46,6 +46,7 @@ const IDX_VER = 2;   // 2: 색인 정렬 popularity(누락 수정). 색인 형�
    v=4: 촉음 받침(롯폰기↔Roppongi)·덩어리 걷어내기 양방식(APA 롯폰기 에키히가시 누락 수정) */
 const CURS = new Set(['JPY', 'THB', 'USD', 'HKD', 'CNY', 'EUR', 'GBP']);
 
+const MATCH_VER = '4';   // tours.html 의 hotelprice?gid=…&v=4 와 같게 — 다른 값은 캐시 우회라 거절
 const RATE_KEYS = new Set(['key', 'cur', 'ci', 'co', 'ad']), MATCH_KEYS = new Set(['gid', 'v']);
 async function handler(req) {
   // 남의 사이트 차단·IP당 호출 제한 — 매칭 1건이 마이리얼트립 MCP 를 부르고, MCP 는 수십 회에 막힌다
@@ -54,7 +55,7 @@ async function handler(req) {
   const q = new URL(req.url).searchParams;
   // 모르는 파라미터(캐시 우회용)는 거절
   const allow = q.has('key') ? RATE_KEYS : MATCH_KEYS;
-  if ([...q.keys()].some(k => !allow.has(k)) || (q.has('v') && !/^\d{1,3}$/.test(q.get('v')))) {
+  if ([...q.keys()].some(k => !allow.has(k)) || (q.has('v') && q.get('v') !== MATCH_VER)) {
     return out({ ok: false, error: 'invalid params' }, 400, 0);
   }
   if (q.has('key')) return rates(q);

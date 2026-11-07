@@ -400,7 +400,7 @@ function renderShell(){
     + '<span class="dday">'+T.ddayText(trip)+' · '+T.tripLength(trip)+'일</span>'
     + '<h1>'+esc(trip.city)+'</h1>'
     + (T.photoSource&&T.cityPhoto&&T.cityPhoto(trip.city)?'<a class="cv-credit" href="'+T.photoSource(T.cityPhoto(trip.city))+'" target="_blank" rel="noopener">사진 Wikimedia Commons</a>':'')
-    + '<div class="dt">'+trip.start.replace(/-/g,'.')+' – '+T.fmtMD(trip.end)+' · <span class="memedit" role="button" tabindex="0" onclick="openMemberSheet()" title="같이 가는 사람 편집">👤 '+mem+' <span class="pen">✎</span></span></div>'
+    + '<div class="dt">'+esc(trip.start.replace(/-/g,'.'))+' – '+esc(T.fmtMD(trip.end))+' · <span class="memedit" role="button" tabindex="0" onclick="openMemberSheet()" title="같이 가는 사람 편집">👤 '+mem+' <span class="pen">✎</span></span></div>'
     + '<div class="ltime" id="ltime"></div>'
     + '</div>'
     + '<div class="quick">'
@@ -873,7 +873,7 @@ function expRows(ex){
   return '<div class="card">'+ex.map(function(e){var c=T.catByKey(e.category);
     var split=(e.paidFor&&e.paidFor.length>1)?' <span class="bdg">나눔 '+e.paidFor.length+'명'+(e.split&&e.split.mode==='amt'?'·금액':e.split&&e.split.mode==='ratio'?'·비율':'')+'</span>':'';
     if(e.spanDays>1) split+=' <span class="bdg">'+e.spanDays+'일 몫</span>';
-    var curTxt=(e.currency&&e.currency!=='KRW')?e.currency+' '+(e.amount||0).toLocaleString():'';
+    var curTxt=(e.currency&&e.currency!=='KRW')?esc(e.currency+' '+(+e.amount||0).toLocaleString()):'';
     return '<div class="exp" style="cursor:pointer" onclick="openExpenseSheet(\''+e.id+'\')"><div class="ic" style="background:'+c.color+'22">'+c.emoji+'</div><div><div class="nm">'+esc(e.memo||c.label)+split+'</div><div class="mt">'+c.label+' · '+(e.method==='cash'?'현금':'카드')+' · '+esc(e.paidBy||'나')+'</div></div><div class="amt"><b>'+won(e.krw)+'</b>'+(curTxt?'<small>'+curTxt+'</small>':'')+' <span style="color:var(--gray-300);font-size:14px">›</span></div>'+(e.hasReceipt?'<img class="rc-thumb" data-rc="'+esc(e.id)+'" alt="영수증" onclick="event.stopPropagation();viewReceipt(this.dataset.rc)">':'')+'</div>';
   }).join('')+'</div>';
 }
@@ -1589,7 +1589,7 @@ function toolsRow(){
 /* ═══ 🖨 여행 계획 한 장 — 일정·항공·예약·숙소 주소(현지어)·비상 연락처. 인쇄 창에서 'PDF로 저장'도 됨 ═══ */
 function printTrip(){
   var cc=ccOf(), li=cc&&window.LOCAL_INFO&&LOCAL_INFO[cc], M=window.LOCAL_INFO_META||{}, P=window.PHRASES;
-  var dot=function(d){ return String(d||'').replace(/-/g,'.'); }, f=trip.flight, b=trip.flightBack, st=stayResv();
+  var dot=function(d){ return esc(String(d||'').replace(/-/g,'.')); },   /* 출력물 날짜도 이스케이프 */ f=trip.flight, b=trip.flightBack, st=stayResv();
   var mem=(trip.members||[]).map(function(m){ return m.name; }).join('·');
   var tx=st&&P&&P.TAXI&&(P.TAXI[cc]||(tzOf()==='Asia/Seoul'?null:P.TAXI.en));
   var h='<div class="pt-h"><h1>'+esc(trip.city)+' 여행</h1><p>'+dot(trip.start)+' – '+dot(trip.end)+' · '+T.tripLength(trip)+'일'+(mem?' · '+esc(mem):'')+'</p></div>';
@@ -1791,7 +1791,7 @@ function pickReceipt(inp){
 }
 function dropReceipt(){ rcState={data:null,remove:true}; var im=document.getElementById('ex-rc-prev'), del=document.getElementById('ex-rc-del'); if(im){ im.hidden=true; im.removeAttribute('src'); } if(del) del.hidden=true; }
 function fillReceipts(root){ [].forEach.call(root.querySelectorAll('img[data-rc]'),function(im){ rcGet(im.getAttribute('data-rc'),function(d){ if(d) im.src=d; else im.remove(); }); }); }
-function viewReceiptSrc(src){ if(!/^data:image\/jpeg;base64,/.test(src)) return; openSheet('<h3>영수증</h3><img src="'+src+'" alt="영수증" style="width:100%;border-radius:12px;display:block">'); }
+function viewReceiptSrc(src){ if(!/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(src)) return;   /* 끝까지 base64 만 — 따옴표로 속성을 벗어나지 못하게 */ openSheet('<h3>영수증</h3><img src="'+src+'" alt="영수증" style="width:100%;border-radius:12px;display:block">'); }
 function viewReceipt(id){ rcGet(id,function(d){ if(d) viewReceiptSrc(d); }); }
 
 /* 예산 설정 */

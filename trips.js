@@ -123,10 +123,19 @@
     var c = s.replace(/[^A-Za-z0-9_-]/g, '').slice(0, 30);
     return (c || 'x') + '_' + hash36(s);
   }
+  function own(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
   function arr(v) { return Array.isArray(v) ? v.filter(isObj) : []; }
   function cleanList(list) { return arr(list).map(function (x) { if (x.id != null) x.id = cleanId(x.id); return x; }); }
+  /* 날짜·시각·숫자 칸 — 화면 여러 곳에서 그대로 쓰이므로 형식이 아니면 버린다(태그·따옴표가 끼어들 자리를 없앤다) */
+  var ISO_D = /^\d{4}-\d{2}-\d{2}$/, TIMEISH = /^[0-9:T .\-]{0,25}$/, WORD = /^[a-z_]{1,20}$/;
+  function isoOr(v, fb) { var s = String(v == null ? '' : v); if (ISO_D.test(s)) return s; var m = /\d{4}-\d{2}-\d{2}/.exec(s); return m ? m[0] : fb; }
+  function numOr0(v) { var n = +v; return isFinite(n) ? n : 0; }
+  function name30(v) { return String(v == null ? '' : v).slice(0, 30); }
+  function timeish(o, keys) { keys.forEach(function (k) { if (o[k] != null && !TIMEISH.test(String(o[k]))) o[k] = ''; }); }
   function clean(t) {
     t.id = cleanId(t.id) || uid();
+    t.start = isoOr(t.start, iso(new Date()));
+    t.end = isoOr(t.end, t.start); if (t.end < t.start) t.end = t.start;
     t.members = arr(t.members).map(function (m, i) {
       m.name = String(m.name == null ? '' : m.name).slice(0, 30);
       if (!HEX.test(m.color)) m.color = MEMBER_COLORS[i % MEMBER_COLORS.length];
@@ -135,15 +144,30 @@
     }).filter(function (m) { return m.name; });
     if (!t.members.length) t.members = [{ name: '나', color: MEMBER_COLORS[0] }];
     t.expenses = cleanList(t.expenses).map(function (e) {
-      e.paidBy = e.paidBy == null ? e.paidBy : String(e.paidBy);
-      if (e.paidFor != null) e.paidFor = Array.isArray(e.paidFor) ? e.paidFor.map(String) : [];
+      // 이름은 멤버 이름과 같은 30자 — 긴 이름이 멤버에서만 잘려 정산에서 빠지던 문제
+      e.paidBy = e.paidBy == null ? e.paidBy : name30(e.paidBy);
+      if (e.paidFor != null) e.paidFor = Array.isArray(e.paidFor) ? e.paidFor.map(name30) : [];
+      var cur = String(e.currency || 'KRW').toUpperCase(); e.currency = /^[A-Z]{3}$/.test(cur) ? cur : 'KRW';
+      e.amount = numOr0(e.amount); e.krw = numOr0(e.krw);
+      if (e.date != null) e.date = isoOr(e.date, '');
+      if (!WORD.test(String(e.category))) e.category = 'etc';
+      if (e.method != null && !WORD.test(String(e.method))) e.method = 'card';
+      if (e.memo != null) e.memo = String(e.memo);
+      if (e.spanDays != null) { var sd = parseInt(e.spanDays, 10); e.spanDays = sd > 1 ? Math.min(60, sd) : null; }
+      if (e.split != null) {
+        var sv = isObj(e.split) && (e.split.mode === 'amt' || e.split.mode === 'ratio') && isObj(e.split.v) ? e.split.v : null;
+        e.split = sv ? { mode: e.split.mode, v: Object.keys(sv).slice(0, 30).reduce(function (o, k) { o[name30(k)] = numOr0(sv[k]); return o; }, {}) } : null;
+      }
       return e;
     });
-    t.reservations = cleanList(t.reservations);
-    t.payments = cleanList(t.payments).filter(function (p) { p.krw = Math.round(+p.krw || 0); p.from = String(p.from || ''); p.to = String(p.to || ''); return p.krw > 0 && p.from && p.to; });
+    t.reservations = cleanList(t.reservations).map(function (r) {
+      ['date', 'checkin', 'checkout', 'cancelBy'].forEach(function (k) { if (r[k] != null) r[k] = isoOr(r[k], ''); });
+      timeish(r, ['dep', 'arr', 'time']); return r;
+    });
+    t.payments = cleanList(t.payments).filter(function (p) { p.krw = Math.round(+p.krw || 0); p.from = name30(p.from || ''); p.to = name30(p.to || ''); p.date = isoOr(p.date, ''); return p.krw > 0 && p.from && p.to; });
     t.checklist = cleanList(t.checklist);
     t.places = Array.isArray(t.places) ? t.places : [];
-    t.days = arr(t.days).map(function (d) { d.items = cleanList(d.items); return d; });
+    t.days = arr(t.days).map(function (d) { if (d.date != null) d.date = isoOr(d.date, ''); d.items = cleanList(d.items); return d; });
     return t;
   }
   /* 저장값이 깨졌으면 [] 로 시작하되, 원문은 덮어쓰기 전에 따로 보관(나중에 복구 가능) */
@@ -273,7 +297,7 @@
     });
     // 이미 주고받은 돈(송금 완료 기록) — 보낸 사람은 갚은 만큼 +, 받은 사람은 받은 만큼 −
     (t.payments || []).forEach(function (p) {
-      if (bal[p.from] == null || bal[p.to] == null || !(p.krw > 0)) return;
+      if (!own(bal, p.from) || !own(bal, p.to) || !(p.krw > 0)) return;   // 'constructor' 같은 이름이 멤버 검사를 지나가지 않게
       bal[p.from] += p.krw; bal[p.to] -= p.krw;
     });
     var cred = [], debt = [];
@@ -352,7 +376,7 @@
       for (var f in sh) share[f] += sh[f];
     });
     (t.payments || []).forEach(function (p) {
-      if (sent[p.from] == null || got[p.to] == null || !(p.krw > 0)) return;
+      if (!own(sent, p.from) || !own(got, p.to) || !(p.krw > 0)) return;
       sent[p.from] += p.krw; got[p.to] += p.krw;
     });
     // net = 아직 남은 차액(+ 받을 돈 · − 보낼 돈) — 주고받은 기록을 반영한다
