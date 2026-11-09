@@ -713,7 +713,7 @@ function settleSection(){
   if(members.length<2){
     return head+'<div class="settle" style="background:var(--gray-100);color:var(--gray-600)">'+svg('ic-swap','')+' 같이 가는 사람을 추가하면 누가 누구에게 얼마 보낼지 자동으로 계산돼요</div>';
   }
-  if(!(trip.expenses||[]).length){
+  if(!(trip.expenses||[]).length&&!(trip.payments||[]).length){   // 지출을 지워도 주고받은 기록이 있으면 아래에서 보이고 되돌릴 수 있게
     return head+'<div class="settle" style="background:var(--gray-100);color:var(--gray-600)">'+svg('ic-swap','')+' 지출을 추가하면 정산이 자동으로 계산돼요</div>';
   }
   var setl=T.settlements(trip), st=T.settleState(trip), pays=trip.payments||[];
@@ -864,8 +864,9 @@ function expList(){
   keys.sort(function(a,b){ return a===''?1:b===''?-1:(a<b?1:-1); });   // 최근 날짜 먼저, 날짜 없음은 맨 끝
   var tgt=dayTarget();
   return keys.map(function(k){
-    var sum=groups[k].reduce(function(s,e){return s+(e.krw||0);},0), inTrip=k&&k>=trip.start&&k<=trip.end, over=tgt&&inTrip&&sum>tgt;
-    return '<div class="dayhd"><b>'+esc(dayLabel(k))+'</b><span'+(over?' class="over"':'')+'>'+won(sum)+(over?' · 하루 목표 +'+won(sum-tgt):'')+'</span></div>'
+    // 머리글 합계는 막대·하루 목표 알림과 같은 계산(여러 날 몫은 그날들에 나눠서) — 날짜 없음 묶음만 그대로 더한다
+    var raw=groups[k].reduce(function(s,e){return s+(e.krw||0);},0), sum=k?daySum(k):raw, inTrip=k&&k>=trip.start&&k<=trip.end, over=tgt&&inTrip&&sum>tgt;
+    return '<div class="dayhd"><b>'+esc(dayLabel(k))+'</b><span'+(over?' class="over"':'')+'>'+won(sum)+(over?' · 하루 목표 +'+won(sum-tgt):'')+(k&&sum!==raw?' <small style="font-weight:500;color:var(--gray-500)">· 여러 날 몫 나눠 계산</small>':'')+'</span></div>'
       + expRows(groups[k]);
   }).join('');
 }
@@ -1050,7 +1051,7 @@ function openExpenseSheet(expId){
     +people
     +memoChips()
     +'<div class="row2"><div><label class="fl" for="ex-memo">메모 (선택)</label><input class="in" id="ex-memo" placeholder="예: 이치란 라멘" value="'+(e?esc(e.memo||''):'')+'"></div>'
-    +'<div style="flex:0 0 150px"><label class="fl" for="ex-date">날짜</label><input class="in" id="ex-date" type="date" value="'+esc((e&&e.date)||defaultExpDate())+'"></div></div>'
+    +'<div style="flex:0 0 150px"><label class="fl" for="ex-date">날짜</label><input class="in" id="ex-date" type="date" value="'+esc((e&&e.date)||defaultExpDate())+'" onchange="drawSpan()"></div></div>'
     +'<label class="fl">🧾 영수증 사진 (선택)</label><div class="rc-row"><img id="ex-rc-prev" class="rc-prev" alt="영수증 미리보기" hidden onclick="if(this.src)viewReceiptSrc(this.src)">'
     +'<label class="rc-pick">📷 '+(e&&e.hasReceipt?'다른 사진':'사진 추가')+'<input type="file" accept="image/*" id="ex-rc" hidden onchange="pickReceipt(this)"></label>'
     +'<button type="button" class="rc-del" id="ex-rc-del" hidden onclick="dropReceipt()">사진 빼기</button></div>'
@@ -1098,7 +1099,12 @@ function pickCat(el){ document.querySelectorAll('.catpick').forEach(function(x){
 function drawSpan(){
   var box=document.getElementById('ex-span'); if(!box) return;
   if(exState.cat!=='stay'&&!(exState.span>1)){ box.innerHTML=''; return; }
-  var n=Math.max(2,Math.min(30,T.tripLength(trip))), o='';
+  // 고를 수 있는 날 수는 지출 날짜부터 여행 마지막 날까지 — 넘기면 여행 뒤 날짜로 빠져 막대에서 금액이 사라졌다
+  var dv=(document.getElementById('ex-date')||{}).value||'', n=T.tripLength(trip);
+  if(/^\d{4}-\d{2}-\d{2}$/.test(dv)&&dv>=trip.start&&dv<=trip.end) n=T.daysBetween(dv,trip.end)+1;
+  n=Math.min(30,Math.max(n,exState.span||1));   // 예전에 더 길게 나눠 둔 지출은 그 값도 고를 수 있게
+  if(n<2){ box.innerHTML=''; exState.span=1; return; }
+  var o='';
   for(var i=1;i<=n;i++) o+='<option value="'+i+'"'+(i===exState.span?' selected':'')+'>'+(i===1?'하루(이날)':i+'일 (이날부터 '+i+'박)')+'</option>';
   box.innerHTML='<label class="fl" for="ex-span-sel">며칠 몫인가요? <span style="font-weight:500;color:var(--gray-500)">(숙박 등 — 날짜별 합계·하루 목표에 나눠 반영)</span></label>'
     +'<select class="in" id="ex-span-sel" onchange="exState.span=+this.value">'+o+'</select>';
@@ -1137,7 +1143,10 @@ function pickPayer(el){ el.parentNode.querySelectorAll('.seg').forEach(function(
 function toggleFor(el){
   var n=el.dataset.f, i=exState.paidFor.indexOf(n);
   if(i>-1){ if(exState.paidFor.length<=1){ return; } exState.paidFor.splice(i,1); el.classList.remove('on'); }
-  else { exState.paidFor.push(n); el.classList.add('on'); }
+  else {
+    exState.paidFor.push(n); el.classList.add('on');
+    var sp=exState.split; if(sp&&sp.mode==='ratio'){ sp.v=sp.v||{}; if(!(+sp.v[n]>0)) sp.v[n]=1; }   // 비율 나눔에 새로 넣은 사람은 1(빈칸이면 0으로 저장돼 부담 0원이었다)
+  }
   var members=(trip.members||[]).map(function(m){return m.name;});
   var all=document.getElementById('ex-forall'); if(all) all.classList.toggle('on', exState.paidFor.length===members.length);
   drawSplit();
@@ -1145,6 +1154,7 @@ function toggleFor(el){
 function allPaidFor(){
   var members=(trip.members||[]).map(function(m){return m.name;});
   exState.paidFor=members.slice();
+  var sp=exState.split; if(sp&&sp.mode==='ratio'){ sp.v=sp.v||{}; members.forEach(function(n){ if(!(+sp.v[n]>0)) sp.v[n]=1; }); }   // 새로 들어온 사람 비율 1
   var wrap=document.getElementById('ex-for'); if(wrap) wrap.querySelectorAll('.seg').forEach(function(x){ x.classList.add('on'); });
   drawSplit();
 }

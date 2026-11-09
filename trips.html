@@ -232,7 +232,7 @@ function doRestore(inp){
       if(!t||typeof t!=='object'||!t.id||!t.city||!/^\d{4}-\d{2}-\d{2}$/.test(t.start||'')||!/^\d{4}-\d{2}-\d{2}$/.test(t.end||'')) return;
       var cur=mine[t.id];
       if(!cur){ T.upsert(t); added++; return; }
-      if(JSON.stringify(cur)===JSON.stringify(t)){ same++; return; }
+      if(T.sameTrip(cur,t)){ same++; return; }
       // 사본은 여행 id 와 지출 id 를 모두 새로 — 같은 id 를 쓰면 사본 지출을 지울 때 원본 영수증 사진까지 지워졌다.
       // 백업에 사진이 있으면 새 id 로도 복사(영수증 지출 id 키·일기 j:여행id:날짜 키)
       var c=JSON.parse(JSON.stringify(t)); c.id='r'+Math.random().toString(36).slice(2,11); c.city=String(t.city).slice(0,30)+' (복원)';
@@ -416,12 +416,26 @@ function createTrip(){
       split:(e.split&&(e.split.mode==='amt'||e.split.mode==='ratio')&&e.split.v&&typeof e.split.v==='object')?{mode:e.split.mode,v:Object.keys(e.split.v).slice(0,20).reduce(function(o,k){ o[str(k,30)]=num(e.split.v[k]); return o; },{})}:null,
       spanDays:Math.min(60,Math.max(1,parseInt(e.spanDays,10)||1))>1?Math.min(60,parseInt(e.spanDays,10)):null };
   });
+  // 같은 도시 여행이 여럿이면 날짜로 고른다: 시작일 같음 → 기간 겹침 → (날짜가 안 맞으면) 새로 만들지 먼저 묻는다.
+  // 예전엔 날짜가 안 맞아도 첫 번째(예: 작년 오사카)에 합쳤다
+  var ISO = /^\d{4}-\d{2}-\d{2}$/, oS = ISO.test(obj.start)?obj.start:'', oE = ISO.test(obj.end)?obj.end:oS;
+  if(oE<oS) oE=oS;
+  var span = function(a,b){ return T.fmtMD(a)+(b&&b!==a?'–'+T.fmtMD(b):''); };
   var cands = T.all().filter(function(t){ return t.city===obj.city; });
-  var t = cands.filter(function(c){ return c.start===obj.start; })[0] || cands[0];
+  var t = null, agreed = false;
+  if(oS){
+    t = cands.filter(function(c){ return c.start===oS; })[0] || cands.filter(function(c){ return c.start<=oE && c.end>=oS; })[0] || null;
+    if(!t && cands.length){
+      var near = cands.slice().sort(function(a,b){ return Math.abs(T.daysBetween(a.start,oS))-Math.abs(T.daysBetween(b.start,oS)); })[0];
+      if(!confirm('받은 지출의 날짜('+span(oS,oE)+')와 맞는 “'+obj.city+'” 여행이 없어요.\n새 여행으로 만들까요?\n\n취소를 누르면 기존 '+span(near.start,near.end)+' 여행에 합칠지 다시 물어요.')) t = near;
+      else agreed = true;
+    }
+  } else t = cands[0] || null;
   if(!t){
-    if(!confirm('“'+obj.city+'” 여행이 이 기기에 없어요. 받은 지출로 새 여행을 만들까요?')) return;
-    t = T.create({ city:str(obj.city,40), start:obj.start, end:obj.end || obj.start, members:[{name:'나',color:T.MEMBER_COLORS[0]}] });
+    if(!agreed&&!confirm('“'+obj.city+'”'+(oS?' '+span(oS,oE):'')+' 여행이 이 기기에 없어요. 받은 지출로 새 여행을 만들까요?')) return;
+    t = T.create({ city:str(obj.city,40), start:oS||undefined, end:oE||oS||undefined, members:[{name:'나',color:T.MEMBER_COLORS[0]}] });
   }
+  var tLabel = '“'+t.city+'” '+span(t.start,t.end);
   var have = {}; (t.expenses||[]).forEach(function(e){ have[e.id]=1; });
   var add = incoming.filter(function(e){ return !have[e.id]; });
   if(!add.length){ alert('합칠 새 지출이 없어요 — 이미 모두 들어 있어요.'); location.href='/trip?id='+t.id+'&tab=budget'; return; }
@@ -447,14 +461,14 @@ function createTrip(){
     location.href='/trip?id='+t.id+'&tab=budget';
   }
   if(!unknown.length){
-    if(!confirm('“'+t.city+'” 여행에 동행 지출 '+add.length+'건을 합칠까요?'+(skipped?'\n'+skipped.trim():''))) return;
+    if(!confirm(tLabel+' 여행에 동행 지출 '+add.length+'건을 합칠까요?'+(skipped?'\n'+skipped.trim():''))) return;
     return finish({});
   }
   var opts = function(n){ return t.members.map(function(m){ return '<option value="m:'+esc(m.name)+'">'+esc(m.name)+(m.name==='나'?' (나)':'')+'</option>'; }).join('')
     + '<option value="new" selected>새 사람 “'+esc(n)+'”(으)로 추가</option>'; };
   var w = document.createElement('div'); w.className='mwrap on'; w.id='mgModal';
   w.innerHTML = '<div class="modal"><div class="grip"></div><h3>받은 지출 합치기</h3>'
-    + '<p class="bk-p">“'+esc(t.city)+'” 여행에 동행 지출 <b>'+add.length+'건</b>을 합쳐요.'+esc(skipped)+'<br>보낸 사람 폰에서 쓰던 이름이 있어요. <b>나를 가리키는 이름은 ‘나’로</b> 골라 주세요 — 안 그러면 정산에서 다른 사람이 낸 것처럼 보여요.</p>'
+    + '<p class="bk-p">'+esc(tLabel)+' 여행에 동행 지출 <b>'+add.length+'건</b>을 합쳐요.'+esc(skipped)+'<br>보낸 사람 폰에서 쓰던 이름이 있어요. <b>나를 가리키는 이름은 ‘나’로</b> 골라 주세요 — 안 그러면 정산에서 다른 사람이 낸 것처럼 보여요.</p>'
     + unknown.map(function(n,i){ return '<label class="fl" for="mg'+i+'" style="display:block;font-size:13px;font-weight:700;margin:12px 0 6px">받은 이름 “'+esc(n)+'”은(는)</label><select class="in" id="mg'+i+'">'+opts(n)+'</select>'; }).join('')
     + '<button class="save" id="mgOk">합치기</button><button class="save" id="mgNo" style="background:var(--gray-100);color:var(--gray-700);margin-top:8px">취소</button></div>';
   document.body.appendChild(w);

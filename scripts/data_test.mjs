@@ -112,4 +112,30 @@ await ok('저장값 정리: 이상한 송금 기록은 버린다', () => {
   assert.equal(T.all()[0].payments.length, 1);
 });
 
+// 2026-11-09 2차 점검 T2·T4·T7
+await ok('되살리기: 정산 기능 전 백업(payments 없음·키 순서 다름)도 같은 여행으로 본다', () => {
+  const saved = { id: 't1', city: '오사카', start: '2026-12-01', end: '2026-12-03', members: [{ name: '나' }], expenses: [{ id: 'e1', krw: 1000, amount: 1000, currency: 'KRW' }] };
+  const store = new Map([['tc_trips_v1', JSON.stringify([saved])]]);
+  const T = boot({ store }).TripStore;
+  const cur = T.all()[0];   // 정리를 거쳐 payments:[] 등이 붙은 값
+  const old = { city: '오사카', id: 't1', end: '2026-12-03', start: '2026-12-01', expenses: [{ currency: 'KRW', amount: 1000, krw: 1000, id: 'e1' }], members: [{ name: '나' }] };
+  assert.equal(JSON.stringify(cur) === JSON.stringify(old), false);   // 예전 비교 방식은 다르다고 봤다
+  assert.equal(T.sameTrip(cur, old), true);
+  assert.equal(T.sameTrip(cur, { ...old, expenses: [{ ...old.expenses[0], krw: 2000 }] }), false);
+  assert.equal(JSON.stringify(old.expenses[0]), '{"currency":"KRW","amount":1000,"krw":1000,"id":"e1"}');   // 비교가 원본을 바꾸지 않음
+});
+await ok('여러 날 몫이 여행 끝을 넘으면 넘친 몫은 마지막 날에 — 날짜별 합 = 총액', () => {
+  const T = boot().TripStore;
+  const t = { start: '2026-12-01', end: '2026-12-03', expenses: [{ krw: 300000, date: '2026-12-03', spanDays: 3 }, { krw: 9000, date: '2026-12-10', spanDays: 3 }] };
+  const d = T.dayTotals(t);
+  assert.equal(d['2026-12-03'], 300000); assert.equal(d['2026-12-04'], undefined);
+  assert.equal(d['2026-12-11'], 3000);   // 여행 밖 날짜 지출은 그대로 나눔
+});
+await ok('지출을 다 지워도 주고받은 기록이 있으면 정산 상태가 none 이 아니다', () => {
+  const T = boot().TripStore;
+  const t = { members: [{ name: '나' }, { name: '민수' }], expenses: [], payments: [{ from: '민수', to: '나', krw: 5000 }] };
+  assert.notEqual(T.settleState(t), 'none');
+  assert.equal(T.settleState({ members: t.members, expenses: [], payments: [] }), 'none');
+});
+
 console.log(`data_test: ${pass} passed`);

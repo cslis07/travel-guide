@@ -344,9 +344,13 @@
     for (var i = 0; i < n; i++) { var d = new Date(d0); d.setDate(d.getDate() + i); out.push({ date: iso(d), krw: i === n - 1 ? krw - per * (n - 1) : per }); }
     return out;
   }
+  /* 여행 안 날짜의 지출을 며칠에 나눴는데 여행 끝을 넘으면, 넘친 몫은 마지막 날에 — 막대·하루 목표에서 금액이 사라지지 않게 */
   function dayTotals(t) {
-    var m = {};
-    (t.expenses || []).forEach(function (e) { spreadOf(e).forEach(function (x) { if (x.date) m[x.date] = (m[x.date] || 0) + x.krw; }); });
+    var m = {}, s = t.start, end = t.end;
+    (t.expenses || []).forEach(function (e) {
+      var inTrip = e.date && s && end && e.date >= s && e.date <= end;
+      spreadOf(e).forEach(function (x) { var d = inTrip && x.date > end ? end : x.date; if (d) m[d] = (m[d] || 0) + x.krw; });
+    });
     return m;
   }
   /* 송금 완료 기록 — 정산 목록에서 '보냈어요'를 누르면 남는다. 지출이 아니라 총지출·예산엔 안 들어간다 */
@@ -362,7 +366,8 @@
   }
   /* 정산 상태 — 'none'(2명 미만·지출 없음) · 'open'(보낼 돈 남음) · 'done'(주고받을 게 없고 기록이 있음) */
   function settleState(t) {
-    if ((t.members || []).length < 2 || !(t.expenses || []).length) return 'none';
+    // 지출을 다 지워도 주고받은 기록이 남아 있으면 계산에 들어가므로 'none' 이 아니다(기록을 보이고 되돌릴 수 있게)
+    if ((t.members || []).length < 2 || !((t.expenses || []).length || (t.payments || []).length)) return 'none';
     if (settlements(t).length) return 'open';
     return (t.payments || []).length ? 'done' : 'even';
   }
@@ -555,9 +560,20 @@
     return '';
   }
 
+  /* 두 여행이 같은 내용인지 — 저장값 정리(clean)를 거친 뒤 키 순서와 상관없이 비교.
+     예전 백업(정산 기능 전)엔 payments 가 없어 그대로 비교하면 모든 여행이 '(복원)' 사본으로 늘었다 */
+  function stableStr(v) {
+    if (Array.isArray(v)) return '[' + v.map(stableStr).join(',') + ']';
+    if (isObj(v)) return '{' + Object.keys(v).filter(function (k) { return v[k] !== undefined; }).sort().map(function (k) { return JSON.stringify(k) + ':' + stableStr(v[k]); }).join(',') + '}';
+    return JSON.stringify(v === undefined ? null : v);
+  }
+  function sameTrip(a, b) {
+    if (!isObj(a) || !isObj(b)) return false;
+    return stableStr(clean(JSON.parse(JSON.stringify(a)))) === stableStr(clean(JSON.parse(JSON.stringify(b))));
+  }
   window.TripStore = {
     KEY: KEY, RATES: RATES, CATS: CATS, MEMBER_COLORS: MEMBER_COLORS,
-    all: all, get: get, create: create, upsert: upsert, remove: remove, cleanId: cleanId,
+    all: all, get: get, create: create, upsert: upsert, remove: remove, cleanId: cleanId, sameTrip: sameTrip,
     addExpense: addExpense, updateExpense: updateExpense, removeExpense: removeExpense,
     addReservation: addReservation, updateReservation: updateReservation, removeReservation: removeReservation,
     addChecklistItem: addChecklistItem, updateChecklistItem: updateChecklistItem, removeChecklistItem: removeChecklistItem,
