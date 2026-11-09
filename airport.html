@@ -2369,11 +2369,14 @@ function setArexDir(d,btn){_arexDir=d;document.querySelectorAll('#trans-arex .su
 /* 셔틀 시간표 요일 구분 — 2026-11 실측으로는 dayType 이 '1' 하나뿐이라 거르지 않는다.
    여러 값이 오기 시작하면 평일(KST)에는 '1'만(주말 값의 뜻은 문서 확인 전이라 주말엔 거르지 않음) */
 function shuttleDayType(list){ const s=new Set(list.map(x=>String(x.dayType))); const wd=kstDate().getDay(); return s.size>1&&s.has('1')&&wd>=1&&wd<=5?'1':null; }
+let _shuttleSeq=0;
 async function loadShuttle() {
+  const seq=++_shuttleSeq, mode=_shuttleMode;   // 시간표(6,000행)가 늦게 와서 '도착 예측' 화면을 덮어쓰지 않게
   spin('shuttle-area');
   try {
-    if(_shuttleMode==='time') {
+    if(mode==='time') {
       const data=await api('ShtbusInfo/getShtbTimeInfo',{numOfRows:6000});   // 전체 4,754건(2026-11 실측) — 1,000건만 받으면 노선 일부가 빠졌다
+      if(seq!==_shuttleSeq) return;
       const all=items(data), dt=shuttleDayType(all);
       const list=dt?all.filter(s=>String(s.dayType)===dt):all;
       if(!list.length){html('shuttle-area','<div class="loading">시간표 없음</div>');return;}
@@ -2400,6 +2403,7 @@ async function loadShuttle() {
       html('shuttle-area',html_out);
     } else {
       const data=await api('ShtbusInfo/getShtbArrivalPredInfo',{numOfRows:200});
+      if(seq!==_shuttleSeq) return;
       const list=items(data);
       if(!list.length){html('shuttle-area','<div class="loading">예측 정보 없음</div>');return;}
       const rows=list.map(s=>`<tr>
@@ -2410,7 +2414,7 @@ async function loadShuttle() {
       </tr>`).join('');
       html('shuttle-area',`<div class="tbl-wrap"><table><thead><tr><th>정류장</th><th>노선</th><th>예상 도착</th><th>위치</th></tr></thead><tbody>${rows}</tbody></table></div>`);
     }
-  } catch(e){err('shuttle-area',e.message);}
+  } catch(e){ if(seq===_shuttleSeq) err('shuttle-area',e.message); }
 }
 
 /* 공항철도: 전체는 39,668건(7일치·전 역)이라 1,000건만 받으면 정렬 안 된 일부만 와서 역 시간표가 비었다.
@@ -2428,12 +2432,12 @@ async function loadArexStn(cd) {
   try {
     const data=await api('AirportRailroadOperationInfo/getAirportRailroad',{stnCd:cd,numOfRows:4000});
     const list=items(data);
+    if(_arexStnList[_arexSelIdx]!==cd){ if(list.length) _arexByStn[cd]=list; return; }   // 그사이 다른 역을 골랐으면 그 역 화면을 건드리지 않는다
     if(!list.length){html('arex-area','<div class="loading">철도 운행 정보 없음</div>');return;}
     _arexByStn[cd]=list;
-    if(_arexStnList[_arexSelIdx]!==cd) return;   // 그사이 다른 역을 골랐으면 그 역을 기다린다
     _arexData=list;
     renderArex();
-  } catch(e){err('arex-area',e.message);}
+  } catch(e){ if(_arexStnList[_arexSelIdx]===cd) err('arex-area',e.message); }
 }
 
 function renderArexMap() {
@@ -2571,10 +2575,14 @@ function renderDepCong(list,areaId,label,isT2) {
   const totLen=list.reduce((a,g)=>a+parseInt(g.waitLength||0),0);
   const maxG=list.length?list.reduce((a,g)=>parseInt(g.waitLength||0)>parseInt(a.waitLength||0)?g:a,list[0]):null;
   // '가장 여유'는 지금 운영 중인 출국장만(닫힌 곳은 대기 0이라 1등으로 뽑히던 문제) — 대기시간, 같으면 대기인원 순
-  const openNow=g=>{const m=/(\d{1,2}):(\d{2})\s*~\s*(\d{1,2}):(\d{2})/.exec(g.operatingTime||'');if(!m)return true;
+  // 대기시간은 "60+" 처럼 오기도 함 — 숫자로 바꾸면 0(가장 빠름)이 되던 문제. 60+ 는 60보다 조금 길게 친다
+  const waitMin=g=>{const t=String(g.waitTime||'');return (parseInt(t,10)||0)+(/\+/.test(t)?0.5:0);};
+  // 운영시간이 비어 있는 출국장은 닫힌 곳(대기 0명). 다른 곳에 운영시간이 하나도 없을 때만 모두 연 것으로 본다
+  const OP_RE=/(\d{1,2}):(\d{2})\s*~\s*(\d{1,2}):(\d{2})/, anyOp=list.some(g=>OP_RE.test(g.operatingTime||''));
+  const openNow=g=>{const m=OP_RE.exec(g.operatingTime||'');if(!m)return !anyOp;
     const d=kstDate(),n=d.getHours()*60+d.getMinutes(),a=+m[1]*60+ +m[2],b=+m[3]*60+ +m[4];return a<=b?(n>=a&&n<=b):(n>=a||n<=b);};
   const openList=list.filter(g=>/DG\d+_[EW]/.test(g.gateId||'')&&openNow(g))
-    .sort((a,b)=>(+a.waitTime||0)-(+b.waitTime||0)||(+a.waitLength||0)-(+b.waitLength||0));
+    .sort((a,b)=>waitMin(a)-waitMin(b)||(parseInt(a.waitLength,10)||0)-(parseInt(b.waitLength,10)||0));
   const minG=openList[0]||null;
 
   const statHtml=`<div class="cong-stat-strip">
@@ -2595,7 +2603,7 @@ function renderDepCong(list,areaId,label,isT2) {
   </div>`;
 
   const worstOpen=openList[openList.length-1];
-  const bestHtml=minG?`<div class="best-gate">🚶 <b>지금은 ${gateLabel(minG)} 출국장이 가장 빨라요</b> · 약 ${minG.waitTime||0}분${worstOpen&&+worstOpen.waitTime>+minG.waitTime?` <span>(가장 붐비는 ${gateLabel(worstOpen)} 약 ${worstOpen.waitTime}분)</span>`:''}</div>`:'';
+  const bestHtml=minG?`<div class="best-gate">🚶 <b>지금은 ${gateLabel(minG)} 출국장이 가장 빨라요</b> · 약 ${minG.waitTime||0}분${worstOpen&&waitMin(worstOpen)>waitMin(minG)?` <span>(가장 붐비는 ${gateLabel(worstOpen)} 약 ${worstOpen.waitTime}분)</span>`:''}</div>`:'';
   const rowsHtml=gates.map(g=>{
     const cell=(side,lbl)=>{
       if(!side) return `<td style="color:var(--muted)">-</td>`;
@@ -2648,16 +2656,18 @@ function renderArrCong(list,areaId,label) {
       <td style="color:var(--muted);text-align:right">►</td>
     </tr>`;
 
+    // 입국장 혼잡 응답은 필드가 소문자(scheduletime·estimatedtime·flightid) — 대문자만 읽어 편명·시각이 모두 '-' 이던 문제
+    const schOf=f=>String(f.scheduletime||f.scheduleDateTime||''), estOf=f=>String(f.estimatedtime||f.estimatedDateTime||'');
     const flightRows=g.flights
-      .sort((a,b)=>(a.scheduleDateTime||'').localeCompare(b.scheduleDateTime||''))
+      .sort((a,b)=>schOf(a).localeCompare(schOf(b)))
       .map(f=>{
-        const sch=fmtTime(f.scheduleDateTime)||'-';
-        const act=fmtTime(f.estimatedDateTime)||'-';
+        const sch=fmtTime(schOf(f))||'-';
+        const act=fmtTime(estOf(f))||'-';
         const early=act!=='-'&&sch!=='-'&&act<sch;
         const kr=Math.round(parseFloat(f.korean||0));
         const fo=Math.round(parseFloat(f.foreigner||0));
         return `<tr class="arr-expand-row ${clsId}" style="display:none">
-          <td class="hi">${f.flightId||f.flightNum||'-'}</td>
+          <td class="hi">${f.flightid||f.flightId||f.flightNum||'-'}</td>
           <td>${f.airportCode||f.airport||'-'}</td>
           <td>${f.gatenumber||f.carousel||'-'}</td>
           <td>${sch}</td>
@@ -2717,32 +2727,30 @@ function setFltSec(term,sec,btn){
   renderFlights();
 }
 
+let _fltSeq=0;
 async function loadFlights() {
+  const seq=++_fltSeq, dir=_fltDir;   // 느린 응답(수하물 4,000행 등)이 나중에 와서 지금 고른 탭을 덮어쓰지 않게
   html('flt-area','<div class="loading">⏳ 로딩 중...</div>');
   html('flt-count','');
   try {
     _fltCache=[];
-    if(_fltDir==='dep'){
-      const d=await api('StatusOfPassengerFlightsOdp/getPassengerDeparturesOdp',{numOfRows:500});
-      _fltCache=items(d);
-    } else if(_fltDir==='arr'){
-      const d=await api('StatusOfPassengerFlightsOdp/getPassengerArrivalsOdp',{numOfRows:500});
-      _fltCache=items(d);
-    } else if(_fltDir==='bag'){
-      const d=await api('StatusOfBaggageLateral/getDeparturesBaggage',{numOfRows:4000});   // 오늘·내일 2,367건(2026-11 실측) — 300건이면 오전 10시 편까지만 보였다
-      _fltCache=items(d);
-    } else if(_fltDir==='close'){
-      const d=await api('FlightClosingInfoSpot/getFlightClosingInfoSpot',{numOfRows:4000});   // 하루 2,547건(2026-11 실측) — 300건이면 오전 7시까지만 보였다
-      _fltCache=items(d);
-    }
+    let d=null;
+    if(dir==='dep') d=await api('StatusOfPassengerFlightsOdp/getPassengerDeparturesOdp',{numOfRows:500});
+    else if(dir==='arr') d=await api('StatusOfPassengerFlightsOdp/getPassengerArrivalsOdp',{numOfRows:500});
+    else if(dir==='bag') d=await api('StatusOfBaggageLateral/getDeparturesBaggage',{numOfRows:4000});   // 오늘·내일 2,367건(2026-11 실측) — 300건이면 오전 10시 편까지만 보였다
+    else if(dir==='close') d=await api('FlightClosingInfoSpot/getFlightClosingInfoSpot',{numOfRows:4000});   // 하루 2,547건(2026-11 실측) — 300건이면 오전 7시까지만 보였다
+    if(seq!==_fltSeq) return;
+    _fltCache=d?items(d):[];
     renderFlights();
-  } catch(e){err('flt-area',e.message);}
+  } catch(e){ if(seq===_fltSeq) err('flt-area',e.message); }
 }
 
 function renderFlights() {
   const q=(el('flt-q')?.value||'').trim().toLowerCase();
   let list=_fltCache;
   if(q) list=list.filter(f=>(f.flightId||f.flightNum||'').toLowerCase().includes(q)||(f.airport||'').toLowerCase().includes(q)||(f.airline||'').toLowerCase().includes(q)||(f.airportCode||'').toLowerCase().includes(q));
+  // 출발·도착 전광판: 공동운항(Slave) 편명은 같은 비행기의 다른 번호(전체 1,192편 중 645편) — 검색할 때만 보인다
+  else if(_fltDir==='dep'||_fltDir==='arr') list=list.filter(f=>f.codeshare!=='Slave');
 
   // Show/hide terminal tabs
   const termTabs=el('flt-term-tabs');
@@ -3098,10 +3106,11 @@ function renderQuickSearch(){
   // 시설 검색 (캐시 활용)
   const facHits = [];
   if(q && Array.isArray(_facCache) && _facCache.length){
+    // 시설 응답 필드는 entrpskoreannm(이름)·lckoreannm(위치)·trtmntprdlstkoreannm(취급 품목) — facParse 결과(_p)로 찾는다
+    //  (예전엔 없는 필드 entrFacltNm·svcEtc 를 읽어 1,205곳 중 늘 0건)
     _facCache.forEach(it => {
-      const nm = (it.entrFacltNm || '').toLowerCase();
-      const sv = (it.svcEtc || '').toLowerCase();
-      if(nm.includes(q) || sv.includes(q)) facHits.push(it);
+      const p = it._p || facParse(it);
+      if(p.nm.toLowerCase().includes(q) || p.loc.toLowerCase().includes(q) || p.prods.join(' ').toLowerCase().includes(q)) facHits.push(it);
     });
   }
   _qsResults = [];
@@ -3144,12 +3153,14 @@ function renderQuickSearch(){
   }
   if(facHits.length){
     html += '<div class="qs-group">공항 시설</div>';
+    const qe = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     facHits.slice(0, 10).forEach(it => {
+      const p = it._p || facParse(it);
       const item = {
         type:'시설', icon:'🏢',
-        title: it.entrFacltNm,
-        sub: `${TERM[it.terminalId]||it.terminalId||''} · ${it.lFloor||''} · ${it.svcEtc||''}`,
-        go: () => { closeQuickSearch(); showTab('facilities',_qsTabBtn('facilities')); setTimeout(()=>{ const q2=el('fac-q'); if(q2){q2.value=it.entrFacltNm;_facPage=1;renderFac();}},150); }
+        title: qe(p.nm),
+        sub: qe([p.loc, p.prods.slice(0, 3).join(', ')].filter(Boolean).join(' · ')),
+        go: () => { closeQuickSearch(); showTab('facilities',_qsTabBtn('facilities')); setTimeout(()=>{ const q2=el('fac-q'); if(q2){q2.value=p.nm;_facPage=1;renderFac();}},150); }
       };
       _qsResults.push(item);
       const idx = _qsResults.length - 1;
@@ -3234,9 +3245,7 @@ async function downloadFavIcs(flightId, dir){
   const list = items(data);
   const live = list.find(x => ((x.flightId || x.flightNum || '') + '').toUpperCase().replace(/\s+/g,'') === flightId);
   if(!live){ _toast(`${flightId} 운항 정보를 찾을 수 없습니다`); return; }
-  const raw = live.estimatedDateTime || live.scheduleDateTime || '';
-  const hhmm = raw.slice(-4);
-  const start = _parseFlightTime(raw, hhmm);
+  const start = _flightInstant(live);
   if(!start){ _toast('출발/도착 시간을 파싱할 수 없습니다'); return; }
   // 출발편: 출발 3시간 전부터 출발까지 / 도착편: 도착시간부터 1시간
   const isDep = dir === 'dep';
@@ -3430,21 +3439,26 @@ function _parseFlightTime(dtStr, hhmmStr){
           h=+dtStr.slice(8,10), mi=+dtStr.slice(10,12);
     return kstInstant(y, mo, d, h, mi);
   }
-  // scheduleDateTime이 'HHMM' 4자리만 있는 경우 → 오늘 + HHMM
+  // 'HHMM' 4자리만 있는 경우 → 오늘(KST) + HHMM. 운항 현황은 그날 편만 오므로 날짜를 넘기지 않는다
+  // (예전엔 3시간 넘게 지난 시각을 내일로 넘겨 이미 떠난 비행기에 '게이트 도착 권장 19시간 후'가 떴다)
   if(hhmmStr && /^\d{4}$/.test(hhmmStr)){
-    const now = new Date(), k = kstDate();
-    const t = kstInstant(k.getFullYear(), k.getMonth(), k.getDate(),
-                       +hhmmStr.slice(0,2), +hhmmStr.slice(2,4));
-    // 출발편 기준: 시간이 이미 지나갔으면 익일로 (도착편은 그대로)
-    if(t.getTime() < now.getTime() - 3*3600*1000) t.setDate(t.getDate()+1);
-    return t;
+    const k = kstDate();
+    return kstInstant(k.getFullYear(), k.getMonth(), k.getDate(), +hhmmStr.slice(0,2), +hhmmStr.slice(2,4));
   }
   return null;
 }
+/* 실제(예상) 시각: 예정 시각(오늘) 기준으로 ±12시간 안에 놓는다 — 00:05 편이 전날 23:54 에 일찍 뜨거나,
+   23:50 편이 지연돼 다음 날 00:30 에 뜨는 경우 */
+function _flightInstant(live){
+  const sch = String(live.scheduleDateTime || ''), est = String(live.estimatedDateTime || '');
+  const base = _parseFlightTime(sch, sch.slice(-4));
+  const t = _parseFlightTime(est, est.slice(-4)) || base;
+  if(!t || !base || est.length >= 12) return t;
+  const gap = t.getTime() - base.getTime(), H12 = 12*3600*1000, D = 24*3600*1000;
+  return gap > H12 ? new Date(t.getTime() - D) : gap < -H12 ? new Date(t.getTime() + D) : t;
+}
 function buildCountdown(live, dir){
-  const raw = live.estimatedDateTime || live.scheduleDateTime || '';
-  const hhmm = (live.estimatedDateTime || live.scheduleDateTime || '').slice(-4);
-  const target = _parseFlightTime(raw, hhmm);
+  const target = _flightInstant(live);
   if(!target) return '';
   const ts = target.getTime();
   const isDep = dir === 'dep';
@@ -3533,7 +3547,8 @@ async function loadFavFlights(){
     area.innerHTML = '<div class="fav-empty">⭐ 저장된 편명이 없습니다.<br><span style="font-size:.7rem;color:var(--muted)">위에 편명을 입력해 추가하세요.</span></div>';
     return;
   }
-  area.innerHTML = '<div class="loading">⏳ 항공편 데이터 조회 중...</div>';
+  const hadCards = !!area.querySelector('.fav-card');
+  if(!hadCards) area.innerHTML = '<div class="loading">⏳ 항공편 데이터 조회 중...</div>';   // 1분 갱신 때마다 카드가 '조회 중'으로 깜빡이지 않게
 
   // Fetch live flight data for matching
   const needDep = favs.some(f => f.dir === 'dep');
@@ -3542,6 +3557,12 @@ async function loadFavFlights(){
     needDep ? api('StatusOfPassengerFlightsOdp/getPassengerDeparturesOdp', {numOfRows:500}) : null,
     needArr ? api('StatusOfPassengerFlightsOdp/getPassengerArrivalsOdp', {numOfRows:500}) : null,
   ]);
+  // 조회 실패(null)면 '운항 정보 없음'으로 바꾸지 말고 직전 화면·변경 감지 기록을 그대로 둔다
+  // (예전엔 한 번 실패하면 기록이 비어 그사이 게이트 변경 알림을 놓쳤다)
+  if((needDep && !depData) || (needArr && !arrData)){
+    if(!hadCards) area.innerHTML = '<div class="err">⚠ 항공편 정보를 불러오지 못했어요. 1분 뒤 다시 확인합니다.</div>';
+    return;
+  }
   const depList = depData ? items(depData) : [];
   const arrList = arrData ? items(arrData) : [];
 
@@ -3556,7 +3577,7 @@ async function loadFavFlights(){
         <div class="fav-flight-id">${f.flightId}</div>
         <div class="fav-meta">
           <div class="fav-route">${dirLbl} · <span style="color:var(--muted)">현재 운항 정보 없음</span></div>
-          <div class="fav-times" style="color:var(--muted)">오늘 ±1일 범위 운항 데이터에서 찾을 수 없음</div>
+          <div class="fav-times" style="color:var(--muted)">오늘 운항 목록에 없어요 · 내일 편은 그날 0시부터 보여요</div>
         </div>
         <button class="fav-remove-btn" onclick="removeFavFlight('${f.flightId}','${f.dir}')" title="삭제">✕</button>
       </div>`;
@@ -3565,7 +3586,7 @@ async function loadFavFlights(){
     const est = fmtTime(live.estimatedDateTime) || '';
     const delayed = est && est !== sch;
     const remark = (live.remark || '').toLowerCase();
-    const cancelled = remark.includes('취소') || remark.includes('cancel');
+    const cancelled = /결항|취소|cancel/.test(remark);   // 공항 표기는 '결항' — 빠져 있어 결항편에 '게이트로 이동하세요'가 떴다
     const dest = live.airport || live.airportCode || '-';
     const air = live.airline || '-';
     const gate = f.dir === 'dep' ? (live.gatenumber || '') : (live.carousel || live.exitnumber || '');
@@ -3603,8 +3624,8 @@ async function loadFavFlights(){
     const live = src.find(x =>
       ((x.flightId || x.flightNum || '') + '').toUpperCase().replace(/\s+/g,'') === f.flightId
     );
-    if(!live) return;
     const key = f.flightId + '|' + f.dir;
+    if(!live){ if(snap[key]) next[key] = snap[key]; return; }   // 목록에서 잠깐 빠져도 기록은 남긴다
     const cur = {
       gate: f.dir === 'dep' ? (live.gatenumber || '') : (live.carousel || live.exitnumber || ''),
       est: live.estimatedDateTime || '',
