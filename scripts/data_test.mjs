@@ -156,4 +156,17 @@ await ok('일정 시간 순 자리: 시간을 넣은 항목만 옮기고 시간 
   assert.deepEqual(T.get('a').days[0].items.map(x => x.title), ['A', '메모', 'B', 'C', 'D', '시간 없음']);
 });
 
+await ok('지난 여행 씀씀이: 사람×일 평균, 여행 기간 밖 지출·3건 미만 여행은 뺀다', () => {
+  const T = boot().TripStore;
+  const e = (krw, category, date) => ({ krw, amount: krw, currency: 'KRW', category, date });
+  const a = { id: 'a', city: '오사카', start: '2026-10-01', end: '2026-10-03', members: [{ name: '나' }, { name: '민수' }],
+    expenses: [e(300000, 'food', '2026-10-01'), e(60000, 'cafe', '2026-10-02'), e(120000, 'transit', '2026-10-02'), e(900000, 'transit', '2026-08-01'), e(180000, 'shop', '2026-10-03')] };
+  const b = { id: 'b', city: '도쿄', start: '2026-09-01', end: '2026-09-01', expenses: [e(50000, 'food', '2026-09-01'), e(10000, 'sight', '2026-09-01')] };
+  const p = T.spendProfile([a, b]);
+  assert.equal(p.trips.length, 1); assert.equal(p.personDays, 6);   // 3일 × 2명, b 는 2건이라 빠짐
+  assert.equal(p.perDay.food, 50000); assert.equal(p.perDay.cafe, 10000);
+  assert.equal(p.perDay.transit, 20000);   // 8월 미리 낸 90만 원(기간 밖)은 빠짐
+  assert.equal(p.perDay.shop, 30000);
+});
+
 console.log(`data_test: ${pass} passed`);

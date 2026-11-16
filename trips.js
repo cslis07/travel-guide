@@ -596,6 +596,23 @@
     if (isObj(v)) return '{' + Object.keys(v).filter(function (k) { return v[k] !== undefined; }).sort().map(function (k) { return JSON.stringify(k) + ':' + stableStr(v[k]); }).join(',') + '}';
     return JSON.stringify(v === undefined ? null : v);
   }
+  /* 지난 여행의 실제 씀씀이 — 분류별 1인 1일 평균(원). 견적 '내 실제 지출 기준'에 쓴다(2026-11-16)
+     현지에서 쓴 돈만: 여행 기간 밖 날짜(미리 산 항공·숙소 등)는 뺀다. 지출 3건 미만인 여행은 표본이 작아 뺀다.
+     여러 여행은 사람×일 가중 평균(짧은 여행 하나가 평균을 흔들지 않게) */
+  function spendProfile(list) {
+    var pd = 0, sums = {}, used = [];
+    arr(list).forEach(function (t) {
+      if (!t.start || !t.end) return;
+      var ex = arr(t.expenses).filter(function (e) { return +e.krw > 0 && (!e.date || (e.date >= t.start && e.date <= t.end)); });
+      if (ex.length < 3) return;
+      var days = tripLength(t), ppl = Math.max(1, arr(t.members).length);
+      pd += days * ppl;
+      ex.forEach(function (e) { var k = WORD.test(String(e.category)) ? e.category : 'etc'; sums[k] = (sums[k] || 0) + (+e.krw); });
+      used.push({ id: t.id, city: String(t.city || ''), start: t.start, end: t.end, days: days, ppl: ppl, count: ex.length });
+    });
+    var per = {}; for (var k in sums) per[k] = pd ? Math.round(sums[k] / pd) : 0;
+    return { trips: used, personDays: pd, perDay: per };
+  }
   function sameTrip(a, b) {
     if (!isObj(a) || !isObj(b)) return false;
     return stableStr(clean(JSON.parse(JSON.stringify(a)))) === stableStr(clean(JSON.parse(JSON.stringify(b))));
@@ -613,6 +630,7 @@
     // 계산
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,
     dailyAllowance: dailyAllowance, remainingDays: remainingDays, byCategory: byCategory,
+    spendProfile: spendProfile,
     settlements: settlements, balances: balances, toKRW: toKRW, sharesOf: sharesOf, spreadOf: spreadOf, dayTotals: dayTotals,
     addPayment: addPayment, removePayment: removePayment, settleState: settleState,
     passportExp: passportExp, setPassportExp: setPassportExp, passportCheck: passportCheck,
