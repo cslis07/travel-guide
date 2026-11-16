@@ -134,4 +134,15 @@ await ok('숙소 API 두 곳에 남의 사이트 차단·호출 제한·시간 �
   }
 });
 
+await ok('공항공사(svc=kac) 프록시는 정해 둔 3개 경로만 — 다른 경로·경로 탈출은 400', async () => {
+  const { GET } = await import('../api/proxy.js');
+  const call = q => GET(new Request('https://travelcost.co.kr/api/proxy?' + q, { headers: { Origin: 'https://travelcost.co.kr' } }));
+  for (const bad of ['flight-status/detail', 'flight-status/../B551177/x', 'flight-status%2Finfo%2F..', 'other/info', '']) {
+    const r = await call('svc=kac&path=' + bad);
+    assert.ok(r.status === 400, bad + ' → ' + r.status);
+  }
+  const ok1 = await call('svc=kac&path=flight-status/info');
+  assert.notEqual(ok1.status, 400);   // 허용 경로(이 테스트 환경엔 키가 없어 500)
+});
+
 console.log(`security_test: ${pass} passed`);

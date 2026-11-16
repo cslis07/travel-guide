@@ -121,6 +121,16 @@
   .rp-total{background:var(--gray-50);border-radius:14px;padding:14px;text-align:center}.rp-total small{display:block;font-size:12px;color:var(--gray-500);font-weight:700}.rp-total b{font-size:30px;font-weight:800;letter-spacing:-.02em}
   .rp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}.rp-grid div{background:var(--gray-50);border-radius:12px;padding:10px;text-align:center}.rp-grid small{display:block;font-size:11px;color:var(--gray-500);font-weight:700}.rp-grid b{font-size:14px;font-weight:800}
   .rp-line{font-size:13px;color:var(--gray-700);margin-top:10px}
+  .ocr-btn{margin-top:8px;width:100%;padding:10px;border:1px dashed var(--primary);border-radius:10px;background:var(--primary-lt);color:var(--primary);font-weight:800;font-size:13px;cursor:pointer}
+  .ocr-note{font-size:11.5px;color:var(--gray-500);margin:6px 2px 0;line-height:1.5}
+  .ocr-chips{margin-top:6px}
+  .pv{border:1px solid var(--gray-100);border-radius:12px;overflow:hidden;font-size:12px}
+  .pv-r{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:4px;padding:8px 10px;border-top:1px solid var(--gray-100);align-items:center}
+  .pv-r:first-child{border-top:0}.pv-r span:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
+  .pv-h{background:var(--gray-50,#F9FAFB);color:var(--gray-500);font-weight:700;font-size:11px}
+  .pv-t{font-weight:800;background:var(--gray-50,#F9FAFB)}
+  .pv em{font-style:normal;color:var(--gray-500)}.pv .pv-up{color:var(--danger,#D92D20);font-weight:700}.pv .pv-dn{color:var(--success,#039855);font-weight:700}
+  .pv-note{font-size:11px;color:var(--gray-500);margin:6px 2px 0;line-height:1.5}
   .rp-cat{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;margin-bottom:7px}.rp-cat span{flex:0 0 72px}.rp-cat i{flex:1;height:9px;background:var(--gray-100);border-radius:9px;overflow:hidden}.rp-cat i b{display:block;height:100%}.rp-cat em{font-style:normal;color:var(--gray-600);flex:0 0 auto;font-size:11.5px}
   .rp-img{width:100%;border-radius:14px;margin-top:14px;box-shadow:var(--shadow)}
   .dayhd{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:14px 4px 6px;font-size:13px}.dayhd b{font-weight:800;color:var(--gray-800)}.dayhd span{font-weight:800;color:var(--gray-700);font-size:12.5px}.dayhd span.over{color:var(--danger)}
@@ -1057,7 +1067,7 @@ function openExpenseSheet(expId){
     +'<div style="flex:0 0 150px"><label class="fl" for="ex-date">날짜</label><input class="in" id="ex-date" type="date" value="'+esc((e&&e.date)||defaultExpDate())+'" onchange="drawSpan()"></div></div>'
     +'<label class="fl">🧾 영수증 사진 (선택)</label><div class="rc-row"><img id="ex-rc-prev" class="rc-prev" alt="영수증 미리보기" hidden onclick="if(this.src)viewReceiptSrc(this.src)">'
     +'<label class="rc-pick">📷 '+(e&&e.hasReceipt?'다른 사진':'사진 추가')+'<input type="file" accept="image/*" id="ex-rc" hidden onchange="pickReceipt(this)"></label>'
-    +'<button type="button" class="rc-del" id="ex-rc-del" hidden onclick="dropReceipt()">사진 빼기</button></div>'
+    +'<button type="button" class="rc-del" id="ex-rc-del" hidden onclick="dropReceipt()">사진 빼기</button></div><div id="ex-ocr"></div>'
     +'<button class="save" onclick="saveExpense()">'+(editExp?'저장':'추가')+'</button>'
     +(editExp?'<button class="save" style="background:var(--gray-100);color:var(--danger);margin-top:8px" onclick="deleteExpense()">삭제</button>':''));
   rcState={data:null,remove:false};
@@ -1220,6 +1230,17 @@ function reportData(){
   return { total:total, days:days, ppl:ppl, perDay:Math.round(total/days), perPerson:Math.round(total/ppl), count:ex.length,
     cats:T.byCategory(trip), big:big, topDay:top?{d:top,amt:byDay[top]}:null, budget:T.budgetTotal(trip), setl:T.settlements(trip) };
 }
+/* 견적 대비 실제 — 경비 계산기에서 담은 여행만(budget.plan). 더 쓴 건 빨강, 덜 쓴 건 초록 */
+function planVsHtml(){
+  var v=T.planVsActual&&T.planVsActual(trip); if(!v) return '';
+  var sg=function(d){ return d>0?'<em class="pv-up">+'+won(d)+'</em>':d<0?'<em class="pv-dn">−'+won(-d)+'</em>':'<em>같음</em>'; };
+  var md=v.at&&/^\d{4}-\d{2}-\d{2}$/.test(v.at)?T.fmtMD(v.at)+' ':'';
+  return '<div class="sech" style="margin-top:14px">견적 대비 실제</div>'
+    +'<div class="pv"><div class="pv-r pv-h"><span>항목</span><span>견적</span><span>실제</span><span>차이</span></div>'
+    +v.rows.map(function(r){ return '<div class="pv-r"><span>'+esc(r.label)+'</span><span>'+won(r.plan)+'</span><span>'+won(r.actual)+'</span><span>'+sg(r.diff)+'</span></div>'; }).join('')
+    +'<div class="pv-r pv-t"><span>합계</span><span>'+won(v.plan)+'</span><span>'+won(v.actual)+'</span><span>'+sg(v.diff)+'</span></div></div>'
+    +'<p class="pv-note">'+esc(md)+'경비 계산 견적과 비교 · 견적 합계엔 예비비 포함 · 항공·숙소를 미리 결제하고 지출에 안 적었다면 실제가 적게 나와요</p>';
+}
 function openReport(){
   var r=reportData();
   var cats=r.cats.slice(0,5).map(function(x){ var pct=r.total?Math.round(x.amt/r.total*100):0;
@@ -1229,6 +1250,7 @@ function openReport(){
     +'<div class="rp-total"><small>총 지출 · '+r.days+'일 · '+r.ppl+'명</small><b>'+won(r.total)+'</b></div>'
     +'<div class="rp-grid"><div><small>하루 평균</small><b>'+won(r.perDay)+'</b></div><div><small>1인당</small><b>'+won(r.perPerson)+'</b></div><div><small>지출</small><b>'+r.count+'건</b></div></div>'
     +bud
+    +planVsHtml()
     +'<div class="sech" style="margin-top:14px">어디에 썼나</div>'+cats
     +(r.big?'<div class="rp-line">💸 가장 큰 지출 <b>'+esc(r.big.memo||T.catByKey(r.big.category).label)+' '+won(r.big.krw)+'</b></div>':'')
     +(r.topDay?'<div class="rp-line">📅 가장 많이 쓴 날 <b>'+esc(dayLabel(r.topDay.d))+' '+won(r.topDay.amt)+'</b></div>':'')
@@ -1796,13 +1818,55 @@ function shrinkImage(file,cb){
   fr.onerror=function(){ cb(null); };
   fr.readAsDataURL(file);
 }
+/* 영수증 사진에서 금액 읽기 — 이 폰 안에서만(receipt-ocr.js). 새로 고른 사진일 때만 버튼, 누를 때만 프로그램을 받는다 */
+var _ocrSeq=0;
+function ocrBox(){
+  var b=document.getElementById('ex-ocr'); if(!b) return;
+  if(!rcState.data||!window.ReceiptOCR){ b.innerHTML=''; return; }
+  b.innerHTML='<button type="button" class="ocr-btn" onclick="runOcr()">🔎 사진에서 금액 읽기</button>'
+    +'<p class="ocr-note">이 폰 안에서만 읽어요(사진은 밖으로 안 나가요) · 처음 한 번 약 5~6MB를 받아요</p>';
+}
+function ocrFmt(v){ return v.toLocaleString('ko-KR',{maximumFractionDigits:2})+' '+esc(exState.cur||''); }
+function runOcr(){
+  var b=document.getElementById('ex-ocr'); if(!b||!rcState.data) return;
+  var seq=++_ocrSeq, data=rcState.data;
+  b.innerHTML='<p class="ocr-note" id="ocr-st" role="status">인식 프로그램 준비 중…</p>';
+  ReceiptOCR.read(data, exState.cur, function(st,p){
+    var el=document.getElementById('ocr-st'); if(el&&seq===_ocrSeq) el.textContent=(/recogniz/.test(st)?'글자 읽는 중… ':'인식 프로그램 받는 중… ')+Math.round(p*100)+'%';
+  }).then(function(r){
+    var bb=document.getElementById('ex-ocr'); if(!bb||seq!==_ocrSeq||rcState.data!==data) return;
+    if(!r.cands.length){ bb.innerHTML='<p class="ocr-note">금액을 찾지 못했어요. 직접 입력해 주세요.</p>'; return; }
+    var a=document.getElementById('ex-amt'), filled=false;
+    // 영수증 통화 기호(¥·₩·€·฿·₫)가 지금 고른 통화와 다르면 그 통화로 — 일본 영수증 ¥591 이 ₩591 이 되지 않게
+    var switched='';
+    if(r.cur&&r.cur!==exState.cur&&(!a||!a.value)){ setExCur(r.cur); switched=r.cur; }
+    if(r.best!=null&&a&&!a.value){ a.value=r.best; updKRW(); filled=true; }
+    bb.innerHTML='<p class="ocr-note">'+(switched?'영수증 기호를 보고 통화를 '+esc(switched)+'(으)로 바꿨어요. ':'')+(filled?'읽은 금액을 넣었어요 — 맞는지 꼭 확인해 주세요.':r.best!=null?'읽은 금액이에요.':'합계를 확실히 찾지 못했어요.')+' 다른 값이면 눌러 바꿔요</p>'
+      +'<div class="segrow ocr-chips">'+r.cands.map(function(v){ return '<button type="button" class="seg'+(v===r.best?' on':'')+'" data-v="'+(+v)+'" onclick="useOcr(this)">'+ocrFmt(+v)+'</button>'; }).join('')+'</div>';
+  },function(){
+    var bb=document.getElementById('ex-ocr'); if(!bb||seq!==_ocrSeq) return;
+    bb.innerHTML='<p class="ocr-note">금액을 읽지 못했어요(인터넷 연결이 필요해요). 직접 입력해 주세요.</p><button type="button" class="ocr-btn" onclick="runOcr()">다시 읽기</button>';
+  });
+}
+/* 통화 버튼 고르기(없으면 '다른 통화'에서 꺼내 붙인다) */
+function setExCur(c){
+  var row=document.getElementById('ex-cur'); if(!row) return;
+  var btn=row.querySelector('[data-cur="'+c+'"]');
+  if(!btn){ var sel=row.querySelector('select'); if(sel&&[].some.call(sel.options,function(o){return o.value===c;})){ sel.value=c; pickCurMore(sel); btn=row.querySelector('[data-cur="'+c+'"]'); } }
+  if(btn) pickCur(btn);
+}
+function useOcr(el){
+  var a=document.getElementById('ex-amt'), v=+el.getAttribute('data-v'); if(!a||!(v>0)) return;
+  a.value=v; updKRW();
+  el.parentNode.querySelectorAll('.seg').forEach(function(x){ x.classList.toggle('on',x===el); });
+}
 function showRcPrev(d){ var im=document.getElementById('ex-rc-prev'), del=document.getElementById('ex-rc-del'); if(!im) return; im.src=d; im.hidden=false; if(del) del.hidden=false; }
 function pickReceipt(inp){
   var f=inp.files&&inp.files[0]; if(!f) return;
   if(!/^image\//.test(f.type)){ alert('사진 파일을 골라 주세요.'); return; }
-  shrinkImage(f,function(d){ if(!d){ alert('사진을 읽지 못했어요.'); return; } rcState={data:d,remove:false}; showRcPrev(d); });
+  shrinkImage(f,function(d){ if(!d){ alert('사진을 읽지 못했어요.'); return; } rcState={data:d,remove:false}; showRcPrev(d); ocrBox(); });
 }
-function dropReceipt(){ rcState={data:null,remove:true}; var im=document.getElementById('ex-rc-prev'), del=document.getElementById('ex-rc-del'); if(im){ im.hidden=true; im.removeAttribute('src'); } if(del) del.hidden=true; }
+function dropReceipt(){ rcState={data:null,remove:true}; _ocrSeq++; var ob=document.getElementById('ex-ocr'); if(ob) ob.innerHTML=''; var im=document.getElementById('ex-rc-prev'), del=document.getElementById('ex-rc-del'); if(im){ im.hidden=true; im.removeAttribute('src'); } if(del) del.hidden=true; }
 function fillReceipts(root){ [].forEach.call(root.querySelectorAll('img[data-rc]'),function(im){ rcGet(im.getAttribute('data-rc'),function(d){ if(d) im.src=d; else im.remove(); }); }); }
 function viewReceiptSrc(src){ if(!/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(src)) return;   /* 끝까지 base64 만 — 따옴표로 속성을 벗어나지 못하게 */ openSheet('<h3>영수증</h3><img src="'+src+'" alt="영수증" style="width:100%;border-radius:12px;display:block">'); }
 function viewReceipt(id){ rcGet(id,function(d){ if(d) viewReceiptSrc(d); }); }
@@ -2028,6 +2092,7 @@ document.body.classList.add('trip-detail');
 })();
 </script>
 <script src="/settle-share.js" defer></script>
+<script src="/receipt-ocr.js" defer></script>
 <script src="/icons.js" defer></script>
 <script src="/nav.js" defer></script>
 </main>

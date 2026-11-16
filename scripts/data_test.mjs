@@ -169,4 +169,30 @@ await ok('지난 여행 씀씀이: 사람×일 평균, 여행 기간 밖 지출�
   assert.equal(p.perDay.shop, 30000);
 });
 
+await ok('견적 대비 실제: 항공+현지 교통은 교통 한 줄, 식비=식비+카페, 예비비는 합계에만', () => {
+  const T = boot().TripStore;
+  const t = { budget: { plan: { at: '2026-11-01', items: [{ key: 'flight', amt: 700000 }, { key: 'stay', amt: 390000 }, { key: 'food', amt: 560000 }, { key: 'transit', amt: 120000 }, { key: 'play', amt: 0 }, { key: 'buffer', amt: 177000 }] } },
+    expenses: [{ krw: 750000, category: 'transit' }, { krw: 400000, category: 'stay' }, { krw: 300000, category: 'food' }, { krw: 50000, category: 'cafe' }, { krw: 30000, category: 'shop' }] };
+  const v = T.planVsActual(t);
+  const by = Object.fromEntries(v.rows.map(r => [r.label, r]));
+  assert.equal(by['교통(항공 포함)'].plan, 820000); assert.equal(by['교통(항공 포함)'].diff, -70000);
+  assert.equal(by['식비'].actual, 350000); assert.equal(by['식비'].diff, -210000);
+  assert.equal(by['관광'], undefined);                 // 견적 0·실제 0 이면 줄 없음
+  assert.equal(by['쇼핑·기타'].plan, 0); assert.equal(by['쇼핑·기타'].actual, 30000);
+  assert.equal(v.plan, 1947000); assert.equal(v.actual, 1530000); assert.equal(v.diff, -417000);
+  assert.equal(T.planVsActual({ budget: { total: 100 }, expenses: [] }), null);
+});
+
+await ok('영수증 금액 고르기: 합계 줄 우선, 소계·받은 돈·거스름·승인번호·날짜는 빼고, 통화 기호 인식', () => {
+  const c = { window: {}, document: {} }; vm.createContext(c); vm.runInContext(read('receipt-ocr.js'), c);
+  const P = c.window.ReceiptOCR.parse;
+  let r = P(['ローソン', '2026年11月16日 13:45', 'TEL 06-1234-5678', 'おにぎり ¥150', '小計 ¥310', '合計 ¥334', 'お預り ¥1,000', 'お釣り ¥666'].join('\n'), 'KRW');
+  assert.equal(r.best, 334); assert.equal(r.cur, 'JPY'); assert.ok(!r.cands.includes(1000) && !r.cands.includes(666) && !r.cands.includes(310));
+  r = P(['일란', '라멘 980', '합 계', '1,190'].join('\n'), 'JPY'); assert.equal(r.best, 1190);   // 합계 말과 숫자가 다른 줄
+  r = P(['아메리카노 4,500', '합계 9,500', '승인번호 12345678'].join('\n'), 'KRW'); assert.equal(r.best, 9500); assert.ok(!r.cands.includes(12345678));
+  r = P(['SUBTOTAL 6.28', 'TAX 0.55', 'TOTAL 6.83', 'CASH 10.00', 'CHANGE 3.17'].join('\n'), 'USD'); assert.equal(r.best, 6.83);
+  r = P(['Pho bo 75.000', 'Tổng cộng: 85.000 đ'].join('\n'), 'VND'); assert.equal(r.best, 85000);
+  r = P(['item 120', 'item 340'].join('\n'), 'JPY'); assert.equal(r.best, null); assert.deepEqual([...r.cands], [340, 120]);
+});
+
 console.log(`data_test: ${pass} passed`);

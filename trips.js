@@ -613,6 +613,28 @@
     var per = {}; for (var k in sums) per[k] = pd ? Math.round(sums[k] / pd) : 0;
     return { trips: used, personDays: pd, perDay: per };
   }
+  /* 견적 대비 실제 — 견적으로 만든 예산(budget.plan)의 항목을 지출 분류에 맞춰 비교(2026-11-16)
+     항공권은 지출 분류가 따로 없어 대개 '교통'에 적으므로 항공+현지 교통을 한 줄로. 예비비는 줄로 두지 않고 합계에만 */
+  var PLAN_MAP = [
+    { label: '교통(항공 포함)', plan: ['flight', 'transit'], cats: ['transit'] },
+    { label: '숙소', plan: ['stay'], cats: ['stay'] },
+    { label: '식비', plan: ['food'], cats: ['food', 'cafe'] },
+    { label: '관광', plan: ['play'], cats: ['sight'] },
+    { label: '쇼핑·기타', plan: ['shop'], cats: ['shop', 'etc'] }
+  ];
+  function planVsActual(t) {
+    var p = t && t.budget && t.budget.plan;
+    if (!p || !Array.isArray(p.items) || !p.items.length) return null;
+    var pa = {}, ac = {}, planTotal = 0;
+    p.items.forEach(function (x) { if (isObj(x)) { var a = Math.max(0, +x.amt || 0); pa[x.key] = (pa[x.key] || 0) + a; planTotal += a; } });
+    arr(t.expenses).forEach(function (e) { var k = WORD.test(String(e.category)) ? e.category : 'etc'; ac[k] = (ac[k] || 0) + Math.max(0, +e.krw || 0); });
+    var sum = function (o, ks) { return ks.reduce(function (s, k) { return s + (o[k] || 0); }, 0); };
+    var rows = PLAN_MAP.map(function (m) { var a = sum(pa, m.plan), b = sum(ac, m.cats); return { label: m.label, plan: Math.round(a), actual: Math.round(b), diff: Math.round(b - a) }; })
+      .filter(function (r) { return r.plan > 0 || r.actual > 0; });
+    if (!rows.length || planTotal <= 0) return null;
+    var actual = sum(ac, Object.keys(ac));
+    return { at: String(p.at || ''), rows: rows, plan: Math.round(planTotal), actual: Math.round(actual), diff: Math.round(actual - planTotal) };
+  }
   function sameTrip(a, b) {
     if (!isObj(a) || !isObj(b)) return false;
     return stableStr(clean(JSON.parse(JSON.stringify(a)))) === stableStr(clean(JSON.parse(JSON.stringify(b))));
@@ -630,7 +652,7 @@
     // 계산
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,
     dailyAllowance: dailyAllowance, remainingDays: remainingDays, byCategory: byCategory,
-    spendProfile: spendProfile,
+    spendProfile: spendProfile, planVsActual: planVsActual,
     settlements: settlements, balances: balances, toKRW: toKRW, sharesOf: sharesOf, spreadOf: spreadOf, dayTotals: dayTotals,
     addPayment: addPayment, removePayment: removePayment, settleState: settleState,
     passportExp: passportExp, setPassportExp: setPassportExp, passportCheck: passportCheck,

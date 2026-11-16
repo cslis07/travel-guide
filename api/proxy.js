@@ -28,6 +28,9 @@ const URL_ALLOWLIST = new Set([
 
 // path 도 화이트리스트로 제한 (경로 탈출·타 엔드포인트 호출 방지)
 const PATH_RE = /^[A-Za-z0-9_]+\/[A-Za-z0-9_]+$/;
+// 한국공항공사(김포·김해 등 14개 공항) 실시간 운항 — svc=kac 일 때만, 정확히 이 경로들만(2026-11-16)
+const KAC_BASE = 'https://apis.data.go.kr/B551178';
+const KAC_PATHS = new Set(['flight-status/info', 'flight-status/depart', 'flight-status/arrival']);
 
 function isAllowedUrl(raw) {
   let u;
@@ -60,6 +63,17 @@ async function handler(req) {
       });
     }
     targetUrl = externalUrl;
+  } else if (path && incoming.searchParams.get('svc') === 'kac') {
+    if (!KAC_PATHS.has(path)) {
+      return new Response(JSON.stringify({ error: 'invalid path' }), { status: 400, headers: { ...CORS, 'Content-Type': 'application/json' } });
+    }
+    if (!KEY) {
+      return new Response(JSON.stringify({ error: 'ICN_API_KEY not configured' }), { status: 500, headers: { ...CORS, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
+    }
+    incoming.searchParams.delete('path'); incoming.searchParams.delete('svc');
+    incoming.searchParams.set('serviceKey', KEY);
+    incoming.searchParams.set('type', 'json');
+    targetUrl = `${KAC_BASE}/${path}?${incoming.searchParams.toString()}`;
   } else if (path) {
     // Proxy a Korean API endpoint
     if (!PATH_RE.test(path)) {
