@@ -355,6 +355,7 @@
       return h;
     }
     function renderAir(t, force) {
+      var seq = ++airSeq;   // 맨 앞에서 — 항공편 없는 여행·캐시로 바꿔도 앞 여행의 느린 응답이 카드를 덮지 않게(2026-11-16)
       var f = storedFlight(t, favFlights());
       safe('db-air', function (el) {
         if (!f) {
@@ -368,7 +369,6 @@
         if (!force && airState && airState.no === normNo(f.no) && airState.date === f.date && Date.now() - lastAirFetch < 60000) {
           el.innerHTML = flightCard(f, airState); bindRetry(t); return;
         }
-        var seq = ++airSeq;
         el.innerHTML = flightCard(f, { state: 'loading' });
         var ctrl = typeof AbortController === 'function' ? new AbortController() : null;
         var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 8000);

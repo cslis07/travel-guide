@@ -353,6 +353,7 @@ const _dom = {
   pageNo: 1, numOfRows: 20,
   totalCount: 0, loaded: 0,
   loading: false,
+  seq: 0,   // 새 검색마다 올림 — 늦게 온 이전 응답은 버린다(2026-11-16)
 };
 
 // 주차 필터 상태
@@ -550,6 +551,7 @@ async function loadMoreDomestic() {
 }
 
 async function _fetchDomesticPage(append) {
+  const seq = append ? _dom.seq : ++_dom.seq;
   _dom.loading = true;
   const btn = document.getElementById('domesticMoreBtn');
   if (btn) btn.disabled = true;
@@ -581,6 +583,7 @@ async function _fetchDomesticPage(append) {
     }
 
     const data = await _callTourApi(endpoint, params);
+    if (seq !== _dom.seq) return;   // 그사이 필터가 바뀜
     if (!data) throw new Error('관광 데이터 서비스에 일시적으로 연결할 수 없습니다.');
 
     const resultCode = data?.response?.header?.resultCode;
@@ -606,6 +609,7 @@ async function _fetchDomesticPage(append) {
     _updateDomMoreBtn();
 
   } catch (err) {
+    if (seq !== _dom.seq) return;
     domHide('domesticLoading');
     if (!append) {
       domShow('domesticError');
@@ -615,8 +619,10 @@ async function _fetchDomesticPage(append) {
         `<button class="retry-btn" onclick="domHide('domesticError');_fetchDomesticPage(false)">🔄 다시 시도</button>`;
     }
   } finally {
-    _dom.loading = false;
-    if (btn) btn.disabled = false;
+    if (seq === _dom.seq) {
+      _dom.loading = false;
+      if (btn) btn.disabled = false;
+    }
   }
 }
 

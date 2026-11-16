@@ -415,9 +415,10 @@ var state = {
   $('f-out').value  = loc(t);
   $('f-back').value = loc(b);
 
-  document.querySelectorAll('.style-btn').forEach(function(btn){
+  // [data-style] 만 — 여행 시기 버튼도 .style-btn 이라, 시기를 누르면 스타일이 undefined 가 돼 계산이 멈췄다(2026-11-16)
+  document.querySelectorAll('[data-style]').forEach(function(btn){
     btn.addEventListener('click', function(){
-      document.querySelectorAll('.style-btn').forEach(function(x){ x.classList.remove('on'); });
+      document.querySelectorAll('[data-style]').forEach(function(x){ x.classList.remove('on'); });
       btn.classList.add('on');
       state.style = btn.dataset.style;
       state.rates = {}; state.live = {};        // 스타일 바꾸면 프리셋 다시
@@ -442,7 +443,8 @@ var state = {
   $('btn-save').addEventListener('click', saveTrip);
   $('btn-copy').addEventListener('click', copyLink);
 
-  restoreFromHash();
+  // 이 스크립트를 다 읽은 뒤에 — 아래 AFF_BLOCKS 가 아직 없어 링크로 연 견적에서 renderAff 가 멈췄다(2026-11-16)
+  setTimeout(restoreFromHash, 0);
 })();
 
 function dest(){ return DESTS.filter(function(d){ return d.key === $('f-dest').value; })[0] || DESTS[0]; }
@@ -808,6 +810,7 @@ function copyLink(){
     d: dest().key, o: $('f-out').value, b: $('f-back').value,
     a: c.adults, c: c.child, r: c.rooms, s: state.style
   });
+  if (state.season && state.season !== 'off') p.set('se', state.season);   // 성수기·명절 할증도 같이(2026-11-16)
   var url = location.origin + location.pathname + '#' + p.toString();
   (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject())
     .then(function(){ alert('견적 링크를 복사했습니다.'); })
@@ -823,10 +826,17 @@ function restoreFromHash(){
   if (p.get('a')) $('f-adult').value = p.get('a');
   if (p.get('c')) $('f-child').value = p.get('c');
   if (p.get('r')) $('f-room').value  = p.get('r');
+  var se = p.get('se');
+  if (se && Object.prototype.hasOwnProperty.call(SEASON, se)) {
+    state.season = se;
+    document.querySelectorAll('[data-season]').forEach(function(b){
+      b.classList.toggle('on', b.dataset.season === se);
+    });
+  }
   var s = p.get('s');
-  if (s) {
+  if (s && Object.prototype.hasOwnProperty.call(PRESET.jp, s)) {   // 모르는 값이면 무시 — 그대로 넣으면 계산이 멈췄다(2026-11-16)
     state.style = s;
-    document.querySelectorAll('.style-btn').forEach(function(b){
+    document.querySelectorAll('[data-style]').forEach(function(b){   // 시기 버튼도 .style-btn 이라 같이 꺼지던 것
       b.classList.toggle('on', b.dataset.style === s);
     });
   }
