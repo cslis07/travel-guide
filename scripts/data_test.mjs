@@ -167,6 +167,9 @@ await ok('지난 여행 씀씀이: 사람×일 평균, 여행 기간 밖 지출�
   assert.equal(p.perDay.food, 50000); assert.equal(p.perDay.cafe, 10000);
   assert.equal(p.perDay.transit, 20000);   // 8월 미리 낸 90만 원(기간 밖)은 빠짐
   assert.equal(p.perDay.shop, 30000);
+  assert.equal(p.stayPerNight, 0);   // 숙박 지출 없는 여행은 숙소 단가에 안 섞음
+  const c = { id: 'c', city: '오사카', start: '2026-07-01', end: '2026-07-04', expenses: [e(270000, 'stay', '2026-05-01'), e(1, 'food', '2026-07-01'), e(1, 'food', '2026-07-02')] };
+  assert.equal(T.spendProfile([a, c]).stayPerNight, 90000);   // 미리 낸 숙박(기간 밖 날짜)도 넣고 3박으로 나눔
 });
 
 await ok('견적 대비 실제: 항공+현지 교통은 교통 한 줄, 식비=식비+카페, 예비비는 합계에만', () => {

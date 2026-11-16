@@ -109,6 +109,7 @@
 .tag-live{background:#E6F8F7;color:#067D77}
 .tag-assume{background:var(--gray-100);color:var(--gray-500)}
 .tag-mine{background:#FFF3E9;color:#B45309}
+.tag-shared{background:#EEF4FF;color:#3538CD}
 .mine{margin:12px 0 4px;padding:12px 14px;border-radius:12px;background:#FFF8F1;border:1px solid #FDE3C8;font-size:.82rem;line-height:1.55;color:var(--gray-700)}
 .mine b{color:var(--gray-900)}
 .mine .mine-num{display:block;margin-top:4px;color:var(--gray-600);font-size:.78rem}
@@ -116,7 +117,7 @@
 .mine button.off{background:var(--gray-100);color:var(--gray-700)}
 .mine.hint{background:var(--gray-50,#F9FAFB);border-color:var(--gray-100);color:var(--gray-500)}
 .mine.hint a{color:var(--primary);font-weight:700}
-@media (prefers-color-scheme: dark){.mine{background:#2a1d10;border-color:#5a3a17;color:var(--gray-600)}.mine b{color:var(--dark)}.tag-mine{background:#3a2610;color:#F5B66B}.mine.hint{background:var(--surface);border-color:var(--gray-200)}}
+@media (prefers-color-scheme: dark){.mine{background:#2a1d10;border-color:#5a3a17;color:var(--gray-600)}.mine b{color:var(--dark)}.tag-mine{background:#3a2610;color:#F5B66B}.tag-shared{background:#1f2347;color:#A4BCFD}.mine.hint{background:var(--surface);border-color:var(--gray-200)}}
 .live-btn{padding:6px 11px;border:1px solid var(--primary);background:var(--primary-lt);color:var(--primary);
   border-radius:999px;font-size:.7rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
 .live-btn:disabled{opacity:.5;cursor:default}
@@ -409,13 +410,14 @@ var state = {
   season: 'off',
   rates: {},          // 항목별 단가
   live: {},           // 실시간으로 채운 항목 { flight:{at:'...'} }
+  shared: {},         // 견적 링크로 받은 단가 { food:true } — '보낸 값' 배지(2026-11-16)
   mine: null,         // '내 실제 지출 기준'을 켰을 때 { region, food, transit, play, shopPerDay, trips }
   computed: null
 };
 
 /* ── 내 실제 지출 기준 — 같은 지역으로 다녀온 여행의 1인 1일 씀씀이(내 여행 지출 기록)
    식비(식비+카페)·현지 교통·관광·쇼핑·기타만. 항공·숙소는 예약 시점·인원 구성이 달라 프리셋/실시간 그대로 */
-var MINE_KEYS = ['food', 'transit', 'play', 'shop'];
+var MINE_KEYS = ['food', 'transit', 'play', 'shop', 'stay'];
 var REGION_LABEL = { jp:'일본', sea:'동남아', eu:'유럽', kr:'국내' };
 var CC_REGION = { jp:'jp', fr:'eu', th:'sea', vn:'sea', id:'sea', sg:'sea', ph:'sea', my:'sea' };
 function regionOfCity(city){
@@ -434,14 +436,14 @@ function mineProfile(region){
   var p = T.spendProfile(pastTrips().filter(function(t){ return regionOfCity(t.city) === region; }));
   if (!p.trips.length) return null;
   var g = function(k){ return p.perDay[k] || 0; };
-  return { region: region, trips: p.trips, food: g('food') + g('cafe'), transit: g('transit'), play: g('sight'), shopPerDay: g('shop') + g('etc') };
+  return { region: region, trips: p.trips, food: g('food') + g('cafe'), transit: g('transit'), play: g('sight'), shopPerDay: g('shop') + g('etc'), stay: p.stayPerNight || 0 };
 }
 /* 기록이 0원인 분류(안 적었을 수도)는 내 기록으로 치지 않고 기본값을 둔다 */
 function mineHas(k){ var m = state.mine; return !!m && MINE_KEYS.indexOf(k) > -1 && (k === 'shop' ? m.shopPerDay : m[k]) > 0; }
 function applyMine(){
   var m = mineProfile(dest().region); if (!m) return;
   state.mine = m;
-  MINE_KEYS.forEach(function(k){ delete state.live[k]; });
+  MINE_KEYS.forEach(function(k){ delete state.live[k]; delete state.shared[k]; });
   calc();
 }
 function clearMine(){
@@ -461,11 +463,11 @@ function renderMine(){
   var cities = [], seen = {};
   m.trips.forEach(function(t){ if (t.city && !seen[t.city]) { seen[t.city] = 1; cities.push(t.city); } });
   var nv = function(v){ return v > 0 ? won(v) : '기록 없음(기본값)'; };
-  var nums = '1인 1일 · 식비 ' + nv(m.food) + ' · 교통 ' + nv(m.transit) + ' · 관광 ' + nv(m.play) + ' · 쇼핑·기타 ' + nv(m.shopPerDay);
+  var nums = '1인 1일 · 식비 ' + nv(m.food) + ' · 교통 ' + nv(m.transit) + ' · 관광 ' + nv(m.play) + ' · 쇼핑·기타 ' + nv(m.shopPerDay) + ' · 숙소 1박 ' + nv(m.stay);
   var src = esc(cities.slice(0, 3).join('·') + (cities.length > 3 ? ' 외' : '')) + ' 여행 ' + m.trips.length + '번';
   box.innerHTML = state.mine
     ? '<div class="mine">🧾 <b>내 지난 여행 기준</b>으로 계산하고 있어요 — ' + src + '의 실제 지출' +
-      '<span class="mine-num">' + nums + ' · 항공·숙소는 그대로</span>' +
+      '<span class="mine-num">' + nums + ' · 항공은 그대로</span>' +
       '<button type="button" class="off" onclick="clearMine();calc()">기본 가정값으로 되돌리기</button></div>'
     : '<div class="mine">🧾 <b>' + esc(REGION_LABEL[d.region] || '') + ' 여행 기록</b>이 있어요 — ' + src +
       '<span class="mine-num">' + nums + '</span>' +
@@ -491,7 +493,7 @@ function renderMine(){
       document.querySelectorAll('[data-style]').forEach(function(x){ x.classList.remove('on'); });
       btn.classList.add('on');
       state.style = btn.dataset.style;
-      state.rates = {}; state.live = {}; state.mine = null;   // 스타일 바꾸면 프리셋 다시
+      state.rates = {}; state.live = {}; state.mine = null; state.shared = {};   // 스타일 바꾸면 프리셋 다시
       if (state.computed) calc();
     });
   });
@@ -502,13 +504,14 @@ function renderMine(){
       btn.classList.add('on');
       state.season = btn.dataset.season;
       delete state.rates.stay; delete state.rates.flight;   // 시기 바꾸면 숙소·항공 프리셋 다시
+      delete state.shared.stay; delete state.shared.flight;
       delete state.live.stay; delete state.live.flight;
       if (state.computed) calc();
     });
   });
 
   $('calcBtn').addEventListener('click', calc);
-  $('btn-reset').addEventListener('click', function(){ state.rates={}; state.live={}; state.mine=null; $('fareBox').innerHTML=''; calc(); });
+  $('btn-reset').addEventListener('click', function(){ state.rates={}; state.live={}; state.mine=null; state.shared={}; $('fareBox').innerHTML=''; calc(); });
   $('btn-cheaper').addEventListener('click', findCheaperDates);
   $('btn-save').addEventListener('click', saveTrip);
   $('btn-copy').addEventListener('click', copyLink);
@@ -552,7 +555,7 @@ function calc(){
   var people = adults + child;
   if (state.mine && state.mine.region !== dest().region) clearMine();   // 다른 지역으로 바꾸면 내 기준은 끈다
   if (state.mine) {
-    ['food', 'transit', 'play'].forEach(function(k){ if (mineHas(k)) state.rates[k] = state.mine[k]; });
+    ['food', 'transit', 'play', 'stay'].forEach(function(k){ if (mineHas(k)) state.rates[k] = state.mine[k]; });
     if (mineHas('shop')) state.rates.shop = Math.round(state.mine.shopPerDay * days * people / 1000) * 1000;
   }
   var r = baseRates();
@@ -611,7 +614,7 @@ function render(){
   $('r-meta').innerHTML = (liveKeys.length
     ? '항공·숙소 ' + liveKeys.length + '개 항목을 실시간 시세로 반영했습니다 (' +
       esc(state.live[liveKeys[0]].at) + ' 조회)'
-    : state.mine ? '식비·교통·관광·쇼핑 중 기록이 있는 항목은 내 지난 여행 실제 지출, 나머지는 조정용 가정값입니다.'
+    : state.mine ? '숙소·식비·교통·관광·쇼핑 중 기록이 있는 항목은 내 지난 여행 실제 지출, 나머지는 조정용 가정값입니다.'
     : '모든 항목이 조정용 가정값입니다. 실시간 시세로 채울수록 범위가 좁아집니다.') +
     '<br>현재 범위 폭 ±' + manwon((c.hi - c.lo) / 2) + '만원';
 
@@ -621,7 +624,7 @@ function render(){
   /* 항목 행 */
   renderMine();
   $('lines').innerHTML = ITEMS.map(function(it){
-    var isLive = !!state.live[it.key], isMine = mineHas(it.key);
+    var isLive = !!state.live[it.key], isMine = mineHas(it.key), isShared = !isLive && !isMine && !!state.shared[it.key];
     // 육로 목적지에서 항공권 → 교통(철도·버스·자가용)으로 표기, 실시간 조회 숨김
     var name = (it.key === 'flight' && landOnly) ? '교통 (철도·버스·자가용)' : it.name;
     var unit = (it.key === 'flight' && landOnly) ? '1인 왕복' : it.unit;
@@ -646,7 +649,7 @@ function render(){
       '<div class="line">' +
         '<div class="line-main">' +
           '<div class="line-name">' + esc(name) +
-            '<span class="tag ' + (isLive ? 'tag-live">실시간' : isMine ? 'tag-mine">내 기록' : 'tag-assume">가정') + '</span>' +
+            '<span class="tag ' + (isLive ? 'tag-live">실시간' : isMine ? 'tag-mine">내 기록' : isShared ? 'tag-shared">보낸 값' : 'tag-assume">가정') + '</span>' +
             seasonBadge +
             (showLive ? '<button class="live-btn" data-live="'+it.key+'" type="button">실시간 시세로 채우기</button>' : '') +
           '</div>' +
@@ -670,6 +673,7 @@ function render(){
       var k = inp.dataset.rate;
       state.rates[k] = Math.max(0, +inp.value || 0);
       delete state.live[k];               // 손으로 고쳤으면 더는 '실시간'이 아니다
+      delete state.shared[k];             // 받은 값도 이제 내 값
       if (mineHas(k)) state.mine = null;   // 내 기록도 아님 — 나머지 내 값은 손 값처럼 남는다
       calc();
     });
@@ -934,7 +938,7 @@ function restoreFromHash(){
     });
   }
   var rt = parseRates(p.get('rt'));
-  for (var k in rt) state.rates[k] = rt[k];   // 보낸 사람이 고친 단가 그대로(받는 쪽에선 '가정'으로 보이고 고칠 수 있다)
+  for (var k in rt) { state.rates[k] = rt[k]; state.shared[k] = true; }   // 보낸 사람이 고친 단가 — '보낸 값' 배지, 고치면 내 값
   calc();
 }
 </script>

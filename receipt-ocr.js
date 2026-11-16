@@ -116,20 +116,26 @@
     for (var i = 0; i < curs.length; i++) { var l = LANG[String(curs[i] || '').toUpperCase()]; if (l) return l + '+eng'; }
     return 'eng';
   }
+  var cancelCur = null;
+  /* 읽는 중이면 멈춘다 — 작업자를 끝내고 기다리던 쪽엔 'cancel' 오류 */
+  function cancel() { if (cancelCur) cancelCur(); }
   function read(dataUrl, cur, onProgress, localCur) {
     var lang = langOf([localCur, cur]);
     var worker = null, done = false;
-    var timer = new Promise(function (_, no) { setTimeout(function () { if (!done) no(new Error('timeout')); }, 90000); });
+    var timer = new Promise(function (_, no) {
+      setTimeout(function () { if (!done) no(new Error('timeout')); }, 90000);
+      cancelCur = function () { if (!done) { done = true; if (worker) worker.terminate(); no(new Error('cancel')); } };
+    });
     var job = loadLib().then(function (T) {
       return T.createWorker(lang, 1, {
         workerPath: CDN + 'tesseract.js@' + VER + '/dist/worker.min.js',
         corePath: CDN + 'tesseract.js-core@' + VER,
         logger: function (m) { if (onProgress && m && typeof m.progress === 'number') onProgress(m.status || '', m.progress); }
       });
-    }).then(function (w) { worker = w; return w.recognize(dataUrl); })
+    }).then(function (w) { worker = w; if (done) { w.terminate(); throw new Error('cancel'); } return w.recognize(dataUrl); })   // 준비 중에 멈췄으면 바로 끝냄
       .then(function (res) { var text = (res && res.data && res.data.text) || ''; var p = parse(text, cur); p.text = text; return p; });
-    return Promise.race([job, timer]).then(function (r) { done = true; if (worker) worker.terminate(); return r; },
-      function (e) { done = true; if (worker) worker.terminate(); throw e; });
+    return Promise.race([job, timer]).then(function (r) { done = true; cancelCur = null; if (worker) worker.terminate(); return r; },
+      function (e) { done = true; cancelCur = null; if (worker) worker.terminate(); throw e; });
   }
-  window.ReceiptOCR = { read: read, parse: parse, langOf: langOf };
+  window.ReceiptOCR = { read: read, parse: parse, langOf: langOf, cancel: cancel };
 })();

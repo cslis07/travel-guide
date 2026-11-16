@@ -600,9 +600,13 @@
      현지에서 쓴 돈만: 여행 기간 밖 날짜(미리 산 항공·숙소 등)는 뺀다. 지출 3건 미만인 여행은 표본이 작아 뺀다.
      여러 여행은 사람×일 가중 평균(짧은 여행 하나가 평균을 흔들지 않게) */
   function spendProfile(list) {
-    var pd = 0, sums = {}, used = [];
+    var pd = 0, sums = {}, used = [], stayKrw = 0, stayNights = 0;
     arr(list).forEach(function (t) {
       if (!t.start || !t.end) return;
+      /* 숙소 1박 — 숙박은 미리 결제하는 일이 많아 날짜와 상관없이 그 여행의 숙박 지출 전부 ÷ 박수.
+         숙박 지출이 없는 여행은 빼서(안 적었을 수 있음) 평균을 끌어내리지 않게 */
+      var st = arr(t.expenses).reduce(function (s, e) { return s + (e.category === 'stay' && +e.krw > 0 ? +e.krw : 0); }, 0);
+      if (st > 0) { stayKrw += st; stayNights += Math.max(1, tripLength(t) - 1); }
       var ex = arr(t.expenses).filter(function (e) { return +e.krw > 0 && (!e.date || (e.date >= t.start && e.date <= t.end)); });
       if (ex.length < 3) return;
       var days = tripLength(t), ppl = Math.max(1, arr(t.members).length);
@@ -611,7 +615,7 @@
       used.push({ id: t.id, city: String(t.city || ''), start: t.start, end: t.end, days: days, ppl: ppl, count: ex.length });
     });
     var per = {}; for (var k in sums) per[k] = pd ? Math.round(sums[k] / pd) : 0;
-    return { trips: used, personDays: pd, perDay: per };
+    return { trips: used, personDays: pd, perDay: per, stayPerNight: stayNights ? Math.round(stayKrw / stayNights) : 0 };
   }
   /* 견적 대비 실제 — 견적으로 만든 예산(budget.plan)의 항목을 지출 분류에 맞춰 비교(2026-11-16)
      항공권은 지출 분류가 따로 없어 대개 '교통'에 적으므로 항공+현지 교통을 한 줄로. 예비비는 줄로 두지 않고 합계에만 */
