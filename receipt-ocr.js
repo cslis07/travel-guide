@@ -110,8 +110,14 @@
     return loading;
   }
   /* dataUrl(이미 줄인 JPEG) → { best, cands, text } */
-  function read(dataUrl, cur, onProgress) {
-    var lang = (LANG[String(cur || '').toUpperCase()] ? LANG[String(cur).toUpperCase()] + '+' : '') + 'eng';
+  /* 글자 데이터를 고를 통화들 — 여행 도시 현지 통화 + 지출 통화(원화로 두고 일본 영수증을 읽어도 일본어로 읽게, 2026-11-16) */
+  //   현지어 하나만 + 영어 — 일본어·한국어를 같이 실으면 '一蘭'을 한글로 잘못 읽었다(실측). 앞 통화부터 처음 맞는 것
+  function langOf(curs) {
+    for (var i = 0; i < curs.length; i++) { var l = LANG[String(curs[i] || '').toUpperCase()]; if (l) return l + '+eng'; }
+    return 'eng';
+  }
+  function read(dataUrl, cur, onProgress, localCur) {
+    var lang = langOf([localCur, cur]);
     var worker = null, done = false;
     var timer = new Promise(function (_, no) { setTimeout(function () { if (!done) no(new Error('timeout')); }, 90000); });
     var job = loadLib().then(function (T) {
@@ -125,5 +131,5 @@
     return Promise.race([job, timer]).then(function (r) { done = true; if (worker) worker.terminate(); return r; },
       function (e) { done = true; if (worker) worker.terminate(); throw e; });
   }
-  window.ReceiptOCR = { read: read, parse: parse };
+  window.ReceiptOCR = { read: read, parse: parse, langOf: langOf };
 })();

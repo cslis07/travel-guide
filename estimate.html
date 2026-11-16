@@ -889,12 +889,27 @@ function copyLink(){
     a: c.adults, c: c.child, r: c.rooms, s: state.style
   });
   if (state.season && state.season !== 'off') p.set('se', state.season);   // 성수기·명절 할증도 같이(2026-11-16)
+  // 손으로 고친 단가·실시간으로 채운 단가도 같이 — '내 기록' 값은 개인 씀씀이라 싣지 않는다(2026-11-16)
+  var rt = Object.keys(state.rates).filter(function(k){ return state.rates[k] != null && !mineHas(k) && RATE_KEYS.indexOf(k) > -1; })
+    .map(function(k){ return k + ':' + Math.round(state.rates[k]); });
+  if (rt.length) p.set('rt', rt.join(','));
   var url = location.origin + location.pathname + '#' + p.toString();
   (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject())
     .then(function(){ alert('견적 링크를 복사했습니다.'); })
     .catch(function(){ prompt('아래 링크를 복사하세요', url); });
 }
 
+var RATE_KEYS = ['flight', 'stay', 'food', 'transit', 'play', 'shop', 'buffer'];
+/* 링크의 rt=flight:350000,stay:120000 — 아는 항목·정수·범위 안의 값만 받는다 */
+function parseRates(v){
+  var out = {};
+  String(v || '').split(',').slice(0, 10).forEach(function(pair){
+    var m = /^([a-z]+):(\d{1,9})$/.exec(pair); if (!m || RATE_KEYS.indexOf(m[1]) < 0) return;
+    var n = +m[2]; if (m[1] === 'buffer' && n > 100) return;
+    out[m[1]] = n;
+  });
+  return out;
+}
 function restoreFromHash(){
   if (!location.hash || location.hash.length < 3) return;
   var p = new URLSearchParams(location.hash.slice(1));
@@ -918,6 +933,8 @@ function restoreFromHash(){
       b.classList.toggle('on', b.dataset.style === s);
     });
   }
+  var rt = parseRates(p.get('rt'));
+  for (var k in rt) state.rates[k] = rt[k];   // 보낸 사람이 고친 단가 그대로(받는 쪽에선 '가정'으로 보이고 고칠 수 있다)
   calc();
 }
 </script>

@@ -1840,7 +1840,7 @@ function runOcr(){
   b.innerHTML='<p class="ocr-note" id="ocr-st" role="status">인식 프로그램 준비 중…</p>';
   ReceiptOCR.read(data, exState.cur, function(st,p){
     var el=document.getElementById('ocr-st'); if(el&&seq===_ocrSeq) el.textContent=(/recogniz/.test(st)?'글자 읽는 중… ':'인식 프로그램 받는 중… ')+Math.round(p*100)+'%';
-  }).then(function(r){
+  }, T.curOf(trip.city)).then(function(r){
     var bb=document.getElementById('ex-ocr'); if(!bb||seq!==_ocrSeq||rcState.data!==data) return;
     if(!r.cands.length){ bb.innerHTML='<p class="ocr-note">금액을 찾지 못했어요. 직접 입력해 주세요.</p>'; return; }
     var a=document.getElementById('ex-amt'), filled=false;
