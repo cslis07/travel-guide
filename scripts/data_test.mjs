@@ -198,4 +198,13 @@ await ok('영수증 금액 고르기: 합계 줄 우선, 소계·받은 돈·거
   r = P(['item 120', 'item 340'].join('\n'), 'JPY'); assert.equal(r.best, null); assert.deepEqual([...r.cands], [340, 120]);
 });
 
+await ok('영수증 분류 추천: 라멘→식비·택시→교통·USJ→관광, 편의점은 추천 안 함', () => {
+  const c = { window: {}, document: {} }; vm.createContext(c); vm.runInContext(read('receipt-ocr.js'), c);
+  const P = (t) => c.window.ReceiptOCR.parse(t.join(String.fromCharCode(10)), 'JPY').cat;
+  assert.equal(P(['一蘭', 'ラーメン ¥980', '合計 ¥1,190']), 'food');
+  assert.equal(P(['MK TAXI', '運賃 ¥1,800']), 'transit');
+  assert.equal(P(['USJ チケット', '合計 ¥9,800']), 'sight');
+  assert.equal(P(['ローソン', 'おにぎり ¥150', '合計 ¥310']), null);
+});
+
 console.log(`data_test: ${pass} passed`);

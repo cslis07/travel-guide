@@ -70,6 +70,23 @@
     }
     return '';
   }
+  /* 영수증 글자 → 지출 분류 추천(2026-11-16). 한 분류만 뚜렷할 때만 — 편의점처럼 갈리는 곳은 추천 안 함 */
+  var CAT_WORDS = {
+    food: /ラーメン|拉麺|食堂|レストラン|居酒屋|寿司|鮨|焼肉|うどん|そば|蕎麦|定食|丼|弁当|RESTAURANT|Restaurant|BISTRO|Bistro|DINER|Diner|식당|음식점|국밥|치킨|피자|분식|ร้านอาหาร|Nhà hàng|nhà hàng|Phở|PHO|餐厅|餐廳|飯店|麵|面馆|料理/g,
+    cafe: /カフェ|珈琲|コーヒー|喫茶|COFFEE|Coffee|CAFE|Cafe|café|STARBUCKS|Starbucks|스타벅스|커피|카페|咖啡/g,
+    transit: /タクシー|TAXI|Taxi|地下鉄|メトロ|METRO|Metro|乗車券|運賃|切符|きっぷ|택시|지하철|교통카드|GRAB|Grab|BOLT|MRT|BTS|高速バス|リムジンバス/g,
+    stay: /ホテル|HOTEL|Hotel|旅館|宿泊|호텔|숙박|게스트하우스|GUEST\s*HOUSE|Guesthouse|RESORT|Resort|HOSTEL|Hostel|酒店|民宿/g,
+    shop: /ドラッグ|DRUG|薬局|ドン.?キホーテ|DON\s*QUIJOTE|UNIQLO|ユニクロ|GU |百貨店|デパート|DUTY\s*FREE|Duty\s*Free|免税|올리브영|OLIVE\s*YOUNG|다이소|DAISO|ダイソー|無印良品|MUJI|BIC\s*CAMERA|ビックカメラ|ヨドバシ/g,
+    sight: /入場|拝観|観覧|チケット|TICKET|Ticket|ADMISSION|Admission|美術館|博物館|MUSEUM|Museum|水族館|AQUARIUM|입장|관람|USJ|ユニバーサル|展望台/g
+  };
+  function catOf(text) {
+    var best = null, n = 0, tie = false;
+    for (var k in CAT_WORDS) {
+      var c = (String(text || '').match(CAT_WORDS[k]) || []).length;
+      if (c > n) { n = c; best = k; tie = false; } else if (c && c === n) tie = true;
+    }
+    return n && !tie ? best : null;
+  }
   /* 인식된 글자 → 금액 후보(가능성 높은 순). best 는 '합계' 줄이나 통화 기호가 붙은 값일 때만 */
   function parse(text, cur) {
     var seen = curOf(half(text));
@@ -92,7 +109,7 @@
       .filter(function (c) { return c.s >= 0 && (zeroDec ? c.v >= 10 : c.v >= 0.5); })
       .sort(function (a, b) { return b.s - a.s || b.v - a.v; });
     var top = cands.filter(function (c) { return c.s >= 1; })[0];
-    return { best: top ? top.v : null, cands: cands.slice(0, 4).map(function (c) { return c.v; }), cur: seen, shop: shopOf(String(text || '').split(/\r?\n/).map(function (x) { return x.trim(); }).filter(Boolean)) };   // 원문 줄 — 'ー' 가 '-' 로 바뀌지 않게
+    return { best: top ? top.v : null, cands: cands.slice(0, 4).map(function (c) { return c.v; }), cur: seen, cat: catOf(text), shop: shopOf(String(text || '').split(/\r?\n/).map(function (x) { return x.trim(); }).filter(Boolean)) };   // 원문 줄 — 'ー' 가 '-' 로 바뀌지 않게
   }
 
   var loading = null;
@@ -139,3 +156,55 @@
   }
   window.ReceiptOCR = { read: read, parse: parse, langOf: langOf, cancel: cancel };
 })();
+
+/* ── 지출 입력 창 연결(trip.html 에서 옮김, 2026-11-16) — 전역 rcState·exState·esc·updKRW·pickCur·T·trip 사용 ── */
+/* 영수증 사진에서 금액 읽기 — 이 폰 안에서만(receipt-ocr.js). 새로 고른 사진일 때만 버튼, 누를 때만 프로그램을 받는다 */
+function ocrBox(){
+  var b=document.getElementById('ex-ocr'); if(!b) return;
+  if(!rcState.data||!window.ReceiptOCR){ b.innerHTML=''; return; }
+  b.innerHTML='<button type="button" class="ocr-btn" onclick="runOcr()">🔎 사진에서 금액 읽기</button>'
+    +'<p class="ocr-note">이 폰 안에서만 읽어요(사진은 밖으로 안 나가요) · 처음 한 번 약 5~6MB를 받아요</p>';
+}
+function ocrFmt(v){ return v.toLocaleString('ko-KR',{maximumFractionDigits:2})+' '+esc(exState.cur||''); }
+function runOcr(){
+  var b=document.getElementById('ex-ocr'); if(!b||!rcState.data) return;
+  var seq=++_ocrSeq, data=rcState.data;
+  b.innerHTML='<p class="ocr-note" id="ocr-st" role="status">인식 프로그램 준비 중…</p><button type="button" class="ocr-btn ocr-stop" onclick="stopOcr()">그만 읽기</button>';
+  ReceiptOCR.read(data, exState.cur, function(st,p){
+    var el=document.getElementById('ocr-st'); if(el&&seq===_ocrSeq) el.textContent=(/recogniz/.test(st)?'글자 읽는 중… ':'인식 프로그램 받는 중… ')+Math.round(p*100)+'%';
+  }, T.curOf(trip.city)).then(function(r){
+    var bb=document.getElementById('ex-ocr'); if(!bb||seq!==_ocrSeq||rcState.data!==data) return;
+    if(!r.cands.length){ bb.innerHTML='<p class="ocr-note">금액을 찾지 못했어요. 직접 입력해 주세요.</p>'; return; }
+    var a=document.getElementById('ex-amt'), filled=false;
+    // 영수증 통화 기호(¥·₩·€·฿·₫)가 지금 고른 통화와 다르면 그 통화로 — 일본 영수증 ¥591 이 ₩591 이 되지 않게
+    var switched='';
+    if(r.cur&&r.cur!==exState.cur&&(!a||!a.value)){ setExCur(r.cur); switched=r.cur; }
+    if(r.best!=null&&a&&!a.value){ a.value=r.best; updKRW(); filled=true; }
+    bb.innerHTML='<p class="ocr-note">'+(switched?'영수증 기호를 보고 통화를 '+esc(switched)+'(으)로 바꿨어요. ':'')+(filled?'읽은 금액을 넣었어요 — 맞는지 꼭 확인해 주세요.':r.best!=null?'읽은 금액이에요.':'합계를 확실히 찾지 못했어요.')+' 다른 값이면 눌러 바꿔요</p>'
+      +'<div class="segrow ocr-chips">'+r.cands.map(function(v){ return '<button type="button" class="seg'+(v===r.best?' on':'')+'" data-v="'+(+v)+'" onclick="useOcr(this)">'+ocrFmt(+v)+'</button>'; }).join('')+'</div>'
+      // 가게 이름은 인식이 흔들릴 수 있어 자동으로 넣지 않고 메모가 비어 있을 때 버튼으로만(2026-11-16)
+      +(r.shop&&!((document.getElementById('ex-memo')||{}).value||'').trim()?'<button type="button" class="seg ocr-shop" data-s="'+esc(r.shop)+'" onclick="useOcrShop(this)">📝 메모에 “'+esc(r.shop)+'” 넣기</button>':'')
+      // 영수증 글자로 본 분류 — 지금 고른 분류와 다를 때만 버튼(자동으로 바꾸지 않음, 2026-11-16)
+      +(r.cat&&r.cat!==exState.cat&&/^[a-z]+$/.test(r.cat)?(function(c){ return '<button type="button" class="seg ocr-shop" data-cat="'+r.cat+'" onclick="useOcrCat(this)">'+c.emoji+' “'+esc(c.label)+'”(으)로 분류</button>'; })(T.catByKey(r.cat)):'');
+  },function(err){
+    var bb=document.getElementById('ex-ocr'); if(!bb||seq!==_ocrSeq) return;
+    if(err&&err.message==='cancel'){ ocrBox(); return; }
+    bb.innerHTML='<p class="ocr-note">금액을 읽지 못했어요(인터넷 연결이 필요해요). 직접 입력해 주세요.</p><button type="button" class="ocr-btn" onclick="runOcr()">다시 읽기</button>';
+  });
+}
+/* 통화 버튼 고르기(없으면 '다른 통화'에서 꺼내 붙인다) */
+function setExCur(c){
+  var row=document.getElementById('ex-cur'); if(!row) return;
+  var btn=row.querySelector('[data-cur="'+c+'"]');
+  if(!btn){ var sel=row.querySelector('select'); if(sel&&[].some.call(sel.options,function(o){return o.value===c;})){ sel.value=c; pickCurMore(sel); btn=row.querySelector('[data-cur="'+c+'"]'); } }
+  if(btn) pickCur(btn);
+}
+/* 느린 폰에서 최대 90초 — 사용자가 멈추고 직접 입력할 수 있게 */
+function stopOcr(){ if(window.ReceiptOCR&&ReceiptOCR.cancel) ReceiptOCR.cancel(); }
+function useOcrShop(el){ var m=document.getElementById('ex-memo'); if(!m) return; m.value=el.getAttribute('data-s')||''; el.remove(); }
+function useOcrCat(el){ var k=el.getAttribute('data-cat'), c=document.querySelector('.catpick[data-cat="'+k+'"]'); if(c&&typeof pickCat==='function') pickCat(c); el.remove(); }
+function useOcr(el){
+  var a=document.getElementById('ex-amt'), v=+el.getAttribute('data-v'); if(!a||!(v>0)) return;
+  a.value=v; updKRW();
+  el.parentNode.querySelectorAll('.seg').forEach(function(x){ x.classList.toggle('on',x===el); });
+}
