@@ -2107,10 +2107,21 @@ async function loadPaxChart() {
   try {
     // 내일 예측은 selectdate=1 로만 온다(오늘 응답에는 내일 행이 없어 '내일'이 늘 비어 있었다)
     const data=await api('passgrAnncmt/getPassgrAnncmt',_chartDay===0?{numOfRows:1000}:{numOfRows:1000,selectdate:1});
+    if(data==null) return;   // 조회 실패 — 보던 숫자 유지
     const list=items(data);
-    if(!list.length) return;
     const dayStr=fmtD(kstDate(Date.now()+_chartDay*86400000));
     const dayLbl=_chartDay===0?'오늘':'내일';
+    // 그날 행이 없으면(내일 예측은 아침엔 아직 안 나온다 — 2026-11-09 09시 실측) 0을 더해 '-' 만 보이던 것 → 공개 전 안내
+    if(!list.some(r=>(r.adate||'')===dayStr)){
+      if(_chartDay===0 && !list.length) return;
+      ['ph-total','ph-t1','ph-t2'].forEach(id=>html(id,'-'));
+      ['ph-t2-pk','hs-t1-pk','hs-t2-pk'].forEach(id=>html(id,''));
+      html('ph-pk-lbl','공개 전');
+      html('ph-t1-pk',dayLbl+' 예측이 아직 나오지 않았어요 · 조금 뒤 다시 보세요');
+      const lb=el('pax-date-lbl'); if(lb) lb.textContent=dayLbl+' · 예측 공개 전';
+      if(_paxChart){ _paxChart.destroy(); _paxChart=null; }
+      return;
+    }
     const t1h=new Array(24).fill(0), t2h=new Array(24).fill(0);
     list.forEach(r=>{
       if((r.adate||'')!==dayStr) return;

@@ -124,6 +124,7 @@
   .ocr-btn{margin-top:8px;width:100%;padding:10px;border:1px dashed var(--primary);border-radius:10px;background:var(--primary-lt);color:var(--primary);font-weight:800;font-size:13px;cursor:pointer}
   .ocr-note{font-size:11.5px;color:var(--gray-500);margin:6px 2px 0;line-height:1.5}
   .ocr-chips{margin-top:6px}
+  .ocr-shop{margin-top:6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .pv{border:1px solid var(--gray-100);border-radius:12px;overflow:hidden;font-size:12px}
   .pv-r{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:4px;padding:8px 10px;border-top:1px solid var(--gray-100);align-items:center}
   .pv-r:first-child{border-top:0}.pv-r span:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
@@ -1228,7 +1229,8 @@ function reportData(){
   var byDay=T.dayTotals(trip);   // 여러 날 몫(숙박 등)은 그날들에 나눠서
   var top=Object.keys(byDay).sort(function(a,b){return byDay[b]-byDay[a];})[0];
   return { total:total, days:days, ppl:ppl, perDay:Math.round(total/days), perPerson:Math.round(total/ppl), count:ex.length,
-    cats:T.byCategory(trip), big:big, topDay:top?{d:top,amt:byDay[top]}:null, budget:T.budgetTotal(trip), setl:T.settlements(trip) };
+    cats:T.byCategory(trip), big:big, topDay:top?{d:top,amt:byDay[top]}:null, budget:T.budgetTotal(trip), setl:T.settlements(trip),
+    pv:T.planVsActual?T.planVsActual(trip):null };
 }
 /* 견적 대비 실제 — 경비 계산기에서 담은 여행만(budget.plan). 더 쓴 건 빨강, 덜 쓴 건 초록 */
 function planVsHtml(){
@@ -1288,6 +1290,11 @@ function drawReportCard(r){
   st.forEach(function(s,i){ var sx=100+i*305; g.fillStyle='#667085'; g.font='600 30px '+F; g.fillText(s[0],sx,640); g.fillStyle='#101828'; g.font='800 44px '+F; g.fillText(s[1],sx,695); });
   var yy=760;
   if(r.budget){ g.fillStyle='#344054'; g.font='600 32px '+F; g.fillText('예산 '+won(r.budget)+' 중 '+Math.round(r.total/r.budget*100)+'% 사용',100,yy); yy+=60; }
+  if(r.pv){   // 견적으로 담은 여행이면 견적 대비 한 줄(2026-11-16)
+    var dv=r.pv.diff; g.font='700 32px '+F;
+    g.fillStyle=dv>0?'#D92D20':dv<0?'#039855':'#344054';
+    g.fillText(dv>0?'견적보다 '+won(dv)+' 더 썼어요':dv<0?'견적보다 '+won(-dv)+' 덜 썼어요 👏':'견적과 똑같이 썼어요',100,yy); yy+=60;
+  }
   g.fillStyle='#101828'; g.font='800 36px '+F; g.fillText('어디에 썼나',100,yy+10); yy+=50;
   r.cats.slice(0,4).forEach(function(xc){
     var pct=r.total?xc.amt/r.total:0;
@@ -1842,7 +1849,9 @@ function runOcr(){
     if(r.cur&&r.cur!==exState.cur&&(!a||!a.value)){ setExCur(r.cur); switched=r.cur; }
     if(r.best!=null&&a&&!a.value){ a.value=r.best; updKRW(); filled=true; }
     bb.innerHTML='<p class="ocr-note">'+(switched?'영수증 기호를 보고 통화를 '+esc(switched)+'(으)로 바꿨어요. ':'')+(filled?'읽은 금액을 넣었어요 — 맞는지 꼭 확인해 주세요.':r.best!=null?'읽은 금액이에요.':'합계를 확실히 찾지 못했어요.')+' 다른 값이면 눌러 바꿔요</p>'
-      +'<div class="segrow ocr-chips">'+r.cands.map(function(v){ return '<button type="button" class="seg'+(v===r.best?' on':'')+'" data-v="'+(+v)+'" onclick="useOcr(this)">'+ocrFmt(+v)+'</button>'; }).join('')+'</div>';
+      +'<div class="segrow ocr-chips">'+r.cands.map(function(v){ return '<button type="button" class="seg'+(v===r.best?' on':'')+'" data-v="'+(+v)+'" onclick="useOcr(this)">'+ocrFmt(+v)+'</button>'; }).join('')+'</div>'
+      // 가게 이름은 인식이 흔들릴 수 있어 자동으로 넣지 않고 메모가 비어 있을 때 버튼으로만(2026-11-16)
+      +(r.shop&&!((document.getElementById('ex-memo')||{}).value||'').trim()?'<button type="button" class="seg ocr-shop" data-s="'+esc(r.shop)+'" onclick="useOcrShop(this)">📝 메모에 “'+esc(r.shop)+'” 넣기</button>':'');
   },function(){
     var bb=document.getElementById('ex-ocr'); if(!bb||seq!==_ocrSeq) return;
     bb.innerHTML='<p class="ocr-note">금액을 읽지 못했어요(인터넷 연결이 필요해요). 직접 입력해 주세요.</p><button type="button" class="ocr-btn" onclick="runOcr()">다시 읽기</button>';
@@ -1855,6 +1864,7 @@ function setExCur(c){
   if(!btn){ var sel=row.querySelector('select'); if(sel&&[].some.call(sel.options,function(o){return o.value===c;})){ sel.value=c; pickCurMore(sel); btn=row.querySelector('[data-cur="'+c+'"]'); } }
   if(btn) pickCur(btn);
 }
+function useOcrShop(el){ var m=document.getElementById('ex-memo'); if(!m) return; m.value=el.getAttribute('data-s')||''; el.remove(); }
 function useOcr(el){
   var a=document.getElementById('ex-amt'), v=+el.getAttribute('data-v'); if(!a||!(v>0)) return;
   a.value=v; updKRW();

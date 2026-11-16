@@ -185,9 +185,9 @@ await ok('견적 대비 실제: 항공+현지 교통은 교통 한 줄, 식비=�
 
 await ok('영수증 금액 고르기: 합계 줄 우선, 소계·받은 돈·거스름·승인번호·날짜는 빼고, 통화 기호 인식', () => {
   const c = { window: {}, document: {} }; vm.createContext(c); vm.runInContext(read('receipt-ocr.js'), c);
-  const P = c.window.ReceiptOCR.parse;
+  const P = c.window.ReceiptOCR.parse;   // 가게 이름도
   let r = P(['ローソン', '2026年11月16日 13:45', 'TEL 06-1234-5678', 'おにぎり ¥150', '小計 ¥310', '合計 ¥334', 'お預り ¥1,000', 'お釣り ¥666'].join('\n'), 'KRW');
-  assert.equal(r.best, 334); assert.equal(r.cur, 'JPY'); assert.ok(!r.cands.includes(1000) && !r.cands.includes(666) && !r.cands.includes(310));
+  assert.equal(r.best, 334); assert.equal(r.cur, 'JPY'); assert.equal(r.shop, 'ローソン'); assert.equal(P(['ロー ソン 難波 店', '合計 ¥300'].join('\n'), 'JPY').shop, 'ローソン難波店'); assert.ok(!r.cands.includes(1000) && !r.cands.includes(666) && !r.cands.includes(310));
   r = P(['일란', '라멘 980', '합 계', '1,190'].join('\n'), 'JPY'); assert.equal(r.best, 1190);   // 합계 말과 숫자가 다른 줄
   r = P(['아메리카노 4,500', '합계 9,500', '승인번호 12345678'].join('\n'), 'KRW'); assert.equal(r.best, 9500); assert.ok(!r.cands.includes(12345678));
   r = P(['SUBTOTAL 6.28', 'TAX 0.55', 'TOTAL 6.83', 'CASH 10.00', 'CHANGE 3.17'].join('\n'), 'USD'); assert.equal(r.best, 6.83);

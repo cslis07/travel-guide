@@ -57,6 +57,19 @@
     MARK_CUR.forEach(function (m) { var k = (text.match(m[0]) || []).length; if (k > n) { n = k; best = m[1]; } });
     return n >= 1 ? best : null;
   }
+  /* 가게 이름 — 위쪽 몇 줄 중 글자가 대부분인 첫 줄(영수증 머리말·인사·날짜·전화 줄은 건너뜀). 인식이 흔들리면 안 낸다 */
+  var HEAD_SKIP = /(領\s*収|レシート|RECEIPT|Receipt|영\s*수\s*증|매\s*출\s*전\s*표|계\s*산\s*서|WELCOME|Welcome|いらっしゃい|ありがと|감사합니다|THANK|Thank|TEL|Tel|電話|전화|発\s*行|No\.|#)/;
+  function shopOf(lines) {
+    for (var i = 0; i < Math.min(lines.length, 4); i++) {
+      // 일본어·중국어 인식은 글자 사이에 띄어쓰기를 끼운다('ロー ソン 難波 店') → 한자·가나 사이 공백은 지운다
+      var l = lines[i].replace(/[\s　]+/g, ' ').replace(/([぀-ヿ一-鿿]) (?=[぀-ヿ一-鿿])/g, '$1').trim();
+      if (HEAD_SKIP.test(l) || /\d{3,}/.test(l)) continue;
+      var letters = (l.match(/[A-Za-z가-힣぀-ヿ一-鿿]/g) || []).length;
+      var nonSpace = l.replace(/ /g, '').length;
+      if (letters >= 2 && nonSpace <= 24 && letters / nonSpace >= 0.75) return l.replace(/[^\w가-힣぀-ヿ一-鿿 &'.-]/g, '').trim().slice(0, 20);
+    }
+    return '';
+  }
   /* 인식된 글자 → 금액 후보(가능성 높은 순). best 는 '합계' 줄이나 통화 기호가 붙은 값일 때만 */
   function parse(text, cur) {
     var seen = curOf(half(text));
@@ -79,7 +92,7 @@
       .filter(function (c) { return c.s >= 0 && (zeroDec ? c.v >= 10 : c.v >= 0.5); })
       .sort(function (a, b) { return b.s - a.s || b.v - a.v; });
     var top = cands.filter(function (c) { return c.s >= 1; })[0];
-    return { best: top ? top.v : null, cands: cands.slice(0, 4).map(function (c) { return c.v; }), cur: seen };
+    return { best: top ? top.v : null, cands: cands.slice(0, 4).map(function (c) { return c.v; }), cur: seen, shop: shopOf(String(text || '').split(/\r?\n/).map(function (x) { return x.trim(); }).filter(Boolean)) };   // 원문 줄 — 'ー' 가 '-' 로 바뀌지 않게
   }
 
   var loading = null;
