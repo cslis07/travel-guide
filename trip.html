@@ -79,8 +79,12 @@
   .tl-dot{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto}
   .tl-dot svg{width:15px;height:15px}
   .tl-line{width:2px;flex:1;background:var(--gray-200);margin:3px 0;min-height:14px}
-  .tl-body{flex:1;padding-bottom:14px}
+  .tl-body{flex:1;padding:0 0 14px}
   .tl-time{font-size:11px;font-weight:700;color:var(--gray-500)}
+  /* style.css 의 옛 타임라인 규칙(.tl-time 90px 파란 상자·.tl-body 18px 여백·.tl-item 밑줄)이 같은 이름이라 섞였다 — 일정 화면에선 끈다(2026-11-16) */
+  .tl-item{border-bottom:0}
+  .tl-time{width:auto;padding:0;background:none;border:0;display:block;flex-shrink:1}
+  .tl-card h4,.tl-card p{margin-bottom:0}
   .tl-when{font-weight:500;margin-left:5px}
   .tm-wrap{position:relative}.tm-wrap .in{padding-right:34px}
   .tm-clr{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:0;border-radius:8px;background:transparent;color:var(--gray-500);font-size:13px;cursor:pointer}
