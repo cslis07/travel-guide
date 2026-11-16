@@ -184,22 +184,25 @@
 })();
 
 /* ── 지출 입력 창 연결(trip.html 에서 옮김, 2026-11-16) — 전역 rcState·exState·esc·updKRW·pickCur·T·trip 사용 ── */
-/* 영수증 사진에서 금액 읽기 — 이 폰 안에서만(receipt-ocr.js). 새로 고른 사진일 때만 버튼, 누를 때만 프로그램을 받는다 */
-function ocrBox(){
+/* 영수증 사진에서 금액 읽기 — 이 폰 안에서만(receipt-ocr.js). 누를 때만 프로그램을 받는다.
+   src: 이미 저장한 영수증 사진(지출 수정 창) — 없으면 새로 고른 사진(rcState.data)(2026-11-16) */
+var _ocrImg=null;
+function ocrBox(src){
   var b=document.getElementById('ex-ocr'); if(!b) return;
-  if(!rcState.data||!window.ReceiptOCR){ b.innerHTML=''; return; }
+  _ocrImg=src||rcState.data||null;
+  if(!_ocrImg||!window.ReceiptOCR){ b.innerHTML=''; return; }
   b.innerHTML='<button type="button" class="ocr-btn" onclick="runOcr()">🔎 사진에서 금액 읽기</button>'
     +'<p class="ocr-note">영수증을 반듯하게, 화면 가득 밝은 곳에서 찍으면 더 잘 읽어요 · 이 폰 안에서만 읽어요(사진은 밖으로 안 나가요) · 처음 한 번 약 5~6MB를 받아요</p>';
 }
 function ocrFmt(v){ return v.toLocaleString('ko-KR',{maximumFractionDigits:2})+' '+esc(exState.cur||''); }
 function runOcr(){
-  var b=document.getElementById('ex-ocr'); if(!b||!rcState.data) return;
-  var seq=++_ocrSeq, data=rcState.data;
+  var b=document.getElementById('ex-ocr'); if(!b||!_ocrImg) return;
+  var seq=++_ocrSeq, data=_ocrImg;
   b.innerHTML='<p class="ocr-note" id="ocr-st" role="status">인식 프로그램 준비 중…</p><button type="button" class="ocr-btn ocr-stop" onclick="stopOcr()">그만 읽기</button>';
   ReceiptOCR.read(data, exState.cur, function(st,p){
     var el=document.getElementById('ocr-st'); if(el&&seq===_ocrSeq) el.textContent=(/recogniz/.test(st)?'글자 읽는 중… ':'인식 프로그램 받는 중… ')+Math.round(p*100)+'%';
   }, T.curOf(trip.city)).then(function(r){
-    var bb=document.getElementById('ex-ocr'); if(!bb||seq!==_ocrSeq||rcState.data!==data) return;
+    var bb=document.getElementById('ex-ocr'); if(!bb||seq!==_ocrSeq||_ocrImg!==data) return;
     if(!r.cands.length){ bb.innerHTML='<p class="ocr-note">금액을 찾지 못했어요. 영수증을 반듯하게, 밝은 곳에서 다시 찍어 보거나 직접 입력해 주세요.</p>'; return; }
     var a=document.getElementById('ex-amt'), filled=false;
     // 영수증 통화 기호(¥·₩·€·฿·₫)가 지금 고른 통화와 다르면 그 통화로 — 일본 영수증 ¥591 이 ₩591 이 되지 않게
@@ -214,7 +217,7 @@ function runOcr(){
       +(r.cat&&r.cat!==exState.cat&&/^[a-z]+$/.test(r.cat)?(function(c){ return '<button type="button" class="seg ocr-shop" data-cat="'+r.cat+'" onclick="useOcrCat(this)">'+c.emoji+' “'+esc(c.label)+'”(으)로 분류</button>'; })(T.catByKey(r.cat)):'');
   },function(err){
     var bb=document.getElementById('ex-ocr'); if(!bb||seq!==_ocrSeq) return;
-    if(err&&err.message==='cancel'){ ocrBox(); return; }
+    if(err&&err.message==='cancel'){ ocrBox(data); return; }
     bb.innerHTML='<p class="ocr-note">금액을 읽지 못했어요(인터넷 연결이 필요해요). 직접 입력해 주세요.</p><button type="button" class="ocr-btn" onclick="runOcr()">다시 읽기</button>';
   });
 }

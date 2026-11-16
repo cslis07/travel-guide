@@ -300,7 +300,7 @@
           '<ul class="db-legend">' + m.rows.map(function (x) {
             return '<li><i style="background:' + esc(x.color) + '" aria-hidden="true"></i><span class="db-lg-name">' + esc(x.label) + '</span><b>' + x.pct + '%</b><small>' + won(x.amt) + '</small></li>';
           }).join('') + '</ul></div>';
-        var note = m.source === 'plan' ? '경비 계산' + (m.planAt ? '(' + esc(m.planAt.replace(/-/g, '.')) + ')' : '') + '에서 담은 <b>예상액</b>이에요. 실제 지출과는 아래에서 비교하세요.'
+        var note = m.source === 'plan' ? '경비 계산' + (m.planAt ? '(' + esc(m.planAt.replace(/-/g, '.')) + ')' : '') + '에서 담은 <b>예상액</b>이에요. 실제 지출은 아래 견적 대비에서 비교해요.'
           : m.source === 'limits' ? '여행 예산 탭에서 정한 <b>항목별 한도</b>예요.'
           : m.source === 'actual' ? '총예산이 없어 <b>실제 지출</b>을 카테고리별로 보여 드려요. 예상 비중이 아니에요.'
           : '항목별 예상액이 없어 <b>총예산 대비 지출</b>만 보여 드려요. 경비 계산에서 담으면 항공·숙소·식비별로 나눠 보여요.';
@@ -309,6 +309,15 @@
           var over = m.left < 0;
           h += '<div class="db-money"><div><small>실제 지출</small><b>' + won(m.spent) + '</b><div class="db-spentbar" aria-hidden="true"><span style="width:' + Math.min(100, m.spentPct) + '%"></span></div></div>' +
             '<div class="' + (over ? 'db-over' : 'db-left') + '"><small>' + (over ? '예산 초과' : '남은 예산') + '</small><b>' + won(Math.abs(m.left)) + '</b><small>' + (over ? '예산의 ' + m.spentPct + '% 사용' : '예산의 ' + (100 - Math.min(100, m.spentPct)) + '% 남음') + '</small></div></div>';
+        }
+        // 견적으로 담은 여행 — 항목별로 실제 지출이 견적의 몇 %인지(2026-11-16. 전엔 '아래에서 비교'라 하고 비교가 없었다)
+        var pv = m.source === 'plan' && T.planVsActual ? T.planVsActual(t) : null;
+        if (pv) {
+          h += '<div class="db-pv"><p class="db-pv-h">견적 대비 실제</p><ul>' + pv.rows.map(function (x) {
+            var pct = x.plan > 0 ? Math.round(x.actual / x.plan * 100) : null, over = pct != null && pct > 100;
+            return '<li><span>' + esc(x.label) + '</span><i aria-hidden="true"><b style="width:' + (pct == null ? 100 : Math.min(100, pct)) + '%"' + (over || pct == null ? ' class="up"' : '') + '></b></i>' +
+              '<em' + (over ? ' class="up"' : '') + '>' + (pct == null ? '견적 없음 ' + won(x.actual) : pct + '%') + '</em></li>';
+          }).join('') + '</ul></div>';
         }
         h += '<div class="db-card-cta"><a class="db-btn db-btn-outline" href="/estimate">경비 계산</a><a class="db-btn db-btn-primary" href="' + href(t, 'budget') + '">예산·지출 관리</a></div>';
         el.innerHTML = h;

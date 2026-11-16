@@ -326,3 +326,15 @@
   .db-text-link{min-height:36px}
   .db-st-label{white-space:normal;line-height:1.35}
 }
+
+/* 견적 대비 실제(2026-11-16) */
+.db-pv{margin-top:14px;padding-top:12px;border-top:1px solid var(--db-line-2,#E4E7EC)}
+.db-pv-h{margin:0 0 8px;font-size:12.5px;font-weight:800;color:var(--db-muted,#475467)}
+.db-pv ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.db-pv li{display:grid;grid-template-columns:96px 1fr auto;gap:8px;align-items:center;font-size:12px}
+.db-pv li span{color:var(--db-muted,#475467);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.db-pv li i{height:7px;border-radius:999px;background:var(--db-line-2,#EEF1F5);overflow:hidden}
+.db-pv li i b{display:block;height:100%;border-radius:999px;background:var(--db-blue,#2563EB)}
+.db-pv li i b.up{background:var(--db-bad,#D92D20)}
+.db-pv li em{font-style:normal;font-weight:800;color:var(--db-muted,#475467);font-variant-numeric:tabular-nums}
+.db-pv li em.up{color:var(--db-bad,#D92D20)}
