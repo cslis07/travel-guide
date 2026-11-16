@@ -2022,5 +2022,6 @@ document.body.classList.add('trip-detail');
 <script src="/icons.js" defer></script>
 <script src="/nav.js" defer></script>
 </main>
+<script>/* 내 여행만 열어도(공유 링크로 바로 들어와도) 오프라인 저장이 되도록 SW 등록 — 설치 버튼(pwa-install.js)은 하단 탭과 겹쳐 빼고 등록만 (2026-11-16) */if('serviceWorker'in navigator)addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})});</script>
 </body>
 </html>
