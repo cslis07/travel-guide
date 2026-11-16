@@ -81,6 +81,9 @@
   .tl-line{width:2px;flex:1;background:var(--gray-200);margin:3px 0;min-height:14px}
   .tl-body{flex:1;padding-bottom:14px}
   .tl-time{font-size:11px;font-weight:700;color:var(--gray-500)}
+  .tl-when{font-weight:500;margin-left:5px}
+  .tm-wrap{position:relative}.tm-wrap .in{padding-right:34px}
+  .tm-clr{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:0;border-radius:8px;background:transparent;color:var(--gray-500);font-size:13px;cursor:pointer}
   .tl-card{background:var(--surface,#fff);border-radius:12px;box-shadow:var(--shadow);padding:11px;margin-top:4px}
   .tl-card h4{font-size:14px;font-weight:700}.tl-card p{font-size:11.5px;color:var(--gray-500);margin-top:2px}
   .tl-cardhead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
@@ -446,7 +449,7 @@ function panePlan(){
     var up = i>0 ? '<button class="tl-edit" title="위로" onclick="moveItem('+curDay+',\''+it.id+'\',-1)">▲</button>' : '';
     var dn = i<items.length-1 ? '<button class="tl-edit" title="아래로" onclick="moveItem('+curDay+',\''+it.id+'\',1)">▼</button>' : '';
     body+='<div class="tl-item"><div class="tl-rail"><div class="tl-dot" style="background:'+dc[0]+';color:'+dc[1]+'">'+svg(dc[2])+'</div>'+(last?'':'<div class="tl-line"></div>')+'</div>'
-      +'<div class="tl-body"><div class="tl-time">'+esc(it.time||'')+'</div><div class="tl-card">'
+      +'<div class="tl-body"><div class="tl-time">'+esc(it.time||'')+(it.when?'<span class="tl-when">'+esc(it.when)+'</span>':'')+'</div><div class="tl-card">'
       +'<div class="tl-cardhead"><h4>'+esc(it.title)+'</h4><div style="display:flex;gap:4px;flex:0 0 auto">'+up+dn+'<button class="tl-edit" title="수정" onclick="editItem('+curDay+',\''+it.id+'\')">✎</button></div></div>'
       +(it.memo?'<p>'+esc(it.memo)+'</p>':'')
       +(it.addr?'<p class="tl-addr">📍 '+esc(it.addr)+'</p>':'')
@@ -542,7 +545,7 @@ function exportICS(mode){
       var tm=(it.time||'').match(/^(\d{1,2}):(\d{2})/);
       if(tm){ var hh=pad(+tm[1]),mm=tm[2]; L.push('DTSTART:'+dateCompact(day.date)+'T'+hh+mm+'00'); }
       else { L.push('DTSTART;VALUE=DATE:'+dateCompact(day.date)); L.push('DTEND;VALUE=DATE:'+nextDay(day.date)); }
-      L.push('SUMMARY:'+icsEsc(it.title)); if(it.memo) L.push('DESCRIPTION:'+icsEsc(it.memo));
+      L.push('SUMMARY:'+icsEsc(it.title)); var dsc=[it.when,it.memo].filter(Boolean).join(' · '); if(dsc) L.push('DESCRIPTION:'+icsEsc(dsc));
       L.push('LOCATION:'+icsEsc((trip.city||'')+' '+it.title)); L.push('END:VEVENT');
     });
   });
@@ -1618,7 +1621,7 @@ function printTrip(){
   if(days.length){
     h+='<h2>🗓 일정</h2><table class="pt-days">'+days.map(function(d){
       var i=(trip.days||[]).indexOf(d);
-      return '<tr><th>'+(i+1)+'일차<br><small>'+T.fmtMD(d.date)+' '+T.dow(d.date)+'</small></th><td>'+(d.items||[]).map(function(it){ return '<div>'+(it.time?'<b>'+esc(it.time)+'</b> ':'')+esc(it.title)+(it.addr?' <small>📍 '+esc(it.addr)+'</small>':'')+(it.memo?' <small>— '+esc(it.memo)+'</small>':'')+'</div>'; }).join('')+'</td></tr>';
+      return '<tr><th>'+(i+1)+'일차<br><small>'+T.fmtMD(d.date)+' '+T.dow(d.date)+'</small></th><td>'+(d.items||[]).map(function(it){ return '<div>'+(it.time?'<b>'+esc(it.time)+'</b> ':'')+(it.when?'<small>('+esc(it.when)+')</small> ':'')+esc(it.title)+(it.addr?' <small>📍 '+esc(it.addr)+'</small>':'')+(it.memo?' <small>— '+esc(it.memo)+'</small>':'')+'</div>'; }).join('')+'</td></tr>';
     }).join('')+'</table>';
   }
   if(M.call||(li&&li.sos)){
@@ -1814,16 +1817,19 @@ function saveBudget(){ var v=Math.max(0,parseInt(document.getElementById('bg-tot
 var itType='sight', editCtx=null;
 function openItemSheet(dayIdx, itemId){
   editCtx=null;
-  var pre={time:'',type:'sight',title:'',memo:'',addr:''};
+  var pre={time:'',when:'',type:'sight',title:'',memo:'',addr:''};
   if(itemId!=null){
     var day=(trip.days||[])[dayIdx]||{}, it=((day.items||[]).filter(function(x){return x.id===itemId;}))[0];
-    if(it){ pre={time:it.time||'',type:it.type||'sight',title:it.title||'',memo:it.memo||'',addr:it.addr||''}; editCtx={dayIdx:dayIdx,itemId:itemId}; }
+    if(it){ pre={time:it.time||'',when:it.when||'',type:it.type||'sight',title:it.title||'',memo:it.memo||'',addr:it.addr||''}; editCtx={dayIdx:dayIdx,itemId:itemId}; }
   }
   itType=pre.type;
   var types=[['sight','관광'],['food','식사'],['lodging','숙소'],['move','이동'],['flight','항공'],['note','메모']];
   openSheet('<h3>'+(editCtx?'일정 수정':(curDay+1)+'일차 일정 추가')+'</h3>'
     +'<div class="segrow" id="it-type">'+types.map(function(t){return '<span class="seg'+(t[0]===pre.type?' on':'')+'" data-t="'+t[0]+'" onclick="pickType(this)">'+t[1]+'</span>';}).join('')+'</div>'
-    +'<div class="row2"><div><label class="fl" for="it-time">시간</label><input class="in" id="it-time" placeholder="예: 13:00" value="'+esc(pre.time)+'"></div><div><label class="fl" for="it-title">장소·제목</label><input class="in" id="it-title" placeholder="예: 도톤보리" value="'+esc(pre.title)+'"></div></div>'
+    +'<label class="fl" for="it-title">장소·제목</label><input class="in" id="it-title" placeholder="예: 도톤보리" value="'+esc(pre.title)+'">'
+    // 시간은 고르기(HH:MM — 오늘 카드·순서·캘린더가 이 값을 쓴다), 정확한 시각이 없으면 옆 칸에 말로
+    +'<div class="row2"><div><label class="fl" for="it-time">시간 (선택)</label><div class="tm-wrap"><input class="in" type="time" id="it-time" value="'+esc(T.hm(pre.time))+'"><button type="button" class="tm-clr" aria-label="시간 지우기" onclick="document.getElementById(\'it-time\').value=\'\'">✕</button></div></div>'
+    +'<div><label class="fl" for="it-when">시간 메모 (선택)</label><input class="in" id="it-when" maxlength="40" placeholder="예: 오전 중·체크인 후" value="'+esc(pre.when)+'"></div></div>'
     +'<label class="fl" for="it-memo">메모 (선택)</label><input class="in" id="it-memo" placeholder="예: 다코야키·리버크루즈" value="'+esc(pre.memo)+'">'
     +'<label class="fl" for="it-addr">주소 (선택 · 길찾기가 정확해져요)</label><input class="in" id="it-addr" placeholder="비우면 장소 이름으로 찾아요" value="'+esc(pre.addr)+'">'
     +(editCtx?'<label class="fl" for="it-day">날짜 (다른 날로 옮기기)</label><select class="in" id="it-day">'+(trip.days||[]).map(function(d,i){ return '<option value="'+i+'"'+(i===editCtx.dayIdx?' selected':'')+'>'+(i+1)+'일차 · '+T.fmtMD(d.date)+' '+T.dow(d.date)+'</option>'; }).join('')+'</select>':'')
@@ -1835,14 +1841,17 @@ function editItem(dayIdx,itemId){ openItemSheet(dayIdx,itemId); }
 function pickType(el){ el.parentNode.querySelectorAll('.seg').forEach(function(x){x.classList.remove('on');}); el.classList.add('on'); itType=el.dataset.t; }
 function saveItem(){
   var title=document.getElementById('it-title').value.trim(); if(!title){alert('장소·제목을 입력하세요.');return;}
-  var tv=document.getElementById('it-time').value.trim();
-  var patch={time:hmOf(tv)||tv,type:itType,title:title,memo:document.getElementById('it-memo').value.trim(),addr:document.getElementById('it-addr').value.trim()};
-  var dsel=document.getElementById('it-day'), nd=dsel?+dsel.value:null;
-  if(editCtx && nd!=null && nd!==editCtx.dayIdx){   // 다른 날로 옮기기 → 그 날 맨 끝에
-    T.removeDayItem(tid,editCtx.dayIdx,editCtx.itemId); T.addDayItem(tid,nd,patch); curDay=nd;
+  var patch={time:T.hm(document.getElementById('it-time').value),when:document.getElementById('it-when').value.trim().slice(0,40),type:itType,title:title,memo:document.getElementById('it-memo').value.trim(),addr:document.getElementById('it-addr').value.trim()};
+  var dsel=document.getElementById('it-day'), nd=dsel?+dsel.value:null, before=null, place=null;
+  if(editCtx){ var di=(((trip.days||[])[editCtx.dayIdx]||{}).items||[]).filter(function(x){return x.id===editCtx.itemId;})[0]; before=di?(di.time||''):null; }
+  // 시간을 넣거나 바꾼 일정은 그 날 시간 순 자리로(시간 없는 일정·▲▼로 정한 순서는 그대로)
+  if(editCtx && nd!=null && nd!==editCtx.dayIdx){   // 다른 날로 옮기기 → 시간이 있으면 시간 순, 없으면 맨 끝
+    T.removeDayItem(tid,editCtx.dayIdx,editCtx.itemId); var t2=T.addDayItem(tid,nd,patch); curDay=nd;
+    place=[nd,t2&&t2.days[nd].items[t2.days[nd].items.length-1].id];
   }
-  else if(editCtx){ T.updateDayItem(tid,editCtx.dayIdx,editCtx.itemId,patch); }
-  else { T.addDayItem(tid,curDay,patch); }
+  else if(editCtx){ T.updateDayItem(tid,editCtx.dayIdx,editCtx.itemId,patch); if(patch.time!==before) place=[editCtx.dayIdx,editCtx.itemId]; }
+  else { var t3=T.addDayItem(tid,curDay,patch); place=[curDay,t3&&t3.days[curDay].items[t3.days[curDay].items.length-1].id]; }
+  if(place&&place[1]&&patch.time) T.placeDayItem(tid,place[0],place[1]);
   reget(); closeSheet(); renderShell();
 }
 function deleteItem(){

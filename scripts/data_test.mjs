@@ -138,4 +138,22 @@ await ok('지출을 다 지워도 주고받은 기록이 있으면 정산 상태
   assert.equal(T.settleState({ members: t.members, expenses: [], payments: [] }), 'none');
 });
 
+await ok('일정 시간: 예전 자유 입력은 HH:MM 으로, 시각만으로 다 못 담는 말은 시간 메모(when)에 남긴다', () => {
+  const store = new Map(), T = boot({ store }).TripStore;
+  const cases = { '9:00': ['09:00', undefined], '오후 2시': ['14:00', undefined], '1330': ['13:30', undefined], '오전 중': ['', '오전 중'], '13:00~15:00': ['13:00', '13:00~15:00'], '13': ['', '13'] };
+  store.set(T.KEY, JSON.stringify([{ id: 'a', start: '2026-12-01', end: '2026-12-01', days: [{ date: '2026-12-01', items: Object.keys(cases).map((k, i) => ({ id: 'i' + i, time: k, title: k })) }] }]));
+  T.get('a').days[0].items.forEach(it => { const [tm, w] = cases[it.title]; assert.equal(it.time, tm, it.title); assert.equal(it.when, w, it.title); });
+});
+await ok('일정 시간 순 자리: 시간을 넣은 항목만 옮기고 시간 없는 항목 순서는 그대로', () => {
+  const store = new Map(), T = boot({ store }).TripStore;
+  store.set(T.KEY, JSON.stringify([{ id: 'a', start: '2026-12-01', end: '2026-12-01', days: [{ date: '2026-12-01', items: [
+    { id: 'x1', time: '09:00', title: 'A' }, { id: 'x2', time: '', title: '메모' }, { id: 'x3', time: '15:00', title: 'C' }] }] }]));
+  let t = T.addDayItem('a', 0, { time: '12:00', title: 'B' }); const nid = t.days[0].items[3].id;
+  T.placeDayItem('a', 0, nid);
+  assert.deepEqual(T.get('a').days[0].items.map(x => x.title), ['A', '메모', 'B', 'C']);
+  t = T.addDayItem('a', 0, { time: '18:00', title: 'D' }); T.placeDayItem('a', 0, t.days[0].items[4].id);
+  t = T.addDayItem('a', 0, { time: '', title: '시간 없음' }); T.placeDayItem('a', 0, t.days[0].items[5].id);
+  assert.deepEqual(T.get('a').days[0].items.map(x => x.title), ['A', '메모', 'B', 'C', 'D', '시간 없음']);
+});
+
 console.log(`data_test: ${pass} passed`);

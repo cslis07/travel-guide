@@ -131,6 +131,27 @@
   function isoOr(v, fb) { var s = String(v == null ? '' : v); if (ISO_D.test(s)) return s; var m = /\d{4}-\d{2}-\d{2}/.exec(s); return m ? m[0] : fb; }
   function numOr0(v) { var n = +v; return isFinite(n) ? n : 0; }
   function name30(v) { return String(v == null ? '' : v).slice(0, 30); }
+  /* 일정 시간 — 'HH:MM' 만 time 에, 나머지 말('오전 중'·'체크인 후'·'13:00~15:00')은 when 에(2026-11-16)
+     '9:00'·'9시 30분'·'오후 2시'·'1330' 은 HH:MM 으로. 읽은 시각만으로 원래 뜻이 다 담기지 않으면 원문을 when 에 남겨 잃지 않는다 */
+  var HM = /^([01]\d|2[0-3]):[0-5]\d$/;
+  var PURE_TIME = /^(오전|오후|AM|PM|am|pm)?\s*\d{1,2}\s*(:\s*\d{2}|시(\s*\d{1,2}\s*분?)?)\s*(AM|PM|am|pm)?$|^\d{3,4}$/;
+  function hmNorm(s) {
+    s = String(s == null ? '' : s).trim(); if (HM.test(s)) return s;
+    var pm = /오후|PM|pm/.test(s), am = /오전|AM|am/.test(s), m = s.match(/(\d{1,2})\s*(?::|시)\s*(\d{1,2})?/) || s.match(/^(\d{1,2})(\d{2})$/);
+    if (!m) return '';
+    var h = +m[1], mi = +(m[2] || 0); if (pm && h < 12) h += 12; if (am && h === 12) h = 0;
+    return h < 24 && mi < 60 ? (h < 10 ? '0' : '') + h + ':' + (mi < 10 ? '0' : '') + mi : '';
+  }
+  function cleanDayItem(it) {
+    var raw = it.time == null ? '' : String(it.time).trim();
+    if (!HM.test(raw)) {
+      var hm = hmNorm(raw);
+      if (raw && !(hm && PURE_TIME.test(raw)) && !it.when) it.when = raw;
+      it.time = hm;
+    }
+    if (it.when != null) it.when = String(it.when).trim().slice(0, 40);
+    return it;
+  }
   function timeish(o, keys) { keys.forEach(function (k) { if (o[k] != null && !TIMEISH.test(String(o[k]))) o[k] = ''; }); }
   function clean(t) {
     t.id = cleanId(t.id) || uid();
@@ -167,7 +188,7 @@
     t.payments = cleanList(t.payments).filter(function (p) { p.krw = Math.round(+p.krw || 0); p.from = name30(p.from || ''); p.to = name30(p.to || ''); p.date = isoOr(p.date, ''); return p.krw > 0 && p.from && p.to; });
     t.checklist = cleanList(t.checklist);
     t.places = Array.isArray(t.places) ? t.places : [];
-    t.days = arr(t.days).map(function (d) { if (d.date != null) d.date = isoOr(d.date, ''); d.items = cleanList(d.items); return d; });
+    t.days = arr(t.days).map(function (d) { if (d.date != null) d.date = isoOr(d.date, ''); d.items = cleanList(d.items).map(cleanDayItem); return d; });
     return t;
   }
   /* 저장값이 깨졌으면 [] 로 시작하되, 원문은 덮어쓰기 전에 따로 보관(나중에 복구 가능) */
@@ -467,6 +488,14 @@
     t.days[dayIdx].items = (t.days[dayIdx].items || []).filter(function (it) { return it.id !== itemId; });
     upsert(t); return t;
   }
+  function placeDayItem(id, dayIdx, itemId) {
+    var t = get(id); if (!t) return; ensureDays(t);
+    var arr = t.days[dayIdx].items || [], i = arr.map(function (x) { return x.id; }).indexOf(itemId);
+    if (i < 0 || !arr[i].time) return t;
+    var it = arr.splice(i, 1)[0], k = arr.length;
+    for (var j = 0; j < arr.length; j++) { if (arr[j].time && arr[j].time > it.time) { k = j; break; } }
+    arr.splice(k, 0, it); t.days[dayIdx].items = arr; upsert(t); return t;
+  }
   function moveDayItem(id, dayIdx, itemId, dir) {
     var t = get(id); if (!t) return; ensureDays(t);
     var arr = t.days[dayIdx].items || [], i = arr.map(function (x) { return x.id; }).indexOf(itemId), j = i + dir;
@@ -579,7 +608,7 @@
     addChecklistItem: addChecklistItem, updateChecklistItem: updateChecklistItem, removeChecklistItem: removeChecklistItem,
     toggleChecklist: toggleChecklist,
     addDayItem: addDayItem, updateDayItem: updateDayItem, removeDayItem: removeDayItem,
-    moveDayItem: moveDayItem, setCatLimit: setCatLimit,
+    moveDayItem: moveDayItem, placeDayItem: placeDayItem, hm: hmNorm, setCatLimit: setCatLimit,
     ensureDays: ensureDays, seedIfEmpty: seedIfEmpty,
     // 계산
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,
