@@ -6,7 +6,7 @@
 //  - 우리 JS·CSS : 네트워크 우선 + 2.5초 넘으면 캐시 — 배포 직후 새 HTML 이 옛 JS 를 받아 TypeError 나던 것 방지
 //  - 그 밖의 자산 : 캐시 우선 + 백그라운드 갱신 (stale-while-revalidate)
 
-const CACHE = 'travelcost-v59';
+const CACHE = 'travelcost-v60';
 
 // 설치 시 미리 담아둘 최소 셸 (오프라인 폴백용)
 // 페이지는 깨끗한 주소로(cleanUrls라 '/x.html'은 리다이렉트 응답이 캐시돼 오프라인 내비게이션에 못 씀)
@@ -51,7 +51,8 @@ const OFFLINE_FALLBACK = '/';
 /* 네트워크가 ms 안에 답하면 그 응답, 아니면 캐시(있을 때만). 네트워크는 끝까지 받아 캐시를 갱신한다 */
 function netFirst(req, ms, store) {
   const net = fetch(req).then(res => {
-    if (store && res.ok) { const clone = res.clone(); caches.open(CACHE).then(c => c.put(req, clone)); }
+    // 페이지는 주소 뒤 ?id=·?source= 와 상관없이 같은 파일 — 주소마다 따로 쌓이던 것을 경로 하나로(2026-11-09)
+    if (store && res.ok) { const clone = res.clone(), u = new URL(req.url), key = req.mode === 'navigate' ? u.origin + u.pathname : req; caches.open(CACHE).then(c => c.put(key, clone)); }
     return res;
   });
   const fromCache = () => caches.match(req, { ignoreSearch: req.mode === 'navigate' });

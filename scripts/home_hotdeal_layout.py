@@ -47,7 +47,7 @@ def cards(src):
     return out
 
 
-def card_html(c, g, load="loading=\"lazy\""):
+def card_html(c, g, load="loading=\"lazy\" fetchpriority=\"low\""):
     # 첫 줄 첫 두 장은 첫 화면에 보이므로 lazy 빼고 바로(첫 장은 fetchpriority) — 홈 LCP 가 이 사진이다(2026-11-06)
     tags = "".join("<span>#%s</span>" % z.replace(" ", "") for z in g["zones"][:3])
     price = ""
@@ -65,7 +65,7 @@ def rail(title, slugs, by, info, first=False):
     eager = ['fetchpriority="high"', 'loading="eager"'] if first else []
     items = "".join(card_html(by[s], info[s], *(eager[i:i + 1])) for i, s in enumerate([s for s in slugs if s in by]))
     return ('<section class="hx-sec"><div class="container"><h2 class="hx-h">%s</h2></div>'
-            '<div class="hx-rail">%s</div>'
+            '<div class="hx-rail"><div class="hx-track">%s</div></div>'   # 트랙을 처음부터 — home-ui.js 가 그린 뒤 카드를 옮기면 LCP 가 다시 기록됐다(2026-11-09)
             '<div class="container"><a class="hx-more" href="#destinations">여행지 가이드 전체 보기 <span>›</span></a></div></section>') % (title, items)
 
 

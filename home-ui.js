@@ -198,17 +198,17 @@ function hxFx() {
   'use strict';
   if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   document.querySelectorAll('.hx-rail').forEach(function (rail) {
-    var cards = [].slice.call(rail.children);
+    // 트랙은 index.html 에 처음부터 있다 — 그린 뒤 카드를 옮기면 같은 사진이 LCP 로 다시 잡혀 1초 늦어졌다. 예전 마크업이면 여기서 만든다
+    var track = rail.querySelector(':scope > .hx-track');
+    var cards = [].slice.call((track || rail).children);
     if (cards.length < 3) return;
-    var track = document.createElement('div');
-    track.className = 'hx-track';
-    cards.forEach(function (c) { track.appendChild(c); });
+    if (!track) { track = document.createElement('div'); track.className = 'hx-track'; cards.forEach(function (c) { track.appendChild(c); }); }
     cards.forEach(function (c) {   // 이음새용 복제 — 화면낭독기·탭 이동에선 빼기
       var k = c.cloneNode(true); k.setAttribute('aria-hidden', 'true'); k.setAttribute('tabindex', '-1');
       track.appendChild(k);
     });
     track.style.setProperty('--hx-dur', (cards.length * 5) + 's');   // 카드 1장당 5초
-    rail.appendChild(track);
+    if (track.parentNode !== rail) rail.appendChild(track);
     rail.classList.add('hx-marquee');
     // 손가락으로 누르고 있는 동안 멈춤(휴대폰엔 hover가 없음)
     var hold = function (on) { return function () { rail.classList.toggle('hx-hold', on); }; };

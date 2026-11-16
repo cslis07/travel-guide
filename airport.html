@@ -2983,16 +2983,30 @@ function renderAirlines() {
 // ════════════════════════════════
 //  INIT & AUTO REFRESH
 // ════════════════════════════════
-function refreshAll() {
-  loadWeather();
-  loadPaxChart();
-  loadNotice();
+/* 1분 갱신 — 화면이 숨겨져 있으면(다른 탭·화면 꺼짐) 건너뛰고, 다시 보일 때 한 번 갱신한다.
+   예전엔 숨겨 둔 탭 하나가 1분마다 API 7회(하루 약 1만 회). 날씨·미세먼지·여객 예측·공지는 10분마다면 충분 */
+let _slowAt=Date.now(), _lastRefresh=Date.now();
+const SLOW_MS=10*60*1000;
+function refreshAll(force) {
+  if(document.hidden && !force) return;
+  _lastRefresh=Date.now();
+  if(force || Date.now()-_slowAt>=SLOW_MS){
+    _slowAt=Date.now();
+    loadWeather();
+    loadPaxChart();
+    loadNotice();
+  }
   if(_tab==='entry')      loadEntry();
   if(_tab==='parking')    { loadParking(); loadParkSpots(); }
-  if(_tab==='transport')  loadTransTab();
+  if(_tab==='transport' && !(_transTab==='shuttle' && _shuttleMode==='time')) loadTransTab();   // 셔틀 시간표(6,000행)는 바뀌지 않는다
   if(_tab==='congestion') loadCong();
   if(_tab==='flights')    loadFlights();
 }
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden) return;
+  if(Date.now()-_lastRefresh>=60000) refreshAll(Date.now()-_slowAt>=SLOW_MS);
+  if(getFavs().length && Date.now()-_favAt>=60000) loadFavFlights();
+});
 
 // Init — set correct theme button label
 (function(){
@@ -3011,7 +3025,7 @@ loadNotice();
 })();
 // 차트는 패널이 열릴 때 로드 (초기에는 데이터만 조회해 헤더 수치 채움)
 loadPaxChart();
-setInterval(refreshAll, 60000);
+setInterval(() => refreshAll(), 60000);
 
 // ── 공유 + 토스트 ──
 function _toast(msg){
@@ -3539,7 +3553,9 @@ function requestFavNotifyPermission(){
   });
 }
 
+var _favAt=0;
 async function loadFavFlights(){
+  _favAt=Date.now();
   const area = el('fav-area');
   if(!area) return;
   const favs = getFavs();
@@ -3653,9 +3669,11 @@ async function loadFavFlights(){
   _setFavSnap(next);
 }
 
-// 즐겨찾기 자동 갱신 (60초마다 백그라운드 체크)
+// 즐겨찾기 자동 갱신 (60초마다) — 숨겨진 화면에선 OS 알림을 허용했을 때만(게이트 변경 알림이 목적). 아니면 다시 보일 때 갱신
 setInterval(() => {
-  if(getFavs().length) loadFavFlights();
+  if(!getFavs().length) return;
+  if(document.hidden && !('Notification' in window && Notification.permission === 'granted')) return;
+  loadFavFlights();
 }, 60000);
 
 // ════════════════════════════════
