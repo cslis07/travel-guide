@@ -133,6 +133,31 @@
     for (var i = 0; i < curs.length; i++) { var l = LANG[String(curs[i] || '').toUpperCase()]; if (l) return l + '+eng'; }
     return 'eng';
   }
+  /* 인식 전 사진 다듬기(2026-11-16) — 회색으로 바꾸고 밝기 폭을 늘린다(어두운·누런 영수증), 폭이 1000px 보다 좁으면 키운다.
+     실패하면 원래 사진 그대로 */
+  function prep(dataUrl) {
+    return new Promise(function (ok) {
+      if (typeof document === 'undefined' || !document.createElement) return ok(dataUrl);
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var sc = img.width < 1000 ? Math.min(2, 1400 / img.width) : 1;
+          var c = document.createElement('canvas'); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc);
+          var g = c.getContext('2d'); g.drawImage(img, 0, 0, c.width, c.height);
+          var d = g.getImageData(0, 0, c.width, c.height), px = d.data, hist = new Uint32Array(256), n = px.length / 4, i, y;
+          for (i = 0; i < px.length; i += 4) { y = (px[i] * 299 + px[i + 1] * 587 + px[i + 2] * 114) / 1000 | 0; px[i] = y; hist[y]++; }
+          var lo = 0, hi = 255, acc = 0;
+          for (i = 0; i < 256; i++) { acc += hist[i]; if (acc > n * 0.02) { lo = i; break; } }
+          for (acc = 0, i = 255; i >= 0; i--) { acc += hist[i]; if (acc > n * 0.02) { hi = i; break; } }
+          var k = hi - lo > 10 ? 255 / (hi - lo) : 1;
+          for (i = 0; i < px.length; i += 4) { y = Math.max(0, Math.min(255, (px[i] - lo) * k)); px[i] = px[i + 1] = px[i + 2] = y; }
+          g.putImageData(d, 0, 0); ok(c);
+        } catch (e) { ok(dataUrl); }
+      };
+      img.onerror = function () { ok(dataUrl); };
+      img.src = dataUrl;
+    });
+  }
   var cancelCur = null;
   /* 읽는 중이면 멈춘다 — 작업자를 끝내고 기다리던 쪽엔 'cancel' 오류 */
   function cancel() { if (cancelCur) cancelCur(); }
@@ -149,12 +174,13 @@
         corePath: CDN + 'tesseract.js-core@' + VER,
         logger: function (m) { if (onProgress && m && typeof m.progress === 'number') onProgress(m.status || '', m.progress); }
       });
-    }).then(function (w) { worker = w; if (done) { w.terminate(); throw new Error('cancel'); } return w.recognize(dataUrl); })   // 준비 중에 멈췄으면 바로 끝냄
+    }).then(function (w) { worker = w; if (done) { w.terminate(); throw new Error('cancel'); } return prep(dataUrl); })
+      .then(function (src) { if (done) throw new Error('cancel'); return worker.recognize(src); })   // 준비 중에 멈췄으면 바로 끝냄
       .then(function (res) { var text = (res && res.data && res.data.text) || ''; var p = parse(text, cur); p.text = text; return p; });
     return Promise.race([job, timer]).then(function (r) { done = true; cancelCur = null; if (worker) worker.terminate(); return r; },
       function (e) { done = true; cancelCur = null; if (worker) worker.terminate(); throw e; });
   }
-  window.ReceiptOCR = { read: read, parse: parse, langOf: langOf, cancel: cancel };
+  window.ReceiptOCR = { read: read, parse: parse, langOf: langOf, cancel: cancel, prep: prep };
 })();
 
 /* ── 지출 입력 창 연결(trip.html 에서 옮김, 2026-11-16) — 전역 rcState·exState·esc·updKRW·pickCur·T·trip 사용 ── */
@@ -163,7 +189,7 @@ function ocrBox(){
   var b=document.getElementById('ex-ocr'); if(!b) return;
   if(!rcState.data||!window.ReceiptOCR){ b.innerHTML=''; return; }
   b.innerHTML='<button type="button" class="ocr-btn" onclick="runOcr()">🔎 사진에서 금액 읽기</button>'
-    +'<p class="ocr-note">이 폰 안에서만 읽어요(사진은 밖으로 안 나가요) · 처음 한 번 약 5~6MB를 받아요</p>';
+    +'<p class="ocr-note">영수증을 반듯하게, 화면 가득 밝은 곳에서 찍으면 더 잘 읽어요 · 이 폰 안에서만 읽어요(사진은 밖으로 안 나가요) · 처음 한 번 약 5~6MB를 받아요</p>';
 }
 function ocrFmt(v){ return v.toLocaleString('ko-KR',{maximumFractionDigits:2})+' '+esc(exState.cur||''); }
 function runOcr(){
@@ -174,7 +200,7 @@ function runOcr(){
     var el=document.getElementById('ocr-st'); if(el&&seq===_ocrSeq) el.textContent=(/recogniz/.test(st)?'글자 읽는 중… ':'인식 프로그램 받는 중… ')+Math.round(p*100)+'%';
   }, T.curOf(trip.city)).then(function(r){
     var bb=document.getElementById('ex-ocr'); if(!bb||seq!==_ocrSeq||rcState.data!==data) return;
-    if(!r.cands.length){ bb.innerHTML='<p class="ocr-note">금액을 찾지 못했어요. 직접 입력해 주세요.</p>'; return; }
+    if(!r.cands.length){ bb.innerHTML='<p class="ocr-note">금액을 찾지 못했어요. 영수증을 반듯하게, 밝은 곳에서 다시 찍어 보거나 직접 입력해 주세요.</p>'; return; }
     var a=document.getElementById('ex-amt'), filled=false;
     // 영수증 통화 기호(¥·₩·€·฿·₫)가 지금 고른 통화와 다르면 그 통화로 — 일본 영수증 ¥591 이 ₩591 이 되지 않게
     var switched='';

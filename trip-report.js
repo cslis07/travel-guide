@@ -159,3 +159,17 @@ function printTrip(){
   window.addEventListener('afterprint',done);
   try{ window.print(); }catch(e){ done(); toast('이 기기는 인쇄를 지원하지 않아요'); }
 }
+
+/* ═══ 여행 중 예산 탭 — 견적 대비 지금까지(2026-11-16). 끝난 여행은 결산의 '견적 대비 실제' 표로 ═══ */
+function planProgressHtml(){
+  var v=T.planVsActual&&T.planVsActual(trip); if(!v) return '';
+  var rows=v.rows.filter(function(x){ return x.plan>0; }), extra=v.rows.filter(function(x){ return x.plan<=0&&x.actual>0; });
+  var bar=function(x){ var pct=Math.round(x.actual/x.plan*100), over=pct>100;
+    return '<div class="catbar"><div class="nm" style="flex:0 0 92px">'+esc(x.label)+'</div><div class="tr"><i style="width:'+Math.min(100,pct)+'%;background:'+(over?'var(--danger)':'var(--primary)')+'"></i></div>'
+      +'<div class="amt"'+(over?' style="color:var(--danger)"':'')+'>'+pct+'%</div></div>'
+      +'<div class="pp-sub">'+won(x.actual)+' / 견적 '+won(x.plan)+(over?' · '+won(x.actual-x.plan)+' 넘음':'')+'</div>'; };
+  var tp=Math.round(v.actual/v.plan*100);
+  return '<div class="sech">견적 대비 지금까지</div><div class="card">'+rows.map(bar).join('')
+    +(extra.length?'<div class="pp-sub" style="margin-top:6px">견적에 없던 지출 · '+extra.map(function(x){ return esc(x.label)+' '+won(x.actual); }).join(' · ')+'</div>':'')
+    +'<div class="pp-tot">합계 '+won(v.actual)+' / 견적 '+won(v.plan)+' · <b'+(tp>100?' style="color:var(--danger)"':'')+'>'+tp+'%</b></div></div>';
+}
