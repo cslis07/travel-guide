@@ -102,6 +102,8 @@ setInterval(tickClock,1000); tickClock();
 // ════════════════════════════════
 //  WEATHER
 // ════════════════════════════════
+let _wxRetry = 0;   // 날씨 조회가 실패하면 30초 뒤 한 번만 다시(10분 갱신을 기다리지 않게)
+function wxRetry(){ if(_wxRetry++ < 1) setTimeout(loadWeather, 30000); }
 async function loadWeather() {
   try {
     const wxUrl='https://api.open-meteo.com/v1/forecast?latitude=37.46&longitude=126.44&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FSeoul';
@@ -111,6 +113,8 @@ async function loadWeather() {
       fetch(`/api/proxy?_url=${encodeURIComponent(aqUrl)}`).then(r=>r.json())
     ]);
     // 값이 null 이면 '--'.toFixed 가 TypeError 를 내 날씨 카드 전체가 비던 문제 — 숫자일 때만 자릿수 맞춤
+    if(!w || !w.current){ wxRetry(); return; }   // 실패 응답이면 보던 값 그대로 두고 다시 시도
+    _wxRetry = 0;
     const c=w?.current||{}, d=w?.daily, f=(v,n)=>typeof v==='number'?v.toFixed(n):'--';
     html('w-temp',f(c.temperature_2m,1)+'°C');
     html('w-desc',WMO[c.weather_code]||'--');
@@ -120,7 +124,7 @@ async function loadWeather() {
     html('w-prec',c.precipitation>0?(c.precipitation.toFixed(1)+'mm'):'없음');
     html('w-pm25',f(aq?.current?.pm2_5,0)+' μg');
     html('w-pm10',f(aq?.current?.pm10,0)+' μg');
-  } catch(e){}
+  } catch(e){ wxRetry(); }
 }
 
 // ════════════════════════════════

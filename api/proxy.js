@@ -96,11 +96,20 @@ async function handler(req) {
     });
   }
 
+  /* 상류 연결이 순간적으로 끊기면(2026-11-17 운영: Open-Meteo 예보만 'fetch failed' — 몇 분 뒤 정상)
+     날씨가 통째로 '--' 가 되므로, 연결 오류는 0.5초 쉬고 한 번 더 묻는다. 12초 시간 초과는 다시 묻지 않는다(사용자 대기 24초 방지) */
+  const get = () => fetch(targetUrl, {
+    headers: { 'User-Agent': 'TravelGuide/1.0' },
+    signal: AbortSignal.timeout(12000),   // 공공 API가 멈추면 12초에 끊고 502로 알림
+  });
   try {
-    const upstream = await fetch(targetUrl, {
-      headers: { 'User-Agent': 'TravelGuide/1.0' },
-      signal: AbortSignal.timeout(12000),   // 공공 API가 멈추면 12초에 끊고 502로 알림
-    });
+    let upstream;
+    try { upstream = await get(); }
+    catch (e1) {
+      if (e1 && (e1.name === 'TimeoutError' || e1.name === 'AbortError')) throw e1;
+      await new Promise(r => setTimeout(r, 500));
+      upstream = await get();
+    }
     const text = await upstream.text();
     // 호출량 계측 — CDN 캐시를 지나 상류까지 간 호출만 찍힌다(Vercel 로그에서 'upstream' 검색·집계)
     console.log(JSON.stringify({ upstream: 'proxy', api: path || new URL(targetUrl).hostname, status: upstream.status, key: KEY_STATE }));
@@ -110,14 +119,18 @@ async function handler(req) {
       headers: {
         ...CORS,
         'Content-Type': 'application/json; charset=utf-8',
-        'Cache-Control': 's-maxage=30, stale-while-revalidate=60',
+        // 날씨(Open-Meteo)는 15분 단위로 바뀌어 10분 CDN 캐시면 충분 — 상류가 잠깐 죽어도 1시간 동안은 직전 값을 준다
+        'Cache-Control': externalUrl && upstream.ok ? 's-maxage=600, stale-while-revalidate=3600' : 's-maxage=30, stale-while-revalidate=60',
       },
     });
   } catch (err) {
     // 상류 주소는 돌려주지 않는다 — 주소 안의 키는 URL 인코딩돼 있어 문자열 치환으로 가려지지 않는다
-    return new Response(JSON.stringify({ error: err.message }), {
+    // 원인 코드(ENOTFOUND·ECONNRESET·UND_ERR_CONNECT_TIMEOUT 등)만 덧붙인다 — 주소·키는 넣지 않음
+    const cause = (err && err.cause && (err.cause.code || err.cause.name)) || (err && err.name) || '';
+    console.log(JSON.stringify({ upstream: 'proxy', api: path || (externalUrl ? new URL(targetUrl).hostname : ''), error: String(err && err.message || err).slice(0, 80), cause }));
+    return new Response(JSON.stringify({ error: err.message, cause }), {
       status: 502,
-      headers: { ...CORS, 'Content-Type': 'application/json' },
+      headers: { ...CORS, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
     });
   }
 }
