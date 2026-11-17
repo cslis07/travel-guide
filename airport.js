@@ -109,7 +109,9 @@ async function loadWeather() {
     const wxUrl='https://api.open-meteo.com/v1/forecast?latitude=37.46&longitude=126.44&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FSeoul';
     const aqUrl='https://air-quality-api.open-meteo.com/v1/air-quality?latitude=37.46&longitude=126.44&current=pm10,pm2_5&timezone=Asia%2FSeoul';
     const [w,aq]=await Promise.all([
-      fetch(`/api/proxy?_url=${encodeURIComponent(wxUrl)}`).then(r=>r.json()),
+      // 예보 주소(api.open-meteo.com)는 서버(서울 리전)에서 접속 시간 초과가 잦아(2026-11-17) 브라우저가 직접 받고, 안 될 때만 서버 경유
+      fetch(wxUrl).then(r=>{ if(!r.ok) throw 0; return r.json(); })
+        .catch(()=>fetch(`/api/proxy?_url=${encodeURIComponent(wxUrl)}`).then(r=>r.json())),
       fetch(`/api/proxy?_url=${encodeURIComponent(aqUrl)}`).then(r=>r.json())
     ]);
     // 값이 null 이면 '--'.toFixed 가 TypeError 를 내 날씨 카드 전체가 비던 문제 — 숫자일 때만 자릿수 맞춤

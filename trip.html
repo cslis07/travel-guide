@@ -533,7 +533,9 @@ function loadWeather(){
     var url='https://api.open-meteo.com/v1/forecast?latitude='+g.lat+'&longitude='+g.lon
       +'&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max'
       +'&timezone=auto&start_date='+trip.start+'&end_date='+en;
-    return fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.ok?r.json():null;});
+    // 예보 주소는 서버(서울 리전)에서 접속이 끊기는 일이 잦아(2026-11-17) 브라우저가 직접 받고, 안 될 때만 서버 경유
+    return fetch(url).then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .catch(function(){ return fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.ok?r.json():null;}); });
   }).then(function(w){
     if(!w || !w.daily || !w.daily.time){ return; }
     var m={}, d=w.daily;

@@ -399,7 +399,7 @@ if('serviceWorker' in navigator){
     var url='https://api.open-meteo.com/v1/forecast?latitude=1.3521&longitude=103.8198'
       +'&current=temperature_2m,weather_code,relative_humidity_2m'
       +'&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FSingapore';
-    fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(w){
+    fetch(url).then(function(r){if(!r.ok)throw 0;return r;}).catch(function(){return fetch('/api/proxy?_url='+encodeURIComponent(url));}).then(function(r){return r.json();}).then(function(w){
       if(!w||!w.current) return;
       var c=w.current,d=w.daily,wm=WMO[c.weather_code]||['🌡️','--'];
       var g=function(id){return document.getElementById(id);};

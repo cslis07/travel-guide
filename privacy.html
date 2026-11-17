@@ -92,6 +92,7 @@
       <p><strong>이용자의 브라우저가 직접 요청하는 곳</strong> — 이때 이용자의 IP 주소와 브라우저 정보가 해당 서비스에 전달됩니다. 여행 기록 내용은 보내지 않습니다.</p>
       <ul>
         <li><strong>환율</strong>: open.er-api.com (환율 조회)</li>
+        <li><strong>날씨 예보</strong>: Open-Meteo api.open-meteo.com (공항·여행지·일정 날씨 — 위치는 공항·도시 좌표만 보내며 이용자 위치는 보내지 않습니다. 직접 연결이 안 될 때만 아래처럼 서비스 서버를 거칩니다)</li>
         <li><strong>사진</strong>: 위키미디어 커먼즈 upload.wikimedia.org (여행지·도시 사진), 인천공항 제공 항공사 로고</li>
         <li><strong>프로그램 파일</strong>: cdn.jsdelivr.net (공항 차트·QR 코드, 영수증 금액 읽기용 글자 인식 프로그램과 언어 데이터 — 영수증 사진은 보내지 않습니다)</li>
       </ul>
@@ -99,7 +100,7 @@
       <p><strong>서비스 서버(Vercel 서울)를 거쳐 요청하는 곳</strong> — 이용자의 IP 주소는 전달되지 않고, 검색 조건(날짜·도시·편명 등)만 전달됩니다.</p>
       <ul>
         <li><strong>공공데이터</strong>: 한국관광공사 TourAPI, 인천국제공항공사 (관광·공항 실시간 정보 조회)</li>
-        <li><strong>날씨</strong>: Open-Meteo (일정 날씨·준비물 추천)</li>
+        <li><strong>날씨</strong>: Open-Meteo (도시 좌표 찾기·미세먼지, 예보 직접 연결이 안 될 때의 예보)</li>
         <li><strong>여행 상품 검색</strong>: 마이리얼트립 (항공·숙소·투어 검색), 숙소 가격 비교 정보</li>
       </ul>
       <p><strong>이용자가 눌러서 이동하는 곳</strong></p>
@@ -124,7 +125,7 @@
       <p>개인정보 보호책임자: 트래블코스트 운영자 · 이메일 <a href="mailto:cslis0913@gmail.com" style="color:#1B4FD8">cslis0913@gmail.com</a></p>
       <p>개인정보 관련 문의·열람·삭제 요청과 고충 처리는 위 이메일로 접수합니다. <a href="https://github.com/cslis07/travel-guide/issues" target="_blank" rel="noopener" style="color:#1B4FD8">GitHub 이슈</a>로도 받을 수 있습니다.</p>
 
-      <p class="legal-updated">시행일: 2026년 11월 16일 (변경: 영수증 금액 읽기(기기 안 글자 인식)와 프로그램 파일 주소 cdn.jsdelivr.net 추가, 개인정보 보호책임자·문의 이메일 기재) · 이전: 2026년 10월 25일 — 내 여행 사진 저장·백업·공유 링크·외부 서비스 구분 추가 · 2026년 7월 7일</p>
+      <p class="legal-updated">시행일: 2026년 11월 17일 (변경: 날씨 예보를 이용자 브라우저가 Open-Meteo 에서 직접 받도록 바꿈) · 이전: 2026년 11월 16일 (변경: 영수증 금액 읽기(기기 안 글자 인식)와 프로그램 파일 주소 cdn.jsdelivr.net 추가, 개인정보 보호책임자·문의 이메일 기재) · 이전: 2026년 10월 25일 — 내 여행 사진 저장·백업·공유 링크·외부 서비스 구분 추가 · 2026년 7월 7일</p>
     </div>
   </div>
 

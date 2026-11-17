@@ -106,7 +106,8 @@ async function handler(req) {
     let upstream;
     try { upstream = await get(); }
     catch (e1) {
-      if (e1 && (e1.name === 'TimeoutError' || e1.name === 'AbortError')) throw e1;
+      // 시간 초과(전체 12초·접속 10초)는 다시 물어도 같은 만큼 더 기다리기만 한다(운영 실측 21초)
+      if (e1 && (e1.name === 'TimeoutError' || e1.name === 'AbortError' || (e1.cause && /TIMEOUT/.test(e1.cause.code || '')))) throw e1;
       await new Promise(r => setTimeout(r, 500));
       upstream = await get();
     }
