@@ -12,6 +12,8 @@
      plan:{at,items:[{key,label,color,amt}]}, // (선택) 경비 계산 항목별 예상액 → t.budget.plan
      checklist:[{group,text,when}],   // (선택) 준비물
      itinerary:[{time,type,title,memo}], // (선택) 1일차에 담을 일정
+     reservations:[{type,title,detail,status,checkin,checkout}], // (선택) 예약(숙소 검색 결과 등)
+     tab,                        // (선택) 담은 뒤 열 여행 탭(plan·budget·resv·pack·air)
      start, end, people          // (선택) 새 여행 기본값
    }
    ═══════════════════════════════════════════════════════════ */
@@ -151,16 +153,30 @@
     }
     if (p.reservations && p.reservations.length) {
       t.reservations = t.reservations || [];
-      p.reservations.forEach(function (r) { t.reservations.push({ id: 'r' + Math.random().toString(36).slice(2, 8), type: r.type || 'etc', title: r.title, detail: r.detail || '', status: r.status || 'planned', when: r.when || '' }); });
+      p.reservations.forEach(function (r) {
+        if (!r || !r.title) return;
+        // 같은 예약을 두 번 담으면 한 번만(종류·이름·체크인이 같으면 같은 예약)
+        var dup = t.reservations.some(function (x) { return x.type === (r.type || 'etc') && x.title === r.title && (x.checkin || '') === (r.checkin || ''); });
+        if (dup) return;
+        var o = { id: 'r' + Math.random().toString(36).slice(2, 8), type: r.type || 'etc', title: r.title, detail: r.detail || '', status: r.status || 'planned', when: r.when || '' };
+        if (r.checkin) o.checkin = r.checkin;
+        if (r.checkout) o.checkout = r.checkout;
+        t.reservations.push(o);
+      });
     }
     if (p.flight && !t.flight) { t.flight = p.flight; }
     return t;
   }
 
+  function tripUrl(id) {
+    var tab = /^(plan|budget|resv|pack|air)$/.test(curPayload.tab || '') ? curPayload.tab : '';
+    return '/trip?id=' + encodeURIComponent(id) + (tab ? '&tab=' + tab : '');
+  }
+
   function applyTo(id) {
     var T = window.TripStore, t = T.get(id); if (!t) return;
     applyPayload(t, curPayload); T.upsert(t);
-    location.href = '/trip?id=' + id;
+    location.href = tripUrl(id);
   }
 
   function makeNew() {
@@ -170,7 +186,7 @@
     if (!start || !end || new Date(end) < new Date(start)) { alert('날짜를 확인해 주세요.'); return; }
     var t = T.create({ city: city, cover: curCover, start: start, end: end, budgetTotal: curPayload.budget || 0 });
     applyPayload(t, curPayload); T.upsert(t);
-    location.href = '/trip?id=' + t.id;
+    location.href = tripUrl(t.id);
   }
 
   window.TripAttach = { open: open, close: close };

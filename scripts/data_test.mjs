@@ -156,6 +156,26 @@ await ok('일정 시간 순 자리: 시간을 넣은 항목만 옮기고 시간 
   assert.deepEqual(T.get('a').days[0].items.map(x => x.title), ['A', '메모', 'B', 'C', 'D', '시간 없음']);
 });
 
+await ok('끌어 옮기기: 같은 날 자리 바꾸기, 다른 날로 옮기면 시간 순 자리, 자리 지정 시 그 자리', () => {
+  const store = new Map(), T = boot({ store }).TripStore;
+  store.set(T.KEY, JSON.stringify([{ id: 'a', start: '2026-12-01', end: '2026-12-02', days: [
+    { date: '2026-12-01', items: [{ id: 'x1', time: '09:00', title: 'A' }, { id: 'x2', time: '', title: 'B' }, { id: 'x3', time: '13:00', title: 'C' }] },
+    { date: '2026-12-02', items: [{ id: 'y1', time: '10:00', title: 'D' }, { id: 'y2', time: '15:00', title: 'E' }] }] }]));
+  T.moveDayItemTo('a', 0, 'x3', 0, 0);
+  assert.deepEqual(T.get('a').days[0].items.map(x => x.title), ['C', 'A', 'B']);
+  T.moveDayItemTo('a', 0, 'x3', 0, 2);
+  assert.deepEqual(T.get('a').days[0].items.map(x => x.title), ['A', 'B', 'C']);
+  T.moveDayItemTo('a', 0, 'x3', 1);          // 13:00 → 2일차 10:00 과 15:00 사이
+  assert.deepEqual(T.get('a').days[0].items.map(x => x.title), ['A', 'B']);
+  assert.deepEqual(T.get('a').days[1].items.map(x => x.title), ['D', 'C', 'E']);
+  T.moveDayItemTo('a', 0, 'x2', 1);          // 시간 없음 → 그 날 끝
+  assert.deepEqual(T.get('a').days[1].items.map(x => x.title), ['D', 'C', 'E', 'B']);
+  T.moveDayItemTo('a', 1, 'y2', 0, 0);       // 자리 지정이면 시간과 상관없이 그 자리
+  assert.deepEqual(T.get('a').days[0].items.map(x => x.title), ['E', 'A']);
+  T.moveDayItemTo('a', 0, 'nope', 1); T.moveDayItemTo('a', 0, 'x1', 9);   // 없는 일정·없는 날은 그대로
+  assert.deepEqual(T.get('a').days[0].items.map(x => x.title), ['E', 'A']);
+});
+
 await ok('지난 여행 씀씀이: 사람×일 평균, 여행 기간 밖 지출·3건 미만 여행은 뺀다', () => {
   const T = boot().TripStore;
   const e = (krw, category, date) => ({ krw, amount: krw, currency: 'KRW', category, date });

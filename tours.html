@@ -165,9 +165,14 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
 /* 숙소 플랫폼별 가격 비교 (구글 호텔 "모든 옵션" 형태) */
 .tt-stay{display:flex;flex-direction:column;gap:0}
 .tt-stay .tt-item{border-bottom-left-radius:0;border-bottom-right-radius:0}
-.pc-box{background:#fff;border:1px solid var(--gray-200);border-top:0;border-radius:0 0 16px 16px;padding:6px 14px 10px}
+.pc-box{background:#fff;border:1px solid var(--gray-200);border-top:0;padding:6px 14px 10px}
 .pc-box:empty{display:none}
-.tt-stay .tt-item:has(+ .pc-box:empty){border-radius:16px}
+/* 숙소 카드 맨 아래: 내 여행 예약에 담기 */
+.tt-att{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:44px;padding:10px 14px;
+  background:#F8FAFF;border:1px solid var(--gray-200);border-top:1px solid var(--gray-100);border-radius:0 0 16px 16px;
+  font-family:inherit;font-size:13.5px;font-weight:800;color:var(--primary);cursor:pointer}
+.tt-att:hover{background:var(--primary-lt,#EAF0FF)}
+.tt-att small{font-size:11.5px;font-weight:600;color:var(--gray-500)}
 .pc-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:8px 0 6px;font-size:13.5px;font-weight:800;color:var(--dark)}
 .pc-head small{font-size:11.5px;font-weight:600;color:var(--gray-500)}
 .pc-row{display:grid;grid-template-columns:26px 1fr auto auto;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--gray-100)}
@@ -363,6 +368,8 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
 </div>
 
 <script src="/affiliates.js"></script>
+<script src="/trips.js"></script>
+<script src="/trip-attach.js"></script>
 <script>
 /* ═══════════════════════════════════════════
    제휴 추적은 affiliates.js(AFF) 한 곳에서만 관리한다.
@@ -572,7 +579,8 @@ function renderItemsPage(scroll){
   const start = (_ttPage - 1) * size;
   const pageItems = _ttItems.slice(start, start + size);
   grid.innerHTML = _ttMode === 'stay'
-    ? pageItems.map((it, i) => `<div class="tt-stay">${itemCard(it)}<div class="pc-box" id="pc-${start + i}"></div></div>`).join('')
+    ? pageItems.map((it, i) => `<div class="tt-stay">${itemCard(it)}<div class="pc-box" id="pc-${start + i}"></div>` +
+        `<button type="button" class="tt-att" onclick="stayAttach(${start + i})">🧳 내 여행 예약에 담기 <small>${stayAttachSub()}</small></button></div>`).join('')
     : pageItems.map(itemCard).join('');
   _pcGen++;
   if(_ttMode === 'stay') pageItems.forEach((it, i) => priceCompareSlot(it, 'pc-' + (start + i)));
@@ -709,6 +717,32 @@ async function loadPriceCompare(it, boxId){
     `<p class="pc-note">트립어드바이저 제휴 요금(Xotelo) 기준 · 1박 요금 비교${stayNote} · 세금·수수료 포함 여부는 플랫폼마다 다름${fxNote} · 비교 대상: ${esc(d.match.name)}</p>`;
 }
 
+/* ── 숙소 → 내 여행 예약(TripAttach) ──
+   검색한 체크인·체크아웃·인원과 숙소 이름을 '예정' 예약으로 담는다. 실제 예약은 각 플랫폼에서 하고,
+   예약 확인 메일을 내 여행 '예약' 탭에 붙여 넣으면 확정으로 바꿀 수 있다. */
+function stayMD(iso){ const m = /^\d{4}-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? (+m[1]) + '/' + (+m[2]) : ''; }
+function stayAttachSub(){
+  const c = _stayCtx; if(!c || !c.ci) return '';
+  return stayMD(c.ci) + (c.co ? '–' + stayMD(c.co) : '');
+}
+function stayAttach(idx){
+  const it = _ttItems[idx], c = _stayCtx || {};
+  if(!it) return;
+  if(!window.TripAttach || !window.TripStore){ alert('내 여행 기능을 불러오지 못했어요. 새로고침 후 다시 눌러 주세요.'); return; }
+  const title = String(it.title || '숙소').replace(/\s+/g, ' ').trim().slice(0, 80);
+  const price = String(it.price || '').replace(/\s+/g, ' ').trim();
+  const bits = [];
+  if(c.ci) bits.push('체크인 ' + stayMD(c.ci));
+  if(c.co) bits.push('체크아웃 ' + stayMD(c.co));
+  if(c.ad) bits.push('성인 ' + c.ad);
+  if(price) bits.push('검색 때 ' + price.slice(0, 30));
+  const city = (String(c.q || '').trim().split(/[\s,·]+/)[0] || '').slice(0, 20);
+  TripAttach.open({
+    label: '숙소를 내 여행 예약에 담기', city: city, start: c.ci || '', end: c.co || '', tab: 'resv',
+    reservations: [{ type:'hotel', title: title, detail: bits.join(' · '), status:'planned', checkin: c.ci || '', checkout: c.co || '' }]
+  });
+}
+
 function ttShow(data, ctaUrl, ctaLabel, partnerQuery, partnerType){
   _ttMode = partnerType || '';
   const cards = data.data && data.data.widget ? parseWidgetCards(data.data.widget) : [];
@@ -832,7 +866,7 @@ async function ttRunStay(){
   const ci = $('stay-in').value, co = $('stay-out').value;
   if(ci && co && co <= ci){ ttError('체크아웃 날짜는 체크인보다 뒤여야 합니다.'); return; }
   _lastRun=ttRunStay; ttLockBtns(true); ttLoading('숙소 검색 중...');
-  _stayCtx = { ci, co, ad: Number($('stay-adult').value) };
+  _stayCtx = { ci, co, ad: Number($('stay-adult').value), q };
   try{
     const data = await callMrt('searchStays', {
       keyword:q, checkIn:ci, checkOut:co,

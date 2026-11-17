@@ -502,6 +502,22 @@
     if (i < 0 || j < 0 || j >= arr.length) return t;
     var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; upsert(t); return t;
   }
+  /* 끌어 옮기기: fromDay 의 일정을 toDay 의 toIndex 자리로(같은 날이면 순서만).
+     다른 날로 옮기면서 자리를 안 정했으면 그 날 끝에 붙이되, 시간이 있으면 그 날 시간 순 자리로 */
+  function moveDayItemTo(id, fromDay, itemId, toDay, toIndex) {
+    var t = get(id); if (!t) return; ensureDays(t);
+    if (!t.days[fromDay] || !t.days[toDay]) return t;
+    var src = t.days[fromDay].items || [], i = src.map(function (x) { return x.id; }).indexOf(itemId);
+    if (i < 0) return t;
+    var it = src.splice(i, 1)[0];
+    var dst = fromDay === toDay ? src : (t.days[toDay].items = t.days[toDay].items || []);
+    var k = typeof toIndex === 'number' && toIndex >= 0 ? Math.min(toIndex, dst.length) : dst.length;
+    if (fromDay !== toDay && typeof toIndex !== 'number' && it.time) {
+      for (var j = 0; j < dst.length; j++) { if (dst[j].time && dst[j].time > it.time) { k = j; break; } }
+    }
+    dst.splice(k, 0, it); t.days[fromDay].items = src;
+    upsert(t); return t;
+  }
   function setCatLimit(id, catKey, amount) {
     var t = get(id); if (!t) return; t.budget = t.budget || { total: 0, currency: 'KRW' };
     t.budget.catLimits = t.budget.catLimits || {};
@@ -651,7 +667,7 @@
     addChecklistItem: addChecklistItem, updateChecklistItem: updateChecklistItem, removeChecklistItem: removeChecklistItem,
     toggleChecklist: toggleChecklist,
     addDayItem: addDayItem, updateDayItem: updateDayItem, removeDayItem: removeDayItem,
-    moveDayItem: moveDayItem, placeDayItem: placeDayItem, hm: hmNorm, setCatLimit: setCatLimit,
+    moveDayItem: moveDayItem, moveDayItemTo: moveDayItemTo, placeDayItem: placeDayItem, hm: hmNorm, setCatLimit: setCatLimit,
     ensureDays: ensureDays, seedIfEmpty: seedIfEmpty,
     // 계산
     spent: spent, budgetTotal: budgetTotal, spentPct: spentPct,

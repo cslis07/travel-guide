@@ -90,6 +90,16 @@
   .tl-cardhead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
   .tl-edit{border:none;background:var(--gray-100);color:var(--gray-500);width:26px;height:26px;border-radius:8px;font-size:13px;cursor:pointer;flex:0 0 auto;line-height:1}
   .tl-edit:active{background:var(--gray-200)}
+  /* 길게 눌러 끌어 옮기기(trip-drag.js) */
+  .tl-card{-webkit-touch-callout:none}
+  .tl-item.tl-press .tl-card{transform:scale(.985);transition:transform .3s}
+  .tl-item.tl-dragging{position:relative;z-index:50;pointer-events:none}
+  .tl-item.tl-dragging .tl-card{box-shadow:0 12px 28px rgba(16,24,40,.22);outline:2px solid var(--primary);transform:scale(1.02)}
+  .tl-drop{position:relative;height:0}
+  .tl-drop::after{content:'';position:absolute;left:38px;right:0;top:-9px;height:3px;border-radius:2px;background:var(--primary)}
+  body.tl-dragmode{-webkit-user-select:none;user-select:none;cursor:grabbing}
+  .daychip.tl-chipover{border-color:var(--primary);background:var(--primary-lt);color:var(--primary);transform:scale(1.06)}
+  .tl-hint{font-size:11.5px;color:var(--gray-500);margin:-6px 2px 10px}
   .addrow{border:1.5px dashed var(--gray-300);border-radius:12px;padding:12px;text-align:center;color:var(--primary);font-weight:700;font-size:13px;background:var(--surface,#fff);cursor:pointer}
   /* 예산 */
   .donut{width:124px;height:124px;margin:2px auto 8px;position:relative}
@@ -379,6 +389,7 @@
 <script src="/trip-report.js"></script>
 <script src="/trip-air.js"></script>
 <script src="/trip-tools.js"></script>
+<script src="/trip-drag.js" defer></script>
 <script>
 var T = window.TripStore; T.seedIfEmpty(); T.refreshRates();
 var tid = new URLSearchParams(location.search).get('id');
@@ -465,7 +476,7 @@ function panePlan(){
     var dc=DOTC[it.type]||DOTC.note, last=(i===items.length-1);
     var up = i>0 ? '<button class="tl-edit" title="위로" onclick="moveItem('+curDay+',\''+it.id+'\',-1)">▲</button>' : '';
     var dn = i<items.length-1 ? '<button class="tl-edit" title="아래로" onclick="moveItem('+curDay+',\''+it.id+'\',1)">▼</button>' : '';
-    body+='<div class="tl-item"><div class="tl-rail"><div class="tl-dot" style="background:'+dc[0]+';color:'+dc[1]+'">'+svg(dc[2])+'</div>'+(last?'':'<div class="tl-line"></div>')+'</div>'
+    body+='<div class="tl-item" data-id="'+esc(it.id)+'" data-day="'+curDay+'"><div class="tl-rail"><div class="tl-dot" style="background:'+dc[0]+';color:'+dc[1]+'">'+svg(dc[2])+'</div>'+(last?'':'<div class="tl-line"></div>')+'</div>'
       +'<div class="tl-body"><div class="tl-time">'+esc(it.time||'')+(it.when?'<span class="tl-when">'+esc(it.when)+'</span>':'')+'</div><div class="tl-card">'
       +'<div class="tl-cardhead"><h4>'+esc(it.title)+'</h4><div style="display:flex;gap:4px;flex:0 0 auto">'+up+dn+'<button class="tl-edit" title="수정" onclick="editItem('+curDay+',\''+it.id+'\')">✎</button></div></div>'
       +(it.memo?'<p>'+esc(it.memo)+'</p>':'')
@@ -479,6 +490,7 @@ function panePlan(){
     + guideCard()
     + toolsRow()
     + '<div class="daychips">'+chips+'</div>'
+    + (items.length>=2||(items.length&&days.length>=2)?dragHint():'')
     + '<div id="planwx"></div>'
     + body
     + '<div class="addrow" onclick="openItemSheet()">＋ 장소·메모·예약 추가</div>'
@@ -488,6 +500,7 @@ function panePlan(){
     + '<button class="seg" style="width:100%;margin-top:8px" onclick="printTrip()">🖨 한 장으로 출력·PDF 저장 <small style="color:var(--gray-500)">배터리·데이터 대비 · 부모님께</small></button>';
 }
 function setDay(i){ curDay=i; renderPane(); }
+function dragHint(){ var s=''; try{ s=localStorage.getItem('tc_drag_tip'); }catch(e){} return s?'':'<div class="tl-hint">💡 카드를 길게 눌러 끌면 순서·날짜를 바꿔요</div>'; }
 function moveItem(dayIdx,id,dir){ T.moveDayItem(tid,dayIdx,id,dir); reget(); renderShell(); }
 function dayRouteMap(){
   var items=((trip.days||[])[curDay]||{}).items||[]; if(items.length<2) return;
