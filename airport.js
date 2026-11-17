@@ -108,24 +108,26 @@ async function loadWeather() {
   try {
     const wxUrl='https://api.open-meteo.com/v1/forecast?latitude=37.46&longitude=126.44&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,precipitation&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FSeoul';
     const aqUrl='https://air-quality-api.open-meteo.com/v1/air-quality?latitude=37.46&longitude=126.44&current=pm10,pm2_5&timezone=Asia%2FSeoul';
-    const [w,aq]=await Promise.all([
-      // 예보 주소(api.open-meteo.com)는 서버(서울 리전)에서 접속 시간 초과가 잦아(2026-11-17) 브라우저가 직접 받고, 안 될 때만 서버 경유
-      fetch(wxUrl).then(r=>{ if(!r.ok) throw 0; return r.json(); })
-        .catch(()=>fetch(`/api/proxy?_url=${encodeURIComponent(wxUrl)}`).then(r=>r.json())),
-      fetch(`/api/proxy?_url=${encodeURIComponent(aqUrl)}`).then(r=>r.json())
-    ]);
     // 값이 null 이면 '--'.toFixed 가 TypeError 를 내 날씨 카드 전체가 비던 문제 — 숫자일 때만 자릿수 맞춤
+    const f=(v,n)=>typeof v==='number'?v.toFixed(n):'--';
+    // 미세먼지는 따로 — 늦거나 실패해도 기온은 먼저 그린다(예전엔 둘을 함께 기다려 기온까지 비었다)
+    fetch(`/api/proxy?_url=${encodeURIComponent(aqUrl)}`).then(r=>r.json()).then(aq=>{
+      if(!aq || !aq.current) return;   // 실패면 보던 값 유지
+      html('w-pm25',f(aq.current.pm2_5,0)+' μg');
+      html('w-pm10',f(aq.current.pm10,0)+' μg');
+    }).catch(()=>{});
+    // 예보 주소(api.open-meteo.com)는 서버(서울 리전)에서 접속 시간 초과가 잦아(2026-11-17) 브라우저가 직접 받고, 안 될 때만 서버 경유
+    const w=await fetch(wxUrl).then(r=>{ if(!r.ok) throw 0; return r.json(); })
+      .catch(()=>fetch(`/api/proxy?_url=${encodeURIComponent(wxUrl)}`).then(r=>r.json()));
     if(!w || !w.current){ wxRetry(); return; }   // 실패 응답이면 보던 값 그대로 두고 다시 시도
     _wxRetry = 0;
-    const c=w?.current||{}, d=w?.daily, f=(v,n)=>typeof v==='number'?v.toFixed(n):'--';
+    const c=w.current, d=w.daily;
     html('w-temp',f(c.temperature_2m,1)+'°C');
     html('w-desc',WMO[c.weather_code]||'--');
     html('w-hi',`${f(d?.temperature_2m_min?.[0],0)}° / ${f(d?.temperature_2m_max?.[0],0)}°`);
     html('w-wind',f(c.wind_speed_10m,1)+'m/s');
     html('w-hum',(c.relative_humidity_2m??'--')+'%');
     html('w-prec',c.precipitation>0?(c.precipitation.toFixed(1)+'mm'):'없음');
-    html('w-pm25',f(aq?.current?.pm2_5,0)+' μg');
-    html('w-pm10',f(aq?.current?.pm10,0)+' μg');
   } catch(e){ wxRetry(); }
 }
 
