@@ -739,7 +739,9 @@ function stayAttach(idx){
   const city = (String(c.q || '').trim().split(/[\s,·]+/)[0] || '').slice(0, 20);
   TripAttach.open({
     label: '숙소를 내 여행 예약에 담기', city: city, start: c.ci || '', end: c.co || '', tab: 'resv',
-    reservations: [{ type:'hotel', title: title, detail: bits.join(' · '), status:'planned', checkin: c.ci || '', checkout: c.co || '' }]
+    // 예약 페이지 주소(제휴 추적 포함)도 담아 내 여행 예약 탭에서 '예약 페이지 다시 열기'로 연다
+    reservations: [{ type:'hotel', title: title, detail: bits.join(' · '), status:'planned', checkin: c.ci || '', checkout: c.co || '',
+                     url: webUrl(it.url) ? affLink(webUrl(it.url)) : '' }]
   });
 }
 

@@ -227,4 +227,18 @@ await ok('영수증 분류 추천: 라멘→식비·택시→교통·USJ→관�
   assert.equal(P(['ローソン', 'おにぎり ¥150', '合計 ¥310']), null);
 });
 
+await ok('예약 페이지 주소: https 예약 플랫폼만 남기고 javascript:·다른 사이트·따옴표 주소는 지운다', () => {
+  const st = new Map(); const T = boot({ store: st }).TripStore;
+  const mk = url => ({ id: 't1', start: '2026-12-01', end: '2026-12-03', reservations: [{ id: 'r1', type: 'hotel', title: '호텔', url }] });
+  const got = url => { st.set('tc_trips_v1', JSON.stringify([mk(url)])); return T.get('t1').reservations[0].url; };
+  assert.equal(got('https://www.myrealtrip.com/offers/123?mylink_id=9'), 'https://www.myrealtrip.com/offers/123?mylink_id=9');
+  assert.equal(got('https://kr.trip.com/hotels/list?city=1'), 'https://kr.trip.com/hotels/list?city=1');
+  assert.equal(got('javascript:alert(1)'), undefined);
+  assert.equal(got('http://www.myrealtrip.com/x'), undefined);
+  assert.equal(got('https://evil.com/?a=myrealtrip.com'), undefined);
+  assert.equal(got('https://myrealtrip.com.evil.com/'), undefined);
+  assert.equal(got('https://user@evil.com/'), undefined);
+  assert.equal(got('https://www.myrealtrip.com/x"onmouseover=1'), undefined);
+});
+
 console.log(`data_test: ${pass} passed`);

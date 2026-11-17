@@ -152,6 +152,13 @@
     if (it.when != null) it.when = String(it.when).trim().slice(0, 40);
     return it;
   }
+  /* 예약 페이지 다시 열기 주소 — https 이고 우리가 링크하는 예약 플랫폼 주소일 때만 남긴다 */
+  var BOOK_HOST = /^(?:[a-z0-9-]+\.)*(?:myrealtrip\.com|klook\.com|kkday\.com|waug\.com|booking\.com|agoda\.com|trip\.com)$/i;
+  function bookUrl(u) {
+    u = String(u == null ? '' : u).trim();
+    var m = /^https:\/\/([^\/?#:@\s]+)(?:[\/?#]|$)/i.exec(u);
+    return m && BOOK_HOST.test(m[1]) && u.length <= 1500 && !/[\s"'<>`]/.test(u) ? u : '';
+  }
   function timeish(o, keys) { keys.forEach(function (k) { if (o[k] != null && !TIMEISH.test(String(o[k]))) o[k] = ''; }); }
   function clean(t) {
     t.id = cleanId(t.id) || uid();
@@ -183,6 +190,7 @@
     });
     t.reservations = cleanList(t.reservations).map(function (r) {
       ['date', 'checkin', 'checkout', 'cancelBy'].forEach(function (k) { if (r[k] != null) r[k] = isoOr(r[k], ''); });
+      if (r.url != null) { r.url = bookUrl(r.url); if (!r.url) delete r.url; }
       timeish(r, ['dep', 'arr', 'time']); return r;
     });
     t.payments = cleanList(t.payments).filter(function (p) { p.krw = Math.round(+p.krw || 0); p.from = name30(p.from || ''); p.to = name30(p.to || ''); p.date = isoOr(p.date, ''); return p.krw > 0 && p.from && p.to; });
@@ -660,6 +668,7 @@
     return stableStr(clean(JSON.parse(JSON.stringify(a)))) === stableStr(clean(JSON.parse(JSON.stringify(b))));
   }
   window.TripStore = {
+    bookUrl: bookUrl,
     KEY: KEY, RATES: RATES, CATS: CATS, MEMBER_COLORS: MEMBER_COLORS,
     all: all, get: get, create: create, upsert: upsert, remove: remove, cleanId: cleanId, sameTrip: sameTrip,
     addExpense: addExpense, updateExpense: updateExpense, removeExpense: removeExpense,

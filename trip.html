@@ -280,6 +280,9 @@
   /* 예약 */
   .resv{display:flex;gap:11px;padding:13px;border-radius:14px;background:var(--surface,#fff);box-shadow:var(--shadow);margin-bottom:10px}
   .resv .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;flex:0 0 auto;color:#fff}
+  .resv .rv-open{display:inline-flex;align-items:center;min-height:36px;margin-top:6px;padding:0 12px;border-radius:9px;background:var(--primary-lt);color:var(--primary);font-size:12px;font-weight:700;text-decoration:none}
+  .wx-fail{font-size:11.5px;color:var(--gray-500);text-align:center;padding:4px 0 10px}
+  .wx-fail button{margin-left:6px;min-height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--gray-200,#EAECF0);background:var(--surface,#fff);color:var(--primary);font-weight:700;font-size:11.5px}
   .resv h4{font-size:13.5px;font-weight:800}.resv .rt{font-size:11.5px;color:var(--gray-500);margin-top:3px;line-height:1.55}
   .resv .tag{font-size:10px;font-weight:800;padding:3px 8px;border-radius:7px;align-self:flex-start}
   .aff{border:1px solid var(--primary-lt);background:var(--primary-lt);border-radius:12px;padding:12px;font-size:12.5px;display:flex;align-items:center;gap:8px;color:var(--primary);font-weight:700;text-decoration:none;margin-top:2px}
@@ -513,7 +516,12 @@ var WMO={0:['☀️','맑음'],1:['🌤️','대체로 맑음'],2:['⛅','구름
 51:['🌦️','약한 이슬비'],53:['🌦️','이슬비'],55:['🌧️','이슬비'],61:['🌦️','약한 비'],63:['🌧️','비'],65:['🌧️','강한 비'],
 71:['🌨️','약한 눈'],73:['🌨️','눈'],75:['❄️','강한 눈'],80:['🌦️','소나기'],81:['🌧️','소나기'],82:['⛈️','강한 소나기'],
 95:['⛈️','뇌우'],96:['⛈️','뇌우·우박'],99:['⛈️','뇌우·우박']};
-var _wx=null, _wxCity=null;
+var _wx=null, _wxCity=null, _wxRetry=0;
+/* 날씨 조회 실패(망·상류 일시 오류) — 20초 뒤 한 번 더 묻고, 그래도 안 되면 일정 탭에 '다시 시도' 버튼 */
+function wxFail(){
+  if(_wxRetry++<1){ setTimeout(function(){ if(document.getElementById('planwx')||document.getElementById('packWx')) loadWeather(); },20000); return; }
+  var box=document.getElementById('planwx'); if(box&&!_wx) box.innerHTML='<div class="wx-fail">날씨를 잠시 불러오지 못했어요 <button type="button" onclick="_wxRetry=0;this.disabled=true;loadWeather()">다시 시도</button></div>';
+}
 function loadWeather(){
   if(_wx && _wxCity===trip.city){ renderWx(); renderPackWx(); renderToday(); return; }
   if(typeof fetch!=='function'){ return; }
@@ -524,12 +532,13 @@ function loadWeather(){
   var known=mapped||cached;
   (known ? Promise.resolve(known) : fetch('/api/proxy?_url='+encodeURIComponent('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=en'))
       .then(function(r){return r.ok?r.json():null;})
-      .then(function(d){ var g=d&&d.results&&d.results[0]; if(!g) return null; var o={lat:g.latitude,lon:g.longitude}; try{localStorage.setItem('tc_geo_'+city,JSON.stringify(o));}catch(e){} return o; })
+      .then(function(d){ if(!d) return null; var g=d.results&&d.results[0]; if(!g) return 'none'; var o={lat:g.latitude,lon:g.longitude}; try{localStorage.setItem('tc_geo_'+city,JSON.stringify(o));}catch(e){} return o; })
   ).then(function(g){
+    if(g==='none') return 'skip';   // 좌표를 못 찾는 도시 이름 — 다시 물어도 같음
     if(!g) return null;
     // 예보는 오늘부터 16일까지만 — 범위 밖 날짜를 물으면 400이라 잘라서 묻고, 전부 밖이면 묻지 않는다
     var last=T.iso(new Date(Date.now()+15*864e5)), en=trip.end<last?trip.end:last;
-    if(trip.start>en) return null;
+    if(trip.start>en) return 'skip';
     var url='https://api.open-meteo.com/v1/forecast?latitude='+g.lat+'&longitude='+g.lon
       +'&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max'
       +'&timezone=auto&start_date='+trip.start+'&end_date='+en;
@@ -537,12 +546,14 @@ function loadWeather(){
     return fetch(url).then(function(r){ if(!r.ok) throw 0; return r.json(); })
       .catch(function(){ return fetch('/api/proxy?_url='+encodeURIComponent(url)).then(function(r){return r.ok?r.json():null;}); });
   }).then(function(w){
-    if(!w || !w.daily || !w.daily.time){ return; }
+    if(w==='skip') return;
+    if(!w || !w.daily || !w.daily.time){ wxFail(); return; }
+    _wxRetry=0;
     var m={}, d=w.daily;
     d.time.forEach(function(dt,i){ m[dt]={code:d.weather_code[i],tmax:Math.round(d.temperature_2m_max[i]),tmin:Math.round(d.temperature_2m_min[i]),pop:d.precipitation_probability_max[i]}; });
     _wx=m; _wxCity=trip.city; renderWx(); renderPackWx(); renderToday();
     if(w.timezone && T.cityTz && !T.cityTz(trip.city)) try{ localStorage.setItem('tc_tz_'+trip.city.trim(), w.timezone); }catch(e){}
-  }).catch(function(){});
+  }).catch(function(){ wxFail(); });
 }
 function renderWx(){
   var box=document.getElementById('planwx'); if(!box||!_wx) return;
@@ -930,6 +941,7 @@ function paneResv(){
     var tag=r.status==='confirmed'?'<span class="tag" style="background:#e7f7ef;color:var(--success)">확정</span>':'<span class="tag" style="background:var(--accent-lt);color:var(--accent)">예정</span>';
     return '<div class="resv" style="cursor:pointer" onclick="openResvSheet(\''+r.id+'\')"><div class="ic" style="background:'+m[0]+'">'+svg(m[1])+'</div><div style="flex:1;min-width:0"><h4>'+esc(r.title)+'</h4><div class="rt">'+esc(r.detail||'').replace(/\n/g,'<br>')+'</div>'
       +cancelChip(r)
+      +(r.url&&T.bookUrl&&T.bookUrl(r.url)?'<a class="rv-open" href="'+esc(r.url)+'" target="_blank" rel="nofollow sponsored noopener" onclick="event.stopPropagation()">🔗 예약 페이지 다시 열기 ↗</a>':'')
       +(r.addr?'<div class="rt rv-addr">📍 '+esc(r.addr)+'</div><button type="button" class="taxi-b" onclick="event.stopPropagation();showAddr(\''+r.id+'\')">🚕 택시 카드 · 길찾기</button>':'')+'</div>'+tag+'</div>';
   }).join(''):'<div class="card" style="color:var(--gray-500);font-size:12.5px;text-align:center;margin-bottom:10px">항공·숙소·투어 예약을 추가해 흐름에 연결하세요.</div>';
   var af=affLink('tours','🎟️ 투어·티켓 최저가 비교 (마이리얼트립·클룩·trip.com)');

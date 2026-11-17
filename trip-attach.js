@@ -12,7 +12,7 @@
      plan:{at,items:[{key,label,color,amt}]}, // (선택) 경비 계산 항목별 예상액 → t.budget.plan
      checklist:[{group,text,when}],   // (선택) 준비물
      itinerary:[{time,type,title,memo}], // (선택) 1일차에 담을 일정
-     reservations:[{type,title,detail,status,checkin,checkout}], // (선택) 예약(숙소 검색 결과 등)
+     reservations:[{type,title,detail,status,checkin,checkout,url}], // (선택) 예약(숙소 검색 결과 등) — url: 예약 페이지(제휴 추적 포함)
      tab,                        // (선택) 담은 뒤 열 여행 탭(plan·budget·resv·pack·air)
      start, end, people          // (선택) 새 여행 기본값
    }
@@ -161,6 +161,8 @@
         var o = { id: 'r' + Math.random().toString(36).slice(2, 8), type: r.type || 'etc', title: r.title, detail: r.detail || '', status: r.status || 'planned', when: r.when || '' };
         if (r.checkin) o.checkin = r.checkin;
         if (r.checkout) o.checkout = r.checkout;
+        var bu = window.TripStore.bookUrl ? window.TripStore.bookUrl(r.url) : '';
+        if (bu) o.url = bu;
         t.reservations.push(o);
       });
     }
