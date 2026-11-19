@@ -32,7 +32,9 @@
   var CSS = [
     '.biz-footer{background:var(--gray-50,#F9FAFB);border-top:1px solid var(--gray-200,#E4E7EC);',
     '  color:var(--gray-500,#667085);font-size:11.5px;line-height:1.8;padding:18px 16px;',
-    '  text-align:center;letter-spacing:-.01em}',
+    '  text-align:center;letter-spacing:-.01em;word-break:keep-all;overflow-wrap:break-word}',
+    /* 번호·이메일·링크 한 덩어리는 중간에서 끊지 않음('335- / 21-02118' — 2026-11-19 화면 점검) */
+    '.biz-footer .biz-nw{white-space:nowrap}',
     '.biz-footer .biz-row{max-width:720px;margin:0 auto}',
     '.biz-footer .biz-name{font-weight:700;color:var(--gray-600,#475467)}',
     '.biz-footer a{color:inherit;text-decoration:underline;text-underline-offset:2px}',
@@ -45,6 +47,7 @@
   ].join('');
 
   function sep() { return '<span class="biz-sep">·</span>'; }
+  function nw(h) { return '<span class="biz-nw">' + h + '</span>'; }
 
   function build() {
     if (document.querySelector('.biz-footer')) return;
@@ -55,17 +58,17 @@
 
     var line1 =
       '<span class="biz-name">' + BIZ.brand + '</span>' +
-      '<span class="biz-sep">·</span>' + BIZ.name + ' (대표 ' + BIZ.owner + ')' +
-      sep() + '사업자등록번호 ' + BIZ.regno +
-      (BIZ.tongsin ? sep() + '통신판매업신고 ' + BIZ.tongsin : '');
+      '<span class="biz-sep">·</span>' + nw(BIZ.name + ' (대표 ' + BIZ.owner + ')') +
+      sep() + nw('사업자등록번호 ' + BIZ.regno) +
+      (BIZ.tongsin ? sep() + nw('통신판매업신고 ' + BIZ.tongsin) : '');
 
-    var line2 = BIZ.addr + (BIZ.email ? sep() + '<a href="mailto:' + BIZ.email + '">' + BIZ.email + '</a>' : '');
+    var line2 = BIZ.addr + (BIZ.email ? sep() + nw('<a href="mailto:' + BIZ.email + '">' + BIZ.email + '</a>') : '');
 
     var legal =
-      '<a href="/privacy">개인정보처리방침</a>' + sep() +
-      '<a href="/terms">이용약관</a>' + sep() +
-      '<a href="/guide">이용가이드</a>' +
-      sep() + '© 2026 ' + BIZ.brand;
+      nw('<a href="/privacy">개인정보처리방침</a>') + sep() +
+      nw('<a href="/terms">이용약관</a>') + sep() +
+      nw('<a href="/guide">이용가이드</a>') +
+      sep() + nw('© 2026 ' + BIZ.brand);
 
     var el = document.createElement('footer');
     el.className = 'biz-footer';

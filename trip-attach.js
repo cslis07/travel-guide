@@ -62,7 +62,7 @@
 
   function summaryLine(p) {
     var bits = [];
-    if (p.budget) bits.push('예산 ₩' + p.budget.toLocaleString('ko-KR'));
+    if (p.budget) bits.push('예산 ' + p.budget.toLocaleString('ko-KR') + '원');
     if (p.checklist && p.checklist.length) bits.push('준비물 ' + p.checklist.length + '개');
     if (p.itinerary && p.itinerary.length) bits.push('일정 ' + p.itinerary.length + '개');
     if (p.days && p.days.length) bits.push(p.days.length + '일 코스 · 일정 ' + p.days.reduce(function (n, d) { return n + d.length; }, 0) + '개');

@@ -555,7 +555,7 @@
     ];
     t.reservations = [
       { id: uid(), type: 'flight', title: '대한항공 KE723', detail: '인천(ICN) 08:05 → 간사이(KIX) 10:35 · 2인', status: 'confirmed', when: start },
-      { id: uid(), type: 'hotel', title: '남바 오리엔탈 호텔', detail: '3박 · ₩336,000 · trip.com', status: 'confirmed', when: start },
+      { id: uid(), type: 'hotel', title: '남바 오리엔탈 호텔', detail: '3박 · 336,000원 · trip.com', status: 'confirmed', when: start },
       { id: uid(), type: 'tour', title: '유니버설 스튜디오 재팬', detail: '1일권 2매 · 최저가 비교 중', status: 'planned', when: '' }
     ];
     t.checklist = [
@@ -570,7 +570,7 @@
     t.days[0].items = [
       { id: uid(), time: '10:35', type: 'flight', title: '간사이 국제공항 (KIX)', memo: '난카이 라피트 → 난바 (약 40분)' },
       { id: uid(), time: '13:00', type: 'sight', title: '도톤보리', memo: '글리코 사인 · 다코야키 · 리버크루즈' },
-      { id: uid(), time: '18:00', type: 'lodging', title: '남바 오리엔탈 호텔', memo: '체크인 · ₩112,000/박' }
+      { id: uid(), time: '18:00', type: 'lodging', title: '남바 오리엔탈 호텔', memo: '체크인 · 1박 112,000원' }
     ];
     upsert(t);
   }

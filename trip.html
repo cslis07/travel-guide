@@ -410,7 +410,7 @@ if(trip){ var _ti=T.daysBetween(trip.start,todayISO()); if(_ti>=0&&_ti<T.tripLen
 function sv(){ return '/svg'; }
 function svg(id,cls){ return '<svg class="i '+(cls||'')+'" viewBox="0 0 24 24"><use href="#'+id+'"/></svg>'; }
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function won(n){return '₩'+(n||0).toLocaleString('ko-KR');}
+function won(n){return (n||0).toLocaleString('ko-KR')+'원';}   /* 앱 전체 '1,240,000원' 표기로 통일(대시보드·견적과 같게, 2026-11-19) */
 /* 토스 아이디 송금 링크 — toss.me/아이디/금액. 아이디는 영문·숫자·._- 만 허용(공유 링크로 들어온 값 방어) */
 function tossId(v){ v=String(v||'').trim().replace(/^https?:\/\/(www\.)?toss\.me\//i,'').replace(/^toss\.me\//i,'').replace(/\/.*$/,''); return /^[A-Za-z0-9._-]{2,30}$/.test(v)?v:''; }
 function tossUrl(name,amt){ var m=(trip.members||[]).filter(function(x){return x.name===name;})[0], id=m&&tossId(m.toss); return id?'https://toss.me/'+id+'/'+Math.round(amt):''; }
@@ -1618,6 +1618,12 @@ function packSheetHtml(){
     }).join('');
     return '<div class="pk-g">'+esc(g.group)+'</div><div class="pk-wrap">'+rows+'</div>';
   }).join('');
+  // 고르기 목록에 없는 이름으로 담긴 것(예시 여행·직접 추가·예전 이름)도 보여 줘야 '담은 항목 N개'와 화면이 맞는다(2026-11-19 화면 점검)
+  var preset={}; PACK_PRESET.forEach(function(g){ g.items.forEach(function(t){ preset[t]=1; }); });
+  var extra=(trip.checklist||[]).filter(function(c){ return c.text && !preset[c.text]; });
+  if(extra.length) body='<div class="pk-g">이미 담은 항목</div><div class="pk-wrap">'+extra.map(function(c){
+    return '<div class="pk-item on" data-t="'+esc(c.text)+'" onclick="if(confirm(\'준비물에서 뺄까요?\'))togglePreset(this.dataset.t,\'\')" title="누르면 빼요"><span class="pk-box">'+svg('ic-tick')+'</span>'+esc(c.text)+'</div>';
+  }).join('')+'</div>'+body;
   var added=(trip.checklist||[]).length;
   return '<h3>준비물 추가</h3>'
     +'<div style="font-size:12.5px;color:var(--gray-500);margin:-4px 0 12px">체크할 항목을 눌러 담으세요'+(added?' · 담은 항목 '+added+'개':'')+'</div>'
