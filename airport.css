@@ -2,7 +2,7 @@
 /* ── DESIGN TOKENS ── */
 :root{
   --bg:#0c0f1e;--bg2:#101628;--card:#141b2d;--card2:#0f1422;
-  --border:#1f2d48;--text:#d0dbf5;--text2:#8aa4c6;--muted:#4e6180;
+  --border:#1f2d48;--text:#d0dbf5;--text2:#8aa4c6;--muted:#71849f;
   --accent:#00c8f0;--a-dim:rgba(0,200,240,.12);--a-hover:rgba(0,200,240,.07);
   --g:#22c55e;--y:#f59e0b;--o:#f97316;--r:#ef4444;--b:#3b82f6;
   --topbar-bg:#07091d;--strip-bg:#0b0e22;
@@ -1167,3 +1167,5 @@ button,select,input,a{touch-action:manipulation}
 @supports(padding:max(0px)){
   body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
 }
+/* 맨 아래 메인·방침·약관 링크 — 15px 높이라 누르기 어렵던 것 */
+body>footer a{display:inline-block;padding:8px 4px}

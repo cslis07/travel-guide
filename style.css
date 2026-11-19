@@ -741,14 +741,14 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
 .footer-brand p {
   font-size: 0.85rem;
   margin-top: 10px;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.68);
   line-height: 1.6;
 }
 
 .footer-brand .disclaimer {
   font-size: 0.75rem;
   margin-top: 14px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.58);
 }
 
 .footer-nav {
@@ -768,7 +768,7 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
 
 .footer-nav a {
   font-size: 0.82rem;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.68);
   transition: color 0.15s;
 }
 
@@ -778,7 +778,7 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
   border-top: 1px solid rgba(255,255,255,0.08);
   padding-top: 20px;
   font-size: 0.78rem;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.58);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -2779,7 +2779,7 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 .hx-info[open]>summary::after{content:"－"}
 /* 출국 준비 한 곳(/prepare) — 여행 연결 안내 · 챙길 물건(checklist.js) */
 .pr-trip,.pk-trip{background:var(--primary-lt);border-radius:12px;padding:11px 13px;font-size:13px;line-height:1.55;color:var(--gray-800);margin:10px 0}
-.pr-trip a,.pk-trip a{color:var(--primary);font-weight:800;white-space:nowrap}
+.pr-trip a,.pk-trip a{color:var(--primary);font-weight:800;white-space:nowrap;display:inline-block;padding:8px 2px;margin:-8px 0}
 .pr-jump{display:block;text-align:center;margin:6px 0 2px;font-size:13px;font-weight:700;color:var(--primary);text-decoration:none}
 .pk-sec{margin-top:28px}.pk-sec h2{font-size:20px;font-weight:800;letter-spacing:-.02em;margin:0 0 10px}
 .pk-g{background:var(--surface,#fff);border:1px solid var(--gray-200);border-radius:14px;padding:6px 12px;margin-bottom:10px}
@@ -2843,6 +2843,10 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
   body:not(.gx-product) img { opacity: .94; }
   body:not(.gx-product) .fx-bar { background: #141a2b; border-color: rgba(255,255,255,.06); }
   body:not(.gx-product) .fx-calc-bar { background: #2a2312; }
+  /* 맨 아래 안내 — 바탕 변수(--gray-800)가 다크에서 밝게 뒤집혀 흰 글씨가 안 보이던 것(2026-11-19 점검) */
+  body:not(.gx-product) .footer { background: #0a0d12; border-top: 1px solid rgba(255,255,255,.07); }
+  body:not(.gx-product) .footer-brand .logo, body:not(.gx-product) .footer-nav h4, body:not(.gx-product) .footer-nav a:hover { color: #fff; }
+  body:not(.gx-product) .fx-rate strong { color: #8fb0ff; }
 }
 
 /* iOS는 16px 미만 입력칸에 포커스하면 화면을 확대한다 — 모바일에서 16px로 고정 */

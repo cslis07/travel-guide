@@ -26,7 +26,7 @@
 
 .tt-tabs{
   display:flex;gap:6px;overflow-x:auto;margin:-26px 0 18px;padding:6px;
-  background:#fff;border-radius:14px;box-shadow:var(--shadow);position:relative;z-index:10;
+  background:var(--surface,#fff);border-radius:14px;box-shadow:var(--shadow);position:relative;z-index:10;
 }
 .tt-tabs::-webkit-scrollbar{display:none}
 .tt-tab{
@@ -36,7 +36,7 @@
 }
 .tt-tab.active{background:var(--primary);color:#fff}
 
-.tt-panel{display:none;background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);
+.tt-panel{display:none;background:var(--surface,#fff);border:1px solid var(--gray-200);border-radius:var(--radius);
   box-shadow:var(--shadow);padding:18px;margin-bottom:16px}
 .tt-panel.active{display:block}
 .tt-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
@@ -44,7 +44,7 @@
 .tt-field label{font-size:12px;font-weight:600;color:var(--gray-600)}
 .tt-field input,.tt-field select{
   border:1px solid var(--gray-200);border-radius:10px;padding:12px;font-size:15px;
-  font-family:inherit;color:var(--dark);outline:none;background:#fff;
+  font-family:inherit;color:var(--dark);outline:none;background:var(--surface,#fff);
 }
 .tt-field input:focus,.tt-field select:focus{border-color:var(--primary)}
 .tt-btn{
@@ -56,7 +56,7 @@
 
 .tt-results{margin-top:4px}
 .tt-card{
-  background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);
+  background:var(--surface,#fff);border:1px solid var(--gray-200);border-radius:var(--radius);
   padding:18px 20px;box-shadow:var(--shadow);white-space:pre-wrap;font-size:14.5px;line-height:1.95;
 }
 .tt-card strong{color:var(--primary-dark);font-weight:700}
@@ -67,7 +67,7 @@
   border-radius:50%;animation:ttspin .8s linear infinite;margin:0 auto 12px}
 @keyframes ttspin{to{transform:rotate(360deg)}}
 .tt-err{background:#FFF5F5;border:1px solid #FFD0D0;color:#C92A2A;border-radius:12px;padding:14px 16px;font-size:13.5px}
-.tt-retry{margin-top:10px;padding:8px 16px;border:1px solid var(--primary);background:#fff;color:var(--primary);border-radius:8px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer}
+.tt-retry{margin-top:10px;padding:8px 16px;border:1px solid var(--primary);background:var(--surface,#fff);color:var(--primary);border-radius:8px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer}
 .tt-retry:hover{background:var(--primary);color:#fff}
 .tt-cta{
   display:block;text-align:center;margin-top:14px;background:#FFF3E9;color:var(--accent-dark);
@@ -85,7 +85,7 @@
 /* 항공편 카드 */
 .tt-flight-head{font-size:13px;font-weight:700;color:var(--gray-600);margin-bottom:10px;padding:0 2px}
 .tt-flight-card{
-  display:block;background:#fff;border:1px solid var(--gray-200);border-radius:var(--radius);
+  display:block;background:var(--surface,#fff);border:1px solid var(--gray-200);border-radius:var(--radius);
   padding:15px 18px;box-shadow:var(--shadow);margin-bottom:10px;transition:.15s;position:relative;
 }
 a.tt-flight-card:hover{border-color:var(--primary);box-shadow:var(--shadow-hover)}
@@ -101,10 +101,10 @@ a.tt-flight-card:hover{border-color:var(--primary);box-shadow:var(--shadow-hover
 .tt-flight-cta{display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:var(--accent-dark)}
 .tt-flight-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .tt-flight-head>span{flex:1;min-width:0}
-.tt-sort{border:1px solid var(--gray-200);border-radius:8px;padding:6px 10px;font-size:12.5px;font-family:inherit;color:var(--dark);background:#fff;cursor:pointer;outline:none}
+.tt-sort{border:1px solid var(--gray-200);border-radius:8px;padding:6px 10px;font-size:12.5px;font-family:inherit;color:var(--dark);background:var(--surface,#fff);cursor:pointer;outline:none}
 
 /* 서브 버튼 (캘린더) */
-.tt-btn-sub{background:#fff;color:var(--primary);border:1.5px solid var(--primary);margin-top:8px}
+.tt-btn-sub{background:var(--surface,#fff);color:var(--primary);border:1.5px solid var(--primary);margin-top:8px}
 .tt-btn-sub:hover{background:var(--primary-lt)}
 
 /* 검색 히스토리 */
@@ -112,7 +112,7 @@ a.tt-flight-card:hover{border-color:var(--primary);box-shadow:var(--shadow-hover
 .tt-history:empty{display:none}
 .tt-hist-lbl{font-size:12px;font-weight:700;color:var(--gray-500);margin-right:2px}
 .tt-hist-chip{
-  background:#fff;border:1px solid var(--gray-200);border-radius:999px;padding:6px 13px;
+  background:var(--surface,#fff);border:1px solid var(--gray-200);border-radius:999px;padding:6px 13px;
   font-size:12.5px;font-family:inherit;color:var(--gray-600);cursor:pointer;transition:.12s;
 }
 .tt-hist-chip:hover{border-color:var(--primary);color:var(--primary)}
@@ -125,7 +125,7 @@ a.tt-flight-card:hover{border-color:var(--primary);box-shadow:var(--shadow-hover
 .tt-fare-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
 .tt-fare-cell{
   display:flex;flex-direction:column;gap:3px;align-items:flex-start;
-  background:#fff;border:1px solid var(--gray-200);border-radius:10px;padding:11px 13px;
+  background:var(--surface,#fff);border:1px solid var(--gray-200);border-radius:10px;padding:11px 13px;
   font-family:inherit;cursor:pointer;transition:.12s;text-align:left;
 }
 .tt-fare-cell:hover{border-color:var(--primary);box-shadow:var(--shadow)}
@@ -140,7 +140,7 @@ a.tt-flight-card:hover{border-color:var(--primary);box-shadow:var(--shadow-hover
 .tt-items-head b{color:var(--dark);font-weight:800}
 .tt-grid{display:grid;grid-template-columns:1fr;gap:12px}
 .tt-item{
-  display:flex;gap:0;background:#fff;border:1px solid var(--gray-200);border-radius:16px;
+  display:flex;gap:0;background:var(--surface,#fff);border:1px solid var(--gray-200);border-radius:16px;
   overflow:hidden;box-shadow:0 1px 3px rgba(16,24,40,.05);text-decoration:none;color:inherit;
   transition:transform .14s ease,box-shadow .14s ease,border-color .14s ease;
 }
@@ -165,7 +165,7 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
 /* 숙소 플랫폼별 가격 비교 (구글 호텔 "모든 옵션" 형태) */
 .tt-stay{display:flex;flex-direction:column;gap:0}
 .tt-stay .tt-item{border-bottom-left-radius:0;border-bottom-right-radius:0}
-.pc-box{background:#fff;border:1px solid var(--gray-200);border-top:0;padding:6px 14px 10px}
+.pc-box{background:var(--surface,#fff);border:1px solid var(--gray-200);border-top:0;padding:6px 14px 10px}
 .pc-box:empty{display:none}
 /* 숙소 카드 맨 아래: 내 여행 예약에 담기 */
 .tt-att{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:44px;padding:10px 14px;
@@ -193,7 +193,7 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
 .pc-google:hover{background:#DCE6FF}
 .pc-more{display:block;text-align:right;padding:9px 0 2px;border-top:1px solid var(--gray-100);font-size:12.5px;font-weight:700;
   color:var(--primary);text-decoration:none}
-.pc-retry{margin-left:6px;border:1px solid var(--gray-200);background:#fff;border-radius:999px;padding:4px 10px;
+.pc-retry{margin-left:6px;border:1px solid var(--gray-200);background:var(--surface,#fff);border-radius:999px;padding:4px 10px;
   font-family:inherit;font-size:12px;font-weight:700;color:var(--primary);cursor:pointer}
 @media(max-width:640px){
   .pc-box{padding:4px 12px 10px}
@@ -211,7 +211,7 @@ a.tt-item:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(16,24,40,
 
 /* 페이지네이션 */
 .tt-pager{display:flex;align-items:center;justify-content:center;gap:6px;margin:18px 0 4px;flex-wrap:wrap}
-.tt-page-btn{min-width:36px;height:36px;padding:0 10px;border:1px solid var(--gray-200);background:#fff;
+.tt-page-btn{min-width:36px;height:36px;padding:0 10px;border:1px solid var(--gray-200);background:var(--surface,#fff);
   border-radius:9px;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--gray-600);cursor:pointer;transition:.12s}
 .tt-page-btn:hover:not(:disabled){border-color:var(--primary);color:var(--primary)}
 .tt-page-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}

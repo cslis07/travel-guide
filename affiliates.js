@@ -273,7 +273,7 @@
       var label = o.verb
         ? esc(p.label) + '에서 ' + esc(o.verb)
         : (query ? esc(p.label) + '에서 "' + esc(query) + '" 보기' : esc(p.label) + ' 바로가기');
-      return '<a class="aff-cta" style="background:' + p.bg + ';color:' + p.color + '"' +
+      return '<a class="aff-cta" style="--ab:' + p.bg + ';--ac:' + p.color + '"' +
         ' href="' + esc(href) + '" target="_blank" rel="nofollow sponsored noopener"' +
         ' data-aff="' + esc(p.key) + '">' + label + ' ↗</a>';
     }).join('');
@@ -406,11 +406,14 @@
     '.aff-cta{display:inline-flex;align-items:center;gap:6px;padding:10px 14px;border-radius:999px;',
     '  font-size:.82rem;font-weight:700;text-decoration:none;margin:4px 6px 4px 0;',
     '  transition:transform .12s ease,box-shadow .12s ease}',
+    /* 브랜드색 그대로는 연한 바탕 위 대비가 낮다(마이리얼트립 2.2:1) — 글씨만 진하게 섞는다 */
+    'a.aff-cta{background:var(--ab);color:var(--ac);color:color-mix(in srgb,var(--ac) 60%,#000)}',
+    '@media(prefers-color-scheme:dark){a.aff-cta{background:color-mix(in srgb,var(--ac) 16%,#181d26);color:color-mix(in srgb,var(--ac) 55%,#fff);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ac) 35%,transparent)}}',
     '.aff-cta:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(16,24,40,.13)}',
     '.aff-goods{margin:0 0 8px;padding:14px;border:1px solid #FCE4CC;background:#FFF8F1;border-radius:14px}',
     '.aff-goods-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:12px}',
     '.agh-title{font-size:1rem;font-weight:800;color:#101828;letter-spacing:-.02em}',
-    '.agh-coupon{font-size:.72rem;font-weight:700;color:#EA6600;background:#FFEDD9;padding:5px 10px;border-radius:999px}',
+    '.agh-coupon{font-size:.72rem;font-weight:700;color:#A84A00;background:#FFEDD9;padding:5px 10px;border-radius:999px}',
     '.aff-goods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}',
     '.aff-goods-card{display:flex;flex-direction:column;gap:7px;padding:13px;border:1px solid #F0E0CC;border-radius:12px;background:#fff;text-decoration:none;transition:transform .12s ease,box-shadow .12s ease,border-color .12s}',
     '.aff-goods-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(16,24,40,.1);border-color:#F5C99A}',
@@ -420,14 +423,14 @@
     '@media(prefers-color-scheme:dark){.aff-goods{background:rgba(234,102,0,.08);border-color:rgba(234,102,0,.25)}.agh-title{color:#F2F4F7}.aff-goods-card{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.1)}.agc-name{color:#CDD5DF}}',
     '.tg-inline{margin-top:10px;padding:10px 12px;background:#FFF8F1;border:1px solid #FCE4CC;border-radius:10px}',
     '.tg-inline-lbl{font-size:.72rem;font-weight:800;color:#B45309;margin-bottom:7px}',
-    '.tg-inline-lbl span{font-weight:600;color:#C2792B}',
+    '.tg-inline-lbl span{font-weight:600;color:#9A5B12}',
     '.tg-item{display:flex;align-items:center;gap:8px;padding:7px 6px;text-decoration:none;border-top:1px solid #F7E4CE}',
     '.tg-item:first-of-type{border-top:0}',
     '.tg-ico{font-size:17px;line-height:1;flex-shrink:0}',
     '.tg-nm{flex:1;min-width:0;font-size:.8rem;font-weight:600;color:#344054;line-height:1.35}',
     '.tg-go{font-size:.75rem;font-weight:800;color:#2577E3;white-space:nowrap}',
     '.tg-item:hover .tg-nm{color:#101828}',
-    '@media(prefers-color-scheme:dark){.tg-inline{background:rgba(234,102,0,.08);border-color:rgba(234,102,0,.25)}.tg-nm{color:#CDD5DF}}',
+    '@media(prefers-color-scheme:dark){.tg-inline{background:rgba(234,102,0,.08);border-color:rgba(234,102,0,.25)}.tg-nm{color:#CDD5DF}.tg-inline-lbl{color:#F5B66B}.tg-inline-lbl span{color:#E3B07C}}',
     '.aff-disclosure{font-size:.7rem;line-height:1.55;color:#667085;margin-top:14px;',
     '  padding:10px 12px;background:#F9FAFB;border:1px solid #E4E7EC;border-radius:10px}',
     '@media(prefers-color-scheme:dark){',
