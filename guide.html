@@ -377,7 +377,7 @@ kbd{
     <div class="sidebar-section">
       <a class="sidebar-link" href="#sec-domestic">
         <span class="sidebar-dot" style="background:var(--c3)"></span>
-        국내여행 (TourAPI)
+        국내여행 (한국관광공사)
       </a>
       <div class="sidebar-sub">
         <a href="#dom-search">지역·업종 검색</a>
@@ -435,7 +435,7 @@ kbd{
         부가 기능
       </a>
       <div class="sidebar-sub">
-        <a href="#tool-search">통합 검색 (Ctrl+K)</a>
+        <a href="#tool-search">통합 검색 (🔍 버튼)</a>
         <a href="#tool-share">공유 + URL 딥링크</a>
         <a href="#tool-theme">테마 + 한/영</a>
         <a href="#tool-pwa">홈 화면 추가 (PWA)</a>
@@ -468,58 +468,44 @@ kbd{
 
       <div class="update-card new">
         <div class="update-head">
-          <span class="update-date">2026.06.30</span>
+          <span class="update-date">2026.11.17</span>
           <span class="update-badge">NEW</span>
         </div>
-        <div class="update-title">🛡️ API 키 보안 강화 + Edge Cache 도입</div>
+        <div class="update-title">🧳 숙소를 내 여행 예약에 담기 · 일정 길게 눌러 옮기기</div>
         <div class="update-body">
-          한국관광공사(TourAPI) 호출을 Vercel Edge Function 프록시 뒤로 옮겼습니다.
           <ul>
-            <li>서비스 키가 더 이상 브라우저에 노출되지 않음</li>
-            <li>같은 검색을 100명이 해도 실제 API 호출은 1회로 압축 (s-maxage 캐싱)</li>
-            <li>API 장애 시 친절한 안내 메시지로 변경</li>
+            <li>숙소 검색 결과에서 '내 여행 예약에 담기' — 체크인·체크아웃이 담기고, 예약 탭에서 '예약 페이지 다시 열기'</li>
+            <li>내 여행 일정 카드를 길게 눌러 끌면 순서·날짜를 바꿀 수 있어요</li>
+            <li>날씨 예보가 끊기지 않게 고쳤고, 못 불러오면 잠시 뒤 다시 불러와요</li>
           </ul>
         </div>
       </div>
 
       <div class="update-card new">
         <div class="update-head">
-          <span class="update-date">2026.06.26</span>
+          <span class="update-date">2026.11.16</span>
           <span class="update-badge">NEW</span>
         </div>
-        <div class="update-title">📱 모바일 UI 대폭 개선</div>
+        <div class="update-title">🧾 영수증 사진으로 지출 입력 · 견적 대비 실제</div>
         <div class="update-body">
-          모바일 화면에서 더 편하게 쓸 수 있도록 다듬었습니다.
           <ul>
-            <li>모든 버튼 44px 이상 터치 타깃 확보</li>
-            <li>탭 가로 스크롤(스냅) + iOS 자동 줌 방지(16px 입력)</li>
-            <li>인천공항 헤더 압축: 차트·공지 숨김, 날씨는 아이콘+온도+습도만</li>
-            <li>iPhone safe-area 대응, 풀스크린 검색 모달</li>
+            <li>지출 추가에서 영수증 사진을 고르면 합계 금액·가게 이름·분류를 찾아 채워요</li>
+            <li>예산 견적과 실제 쓴 돈을 항목별로 비교해 보여 줘요(예산 탭·대시보드·결산)</li>
+            <li>일정에 시간을 고르는 칸이 생겼어요</li>
           </ul>
         </div>
       </div>
 
       <div class="update-card">
         <div class="update-head">
-          <span class="update-date">2026.06.25</span>
+          <span class="update-date">2026.11.06</span>
         </div>
-        <div class="update-title">⏰ 출발 카운트다운 + Ctrl+K 통합 검색 + T1/T2 평면도</div>
+        <div class="update-title">💸 정산 마무리</div>
         <div class="update-body">
           <ul>
-            <li>내 편명에 추가한 항공편의 출발까지 실시간 카운트다운, 게이트 이동 권장 시간 표시</li>
-            <li><kbd>Ctrl</kbd> + <kbd>K</kbd> 단축키로 탭·항공편·시설 통합 검색</li>
-            <li>인천공항 T1/T2 평면도 SVG로 라운지·게이트·편의시설 위치 표시</li>
+            <li>송금 목록마다 '보냈어요 ✓' — 주고받은 기록이 남고 남은 정산만 다시 계산</li>
+            <li>금액·비율로 나누기, 숙박비를 며칠 몫으로 나누기</li>
           </ul>
-        </div>
-      </div>
-
-      <div class="update-card">
-        <div class="update-head">
-          <span class="update-date">2026.06.24</span>
-        </div>
-        <div class="update-title">💱 환율 계산기 + 목적지 5페이지 추가</div>
-        <div class="update-body">
-          상단 환율 계산기(6개 통화 즉시 변환) 추가. 목적지 가이드 페이지 5개 추가 (후쿠오카·도쿄·제주·부산·강릉).
         </div>
       </div>
     </section>
@@ -546,7 +532,7 @@ kbd{
           <li><span class="fi">🧮</span><div><span class="ft">환율 계산기</span><span class="fd">금액 입력 → 6개 통화 즉시 변환. 키 입력에 따라 실시간 갱신</span></div></li>
           <li><span class="fi">🔍</span><div><span class="ft">검색 위젯</span><span class="fd">항공권 / 호텔 / 국내여행 3개 탭. 외부 OTA로 검색 위임</span></div></li>
           <li><span class="fi">✈</span><div><span class="ft">인천공항 배너</span><span class="fd">실시간 정보 페이지(/airport)로 바로 이동</span></div></li>
-          <li><span class="fi">🗺</span><div><span class="ft">목적지 카드</span><span class="fd">9개 여행지(오사카·후쿠오카·도쿄·교토·방콕·다낭·발리·제주·부산·강릉)</span></div></li>
+          <li><span class="fi">🗺</span><div><span class="ft">목적지 카드</span><span class="fd">인기 여행지 카드 — 23개 여행지 전체는 '여행지' 메뉴(/destinations)에서</span></div></li>
         </ul>
       </div>
 
@@ -659,7 +645,7 @@ kbd{
       <div class="section-header sh-3">
         <span class="section-icon">🇰🇷</span>
         <div>
-          <div class="section-title">국내여행 (TourAPI)</div>
+          <div class="section-title">국내여행 (한국관광공사)</div>
           <div class="section-subtitle">한국관광공사 공공데이터 — 관광지·문화·축제·레포츠·숙박·음식점·카페</div>
         </div>
       </div>
@@ -784,7 +770,7 @@ kbd{
         <div class="steps">
           <div class="step"><div class="step-num" style="background:var(--c4)">1</div><div class="step-body"><div class="step-label">편명 입력</div><div class="step-text">예: <code>KE901</code>, <code>OZ102</code>. 자동완성으로 현재 운항 중인 편명 추천</div></div></div>
           <div class="step"><div class="step-num" style="background:var(--c4)">2</div><div class="step-body"><div class="step-label">출발/도착 선택</div><div class="step-text">드롭다운에서 출발편 또는 도착편 선택</div></div></div>
-          <div class="step"><div class="step-num" style="background:var(--c4)">3</div><div class="step-body"><div class="step-label">⭐ 추가</div><div class="step-text">localStorage에 영구 저장. 다음 방문 시에도 유지</div></div></div>
+          <div class="step"><div class="step-num" style="background:var(--c4)">3</div><div class="step-body"><div class="step-label">⭐ 추가</div><div class="step-text">이 기기에 저장돼 다음에 열어도 그대로 있어요</div></div></div>
         </div>
       </div>
 
@@ -932,7 +918,7 @@ kbd{
       <div class="feature" id="tool-search">
         <div class="feature-title">🔍 통합 검색 <span class="feature-badge">단축키</span></div>
         <p class="feature-desc">
-          인천공항 페이지에서 <kbd>Ctrl</kbd> + <kbd>K</kbd> (또는 우상단 🔍 버튼) → 8개 탭, 7개 액션, 항공편, 시설을 한 화면에서 즉시 검색.
+          인천공항 페이지 오른쪽 위 🔍 버튼(PC는 <kbd>Ctrl</kbd> + <kbd>K</kbd>) → 탭·항공편·시설을 한 화면에서 바로 검색.
         </p>
         <ul class="func-list">
           <li><span class="fi">⬆️⬇️</span><div><span class="ft">방향키로 선택 이동</span><span class="fd">결과 목록에서 위/아래로 이동</span></div></li>
@@ -958,13 +944,13 @@ kbd{
 
       <div class="feature" id="tool-theme">
         <div class="feature-title">🌙 테마 + 🌐 한/영</div>
-        <p class="feature-desc">우상단 토글로 다크/라이트 모드 전환. 시스템 prefers-color-scheme 자동 감지. <kbd>EN</kbd> 버튼으로 영어 번역 (탭·서브탭).</p>
+        <p class="feature-desc">오른쪽 위 버튼으로 다크/라이트 모드 전환. 처음엔 휴대폰 화면 설정(다크 모드)을 따라가요. <kbd>EN</kbd> 버튼으로 영어 번역 (탭·서브탭).</p>
       </div>
 
       <div class="feature" id="tool-pwa">
         <div class="feature-title">📱 홈 화면에 추가 (PWA)</div>
         <p class="feature-desc">
-          모바일 브라우저에서 "홈 화면에 추가" → 앱처럼 작동. Service Worker가 정적 자산을 캐싱해 오프라인에서도 마지막 화면이 표시됩니다. 실시간 API는 항상 네트워크 우선.
+          모바일 브라우저에서 "홈 화면에 추가" → 앱처럼 작동. 한 번 연 화면은 기기에 저장돼 인터넷이 끊겨도 열리고, 실시간 정보(항공편·혼잡도)는 연결될 때 새로 받아요.
         </p>
         <div class="tip tip-green">
           ✅ Chrome (Android): 주소창 옆 ⋮ → "홈 화면에 추가"<br>

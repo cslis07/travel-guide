@@ -62,7 +62,7 @@
     <div class="container">
       <div class="section-header">
         <h1 style="font-size:1.6rem;font-weight:850;letter-spacing:-.03em">여행지 가이드</h1>
-        <p>여행지를 선택하면 일정·항공권·호텔·입장권까지 한 번에 볼 수 있어요 · 항공권 가격은 2026년 5월 기준 참고가예요</p>
+        <p>여행지를 선택하면 일정·항공권·호텔·입장권까지 한 번에 볼 수 있어요 · 항공권 가격은 2026년 5월에 조사한 참고가라 지금 가격과 다를 수 있어요</p>
       </div>
 
       <div class="filter-bar">
@@ -527,7 +527,7 @@ document.getElementById('cmpGo').addEventListener('click', function () {
   var prices = cs.map(priceOf), flights = picked.map(function (n) { return DM[n][0]; });
   var minP = Math.min.apply(null, prices), minF = Math.min.apply(null, flights);
   var row = function (label, f) { return '<tr><th scope="row">' + label + '</th>' + picked.map(f).join('') + '</tr>'; };
-  var html = '<button type="button" class="cmp-x" aria-label="닫기">✕</button><h2>여행지 비교</h2><p class="note">항공권은 2026년 5월 기준 참고가, 이동 시간·추천 시기는 대략값이에요.</p>'
+  var html = '<button type="button" class="cmp-x" aria-label="닫기">✕</button><h2>여행지 비교</h2><p class="note">항공권은 2026년 5월에 조사한 참고가(지금과 다를 수 있음), 이동 시간·추천 시기는 대략값이에요.</p>'
     + '<table class="cmp-t"><thead><tr><th scope="row"></th>' + picked.map(function (n) { return '<th scope="col">' + n + '</th>'; }).join('') + '</tr></thead><tbody>'
     + row('항공권', function (n, i) { var t = (cs[i].querySelector('.dest-price') || {}).textContent || '—'; return '<td' + (prices[i] === minP && isFinite(minP) ? ' class="best"' : '') + '>' + t.replace('항공권 ', '') + '</td>'; })
     + row('이동 시간', function (n, i) { return '<td' + (flights[i] === minF ? ' class="best"' : '') + '>' + DM[n][1] + '</td>'; })

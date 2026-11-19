@@ -351,6 +351,8 @@
   .in{width:100%;padding:11px 12px;border:1px solid var(--gray-200);border-radius:11px;font-size:16px;font-family:inherit;background:var(--gray-50)}
   .row2{display:flex;gap:9px}.row2>div{flex:1}
   .save{width:100%;padding:14px;border:none;border-radius:14px;background:var(--primary);color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:14px}
+  /* 아래 창이 길어도 저장·추가 버튼은 늘 보이게(창 아래 붙임) — 지출·준비물 추가에서 첫 화면에 안 보이던 것(2026-11-19 화면 점검) */
+  #sheetBody>.save:not([style]){position:sticky;bottom:0;z-index:2;box-shadow:0 14px 0 14px var(--surface,#fff)}
 </style>
 </head>
 <body>
@@ -944,7 +946,7 @@ function paneResv(){
       +(r.url&&T.bookUrl&&T.bookUrl(r.url)?'<a class="rv-open" href="'+esc(r.url)+'" target="_blank" rel="nofollow sponsored noopener" onclick="event.stopPropagation()">🔗 예약 페이지 다시 열기 ↗</a>':'')
       +(r.addr?'<div class="rt rv-addr">📍 '+esc(r.addr)+'</div><button type="button" class="taxi-b" onclick="event.stopPropagation();showAddr(\''+r.id+'\')">🚕 택시 카드 · 길찾기</button>':'')+'</div>'+tag+'</div>';
   }).join(''):'<div class="card" style="color:var(--gray-500);font-size:12.5px;text-align:center;margin-bottom:10px">항공·숙소·투어 예약을 추가해 흐름에 연결하세요.</div>';
-  var af=affLink('tours','🎟️ 투어·티켓 최저가 비교 (마이리얼트립·클룩·trip.com)');
+  var af=affLink('tours','<span style="flex:1;min-width:0">🎟️ 투어·티켓 최저가 비교<small style="display:block;font-size:11.5px;font-weight:600;opacity:.75;margin-top:2px">마이리얼트립 · 클룩 · 트립닷컴</small></span>');
   return cancelBanner()+paste+body+af;
 }
 /* ⏰ 무료 취소 마감 칩 — 3일 이내 주황, 오늘 빨강, 지나면 회색 */

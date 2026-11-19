@@ -123,7 +123,7 @@
     <input class="in" id="f-city" placeholder="예: 오사카, 다낭, 강릉">
     <div class="row2">
       <div><label class="fl" for="f-start">출발일</label><input class="in" id="f-start" type="date"></div>
-      <div><label class="fl" for="f-end">도착일</label><input class="in" id="f-end" type="date"></div>
+      <div><label class="fl" for="f-end">귀국일</label><input class="in" id="f-end" type="date"></div>
     </div>
     <label class="fl" for="f-budget">총예산 (원, 선택)</label>
     <input class="in" id="f-budget" type="number" inputmode="numeric" placeholder="예: 1200000">
@@ -327,7 +327,7 @@ function card(t){
     +   '<button class="tdel" title="여행 삭제" aria-label="여행 삭제" onclick="event.stopPropagation();delTrip(\''+t.id+'\')">🗑</button>'
     +   '<button class="tcopy" title="이 여행을 새 날짜로 다시 쓰기" onclick="event.stopPropagation();copyTrip(\''+t.id+'\')">↻ 다시 쓰기</button>'
     +   '<span class="dday"'+(done?' style="background:rgba(0,0,0,.28)"':'')+'>'+T.ddayText(t)+'</span>'
-    +   '<div><h3>'+esc(t.city)+'</h3><div class="dt">'+T.fmtMD(t.start)+' – '+T.fmtMD(t.end)+' · '+T.tripLength(t)+'일 · '+(t.members||[]).length+'명</div></div>'
+    +   '<div><h3>'+esc(t.city)+'</h3><div class="dt">'+T.fmtMD(t.start)+' – '+T.fmtMD(t.end)+' · '+(T.tripLength(t)>1?(T.tripLength(t)-1)+'박 ':'')+T.tripLength(t)+'일 · '+(t.members||[]).length+'명</div></div>'
     + '</div>'
     + (T.budgetTotal(t)&&!done?'<div class="tbar"><div class="pr"><i style="width:'+pct+'%"></i></div></div>':'')
     + '<div class="tmeta"><span>📍 일정 '+places+'곳</span><span>💰 '+budgetLbl+'</span><div class="avz">'+mem+'</div></div>'

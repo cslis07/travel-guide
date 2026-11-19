@@ -318,7 +318,7 @@ async function loadParking() {
         const cr=ct?Math.round(co/ct*100):0;
         return `<div class="park-sum-box"><div class="park-sum-lbl">${cat} 주차장</div>
           <div class="park-sum-val ${prClass(cr)}">${cr}%</div>
-          <div class="park-sum-sub">기여 ${ct.toLocaleString()}면</div></div>`;
+          <div class="park-sum-sub">${co.toLocaleString()} / ${ct.toLocaleString()}면</div></div>`;
       }).join('');
       // Rows by category
       const rowsHtml=cats.flatMap(cat=>{
@@ -868,13 +868,13 @@ function renderFlights() {
       const air=(f.airline||'-').length>8?(f.airline||'-').slice(0,7)+'…':(f.airline||'-');
       return `<div class="flt-card2">
         <div class="flt-c2-top">
-          <span class="flt-c2-time${delayed?' delayed':''}">${sch}${delayed?`<br><small style="font-size:.56rem">${est}</small>`:''}</span>
+          <span class="flt-c2-time${delayed?' delayed':''}">${sch}${delayed?`<br><small style="font-size:.56rem" title="예정 ${sch} → 변경 ${est}">→ ${est} 변경</small>`:''}</span>
           ${badge(f.remark||'')}
         </div>
         <div class="flt-c2-flt">${f.flightId||'-'}</div>
         <div class="flt-c2-dest">${isDep?'↑':'↓'} ${dest}</div>
         <div class="flt-c2-air">${air}</div>
-        <div class="flt-c2-info">${ck?`체크인 ${ck.split('-')[0]}~`:''}${gate?` ✈${gate}`:''}</div>
+        <div class="flt-c2-info">${[ck?`카운터 ${ck.split('-')[0]}~`:'', gate?`${isDep?'탑승구':'수하물'} ${gate}`:''].filter(Boolean).join(' · ')}</div>
       </div>`;
     }).join('');
 

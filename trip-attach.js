@@ -99,7 +99,7 @@
       + '<div class="ta-div">새 여행 만들기</div>'
       + '<label class="ta-lbl">도시</label><input class="ta-in" id="ta-city" value="' + esc(payload.city || '') + '" placeholder="예: 오사카">'
       + '<div class="ta-row"><div><label class="ta-lbl">출발일</label><input class="ta-in" id="ta-start" type="date" value="' + d1 + '"></div>'
-      + '<div><label class="ta-lbl">도착일</label><input class="ta-in" id="ta-end" type="date" value="' + d2 + '"></div></div>'
+      + '<div><label class="ta-lbl">귀국일</label><input class="ta-in" id="ta-end" type="date" value="' + d2 + '"></div></div>'
       + '<label class="ta-lbl">커버 색</label><div class="ta-cov" id="ta-cov">'
       + covers.map(function (c) { return '<i class="cov-' + c + (c === curCover ? ' on' : '') + '" data-c="' + c + '"></i>'; }).join('')
       + '</div>'

@@ -273,7 +273,8 @@ td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--a-hover)}
 .rate-bar{height:4px;background:var(--border);border-radius:2px;margin-top:3px;overflow:hidden;min-width:60px}
-.rate-fill{height:100%;border-radius:2px}
+.rate-fill{height:100%;border-radius:2px;background:var(--g)}
+.rate-fill.pry{background:var(--y)}.rate-fill.pro{background:var(--o)}.rate-fill.prr{background:var(--r)}
 
 /* ── SECTION HEADER ── */
 .sec-hdr{

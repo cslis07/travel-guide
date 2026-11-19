@@ -317,7 +317,7 @@ window._loadChartJs = function(){
   <div class="fav-intro">
     <div class="fav-intro-text">
       <strong>⭐ 내 편명 추적</strong>
-      <span>편명을 저장하면 출발 카운트다운과 게이트·시간 변경을 확인할 수 있어요. localStorage 영구 저장.</span>
+      <span>편명을 저장하면 출발 카운트다운과 게이트·시간 변경을 확인할 수 있어요. 이 기기에 저장돼 다음에 열어도 그대로예요.</span>
     </div>
     <div class="fav-add-row">
       <input class="fav-add-input" id="fav-add-q" list="fav-suggestions" placeholder="편명 입력 (예: KE901, OZ102)" oninput="updateFavSuggestions()" onkeydown="if(event.key==='Enter')addFavFlight()">
@@ -820,7 +820,8 @@ window._loadChartJs = function(){
       h+='<div style="background:#F9FAFB;border:1px solid #E4E7EC;border-radius:14px;padding:14px 16px;margin-bottom:12px">'
         +'<div style="font-weight:800;font-size:15px;margin-bottom:4px">🚐 도착 공항에서 — 픽업·렌터카 미리 예약</div>'
         +'<div style="font-size:12.5px;color:#667085;margin-bottom:10px">짐이 많거나 늦은 시간 도착이면 현지 대중교통보다 편합니다. 출국 전에 잡아두세요.</div>'
-        +tr+cr+'</div>';
+        +(tr?'<div style="font-size:12px;font-weight:700;color:#475467;margin:2px 0 6px">🚐 공항 픽업·샌딩</div>'+tr:'')
+        +(cr?'<div style="font-size:12px;font-weight:700;color:#475467;margin:10px 0 6px">🚗 렌터카</div>'+cr:'')+'</div>';
     }
     if(AFF.goodsHtml) h+=AFF.goodsHtml();
     if(AFF.disclosureHtml) h+=AFF.disclosureHtml();

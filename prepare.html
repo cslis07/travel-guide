@@ -90,9 +90,11 @@
 .todo-name{font-size:.89rem;font-weight:650;color:var(--gray-800);line-height:1.45}
 .todo.done .todo-name{text-decoration:line-through;color:var(--gray-500)}
 .todo-desc{font-size:.75rem;color:var(--gray-500);line-height:1.55;margin-top:3px}
-.todo-links{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px}
-.todo-link{font-size:.72rem;font-weight:650;color:var(--primary);background:var(--primary-lt);
-  padding:6px 11px;border-radius:999px;text-decoration:none}
+/* 옆 제휴 버튼(.aff-cta)과 높이·글자를 맞춤 — 늘어난 칸 위쪽에 글자만 붙어 깨져 보이던 것(2026-11-19 화면 점검) */
+.todo-links{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.todo-link{display:inline-flex;align-items:center;min-height:40px;font-size:.82rem;font-weight:700;color:var(--primary);background:var(--primary-lt);
+  padding:0 14px;border-radius:999px;text-decoration:none}
+.todo-link:not(.ext)::after{content:' →';white-space:pre}
 .todo-link.ext{color:var(--gray-600);background:var(--gray-100)}
 .todo-link:hover{filter:brightness(.96)}
 
@@ -149,7 +151,7 @@
     <label for="departDate">출발일</label>
     <div class="pr-date-row">
       <input type="date" id="departDate">
-      <span class="pr-dday" id="dday">D-—</span>
+      <span class="pr-dday" id="dday"></span>
     </div>
   </div>
 
@@ -373,7 +375,7 @@ function render(){
   var done = getDone();
   var left = daysLeft();
 
-  $('dday').textContent = left == null ? 'D-—'
+  $('dday').textContent = left == null ? ''
     : left > 0 ? 'D-' + left : left === 0 ? 'D-DAY' : '출발일 지남';
 
   $('stages').innerHTML = STAGES.map(function(st){

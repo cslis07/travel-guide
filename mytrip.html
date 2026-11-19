@@ -90,18 +90,20 @@
     <!-- 내 편명 -->
     <div class="mt-card">
       <div class="mt-card-head">
-        <span>⭐</span><h2>내 편명</h2><span class="mt-count" id="c-flights">0</span>
+        <span>⭐</span><h2>인천공항 추적 편명</h2><span class="mt-count" id="c-flights">0</span>
         <a href="airport.html#tab=fav">인천공항에서 →</a>
       </div>
+      <p style="margin:-2px 0 8px;font-size:12px;color:#667085;line-height:1.5">인천공항 화면에서 ⭐로 추적하는 편명이에요. 여행마다 등록한 항공편은 내 여행 '공항' 탭에 있어요.</p>
       <div id="mt-flights"></div>
     </div>
 
     <!-- 출국 체크리스트 -->
     <div class="mt-card">
       <div class="mt-card-head">
-        <span>✅</span><h2>출국 체크리스트</h2>
+        <span>✅</span><h2>인천공항 출국 체크리스트</h2>
         <a href="airport.html#tab=prep">체크하러 →</a>
       </div>
+      <p style="margin:-2px 0 8px;font-size:12px;color:#667085;line-height:1.5">모든 여행에 공통인 출국 절차 목록이에요. 여행별 준비물은 내 여행 '준비물' 탭에서 따로 챙겨요.</p>
       <div id="mt-checklist"></div>
     </div>
 
@@ -154,7 +156,7 @@
       ? '<div class="mt-list">' + flights.map(function(f){
           return '<div class="mt-row"><span class="mt-ic">'+(f.dir==='dep'?'🛫':'🛬')+'</span><span class="mt-main">'+esc(f.flightId||'')+'</span><span class="mt-sub">'+(f.dir==='dep'?'출발':'도착')+'</span></div>';
         }).join('') + '</div>'
-      : '<div class="mt-empty">추적 중인 편명이 없어요.</div>';
+      : '<div class="mt-empty">인천공항 화면에서 추적 중인 편명이 없어요.</div>';
 
     // 체크리스트 진행
     var state = jget('icn_checklist','{}');

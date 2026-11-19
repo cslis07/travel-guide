@@ -552,7 +552,7 @@ const _TT_PAGE_SIZE = 5;
 function itemCard(it){
   const badges = (it.badges || []).slice(0,2).map(b => `<span class="tt-badge">${esc(b)}</span>`).join('');
   const rate = it.rating
-    ? `<span class="tt-rate">⭐ ${esc(it.rating)}${it.rcount ? ` <small>(${esc(it.rcount)})</small>` : ''}</span>` : '';
+    ? `<span class="tt-rate">⭐ ${esc(/^\d+$/.test(it.rating) ? it.rating + '.0' : it.rating)}${it.rcount ? ` <small>(${esc(it.rcount)})</small>` : ''}</span>` : '';
   const meta = (it.metas || []).slice(0,1).map(m => `<span class="tt-mloc">${esc(m)}</span>`).join('');
   const price = it.price ? `<span class="tt-price2">${esc(it.price)}</span>` : '<span></span>';
   const thumb = it.img

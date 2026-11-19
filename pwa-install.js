@@ -40,6 +40,8 @@ if ('serviceWorker' in navigator) {
     'background:#1B4FD8;color:#fff;font-family:inherit;font-size:13.5px;font-weight:700;',
     'box-shadow:0 6px 20px rgba(27,79,216,.4);transition:transform .15s;}',
     '#pwa-install-btn:hover{transform:translateY(-2px)}',
+    /* 떠 있는 버튼이 입력칸·가격·버튼을 가리지 않게 — 스크롤·입력 중·8초 뒤엔 숨김(2026-11-19 화면 점검) */
+    '#pwa-install-btn.pwa-away{opacity:0;transform:translateY(24px);pointer-events:none;transition:opacity .2s,transform .2s}',
     '#pwa-install-btn .pwa-x{margin-left:4px;opacity:.7;font-weight:400;padding:0 2px}',
     '#pwa-ios-sheet{position:fixed;inset:0;z-index:9100;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center}',
     '#pwa-ios-sheet.open{display:flex}',
@@ -57,6 +59,15 @@ if ('serviceWorker' in navigator) {
   btn.id = 'pwa-install-btn';
   btn.innerHTML = '📱 앱으로 설치 <span class="pwa-x" title="닫기">✕</span>';
   document.body.appendChild(btn);
+
+  // 잠깐 숨기기(닫기와 달리 저장 안 함): 아래로 스크롤하면, 입력칸을 누르면, 처음 보인 뒤 8초가 지나면
+  var awayTimer = 0;
+  function away(on) { btn.classList.toggle('pwa-away', !!on); }
+  function armTimer() { clearTimeout(awayTimer); awayTimer = setTimeout(function () { away(true); }, 8000); }
+  window.addEventListener('scroll', function () { if (window.scrollY > 60) away(true); }, { passive: true });
+  document.addEventListener('focusin', function (e) { if (e.target && /^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) away(true); });
+  var shown = new MutationObserver(function () { if (btn.style.display === 'inline-flex') { armTimer(); shown.disconnect(); } });
+  shown.observe(btn, { attributes: true, attributeFilter: ['style'] });
 
   function dismiss() {
     btn.style.display = 'none';
