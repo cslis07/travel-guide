@@ -542,11 +542,11 @@ function renderArex() {
   html('arex-area',`
     <div class="arex-tbl-hdr">
       <span class="arex-stn-sel">${stnName}</span>
-      <span class="arex-tbl-meta">총 ${total}편 · <span style="color:var(--o)">직행 ${dircCnt}편</span> · <span style="color:var(--muted)">일반 ${total-dircCnt}편</span></span>
+      <span class="arex-tbl-meta">총 ${total}편 · <span style="color:var(--ot)">직행 ${dircCnt}편</span> · <span style="color:var(--muted)">일반 ${total-dircCnt}편</span></span>
     </div>
     <div class="card" style="padding:8px">${tblHtml||(_arexData.some(f=>f.stnCd===cd&&f.planDptrDttm&&f.drvDt===today)?`<div class="loading">${stnName}에서 ${_arexDir==='to'?'공항':'서울'} 방향으로 출발하는 열차가 없어요 (종점)</div>`:'<div class="loading">해당 역 시간표 없음</div>')}</div>
     <div style="font-size:.62rem;color:var(--muted);margin-top:6px;padding-left:2px">
-      <span style="color:var(--o);font-weight:700">굵은 숫자</span> = 직행 · 현재 시각 근방 = <span style="background:var(--accent);color:#fff;padding:1px 3px;border-radius:2px">강조</span>
+      <span style="color:var(--ot);font-weight:700">굵은 숫자</span> = 직행 · 현재 시각 근방 = <span style="background:var(--accent);color:#fff;padding:1px 3px;border-radius:2px">강조</span>
     </div>
   `);
 }
@@ -632,16 +632,16 @@ function renderDepCong(list,areaId,label,isT2) {
   const statHtml=`<div class="cong-stat-strip">
     <div class="cong-stat-card">
       <div class="cong-stat-lbl">전체 대기인원</div>
-      <div class="cong-stat-val" style="color:var(--y)">${totLen>0?totLen+'명':'-'}</div>
+      <div class="cong-stat-val" style="color:var(--yt)">${totLen>0?totLen+'명':'-'}</div>
     </div>
     <div class="cong-stat-card">
       <div class="cong-stat-lbl">가장 혼잡</div>
-      <div class="cong-stat-val" style="color:var(--r)">${maxG?gateLabel(maxG):'-'}</div>
+      <div class="cong-stat-val" style="color:var(--rt)">${maxG?gateLabel(maxG):'-'}</div>
       ${maxG?`<div class="cong-stat-sub">${maxG.waitLength||0}명 약 ${maxG.waitTime||0}분</div>`:''}
     </div>
     <div class="cong-stat-card">
       <div class="cong-stat-lbl">가장 빠름(운영 중)</div>
-      <div class="cong-stat-val" style="color:var(--g)">${minG?gateLabel(minG):'-'}</div>
+      <div class="cong-stat-val" style="color:var(--gt)">${minG?gateLabel(minG):'-'}</div>
       ${minG?`<div class="cong-stat-sub">${minG.waitLength||0}명 약 ${minG.waitTime||0}분</div>`:''}
     </div>
   </div>`;
@@ -715,7 +715,7 @@ function renderArrCong(list,areaId,label) {
           <td>${f.airportCode||f.airport||'-'}</td>
           <td>${f.gatenumber||f.carousel||'-'}</td>
           <td>${sch}</td>
-          <td style="color:${early?'var(--o)':act!==sch&&act!=='-'?'var(--y)':'inherit'}">${act}</td>
+          <td style="color:${early?'var(--ot)':act!==sch&&act!=='-'?'var(--yt)':'inherit'}">${act}</td>
           <td>${kr}</td>
           <td>${fo}</td>
         </tr>`;

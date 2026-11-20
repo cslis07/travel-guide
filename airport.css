@@ -5,6 +5,8 @@
   --border:#1f2d48;--text:#d0dbf5;--text2:#8aa4c6;--muted:#71849f;
   --accent:#00c8f0;--a-dim:rgba(0,200,240,.12);--a-hover:rgba(0,200,240,.07);
   --g:#22c55e;--y:#f59e0b;--o:#f97316;--r:#ef4444;--b:#3b82f6;
+  /* 글씨용 상태 색 — 밝은 모드에선 흰 바탕 대비 4.5 이상으로 진하게(막대·테두리는 위 색 그대로) */
+  --gt:#22c55e;--yt:#f59e0b;--ot:#f97316;--rt:#ef4444;
   --topbar-bg:#07091d;--strip-bg:#0b0e22;
   --sh:0 4px 18px rgba(0,0,0,.45);--sh-sm:0 1px 6px rgba(0,0,0,.3);
   --rc:10px;--rb:6px;--rx:4px;
@@ -12,7 +14,7 @@
 [data-theme="light"]{
   --bg:#eef2fa;--bg2:#e6ecf6;--card:#ffffff;--card2:#f4f7fd;
   --border:#ccd5e8;--text:#0d1421;--text2:#334266;--muted:#677296;
-  --accent:#0077a8;--a-dim:rgba(0,119,168,.1);--a-hover:rgba(0,119,168,.06);
+  --accent:#0077a8;--gt:#15803d;--yt:#b45309;--ot:#c2410c;--rt:#b91c1c;--a-dim:rgba(0,119,168,.1);--a-hover:rgba(0,119,168,.06);
   --topbar-bg:#ffffff;--strip-bg:#ffffff;
   --sh:0 4px 18px rgba(0,0,0,.07);--sh-sm:0 1px 6px rgba(0,0,0,.05);
 }
@@ -195,10 +197,10 @@ body{
 .t-arrow{font-size:.59rem;display:flex;align-items:center;gap:3px;margin-top:1px}
 .t-arrow::before{content:'↑';font-size:.63rem;font-weight:700}
 .t-arrow-c{color:var(--text2)}.t-arrow-c::before{color:var(--accent)}
-.t-arrow-o{color:var(--text2)}.t-arrow-o::before{color:var(--o)}
+.t-arrow-o{color:var(--text2)}.t-arrow-o::before{color:var(--ot)}
 .t-val{font-size:1.45rem;font-weight:700;line-height:1.2}
 .t-val-c{color:var(--accent)}
-.t-val-o{color:var(--o)}
+.t-val-o{color:var(--ot)}
 .t-sub{font-size:.61rem;color:var(--muted);margin-top:2px}
 .t-sub b{font-weight:500;color:var(--text2)}
 
@@ -305,7 +307,7 @@ tr:hover td{background:var(--a-hover)}
   padding:5px 0 4px 8px;font-size:.72rem;font-weight:700;color:var(--text2);
   border-left:3px solid var(--accent);margin:9px 0 5px;
 }
-.prg{color:var(--g)}.pry{color:var(--y)}.pro{color:var(--o)}.prr{color:var(--r)}
+.prg{color:var(--gt)}.pry{color:var(--yt)}.pro{color:var(--ot)}.prr{color:var(--rt)}
 
 /* ── FLIGHT BOARD ── */
 .flt-controls{display:flex;align-items:center;gap:7px;margin-bottom:10px;flex-wrap:wrap}
@@ -357,7 +359,7 @@ tr:hover td{background:var(--a-hover)}
 .flt-card2:hover{background:var(--a-hover);border-color:var(--accent)}
 .flt-c2-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:3px;gap:2px}
 .flt-c2-time{font-size:.76rem;font-weight:600;color:var(--text);line-height:1.2;flex-shrink:0}
-.flt-c2-time.delayed{color:var(--o)}
+.flt-c2-time.delayed{color:var(--ot)}
 .flt-c2-flt{font-size:.72rem;font-weight:700;color:var(--accent);margin-bottom:1px}
 .flt-c2-dest{font-size:.68rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}
 .flt-c2-air{font-size:.61rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
@@ -391,7 +393,7 @@ tr:hover td{background:var(--a-hover)}
 .flt-btm{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:.64rem;color:var(--muted)}
 
 /* ── CONGESTION ── */
-.wait-good{color:var(--g)}.wait-ok{color:var(--y)}.wait-busy{color:var(--o)}.wait-jam{color:var(--r)}
+.wait-good{color:var(--gt)}.wait-ok{color:var(--yt)}.wait-busy{color:var(--ot)}.wait-jam{color:var(--rt)}
 .cong-section{
   margin-bottom:14px;border:1px solid var(--border);border-radius:var(--rc);
   overflow:hidden;background:var(--card);box-shadow:var(--sh-sm);
@@ -449,7 +451,7 @@ tr:hover td{background:var(--a-hover)}
 .arex-hr{font-size:.7rem;color:var(--muted);min-width:30px;flex-shrink:0}
 .arex-mins{display:flex;gap:5px;flex-wrap:wrap}
 .arex-min{font-size:.72rem;color:var(--text);cursor:pointer}
-.arex-min.dirc{color:var(--o);font-weight:600}
+.arex-min.dirc{color:var(--ot);font-weight:600}
 .arex-min.now{background:var(--accent);color:#fff;border-radius:3px;padding:0 3px}
 /* SHUTTLE */
 .shuttle-route{
@@ -479,7 +481,7 @@ tr:hover td{background:var(--a-hover)}
 .fac-card-name{font-size:.82rem;font-weight:700;color:var(--text);margin-bottom:5px}
 .fac-tags{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:5px}
 .fac-tag{display:inline-block;padding:2px 6px;border-radius:5px;font-size:.61rem;background:var(--a-dim);color:var(--accent)}
-.fac-tag-floor{background:rgba(34,197,94,.12);color:var(--g)}
+.fac-tag-floor{background:rgba(34,197,94,.12);color:var(--gt)}
 .fac-tag-duty{background:rgba(168,85,247,.12);color:#a855f7}
 .fac-tag-prod{background:var(--bg2);color:var(--text2)}
 .fac-loc{font-size:.68rem;color:var(--muted);line-height:1.5;margin-bottom:2px}
@@ -532,7 +534,7 @@ tr:hover td{background:var(--a-hover)}
 /* 출국장 혼잡 칸은 데이터가 오면 82→160~500px 로 커져 아래가 391px 밀렸다(CLS 0.66) — 폰에서 불러오는 동안 자리를 미리 잡는다(2026-11-06 360px 실측 높이) */
 @media(max-width:700px){#cong-dep1-area>.loading,#cong-dep2-area>.loading{min-height:460px}#cong-arr1-area>.loading{min-height:270px}#cong-arr2-area>.loading{min-height:150px}}
 .err{
-  padding:12px;color:var(--r);background:rgba(239,68,68,.08);
+  padding:12px;color:var(--rt);background:rgba(239,68,68,.08);
   border:1px solid rgba(239,68,68,.2);border-radius:var(--rb);font-size:.75rem;
 }
 .notice-bar{
@@ -613,7 +615,7 @@ tr:hover td{background:var(--a-hover)}
 .fav-route{font-size:.82rem;color:var(--text);font-weight:600}
 .fav-times{font-size:.7rem;color:var(--text2);display:flex;gap:10px;flex-wrap:wrap}
 .fav-times b{color:var(--text)}
-.fav-times .delay-tag{color:var(--y);font-weight:700}
+.fav-times .delay-tag{color:var(--yt);font-weight:700}
 .fav-gate{
   font-size:.7rem;color:var(--muted);
 }
@@ -623,7 +625,7 @@ tr:hover td{background:var(--a-hover)}
   border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:.9rem;
   display:flex;align-items:center;justify-content:center;transition:.15s;
 }
-.fav-remove-btn:hover{border-color:var(--r);color:var(--r)}
+.fav-remove-btn:hover{border-color:var(--r);color:var(--rt)}
 .fav-empty{
   text-align:center;padding:30px;color:var(--muted);font-size:.78rem;
   background:var(--card);border:1px dashed var(--border);border-radius:var(--rc);
@@ -637,9 +639,9 @@ tr:hover td{background:var(--a-hover)}
 .fav-countdown.warning{border-color:var(--y);background:rgba(245,158,11,.06)}
 .fav-countdown.go{border-color:var(--g);background:rgba(34,197,94,.06)}
 .fav-cd-time{font-weight:800;font-size:1rem;color:var(--accent);letter-spacing:.02em}
-.fav-countdown.urgent .fav-cd-time{color:var(--r)}
-.fav-countdown.warning .fav-cd-time{color:var(--y)}
-.fav-countdown.go .fav-cd-time{color:var(--g)}
+.fav-countdown.urgent .fav-cd-time{color:var(--rt)}
+.fav-countdown.warning .fav-cd-time{color:var(--yt)}
+.fav-countdown.go .fav-cd-time{color:var(--gt)}
 .fav-cd-msg{flex:1;color:var(--text2);font-weight:500;line-height:1.4}
 .fav-cd-msg b{color:var(--text);font-weight:700}
 
@@ -659,13 +661,13 @@ tr:hover td{background:var(--a-hover)}
   width:0%;transition:width .25s;
 }
 .best-gate{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.35);color:var(--text);border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:.8rem}
-.best-gate b{color:var(--g)}.best-gate span{color:var(--muted);font-size:.72rem}
+.best-gate b{color:var(--gt)}.best-gate span{color:var(--muted);font-size:.72rem}
 .park-calc{margin-top:10px}.pc-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
 .pc-row label{flex:1;min-width:140px;display:flex;flex-direction:column;gap:4px;font-size:.7rem;color:var(--text2);font-weight:600}
 .pc-row input,.pc-row select{background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:9px;font:inherit;font-size:.8rem;min-height:40px}
 .pc-dur{font-size:.75rem;color:var(--text2);margin-bottom:6px}.pc-cards{display:flex;gap:8px}
 .pc-c{flex:1;background:var(--card2);border:1px solid var(--border);border-radius:11px;padding:10px;text-align:center}.pc-c small{display:block;font-size:.68rem;color:var(--muted)}.pc-c b{font-size:1.05rem}
-.pc-c.win{border-color:var(--g)}.pc-c.win b{color:var(--g)}.pc-tip{font-size:.75rem;margin-top:8px;color:var(--text2)}
+.pc-c.win{border-color:var(--g)}.pc-c.win b{color:var(--gt)}.pc-tip{font-size:.75rem;margin-top:8px;color:var(--text2)}
 .pc-note{font-size:.62rem;color:var(--muted);margin-top:10px;line-height:1.5}.pc-note a{color:var(--accent)}
 .prep-move{display:block;margin-top:12px;background:var(--a-dim);border-radius:12px;padding:12px 14px;text-decoration:none;color:var(--text);font-size:.8rem}.prep-move b{display:block;color:var(--accent)}.prep-move span{font-size:.72rem;color:var(--text2)}
 #check-progress-lbl{font-size:.72rem;color:var(--text2);font-weight:600;white-space:nowrap}
@@ -674,7 +676,7 @@ tr:hover td{background:var(--a-hover)}
   border-radius:var(--rb);padding:6px 12px;cursor:pointer;font-size:.7rem;
   font-family:inherit;transition:.15s;
 }
-.check-reset-btn:hover{border-color:var(--r);color:var(--r)}
+.check-reset-btn:hover{border-color:var(--r);color:var(--rt)}
 
 /* ── 출국 진행 트래커 ── */
 .depart-tracker{
@@ -736,7 +738,7 @@ tr:hover td{background:var(--a-hover)}
   margin-left:auto;background:none;border:none;color:var(--muted);
   cursor:pointer;font-size:.8rem;padding:2px 6px;border-radius:4px;opacity:.6;
 }
-.check-del:hover{color:var(--r);opacity:1;background:rgba(239,68,68,.1)}
+.check-del:hover{color:var(--rt);opacity:1;background:rgba(239,68,68,.1)}
 .check-add-row{display:flex;gap:6px;margin-top:8px}
 .check-custom-input{
   flex:1;background:var(--card2);border:1px solid var(--border);border-radius:var(--rb);
@@ -837,8 +839,8 @@ tr:hover td{background:var(--a-hover)}
   letter-spacing:.04em;white-space:nowrap;
 }
 .lounge-tag.t1{background:rgba(0,200,240,.15);color:var(--accent);border:1px solid rgba(0,200,240,.3)}
-.lounge-tag.t2{background:rgba(245,158,11,.15);color:var(--y);border:1px solid rgba(245,158,11,.3)}
-.lounge-tag.pp{background:rgba(34,197,94,.15);color:var(--g);border:1px solid rgba(34,197,94,.3)}
+.lounge-tag.t2{background:rgba(245,158,11,.15);color:var(--yt);border:1px solid rgba(245,158,11,.3)}
+.lounge-tag.pp{background:rgba(34,197,94,.15);color:var(--gt);border:1px solid rgba(34,197,94,.3)}
 .lounge-loc{font-size:.7rem;color:var(--muted)}
 .lounge-loc b{color:var(--text2);font-weight:500}
 .lounge-cards-line{font-size:.7rem;color:var(--text2);line-height:1.5}
