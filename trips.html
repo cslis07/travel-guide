@@ -57,9 +57,9 @@
   .mwrap.on{display:flex}
   .tw-head>div:first-child{flex:1}
   .bkbtn{border:1px solid var(--gray-200);background:var(--surface,#fff);color:var(--gray-700);border-radius:14px;padding:10px 12px;font-size:13px;font-weight:800;margin-right:8px;cursor:pointer;font-family:inherit}
-  .bk-p{font-size:13px;color:var(--gray-600);line-height:1.6;margin:4px 0 10px}.bk-last{font-size:12.5px;font-weight:700;color:var(--primary);margin-bottom:8px}
+  .bk-p{font-size:13px;color:var(--gray-600);line-height:1.6;margin:4px 0 10px}.bk-last{font-size:12.5px;font-weight:700;color:var(--primary-tx,var(--primary));margin-bottom:8px}
   .bk-chk{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;min-height:40px}.bk-chk small{font-weight:500;color:var(--gray-500)}
-  .bk-restore{display:flex;align-items:center;justify-content:center;min-height:48px;margin-top:8px;border:1.5px dashed var(--gray-300);border-radius:14px;font-size:14px;font-weight:800;color:var(--primary);cursor:pointer}
+  .bk-restore{display:flex;align-items:center;justify-content:center;min-height:48px;margin-top:8px;border:1.5px dashed var(--gray-300);border-radius:14px;font-size:14px;font-weight:800;color:var(--primary-tx,var(--primary));cursor:pointer}
   .bk-note{font-size:11.5px;color:var(--gray-500);margin-top:10px;line-height:1.5}
   .bk-banner{display:flex;align-items:center;gap:10px;background:#FFFAEB;border:1px solid #FEDF89;border-radius:14px;padding:11px 13px;margin-bottom:14px}
   .bk-banner span{font-size:20px}.bk-banner div{flex:1;font-size:12.5px;color:#93370D}.bk-banner small{display:block;color:#B54708}
@@ -127,7 +127,7 @@
     </div>
     <label class="fl" for="f-budget">총예산 (원, 선택)</label>
     <input class="in" id="f-budget" type="number" inputmode="numeric" placeholder="예: 1200000">
-    <a href="/estimate" style="display:inline-block;margin-top:6px;font-size:12px;font-weight:700;color:var(--primary);text-decoration:none">🧮 얼마 들지 모르겠다면 — 경비 계산으로 예산 잡기 ›</a>
+    <a href="/estimate" style="display:inline-block;margin-top:6px;font-size:12px;font-weight:700;color:var(--primary-tx,var(--primary));text-decoration:none">🧮 얼마 들지 모르겠다면 — 경비 계산으로 예산 잡기 ›</a>
     <div class="row2">
       <div><label class="fl" for="f-ppl">인원</label><input class="in" id="f-ppl" type="number" inputmode="numeric" value="1" min="1"></div>
       <div><label class="fl">커버 색</label>

@@ -110,7 +110,7 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
 .fx-label {
   font-size: 12px;
   font-weight: 800;
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
   white-space: nowrap;
   flex-shrink: 0;
   letter-spacing: 0.02em;
@@ -268,7 +268,7 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
 .logo {
   font-size: 1.2rem;
   font-weight: 900;
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -286,7 +286,7 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
   transition: color 0.15s;
 }
 
-.nav a:hover { color: var(--primary); }
+.nav a:hover { color:var(--primary-tx,var(--primary)); }
 
 .menu-btn {
   display: none;
@@ -492,7 +492,7 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
 .section-badge {
   display: inline-block;
   background: rgba(27,79,216,0.1);
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
   font-size: 0.78rem;
   font-weight: 700;
   padding: 4px 12px;
@@ -610,7 +610,7 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
 
 .dest-price {
   font-size: 0.82rem;
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
   font-weight: 600;
 }
 
@@ -657,7 +657,7 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
 .how-num {
   font-size: 0.75rem;
   font-weight: 900;
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
   letter-spacing: 0.1em;
   margin-bottom: 10px;
 }
@@ -796,7 +796,7 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
   border-bottom: 1px solid var(--gray-200);
 }
 
-.breadcrumb a { color: var(--primary); }
+.breadcrumb a { color:var(--primary-tx,var(--primary)); }
 .breadcrumb a:hover { text-decoration: underline; }
 .breadcrumb span { margin: 0 6px; }
 
@@ -906,7 +906,7 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
 
 .dest-nav a:hover,
 .dest-nav a.active {
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
   border-bottom-color: var(--primary);
 }
 
@@ -985,7 +985,7 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
   display: block;
   font-size: 0.92rem;
   font-weight: 700;
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
 }
 
 .budget-note {
@@ -1138,7 +1138,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
 .price-cell {
   font-size: 1rem;
   font-weight: 800;
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
 }
 
 .book-btn {
@@ -1189,7 +1189,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
 
 .cta-btn.secondary {
   background: var(--white);
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
   border: 1.5px solid var(--primary);
 }
 
@@ -1262,7 +1262,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
 }
 
 .hotel-price { font-size: 0.85rem; color: var(--dark); margin-bottom: 10px; }
-.hotel-price strong { color: var(--primary); font-size: 1rem; }
+.hotel-price strong { color:var(--primary-tx,var(--primary)); font-size: 1rem; }
 
 .hotel-tags {
   display: flex;
@@ -1368,7 +1368,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
 .ticket-price {
   font-size: 1.1rem;
   font-weight: 800;
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
   margin-bottom: 14px;
 }
 
@@ -1843,7 +1843,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
   line-height: 1.7;
 }
 
-.dom-error a { color: var(--primary); text-decoration: underline; }
+.dom-error a { color:var(--primary-tx,var(--primary)); text-decoration: underline; }
 .dom-error code {
   background: var(--gray-100);
   padding: 2px 6px;
@@ -1888,7 +1888,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
 }
 .tmd-save-btn.active { background: #FEE2E2; color: #EF4444; }
 .saved-count-badge {
-  font-size: 14px; color: var(--primary); font-weight: 700;
+  font-size: 14px; color:var(--primary-tx,var(--primary)); font-weight: 700;
 }
 
 .dom-card:hover {
@@ -1992,7 +1992,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
 
 .type-tab:hover {
   border-color: var(--primary);
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
   background: rgba(27,79,216,0.05);
 }
 
@@ -2258,7 +2258,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
 
 .dom-more {
   font-size: 0.73rem;
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
   font-weight: 600;
   margin-top: 7px;
 }
@@ -2322,7 +2322,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
   flex-shrink: 0;
   transition: all 0.15s;
 }
-.dom-fb-parking-btn:hover { border-color: var(--primary); color: var(--primary); }
+.dom-fb-parking-btn:hover { border-color: var(--primary); color:var(--primary-tx,var(--primary)); }
 .dom-fb-parking-btn.active { background: var(--primary); border-color: var(--primary); color: var(--white); }
 .dom-fb-parking-btn:disabled { opacity: 0.6; cursor: wait; }
 
@@ -2354,7 +2354,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
   display: inline-block;
   font-size: 0.68rem;
   font-weight: 600;
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
   background: rgba(27,79,216,0.08);
   border-radius: 6px;
   padding: 2px 6px;
@@ -2379,7 +2379,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
   background: var(--white);
   border: 2px solid var(--primary);
   border-radius: 30px;
-  color: var(--primary);
+  color:var(--primary-tx,var(--primary));
   font-size: 0.92rem;
   font-weight: 700;
   font-family: inherit;
@@ -2520,7 +2520,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
 .retry-btn {
   display: inline-flex; align-items: center; gap: 4px;
   margin-top: 8px; padding: 7px 15px; border: 1px solid var(--primary);
-  background: var(--white); color: var(--primary);
+  background: var(--white); color:var(--primary-tx,var(--primary));
   border-radius: 8px; font-size: 13px; font-weight: 700;
   font-family: inherit; cursor: pointer; transition: .15s;
 }
@@ -2666,7 +2666,7 @@ input:focus, select:focus, textarea:focus {
 .gx-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .gx-b{font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:999px}
 .gx-b1{background:var(--accent);color:#fff}
-.gx-b2{background:var(--primary-lt);color:var(--primary)}
+.gx-b2{background:var(--primary-lt);color:var(--primary-tx,var(--primary))}
 .gx-info h1{font-size:21px;line-height:1.35;font-weight:800;letter-spacing:-.03em;color:var(--gray-900);margin:10px 0 0}
 .gx-desc{font-size:14px;line-height:1.6;color:var(--gray-600);margin:8px 0 0}
 .gx-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
@@ -2756,18 +2756,18 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
   #destinations .dest-body h3{font-size:16px;margin:2px 0 4px}
   #destinations .dest-body p{font-size:12.5px;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 }
-.gx-course{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;max-width:520px;margin:14px auto 4px;min-height:52px;padding:10px 14px;border:1.5px solid var(--primary);border-radius:12px;background:var(--primary-lt);color:var(--primary);font-size:15px;font-weight:800;font-family:inherit;cursor:pointer}
+.gx-course{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;max-width:520px;margin:14px auto 4px;min-height:52px;padding:10px 14px;border:1.5px solid var(--primary);border-radius:12px;background:var(--primary-lt);color:var(--primary-tx,var(--primary));font-size:15px;font-weight:800;font-family:inherit;cursor:pointer}
 .gx-course small{font-size:12px;font-weight:700;color:var(--gray-600)}
 /* 홈 '내 다음 여행' 카드 */
 #hxNext:empty{display:none}
 .hx-next{display:flex;align-items:center;gap:12px;background:var(--surface,#fff);border-radius:14px;padding:12px 14px;margin-bottom:12px;text-decoration:none;box-shadow:0 2px 10px rgba(16,24,40,.08)}
 .hx-nx-dot{flex:0 0 44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff;font-size:18px;font-weight:800}
 .hx-nx-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
-.hx-nx-body small{font-size:11.5px;font-weight:700;color:var(--primary)}
+.hx-nx-body small{font-size:11.5px;font-weight:700;color:var(--primary-tx,var(--primary))}
 .hx-nx-body strong{font-size:16px;font-weight:800;color:var(--gray-900);letter-spacing:-.02em}
 .hx-nx-body>span{font-size:12.5px;color:var(--gray-600);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hx-nx-body em{font-style:normal;font-weight:800;color:var(--accent);margin-left:4px}
-.hx-nx-cta{flex:0 0 auto;font-size:13px;font-weight:800;color:var(--primary)}
+.hx-nx-cta{flex:0 0 auto;font-size:13px;font-weight:800;color:var(--primary-tx,var(--primary))}
 /* 홈 줄이기(2026-10-23): 접힌 환율 계산기 · 여행지 8곳 + 전체 보기 · 이용 안내 접기 */
 .hx-hide{display:none!important}
 #destGrid.hx-collapsed .dest-card:nth-child(n+9){display:none}
@@ -2779,8 +2779,8 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 .hx-info[open]>summary::after{content:"－"}
 /* 출국 준비 한 곳(/prepare) — 여행 연결 안내 · 챙길 물건(checklist.js) */
 .pr-trip,.pk-trip{background:var(--primary-lt);border-radius:12px;padding:11px 13px;font-size:13px;line-height:1.55;color:var(--gray-800);margin:10px 0}
-.pr-trip a,.pk-trip a{color:var(--primary);font-weight:800;white-space:nowrap;display:inline-block;padding:8px 2px;margin:-8px 0}
-.pr-jump{display:block;text-align:center;margin:6px 0 2px;font-size:13px;font-weight:700;color:var(--primary);text-decoration:none}
+.pr-trip a,.pk-trip a{color:var(--primary-tx,var(--primary));font-weight:800;white-space:nowrap;display:inline-block;padding:8px 2px;margin:-8px 0}
+.pr-jump{display:block;text-align:center;margin:6px 0 2px;font-size:13px;font-weight:700;color:var(--primary-tx,var(--primary));text-decoration:none}
 .pk-sec{margin-top:28px}.pk-sec h2{font-size:20px;font-weight:800;letter-spacing:-.02em;margin:0 0 10px}
 .pk-g{background:var(--surface,#fff);border:1px solid var(--gray-200);border-radius:14px;padding:6px 12px;margin-bottom:10px}
 .pk-gt{font-size:13px;font-weight:800;color:var(--gray-700);padding:8px 0 4px}
@@ -2794,8 +2794,8 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 .pk-add{display:flex;gap:8px;padding:10px 0}
 .pk-in{flex:1;min-height:44px;border:1px solid var(--gray-200);border-radius:10px;padding:0 12px;font:inherit;font-size:14px}
 .pk-addbtn,.pk-import{min-height:44px;border:none;border-radius:10px;background:var(--primary);color:#fff;font:inherit;font-weight:800;padding:0 16px;cursor:pointer}
-.pk-import{width:100%;margin:2px 0 10px;background:var(--primary-lt);color:var(--primary)}
-.pk-note{font-size:12px;color:var(--gray-500);margin:6px 2px}.pk-note a{color:var(--primary);font-weight:700}
+.pk-import{width:100%;margin:2px 0 10px;background:var(--primary-lt);color:var(--primary-tx,var(--primary))}
+.pk-note{font-size:12px;color:var(--gray-500);margin:6px 2px}.pk-note a{color:var(--primary-tx,var(--primary));font-weight:700}
 .pk-link{border:none;background:none;color:var(--gray-600);text-decoration:underline;font:inherit;font-size:12px;cursor:pointer;padding:0}
 .pk-empty{font-size:13px;color:var(--gray-500);text-align:center;padding:16px}
 
@@ -2809,12 +2809,12 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 .en-t{display:flex;align-items:center;gap:8px;font-size:15px}.en-fee{font-size:11.5px;font-weight:800;color:var(--success);background:#ECFDF3;padding:2px 7px;border-radius:6px}
 .en-w{font-size:13px;color:var(--gray-600);margin-top:3px;line-height:1.5}.en-w b{color:var(--gray-800)}
 .en-a{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
-.en-a a{font-size:13px;font-weight:800;color:var(--primary);text-decoration:none;min-height:36px;display:inline-flex;align-items:center}
-.en-a button{min-height:36px;border:none;border-radius:9px;background:var(--primary-lt);color:var(--primary);font:inherit;font-size:12.5px;font-weight:800;padding:0 10px;cursor:pointer}
+.en-a a{font-size:13px;font-weight:800;color:var(--primary-tx,var(--primary));text-decoration:none;min-height:36px;display:inline-flex;align-items:center}
+.en-a button{min-height:36px;border:none;border-radius:9px;background:var(--primary-lt);color:var(--primary-tx,var(--primary));font:inherit;font-size:12.5px;font-weight:800;padding:0 10px;cursor:pointer}
 .en-a em{font-style:normal;font-size:12.5px;font-weight:800;color:var(--success)}
 .en-note{font-size:13px;color:var(--gray-700);background:var(--gray-50);border-radius:10px;padding:9px 11px;margin-bottom:8px}
 .en-empty{font-size:13px;color:var(--gray-500);text-align:center;padding:14px}
-.en-foot{font-size:11.5px;color:var(--gray-500);line-height:1.6;margin-top:6px}.en-foot a{color:var(--primary)}
+.en-foot{font-size:11.5px;color:var(--gray-500);line-height:1.6;margin-top:6px}.en-foot a{color:var(--primary-tx,var(--primary))}
 /* 🔔 환율 좋은 날 알림(홈) */
 #hxFxHit:empty{display:none}
 .fxhit{display:block;background:var(--surface,#fff);border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:12.5px;color:var(--gray-700);text-decoration:none;box-shadow:0 1px 3px rgba(16,24,40,.08)}
@@ -2823,7 +2823,7 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 .fxa>b{display:block;font-size:14px}.fxa>small{display:block;font-size:11.5px;color:var(--gray-500);margin:2px 0 8px}
 .fxa-r{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;font-weight:700;color:var(--gray-700)}
 .fxa-r select,.fxa-r input{min-height:40px;border:1px solid var(--gray-200);border-radius:9px;padding:0 8px;font:inherit;font-size:13.5px}.fxa-r input{width:90px}
-.fxa-now{font-size:12px;color:var(--primary);font-weight:700;margin-top:6px}
+.fxa-now{font-size:12px;color:var(--primary-tx,var(--primary));font-weight:700;margin-top:6px}
 .fxa-b{display:flex;gap:8px;margin-top:10px}.fxa-b button{flex:1;min-height:42px;border:none;border-radius:10px;background:var(--primary);color:#fff;font:inherit;font-weight:800;cursor:pointer}.fxa-b button.off{background:var(--gray-100);color:var(--gray-700)}
 
 /* ══ 다크 모드 — 폰이 다크 모드면 자동(2026-10-23). 가이드 23곳(.gx-product)은 각자 인라인 스타일이라 밝게 유지 ══ */
@@ -2834,6 +2834,7 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
     --gray-50: #0d1015; --gray-100: #1e232c; --gray-200: #2b313c; --gray-300: #3b4250; --gray-400: #5d6676;
     --gray-500: #8f98a8; --gray-600: #aab2c0; --gray-700: #c7cdd7; --gray-800: #e0e4ea; --gray-900: #f3f5f8;
     --primary: #3d6ff0; --primary-lt: #1b2747; --accent-lt: #3a2416;
+    /* 글씨용 파랑 — 바탕용 #3d6ff0 은 어두운 바탕 위 글씨로 3.3~3.9 라 흐렸다(2026-11-20) */ --primary-tx: #8fb0ff;
     --shadow: 0 1px 2px rgba(0,0,0,.45), 0 4px 16px rgba(0,0,0,.35);
     background: var(--gray-50);
   }
@@ -2847,6 +2848,7 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
   body:not(.gx-product) .footer { background: #0a0d12; border-top: 1px solid rgba(255,255,255,.07); }
   body:not(.gx-product) .footer-brand .logo, body:not(.gx-product) .footer-nav h4, body:not(.gx-product) .footer-nav a:hover { color: #fff; }
   body:not(.gx-product) .fx-rate strong { color: #8fb0ff; }
+  body:not(.gx-product) .cat-tag.japan { color: #ff7a8f; } body:not(.gx-product) .cat-tag.europe { color: #b9a2f7; }
 }
 
 /* iOS는 16px 미만 입력칸에 포커스하면 화면을 확대한다 — 모바일에서 16px로 고정 */
@@ -2898,7 +2900,7 @@ html.hx-mq .hx-rail:not(.hx-marquee){overflow:hidden;max-width:1080px;width:calc
 @media(max-width:400px){.hx-onb ol{gap:4px}.hx-onb a{gap:0;padding:4px 2px;min-height:44px}.hx-onb a span{font-size:11.5px;line-height:1.1}.hx-onb a b{font-size:12.5px;line-height:1.25;letter-spacing:-.02em}}   /* 좁은 폰(320~400px): 세 칸 글자가 잘리지 않게 간격·크기 축소 */
 @media(max-width:759px){.hx-onb{padding:8px 10px}.hx-onb-h{margin-bottom:4px}.hx-onb-h b{font-size:13.5px}.hx-onb-x{width:28px;height:28px}.hx-onb small{display:none}.hx-onb a{display:flex;justify-content:center;gap:4px;padding:0 4px;min-height:38px}.hx-onb a span{font-size:13px}.hx-onb a b{font-size:12.5px;white-space:nowrap}}
 .hx-onb a{display:grid;grid-template-columns:28px 1fr;align-items:center;gap:0 8px;padding:10px;border-radius:10px;background:var(--gray-50);text-decoration:none;color:inherit;min-height:48px}
-.hx-onb a span{grid-row:span 2;font-size:18px;font-weight:850;color:var(--primary);text-align:center}
+.hx-onb a span{grid-row:span 2;font-size:18px;font-weight:850;color:var(--primary-tx,var(--primary));text-align:center}
 .hx-onb a b{font-size:14px;color:var(--gray-900)}.hx-onb a small{font-size:12px;color:var(--gray-600)}
 /* 가이드 '한눈에 비교' 표(760px, 옆으로 밀어 봄) — 폰에서 구역 이름 열을 고정해 어느 줄인지 잃지 않게, 칸 여백도 줄인다 */
 @media(max-width:640px){.sgg .compare table{min-width:620px}.sgg .compare th,.sgg .compare td{padding:12px 12px;font-size:13.5px}.sgg .compare th:first-child,.sgg .compare td:first-child{position:sticky;left:0;z-index:1;background:#fff;box-shadow:1px 0 0 var(--sgg-line,#e6e9ee)}.sgg .compare th:first-child{background:#f7f9fb}}
@@ -2910,7 +2912,7 @@ html.hx-mq .hx-rail:not(.hx-marquee){overflow:hidden;max-width:1080px;width:calc
 .jp-rate{font-size:.8rem;font-weight:700;color:#B45309;margin-bottom:3px}.jp-rate small{font-weight:500;color:var(--gray-600)}
 .jp-by{font-size:.72rem;color:var(--gray-600);margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.jp-by a{color:inherit}
 .jp-links{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px}
-.jp-links a{display:inline-flex;align-items:center;min-height:36px;font-size:.82rem;font-weight:700;color:var(--primary);text-decoration:none}
+.jp-links a{display:inline-flex;align-items:center;min-height:36px;font-size:.82rem;font-weight:700;color:var(--primary-tx,var(--primary));text-decoration:none}
 .jp-links a:hover{text-decoration:underline}
 .jp-attr{margin-top:16px;font-size:.78rem;color:var(--gray-600);text-align:right}.jp-attr b{color:var(--gray-800)}
 @media (prefers-color-scheme:dark){body:not(.gx-product) .jp-rate{color:#F5B66B}body:not(.gx-product) .jp-links a{color:#8fb0ff}}

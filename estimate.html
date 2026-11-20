@@ -70,8 +70,8 @@
   border-radius:var(--radius-sm);font-size:.82rem;font-weight:650;color:var(--gray-600);
   cursor:pointer;font-family:inherit;transition:all .15s;line-height:1.35}
 .style-btn small{display:block;font-size:.66rem;font-weight:500;color:var(--gray-500);margin-top:2px}
-.style-btn.on{border-color:var(--primary);background:var(--primary-lt);color:var(--primary)}
-.style-btn.on small{color:var(--primary)}
+.style-btn.on{border-color:var(--primary);background:var(--primary-lt);color:var(--primary-tx,var(--primary))}
+.style-btn.on small{color:var(--primary-tx,var(--primary))}
 
 .est-calc{width:100%;padding:15px;border:none;border-radius:var(--radius-sm);background:var(--primary);
   color:#fff;font-size:1rem;font-weight:750;cursor:pointer;font-family:inherit;margin-top:6px;
@@ -116,9 +116,9 @@
 .mine button{margin-top:9px;width:100%;padding:10px;border:0;border-radius:10px;background:#B45309;color:#fff;font-weight:800;font-size:.85rem;cursor:pointer}
 .mine button.off{background:var(--gray-100);color:var(--gray-700)}
 .mine.hint{background:var(--gray-50,#F9FAFB);border-color:var(--gray-100);color:var(--gray-500)}
-.mine.hint a{color:var(--primary);font-weight:700}
+.mine.hint a{color:var(--primary-tx,var(--primary));font-weight:700}
 @media (prefers-color-scheme: dark){.mine{background:#2a1d10;border-color:#5a3a17;color:var(--gray-600)}.mine b{color:var(--dark)}.tag-mine{background:#3a2610;color:#F5B66B}.tag-shared{background:#1f2347;color:#A4BCFD}.mine.hint{background:var(--surface);border-color:var(--gray-200)}}
-.live-btn{padding:6px 11px;border:1px solid var(--primary);background:var(--primary-lt);color:var(--primary);
+.live-btn{padding:6px 11px;border:1px solid var(--primary);background:var(--primary-lt);color:var(--primary-tx,var(--primary));
   border-radius:999px;font-size:.7rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
 .live-btn:disabled{opacity:.5;cursor:default}
 
@@ -133,7 +133,7 @@
 .act{flex:1;min-width:130px;padding:12px;border:1px solid var(--gray-300);background:var(--white);
   border-radius:var(--radius-sm);font-size:.83rem;font-weight:700;color:var(--gray-700);
   cursor:pointer;font-family:inherit;transition:all .15s}
-.act:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-lt)}
+.act:hover{border-color:var(--primary);color:var(--primary-tx,var(--primary));background:var(--primary-lt)}
 
 /* 날짜별 최저가 */
 .fare-load,.fare-note{font-size:.73rem;color:var(--gray-500);line-height:1.55;margin-top:10px}
