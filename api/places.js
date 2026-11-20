@@ -77,9 +77,10 @@ async function handler(req) {
       return json({ error: `upstream ${up.status}` }, 502, CORS);
     }
     const data = await up.json();
-    // 사각형이 부산·제주 일부도 덮는다 → 주소에 '일본'(또는 Japan)이 있는 곳만
+    // 사각형이 부산·제주·북한·블라디보스토크 일부도 덮는다 → 다른 나라 주소는 뺀다
+    // (regionCode=JP 라 일본 주소에는 나라 이름이 안 붙는다 — '일본'으로 거르면 다 빠지던 문제, 2026-11-20)
     const places = (data.places || [])
-      .filter(p => /일본|Japan/i.test(p.formattedAddress || ''))
+      .filter(p => !/대한민국|한국|Korea|북한|조선|러시아|Russia|중국|China/i.test(p.formattedAddress || ''))
       .map(p => {
         const ph = (p.photos || [])[0];
         const au = ph && (ph.authorAttributions || [])[0];
@@ -96,7 +97,7 @@ async function handler(req) {
         };
       });
     // 구글 콘텐츠는 저장 금지 → CDN 캐시 없이, 같은 사람 브라우저에서만 10분
-    return json({ places }, 200, CORS, 'private, max-age=600');
+    return json({ places, raw: (data.places || []).length }, 200, CORS, 'private, max-age=600');
   } catch (e) {
     return json({ error: e.message || 'upstream error' }, 502, CORS);
   }
