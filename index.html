@@ -118,6 +118,7 @@
           <button class="sw-tab active" data-tab="flight">✈ 항공권</button>
           <button class="sw-tab" data-tab="hotel">🏨 숙소</button>
           <button class="sw-tab" data-tab="domestic">🇰🇷 국내여행</button>
+          <button class="sw-tab" data-tab="japan">🇯🇵 일본</button>
         </div>
 
         <!-- 항공권 -->
@@ -251,6 +252,17 @@
             <button class="sw-btn" onclick="searchDomestic()">🔍 검색</button>
           </div>
         </div>
+        <!-- 일본 관광지 (구글 지도 장소 검색 — jp-search.js) -->
+        <div class="sw-form" id="sw-japan">
+          <div class="sw-row sw-row--kw">
+            <div class="sw-field sw-field--grow">
+              <label for="sw-jp-q">일본 관광지 검색</label>
+              <input type="search" id="sw-jp-q" maxlength="60" enterkeyhint="search" placeholder="예) 교토 단풍, 오사카 야경, 삿포로 온천" onkeydown="if(event.key==='Enter'){event.preventDefault();searchJapan()}">
+            </div>
+            <button class="sw-btn" onclick="searchJapan()">🔍 검색</button>
+          </div>
+          <div class="jp-ex" aria-label="검색 예시"><button type="button" onclick="searchJapan('교토 사찰')">교토 사찰</button><button type="button" onclick="searchJapan('도쿄 전망대')">도쿄 전망대</button><button type="button" onclick="searchJapan('오사카 야경')">오사카 야경</button><button type="button" onclick="searchJapan('후쿠오카 온천')">후쿠오카 온천</button></div>
+        </div>
       </div>
     </div>
   </section>
@@ -363,6 +375,20 @@
           더 보기 <span id="domesticMoreLabel"></span>
         </button>
       </div>
+    </div>
+  </section>
+
+  <!-- ── 일본 관광지 결과 (구글 지도) ── -->
+  <section class="dom-section hidden" id="jpSection" aria-live="polite">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">🇯🇵 일본 관광지</span>
+        <h2 id="jpTitle">검색 결과</h2>
+      </div>
+      <div class="dom-loading hidden" id="jpLoading"><div class="dom-spinner"></div><p>구글 지도에서 찾는 중...</p></div>
+      <div class="dom-error hidden" id="jpError"><p id="jpErrorMsg"></p></div>
+      <div class="dom-grid" id="jpGrid"></div>
+      <p class="jp-attr hidden" id="jpAttr">장소 정보·사진 제공 <b>Google 지도</b> · 영업 여부·요금은 구글 지도에서 확인하세요</p>
     </div>
   </section>
 
@@ -917,6 +943,7 @@ if('serviceWorker' in navigator){
 <script src="/icons.js" defer></script>
 <script src="/trips.js"></script>
 <script src="/home-ui.js" defer></script>
+<script src="/jp-search.js" defer></script>
 <script src="/nav.js" defer></script>
 <script src="/bizfooter.js" defer></script>
 </body>

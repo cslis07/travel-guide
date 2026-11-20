@@ -2902,3 +2902,17 @@ html.hx-mq .hx-rail:not(.hx-marquee){overflow:hidden;max-width:1080px;width:calc
 .hx-onb a b{font-size:14px;color:var(--gray-900)}.hx-onb a small{font-size:12px;color:var(--gray-600)}
 /* 가이드 '한눈에 비교' 표(760px, 옆으로 밀어 봄) — 폰에서 구역 이름 열을 고정해 어느 줄인지 잃지 않게, 칸 여백도 줄인다 */
 @media(max-width:640px){.sgg .compare table{min-width:620px}.sgg .compare th,.sgg .compare td{padding:12px 12px;font-size:13.5px}.sgg .compare th:first-child,.sgg .compare td:first-child{position:sticky;left:0;z-index:1;background:#fff;box-shadow:1px 0 0 var(--sgg-line,#e6e9ee)}.sgg .compare th:first-child{background:#f7f9fb}}
+/* 일본 관광지 검색(구글 지도) — jp-search.js */
+.jp-ex{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.jp-ex button{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;font:inherit;font-size:.82rem;font-weight:600;cursor:pointer}
+.jp-ex button:hover{background:rgba(255,255,255,.22)}
+.jp-card:hover{transform:none}
+.jp-rate{font-size:.8rem;font-weight:700;color:#B45309;margin-bottom:3px}.jp-rate small{font-weight:500;color:var(--gray-600)}
+.jp-by{font-size:.72rem;color:var(--gray-600);margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.jp-by a{color:inherit}
+.jp-links{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px}
+.jp-links a{display:inline-flex;align-items:center;min-height:36px;font-size:.82rem;font-weight:700;color:var(--primary);text-decoration:none}
+.jp-links a:hover{text-decoration:underline}
+.jp-attr{margin-top:16px;font-size:.78rem;color:var(--gray-600);text-align:right}.jp-attr b{color:var(--gray-800)}
+@media (prefers-color-scheme:dark){body:not(.gx-product) .jp-rate{color:#F5B66B}body:not(.gx-product) .jp-links a{color:#8fb0ff}}
+/* 폰: 키워드 칸(.sw-field--grow)이 min-width 180px 로 오른쪽에 쪼그라져 붙던 것(국내여행 키워드도 같음) → 한 줄 꽉 */
+@media (max-width:600px){.sw-row .sw-field.sw-field--grow{min-width:100%;flex:none;align-self:stretch}}
