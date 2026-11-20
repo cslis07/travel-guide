@@ -2916,3 +2916,5 @@ html.hx-mq .hx-rail:not(.hx-marquee){overflow:hidden;max-width:1080px;width:calc
 @media (prefers-color-scheme:dark){body:not(.gx-product) .jp-rate{color:#F5B66B}body:not(.gx-product) .jp-links a{color:#8fb0ff}}
 /* 폰: 키워드 칸(.sw-field--grow)이 min-width 180px 로 오른쪽에 쪼그라져 붙던 것(국내여행 키워드도 같음) → 한 줄 꽉 */
 @media (max-width:600px){.sw-row .sw-field.sw-field--grow{min-width:100%;flex:none;align-self:stretch}}
+/* 사진 없는 카드: 빈 썸네일(height:100%)이 카드 전체를 덮어 이름·주소·링크가 안 보이던 것(국내·일본 검색 공통) → 사진 자리 높이만 */
+.dom-card > .dom-thumb.dom-thumb--empty{height:148px}

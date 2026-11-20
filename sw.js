@@ -6,7 +6,7 @@
 //  - 우리 JS·CSS : 네트워크 우선 + 2.5초 넘으면 캐시 — 배포 직후 새 HTML 이 옛 JS 를 받아 TypeError 나던 것 방지
 //  - 그 밖의 자산 : 캐시 우선 + 백그라운드 갱신 (stale-while-revalidate)
 
-const CACHE = 'travelcost-v83';
+const CACHE = 'travelcost-v84';
 
 // 설치 시 미리 담아둘 최소 셸 (오프라인 폴백용)
 // 페이지는 깨끗한 주소로(cleanUrls라 '/x.html'은 리다이렉트 응답이 캐시돼 오프라인 내비게이션에 못 씀)
@@ -95,6 +95,8 @@ self.addEventListener('fetch', e => {
 
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return; // 외부 도메인은 건드리지 않음
+  // 일본 관광지 사진(/api/places?photo=)은 구글 사진 주소로 302 — 서비스워커가 받으면 CSP connect-src 에 막혀 '오프라인' 503 이 됐다(2026-11-20). 브라우저가 직접 받게 둔다(캐시도 안 함)
+  if (url.pathname === '/api/places' && url.searchParams.has('photo')) return;
 
   const accept = req.headers.get('accept') || '';
   const isHtml = req.mode === 'navigate' || accept.includes('text/html');
