@@ -2858,7 +2858,7 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
 @media (max-width:900px){
   #sw-from,#sw-to,#sw-dep,#sw-ret,#sw-pax,#f-dest,#f-out,#f-back,#f-adult,#f-child,#f-room,#departDate,input.pk-in{font-size:16px}
 }
-.hx-price .hx-asof{font-size:10px;font-weight:500;color:rgba(255,255,255,.8);margin-left:2px}
+.hx-price .hx-asof{display:inline-block;white-space:nowrap;font-size:11px;font-weight:500;color:rgba(255,255,255,.85);margin-left:2px}
 /* 탭 대상 24px 이상(WCAG 2.2 2.5.8) — 2026-10-25 점검에서 21px 안팎이던 것들 */
 .footer-nav a{display:flex;align-items:center;min-height:24px}
 .pr-jump{min-height:24px;line-height:24px}
