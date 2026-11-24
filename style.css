@@ -578,7 +578,7 @@ a, button, [role="button"], input, select, textarea { -webkit-tap-highlight-colo
 }
 
 .cat-tag.japan  { background: rgba(188,0,45,0.1); color: #BC002D; }
-.cat-tag.sea    { background: rgba(5,150,105,0.1); color: #059669; }
+.cat-tag.sea    { background: rgba(5,150,105,0.1); color: #047857; }
 .cat-tag.domestic { background: rgba(37,99,235,0.1); color: #2563EB; }
 .cat-tag.europe { background: rgba(124,58,237,0.1); color: #7C3AED; }
 .cat-tag.china  { background: rgba(220,38,38,0.1); color: #DC2626; }
@@ -2851,6 +2851,7 @@ body.gx-product #pwa-install-btn{bottom:calc(84px + env(safe-area-inset-bottom,0
   body:not(.gx-product) .footer-brand .logo, body:not(.gx-product) .footer-nav h4, body:not(.gx-product) .footer-nav a:hover { color: #fff; }
   body:not(.gx-product) .fx-rate strong { color: #8fb0ff; }
   body:not(.gx-product) .cat-tag.japan { color: #ff7a8f; } body:not(.gx-product) .cat-tag.europe { color: #b9a2f7; }
+  body:not(.gx-product) .cat-tag.china { color: #f87171; } body:not(.gx-product) .cat-tag.domestic { color: #8fb0ff; } body:not(.gx-product) .cat-tag.sea { color: #059669; }
 }
 
 /* iOS는 16px 미만 입력칸에 포커스하면 화면을 확대한다 — 모바일에서 16px로 고정 */

@@ -198,7 +198,7 @@ async function loadPaxChart() {
       plugins:{legend:{display:false},tooltip:{
         backgroundColor:isLight?'#fff':'#0d1628',
         borderColor:isLight?'#ccd5e8':'#1f2d48',borderWidth:1,
-        titleColor:isLight?'#0d1421':'#d0dbf5',bodyColor:isLight?'#677296':'#8aa4c6',
+        titleColor:isLight?'#0d1421':'#d0dbf5',bodyColor:isLight?'#626c8e':'#8aa4c6',
         padding:8,cornerRadius:8,
         callbacks:{label:c=>`${c.dataset.label}: ${c.parsed.y.toLocaleString()}명`}
       }},
