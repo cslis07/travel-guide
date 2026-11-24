@@ -23,6 +23,18 @@ export function foreignOrigin(req) {
   return !!origin && !ORIGIN_RE.test(origin);
 }
 
+/* 우리 화면(같은 사이트)에서 브라우저가 보낸 요청인지 — 봇·스크립트가 유료 API 하루 상한을 써 버리지 않게(2026-11-24).
+   1) 요즘 브라우저는 Sec-Fetch-Site 를 붙인다: same-origin·same-site 만 통과(주소창 직접 입력 'none'·남의 사이트 'cross-site' 는 막음)
+   2) 그 머리글이 없는 옛 브라우저는 Origin 이나 Referer 가 우리 주소일 때만 통과
+   머리글은 흉내 낼 수 있으므로 완전한 차단은 아니다 — 근본 대책은 구글 콘솔의 하루 할당량 */
+export function sameSiteRequest(req) {
+  const sfs = req.headers.get('sec-fetch-site');
+  if (sfs) return sfs === 'same-origin' || sfs === 'same-site';
+  const origin = req.headers.get('origin');
+  if (origin) return ORIGIN_RE.test(origin);
+  try { return ORIGIN_RE.test(new URL(req.headers.get('referer') || '').origin); } catch { return false; }
+}
+
 const hits = new Map();
 let sweptAt = 0;
 export function rateLimited(req, perMin = 120) {

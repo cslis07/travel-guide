@@ -124,6 +124,17 @@ await ok('API 는 우리 사이트·이 프로젝트 Vercel 배포만 허용', (
     assert.equal(G.foreignOrigin(req(o)), true, o);
 });
 
+await ok('일본 검색 API 는 우리 화면의 브라우저 요청만 — 봇·주소창·남의 사이트는 막는다', () => {
+  const r = h => ({ headers: { get: k => (h[k] ?? null) } });
+  for (const h of [{ 'sec-fetch-site': 'same-origin' }, { 'sec-fetch-site': 'same-site' },
+                   { origin: 'https://travelcost.co.kr' }, { referer: 'https://travelcost.co.kr/?q=1' }, { referer: 'http://127.0.0.1:5181/index.html' }])
+    assert.equal(G.sameSiteRequest(r(h)), true, JSON.stringify(h));
+  for (const h of [{}, { 'sec-fetch-site': 'none' }, { 'sec-fetch-site': 'cross-site', referer: 'https://travelcost.co.kr/' },
+                   { origin: 'https://evil.example' }, { referer: 'https://evil.example/travelcost.co.kr' }, { referer: 'not a url' }])
+    assert.equal(G.sameSiteRequest(r(h)), false, JSON.stringify(h));
+  assert.match(read('api/places.js'), /if \(!sameSiteRequest\(req\)\) return json\(\{ error: 'same-site only' \}, 403/);
+});
+
 const src = { proxy: read('api/proxy.js'), idx: read('api/hotelidx.js'), price: read('api/hotelprice.js') };
 await ok('프록시 오류 응답에 상류 주소(키 포함)를 싣지 않는다', () => {
   assert.doesNotMatch(src.proxy, /target:\s*safe/);

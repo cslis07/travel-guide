@@ -15,7 +15,7 @@
 //   - 결과를 보여 줄 때 'Google 지도' 표시, 사진 작가 이름, googleMapsUri 링크를 같이 보여 준다(화면 쪽 jp-search.js)
 //   - 하루 상한은 인스턴스 메모리 기준이라 근사치다 — 정확한 상한은 구글 클라우드 콘솔의 할당량으로 건다
 
-import { cors, foreignOrigin, rateLimited, tooMany } from './_guard.js';
+import { cors, foreignOrigin, rateLimited, sameSiteRequest, tooMany } from './_guard.js';
 
 const API = 'https://places.googleapis.com/v1';
 const JAPAN = { low: { latitude: 24.0, longitude: 122.9 }, high: { latitude: 45.6, longitude: 146.0 } };
@@ -46,6 +46,8 @@ async function handler(req) {
   if (foreignOrigin(req)) return json({ error: 'origin not allowed' }, 403, CORS);
   if (req.method === 'OPTIONS') return new Response(null, { status: 200, headers: CORS });
   if (req.method !== 'GET') return json({ error: 'method not allowed' }, 405, CORS);
+  // 우리 화면에서 온 브라우저 요청만 — 봇·스크립트(curl 등)가 하루 상한을 써 버려 실제 사용자가 못 찾는 일을 막는다
+  if (!sameSiteRequest(req)) return json({ error: 'same-site only' }, 403, CORS);
   if (rateLimited(req, 30)) return tooMany(CORS);
 
   const key = process.env.GOOGLE_PLACES_KEY;
