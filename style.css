@@ -2579,6 +2579,7 @@ tbody tr:hover { background: rgba(27,79,216,0.03); }
 
 /* 가격은 카드에서 가장 먼저 읽혀야 한다 */
 .dest-price { font-weight: 800; color: var(--gray-800); letter-spacing: -.02em; }
+.dest-price .dp-via { display: block; font-size: 12px; font-weight: 600; color: var(--gray-600); letter-spacing: 0; }
 
 /* 별점은 여행앱 관행대로 앰버 */
 .star, .tt-rate, .dom-rating { color: var(--rating); }
